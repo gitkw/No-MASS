@@ -16,6 +16,7 @@
 
 std::map<std::string, ZoneStruct> SimulationConfig::zones;
 std::map<int, windowStruct> SimulationConfig::windows;
+std::map<int, shadeStruct> SimulationConfig::shades;
 std::vector<agentStruct> SimulationConfig::agents;
 std::vector<stateStruct> SimulationConfig::states;
 simulationStruct SimulationConfig::info;
@@ -106,6 +107,10 @@ void SimulationConfig::parseAgents(boost::property_tree::ptree::value_type & v)
                 {
                     agent.windowId = childschild.second.get_value<int>();
                 }
+                else if(childschild.first == "shade")
+                {
+                    agent.shadeId = childschild.second.get_value<int>();
+                }
             }
             agents.push_back(agent);
         }
@@ -154,9 +159,9 @@ void SimulationConfig::parseModels(boost::property_tree::ptree::value_type & v)
         {
             parseWindows(child);
         }
-        else if (child.first == "shading")
+        else if (child.first == "shades")
         {
-            SimulationConfig::info.shading = child.second.get_value<bool>();
+            parseShades(child);
         }
         else if (child.first == "lights")
         {
@@ -164,6 +169,7 @@ void SimulationConfig::parseModels(boost::property_tree::ptree::value_type & v)
         }
     }
 }
+
 void SimulationConfig::parseWindows(boost::property_tree::ptree::value_type & v)
 {
     for(boost::property_tree::ptree::value_type & child: v.second)
@@ -272,6 +278,114 @@ void SimulationConfig::parseWindows(boost::property_tree::ptree::value_type & v)
                 }
             }
             windows.insert(ws);
+        }
+    }
+}
+
+void SimulationConfig::parseShades(boost::property_tree::ptree::value_type & v)
+{
+    for(boost::property_tree::ptree::value_type & child: v.second)
+    {
+        if (child.first == "enabled")
+        {
+            SimulationConfig::info.shading = child.second.get_value<bool>();
+        }
+        else if (child.first == "shade")
+        {
+            std::pair<int, shadeStruct> ws;
+
+            for(boost::property_tree::ptree::value_type & childschild: child.second)
+            {
+                if (childschild.first == "id")
+                {
+                    ws.first = childschild.second.get_value<int>();
+                }
+                else if (childschild.first == "a01arr")
+                {
+                    ws.second.a01arr = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01inarr")
+                {
+                    ws.second.b01inarr = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01sarr")
+                {
+                    ws.second.b01sarr = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "a10arr")
+                {
+                    ws.second.a10arr = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b10inarr")
+                {
+                    ws.second.b10inarr = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b10sarr")
+                {
+                    ws.second.b10sarr = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "a01int")
+                {
+                    ws.second.a01int = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01inint")
+                {
+                    ws.second.b01inint = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01sint")
+                {
+                    ws.second.b01sint = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "a10int")
+                {
+                    ws.second.a10int = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b10inint")
+                {
+                    ws.second.b10inint = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b10sint")
+                {
+                    ws.second.b10sint = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "afullraise")
+                {
+                    ws.second.afullraise = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "boutfullraise")
+                {
+                    ws.second.boutfullraise = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "bsfullraise")
+                {
+                    ws.second.bsfullraise = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "bsfulllower")
+                {
+                    ws.second.bsfulllower = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "boutfulllower")
+                {
+                    ws.second.boutfulllower = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "afulllower")
+                {
+                    ws.second.afulllower = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "aSFlower")
+                {
+                    ws.second.aSFlower = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "bSFlower")
+                {
+                    ws.second.bSFlower = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "shapelower")
+                {
+                    ws.second.shapelower = childschild.second.get_value<double>();
+                }
+            }
+            shades.insert(ws);
         }
     }
 }
