@@ -1,0 +1,27 @@
+language: cpp
+
+compiler:
+  - gcc
+
+before_install:
+
+before_script:
+
+
+script: rake ci
+
+after_success:
+
+
+branches:
+  only:
+    - master
+
+notifications:
+  email: false
+
+env:
+
+os:
+  - linux
+  - osx
