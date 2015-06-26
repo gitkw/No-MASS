@@ -1,7 +1,3 @@
 [submodule "Boost/Boost-Source"]
 	path = Boost/Boost-Source
 	url = https://github.com/boostorg/boost.git
-[submodule "EnergyPlus"]
-	path = EnergyPlus
-	url = https://jacoblchapman@bitbucket.org/jacoblchapman/energyplushpc.git
-	branch = HPC
