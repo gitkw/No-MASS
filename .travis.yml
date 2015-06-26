@@ -3,7 +3,14 @@ language: cpp
 compiler:
   - gcc
 
-before_install: git submodule update --init --recursive
+before_install:
+  # make sure gcc is up to date
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -qq
+  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.9; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
+  # download submodules
+  - git submodule update --init --recursive
 
 before_script:
   - cd Boost
