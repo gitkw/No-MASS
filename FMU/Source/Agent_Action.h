@@ -1,0 +1,23 @@
+#ifndef AGENT_ACTION_H
+#define AGENT_ACTION_H
+
+#include "Zone.h"
+
+class Agent_Action
+{
+    public:
+        Agent_Action();
+
+        virtual void step(const Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
+
+        virtual double getResult();
+    protected:
+        double result;
+
+
+        double getFutureDurationOfPresenceState(const std::vector<double> &activities) const;
+    private:
+
+};
+
+#endif // AGENT_ACTION_H

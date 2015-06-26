@@ -1,0 +1,433 @@
+/*
+ * File:   SimulationSetup.cpp
+ * Author: jake
+ *
+ * Created on September 13, 2013, 10:17 AM
+ */
+
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+#include <boost/lexical_cast.hpp>
+#include <iostream>
+#include <map>
+#include "SimulationConfig.h"
+#include "Utility.h"
+
+std::map<std::string, ZoneStruct> SimulationConfig::zones;
+std::map<int, windowStruct> SimulationConfig::windows;
+std::vector<agentStruct> SimulationConfig::agents;
+std::vector<stateStruct> SimulationConfig::states;
+simulationStruct SimulationConfig::info;
+int SimulationConfig::stepCount = -1;
+
+SimulationConfig::SimulationConfig()
+{
+}
+
+void SimulationConfig::parseBuilding(boost::property_tree::ptree::value_type & v)
+{
+
+    for(boost::property_tree::ptree::value_type & child: v.second)
+    {
+        if (child.first == "zone")
+        {
+            std::pair<std::string, ZoneStruct> zone;
+
+            for(boost::property_tree::ptree::value_type & childschild: child.second)
+            {
+
+                if (childschild.first == "name")
+                {
+
+                    //std::cout << "name: " << childschild.second.data() << std::endl;
+                    zone.first = childschild.second.data();
+                    zone.second.name = childschild.second.data();
+                }
+                else if (childschild.first == "activities" || childschild.first == "activity")
+                {
+                    //std::cout << "type: " << childschild.second.data() << std::endl;
+                    zone.second.activity = childschild.second.data();
+                }
+                else if (childschild.first == "groundFloor")
+                {
+
+                    //std::cout << "type: " << childschild.second.data() << std::endl;
+                    zone.second.groundFloor = childschild.second.get_value<bool>();
+                }
+            }
+            std::cout << "Name: " << zone.first << " Activity: " << zone.second.activity;
+            std::cout << " Floor: " << zone.second.groundFloor << std::endl;
+            if(zone.second.activity == "")
+            {
+                std::cout << "Did not define activities for zone: " << zone.second.name << std::endl;
+                exit(-1);
+            }
+            zones.insert(zone);
+        }
+    }
+}
+void SimulationConfig::parseAgents(boost::property_tree::ptree::value_type & v)
+{
+
+    for(boost::property_tree::ptree::value_type & child: v.second)
+    {
+        if (child.first == "agent")
+        {
+            agentStruct agent;
+
+            for(boost::property_tree::ptree::value_type & childschild: child.second)
+            {
+                if (childschild.first == "profile")
+                {
+                    for(boost::property_tree::ptree::value_type & childschildchild: childschild.second)
+                    {
+                        std::string text = childschildchild.first;
+                        text.erase(0,1);
+                        std::pair<int, std::string> a;
+                        a.first = boost::lexical_cast<int>(text);
+                        a.second = childschildchild.second.get_value<std::string>();
+                        agent.profile.insert(a);
+                    }
+                }
+                else if(childschild.first == "bedroom")
+                {
+                    agent.bedroom = childschild.second.data();
+                }
+                else if(childschild.first == "office")
+                {
+                    agent.office = childschild.second.data();
+                }
+                else if(childschild.first == "power")
+                {
+                    agent.power = childschild.second.get_value<double>();
+                }
+                else if(childschild.first == "window")
+                {
+                    agent.windowId = childschild.second.get_value<int>();
+                }
+            }
+            agents.push_back(agent);
+        }
+    }
+}
+
+void SimulationConfig::parseStates(boost::property_tree::ptree::value_type & v)
+{
+
+    for(boost::property_tree::ptree::value_type & child: v.second)
+    {
+        if (child.first == "state")
+        {
+            stateStruct state;
+
+            for(boost::property_tree::ptree::value_type & childschild: child.second)
+            {
+                if (childschild.first == "name")
+                {
+                    state.name = childschild.second.data();
+                }
+                else if(childschild.first == "location")
+                {
+                    state.location = childschild.second.data();
+                }
+                else if(childschild.first == "clo")
+                {
+                    state.clo = childschild.second.get_value<int>();
+                }
+                else if(childschild.first == "metabolicRate")
+                {
+                    state.met = childschild.second.get_value<int>();
+                }
+            }
+            states.push_back(state);
+        }
+    }
+}
+
+void SimulationConfig::parseModels(boost::property_tree::ptree::value_type & v)
+{
+
+    for(boost::property_tree::ptree::value_type & child: v.second)
+    {
+        if (child.first == "windows")
+        {
+            parseWindows(child);
+        }
+        else if (child.first == "shading")
+        {
+            SimulationConfig::info.shading = child.second.get_value<bool>();
+        }
+        else if (child.first == "lights")
+        {
+            SimulationConfig::info.lights = child.second.get_value<bool>();
+        }
+    }
+}
+void SimulationConfig::parseWindows(boost::property_tree::ptree::value_type & v)
+{
+    for(boost::property_tree::ptree::value_type & child: v.second)
+    {
+        if (child.first == "enabled")
+        {
+            SimulationConfig::info.windows = child.second.get_value<bool>();
+        }
+        else if (child.first == "window")
+        {
+            std::pair<int, windowStruct> ws;
+
+            for(boost::property_tree::ptree::value_type & childschild: child.second)
+            {
+                if (childschild.first == "id")
+                {
+                    ws.first = childschild.second.get_value<int>();
+                }
+                else if (childschild.first == "aop")
+                {
+                    ws.second.aop = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "bopout")
+                {
+                    ws.second.bopout = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "shapeop")
+                {
+                    ws.second.shapeop = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "a01arr")
+                {
+                    ws.second.a01arr = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01inarr")
+                {
+                    ws.second.b01inarr = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01outarr")
+                {
+                    ws.second.b01outarr = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01absprevarr")
+                {
+                    ws.second.b01absprevarr = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01rnarr")
+                {
+                    ws.second.b01rnarr = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "a01int")
+                {
+                    ws.second.a01int = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01inint")
+                {
+                    ws.second.b01inint = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01outint")
+                {
+                    ws.second.b01outint = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01presint")
+                {
+                    ws.second.b01presint = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01rnint")
+                {
+                    ws.second.b01rnint = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "a01dep")
+                {
+                    ws.second.a01dep = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01outdep")
+                {
+                    ws.second.b01outdep = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01absdep")
+                {
+                    ws.second.b01absdep = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b01gddep")
+                {
+                    ws.second.b01gddep = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "a10dep")
+                {
+                    ws.second.a10dep = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b10indep")
+                {
+                    ws.second.b10indep = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b10outdep")
+                {
+                    ws.second.b10outdep = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b10absdep")
+                {
+                    ws.second.b10absdep = childschild.second.get_value<double>();
+                }
+                else if (childschild.first == "b10gddep")
+                {
+                    ws.second.b10gddep = childschild.second.get_value<double>();
+                }
+            }
+            windows.insert(ws);
+        }
+    }
+}
+
+/**
+ * @brief Parses the simulation configuration file
+ * @details Parse the configuration file for the all the parameteres needed in the simulation
+ *
+ * @param filename location of the simulation file to parse.
+ */
+void SimulationConfig::parseConfiguration(std::string filename)
+{
+
+    // Create an empty property tree object
+    boost::property_tree::ptree pt;
+    // Load the XML file into the property tree. If reading fails
+    // (cannot open file, parse error), an exception is thrown.
+
+    boost::property_tree::read_xml(filename, pt);
+    // Iterate over the debug.modules section and store all found
+    // modules in the m_modules set. The get_child() function
+    // returns a reference to the child at the specified path; if
+    // there is no such child, it throws. Property tree iterators
+    // are models of BidirectionalIterator.
+
+    info.windows = false;
+    info.shading = false;
+    info.lights = false;
+    for(boost::property_tree::ptree::value_type & v: pt.get_child("simulation"))
+    {
+
+        if (v.first == "seed")
+        {
+            Utility::setSeed(v.second.get_value<int>());
+        }
+        else if (v.first == "simulateAgents")
+        {
+            SimulationConfig::info.simulateAgents = v.second.get_value<bool>();
+        }
+        else if (v.first == "agents")
+        {
+            parseAgents(v);
+        }
+        else if (v.first == "states")
+        {
+            parseStates(v);
+        }
+        else if (v.first == "presencePage")
+        {
+            SimulationConfig::info.presencePage = v.second.get_value<bool>();
+        }
+        else if (v.first == "case")
+        {
+            SimulationConfig::info.caseOrder = v.second.get_value<int>();
+        }
+        else if (v.first == "building")
+        {
+            parseBuilding(v);
+        }
+        else if (v.first == "models")
+        {
+            parseModels(v);
+        }
+
+    }
+    std::cout << "Loaded XML file: -" << filename << "-" << std::endl;
+
+}
+
+SimulationConfig::SimulationConfig(const SimulationConfig &orig)
+{
+}
+
+SimulationConfig::~SimulationConfig()
+{
+}
+
+std::string SimulationConfig::getZoneNameFromActivity(std::string activity)
+{
+    std::string zoneName = "Out"; //Default out of zone
+    bool found = false;
+    for (std::pair<std::string, ZoneStruct> it : zones)
+    {
+        std::vector<std::string> activities = splitZoneActivities(it.second.activity);
+        for(std::string eachActivity: activities)
+        {
+            if (eachActivity == activity)
+            {
+                zoneName = it.first;
+                found = true;
+                break;
+            }
+        }
+        if(found)
+        {
+            break;
+        }
+    }
+    return zoneName;
+}
+
+std::vector<std::string> SimulationConfig::splitZoneActivities(std::string typeString)
+{
+    std::vector<std::string> types;
+    const char *str = typeString.c_str();
+    char c = ',';
+    do
+    {
+        const char *begin = str;
+        while (*str != c && *str)
+        {
+            str++;
+        }
+        types.push_back(std::string(begin, str));
+        //std::cout << std::string(begin, str) << std::endl;
+    }
+    while (0 != *str++);
+    return types;
+}
+
+std::vector<std::string> SimulationConfig::getActivities(std::string* name)
+{
+    std::vector<std::string> activities;
+    if (activeZone(name))
+    {
+        ZoneStruct zone = SimulationConfig::zones.at(*name);
+        activities = splitZoneActivities(zone.activity);
+    }
+    return activities;
+}
+
+bool SimulationConfig::activeZone(std::string* zoneName)
+{
+    return (SimulationConfig::zones.find(*zoneName) != SimulationConfig::zones.end());
+}
+
+bool SimulationConfig::isZoneGroundFloor(std::string* zoneName)
+{
+    return SimulationConfig::zones.at(*zoneName).groundFloor;
+}
+
+int SimulationConfig::numberOfAgents()
+{
+    return SimulationConfig::agents.size();
+}
+
+double SimulationConfig::lengthOfTimestep()
+{
+    return 60.0 / SimulationConfig::info.timeStepsPerHour;
+}
+
+void SimulationConfig::step()
+{
+    stepCount++;
+}
+int SimulationConfig::getStepCount()
+{
+    return stepCount;
+}
