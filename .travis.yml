@@ -6,9 +6,12 @@ compiler:
 before_install:
 
 before_script:
+  - cd Boost
+  - make
+  - cd ../FMU
 
 
-script: rake ci
+script: make
 
 after_success:
 
