@@ -3,8 +3,7 @@ language: cpp
 compiler:
   - gcc
 
-before_install:
-  - git submodule update --init --recursive
+before_install: git submodule update --init --recursive
 
 before_script:
   - cd Boost
