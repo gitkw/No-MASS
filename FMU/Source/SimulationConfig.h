@@ -27,7 +27,38 @@ struct agentStruct {
     std::string office;
     double power;
     int windowId;
+    int shadeId;
     std::map<int, std::string> profile;
+};
+
+struct shadeStruct {
+    float a01arr;
+    float b01inarr;
+    float b01sarr;
+    // Probability of raising on arrival
+    float a10arr;
+    float b10inarr;
+    float b10sarr;
+
+    float a01int;
+    float b01inint;
+    float b01sint;
+    // Probability of raising during presence
+    float a10int;
+    float b10inint;
+    float b10sint;
+
+    float afullraise;
+    float boutfullraise;
+    float bsfullraise;
+
+    float bsfulllower;
+    float boutfulllower;
+    float afulllower;
+
+    float aSFlower;
+    float bSFlower;
+    float shapelower;
 };
 
 struct windowStruct {
@@ -93,6 +124,7 @@ public:
     static std::map<std::string, ZoneStruct> zones;
     static std::vector<agentStruct> agents;
     static std::map<int, windowStruct> windows;
+    static std::map<int, shadeStruct> shades;
     static std::vector<stateStruct> states;
     static simulationStruct info;
     static int numberOfAgents();
@@ -107,10 +139,10 @@ private:
     static void parseModels(boost::property_tree::ptree::value_type & v);
     static void parseStates(boost::property_tree::ptree::value_type & v);
     static void parseWindows(boost::property_tree::ptree::value_type & v);
+    static void parseShades(boost::property_tree::ptree::value_type & v);
     SimulationConfig();
     SimulationConfig(const SimulationConfig& orig);
     virtual ~SimulationConfig();
 };
 
 #endif	/* SIMULATIONSETUP_H */
-

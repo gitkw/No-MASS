@@ -31,6 +31,7 @@ Agent::Agent(int newId) : id(newId)
     office = agent.office;
     power = agent.power;
     aaw.setup(agent.windowId);
+    aas.setup(agent.shadeId);
     aahg.setup(id);
 
     if (SimulationConfig::info.presencePage){
