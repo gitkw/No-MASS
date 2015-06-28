@@ -51,7 +51,7 @@ clean: clean_debug clean_release
 before_build: 
 
 after_build: 
-	cp ./bin/Debug/libFMI.so ../../EnergyPlus/tmp-fmus/agentFMU.fmu_FMI/binaries/linux64/FMI.so
+	#cp ./bin/Debug/libFMI.so ../../EnergyPlus/tmp-fmus/agentFMU.fmu_FMI/binaries/linux64/FMI.so
 
 before_debug: 
 	test -d bin/Debug || mkdir -p bin/Debug
