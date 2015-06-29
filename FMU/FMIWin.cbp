@@ -42,16 +42,14 @@
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
-			<Add directory="../Boost/Boost-Source" />
-			<Add directory="../../../../../../usr/include/postgresql" />
-			<Add directory="Source/Simulation/Agents" />
+			<Add directory="../../Boost/Boost-Source" />
 		</Compiler>
 		<Linker>
 			<Add option="-static" />
 			<Add directory="../Boost/Boost-Source/stage/lib" />
 		</Linker>
 		<ExtraCommands>
-			<Add after="xcopy /y C:\Users\Jacob\git\masplatform\AgentSimulationFMI\bin\Debug\* C:\EnergyPlusV8-3-0\tmp-fmus\agentFMU.fmu_FMI\binaries\win64\" />
+			<Add after="xcopy /y C:\Users\Jacob\git\masplatform\No-MASS\FMU\bin\Debug\* C:\EnergyPlusV8-3-0\tmp-fmus\agentFMU.fmu_FMI\binaries\win64\" />
 			<Mode after="always" />
 		</ExtraCommands>
 		<Unit filename="Source/Agent.cpp" />
