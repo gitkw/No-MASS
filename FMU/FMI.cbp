@@ -8,7 +8,7 @@
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/FMI" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../../EnergyPlus" />
+				<Option working_dir="../../../EnergyPlus" />
 				<Option object_output="obj/Debug/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -55,7 +55,7 @@
 			<Add directory="../Boost/Boost-Source/stage/lib" />
 		</Linker>
 		<ExtraCommands>
-			<Add after="cp ./bin/Debug/libFMI.so ../../EnergyPlus/tmp-fmus/agentFMU.fmu_FMI/binaries/linux64/FMI.so" />
+			<Add after="cp ./bin/Debug/libFMI.so ../../../EnergyPlus/tmp-fmus/agentFMU.fmu_FMI/binaries/linux64/FMI.so" />
 			<Mode after="always" />
 		</ExtraCommands>
 		<Unit filename="Source/Agent.cpp" />
