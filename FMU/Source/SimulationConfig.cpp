@@ -84,11 +84,35 @@ void SimulationConfig::parseAgents(boost::property_tree::ptree::value_type & v)
                     for(boost::property_tree::ptree::value_type & childschildchild: childschild.second)
                     {
                         std::string text = childschildchild.first;
-                        text.erase(0,1);
-                        std::pair<int, std::string> a;
-                        a.first = boost::lexical_cast<int>(text);
-                        a.second = childschildchild.second.get_value<std::string>();
-                        agent.profile.insert(a);
+                        if(SimulationConfig::info.presencePage){
+                            std::pair<int, std::string> a;
+
+                            if(text == "monday"){
+                                a.first = 0;
+                            }else if(text == "tuesday"){
+                                a.first = 1;
+                            }else  if(text == "wednesday"){
+                                a.first = 2;
+                            }else  if(text == "thursday"){
+                                a.first = 3;
+                            }else  if(text == "friday"){
+                                a.first = 4;
+                            }else  if(text == "saturday"){
+                                a.first = 5;
+                            }else  if(text == "sunday"){
+                                a.first = 6;
+                            }
+
+                            a.second = childschildchild.second.get_value<std::string>();
+                            agent.profile.insert(a);
+                        }
+                        else{
+                            text.erase(0,1);
+                            std::pair<int, std::string> a;
+                            a.first = boost::lexical_cast<int>(text);
+                            a.second = childschildchild.second.get_value<std::string>();
+                            agent.profile.insert(a);
+                        }
                     }
                 }
                 else if(childschild.first == "bedroom")

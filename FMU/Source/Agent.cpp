@@ -211,7 +211,7 @@ void Agent::model_presenceFromActivities()
 
 void Agent::model_presenceFromPage()
 {
-    presence = Model_Presence::calculatePresenceFromPage();
+    presence = Model_Presence::calculatePresenceFromPage(id);
     for (unsigned int i = 0; i < presence.size(); ++i)
     {
         if (presence.at(i))

@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Model_Presence.h
  * Author: jake
  *
@@ -13,17 +13,17 @@
 
 class Model_Presence {
 public:
-    
+
     static std::vector<int> calculatePresenceFromActivities(const std::vector<double> activities) ;
-    static std::vector<int> calculatePresenceFromPage();
+    static std::vector<int> calculatePresenceFromPage(const int agentID);
 private:
     Model_Presence();
     Model_Presence(const Model_Presence& orig);
     virtual ~Model_Presence();
-    
+
     static double getT11(double pcurr, double pnext, double shuff) ;
     static double getT01(double pcurr, double pnext, double shuff) ;
-    
+
     static int calculateNumberOfDays(int startDay, int startMonth, int endDay, int endMonth) ;
 
 };

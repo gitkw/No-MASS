@@ -5,6 +5,9 @@
  * Created on September 17, 2013, 3:13 PM
  */
 
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 #include <ctime>
 #include <vector>
 #include <cassert>
@@ -44,16 +47,49 @@ int Model_Presence::calculateNumberOfDays(const int startDay, const int startMon
     return days;
 }
 
-std::vector<int> Model_Presence::calculatePresenceFromPage() {
+std::vector<int> Model_Presence::calculatePresenceFromPage(const int agentID) {
 
-    static const float pMon[] = {0.021, 0.021, 0.021, 0.021, 0.021, 0.021, 0.021, 0.025, 0.250, 0.422, 0.309, 0.377, 0.187, 0.375, 0.426, 0.396, 0.375, 0.432, 0.084, 0.070, 0.047, 0.039, 0.038, 0.038};
-    static const float pTue[] = {0.040, 0.038, 0.038, 0.038, 0.038, 0.038, 0.038, 0.046, 0.320, 0.401, 0.325, 0.417, 0.196, 0.372, 0.435, 0.402, 0.334, 0.435, 0.100, 0.053, 0.044, 0.044, 0.042, 0.042};
-    static const float pWed[] = {0.041, 0.041, 0.041, 0.041, 0.041, 0.041, 0.041, 0.062, 0.342, 0.403, 0.297, 0.342, 0.194, 0.354, 0.395, 0.363, 0.336, 0.383, 0.080, 0.043, 0.027, 0.026, 0.026, 0.026};
-    static const float pThu[] = {0.024, 0.024, 0.024, 0.024, 0.024, 0.024, 0.024, 0.029, 0.265, 0.373, 0.271, 0.368, 0.193, 0.361, 0.402, 0.357, 0.324, 0.367, 0.094, 0.067, 0.032, 0.032, 0.030, 0.030};
-    static const float pFri[] = {0.030, 0.029, 0.029, 0.029, 0.029, 0.029, 0.029, 0.055, 0.327, 0.367, 0.304, 0.373, 0.215, 0.317, 0.280, 0.239, 0.197, 0.125, 0.066, 0.069, 0.031, 0.029, 0.027, 0.027};
+    float pMon[24];
+    float pTue[24];
+    float pWed[24];
+    float pThu[24];
+    float pFri[24];
+    float pSat[24];
+    float pSun[24];
 
-    static const float pSat[] = {0.028, 0.030, 0.029, 0.029, 0.030, 0.029, 0.029, 0.030, 0.030, 0.030, 0.035, 0.037, 0.030, 0.032, 0.041, 0.045, 0.042, 0.034, 0.035, 0.032, 0.027, 0.024, 0.021, 0.021};
-    static const float pSun[] = {0.021, 0.021, 0.021, 0.021, 0.021, 0.021, 0.021, 0.021, 0.024, 0.025, 0.032, 0.045, 0.040, 0.041, 0.033, 0.032, 0.033, 0.031, 0.031, 0.028, 0.026, 0.027, 0.025, 0.025};
+    std::map<int, std::string> probMap = SimulationConfig::agents.at(agentID).profile;
+    for(int day = 0; day < 7; day++) {
+        std::vector<std::string> tokProbs;
+        boost::split(tokProbs, probMap.at(day), boost::is_any_of(","));
+        int hour = 0;
+        for(std::string strProb: tokProbs) {
+            switch (day)
+            {
+              case 0:
+                pMon[hour] = boost::lexical_cast<double>(strProb);
+                break;
+              case 1:
+                pTue[hour] = boost::lexical_cast<double>(strProb);
+                break;
+              case 2:
+                pWed[hour] = boost::lexical_cast<double>(strProb);
+                break;
+              case 3:
+                pThu[hour] = boost::lexical_cast<double>(strProb);
+                break;
+              case 4:
+                pFri[hour] = boost::lexical_cast<double>(strProb);
+                break;
+              case 5:
+                pSat[hour] = boost::lexical_cast<double>(strProb);
+                break;
+              case 6:
+                pSun[hour] = boost::lexical_cast<double>(strProb);
+                break;
+            }
+            hour++;
+        }
+    }
 
     unsigned int timeStepsPerHour = SimulationConfig::info.timeStepsPerHour;
     unsigned int days = calculateNumberOfDays( SimulationConfig::info.startDay, SimulationConfig::info.startMonth, SimulationConfig::info.endDay, SimulationConfig::info.endMonth);
