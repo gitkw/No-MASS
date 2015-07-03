@@ -130,13 +130,13 @@ void Model_Agents::step()
         }
         setAgentCountForZone(&zone);
 
-        if(!SimulationConfig::info.lights){
+        if(SimulationConfig::info.windows){
             setAgentWindowDecisionForZone(&zone);
         }
-        if(!SimulationConfig::info.lights){
+        if(SimulationConfig::info.shading){
             setAgentBlindDecisionForZone(&zone);
         }
-        if(!SimulationConfig::info.lights){
+        if(SimulationConfig::info.lights){
             setAgentLightDecisionForZone(&zone);
         }
         setAgentGainsForZone(&zone);
