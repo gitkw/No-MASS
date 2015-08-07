@@ -22131,14 +22131,16 @@
 	"Model_HeatGains.h"
 	"Agent_Action_Heat_Gains.h"
 
-1435699157 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent.cpp
+1438873452 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent.cpp
 	<string>
 	<vector>
 	<iostream>
+	<algorithm>
 	<limits>
+	<memory>
 	"Model_HeatGains.h"
 	"Model_Lights.h"
-	"VariableStore.h"
+	"DataStore.h"
 	"SimulationConfig.h"
 	"StateMachine.h"
 	"Utility.h"
@@ -27562,9 +27564,10 @@
 	<boost/iterator/iterator_facade.hpp>
 	<boost/ref.hpp>
 
-1435330853 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent.h
+1438873844 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent.h
 	<unordered_map>
 	<string>
+	<memory>
 	"Model_Activity.h"
 	"Model_Presence.h"
 	"StateMachine.h"
@@ -27589,46 +27592,45 @@
 
 1435330853 /home/jake/git/masplatform/No-MASS/FMU/Source/RLearning.h
 
-1435330853 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Window.h
+1438868610 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Window.h
 	"Agent_Action.h"
 	"Model_Windows.h"
 	"Zone.h"
 
-1435330853 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action.h
+1438870690 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action.h
 	"Zone.h"
 
-1435330853 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Lights.h
+1438868610 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Lights.h
 	"Agent_Action.h"
 
-1435484942 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Shades.h
+1438868610 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Shades.h
 	"Agent_Action.h"
 
-1435330853 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Heat_Gains.h
+1438869518 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Heat_Gains.h
 	"Agent_Action.h"
 
-1435330853 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action.cpp
+1438873105 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action.cpp
 	"SimulationConfig.h"
 	"Agent_Action.h"
 
-1435330853 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Heat_Gains.cpp
-	"VariableStore.h"
+1438868565 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Heat_Gains.cpp
+	"DataStore.h"
 	"Model_HeatGains.h"
 	"Agent_Action_Heat_Gains.h"
 
-1435330853 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Lights.cpp
+1438868578 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Lights.cpp
 	"Model_Lights.h"
 	"Agent_Action_Lights.h"
 
-1435484942 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Shades.cpp
-	"VariableStore.h"
+1438868592 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Shades.cpp
+	"DataStore.h"
 	"Model_ExternalShading.h"
 	"Agent_Action_Shades.h"
 	"SimulationConfig.h"
 
-1435912755 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Window.cpp
-	<iostream>
+1438868608 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Window.cpp
 	"SimulationConfig.h"
-	"VariableStore.h"
+	"DataStore.h"
 	"Agent_Action_Window.h"
 
 1435330853 source:/home/jake/git/masplatform/No-MASS/FMU/Source/EP_IDFObject.cpp
@@ -30044,13 +30046,13 @@
 
 1435330853 source:/home/jake/git/masplatform/No-MASS/FMU/Source/fmiFunctions.cpp
 
-1435330853 source:/home/jake/git/masplatform/No-MASS/FMU/Source/fmuTemplate.cpp
+1438866072 source:/home/jake/git/masplatform/No-MASS/FMU/Source/fmuTemplate.cpp
 	<iterator>
 	<vector>
 	<iostream>
 	<boost/property_tree/ptree.hpp>
 	<boost/property_tree/xml_parser.hpp>
-	"VariableStore.h"
+	"DataStore.h"
 	"Simulation.h"
 	"SimulationConfig.h"
 	"fmuTemplate.h"
@@ -30104,7 +30106,7 @@
 	<iterator>
 	"Model_Activity.h"
 
-1435912681 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Model_Agents.cpp
+1438871940 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Model_Agents.cpp
 	<string>
 	<vector>
 	<list>
@@ -30210,12 +30212,12 @@
 	"Utility.h"
 	"RLearning.h"
 
-1435330853 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Simulation.cpp
+1438866072 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Simulation.cpp
 	<iostream>
 	<string>
 	"Simulation.h"
 	"SimulationConfig.h"
-	"VariableStore.h"
+	"DataStore.h"
 
 1435739486 source:/home/jake/git/masplatform/No-MASS/FMU/Source/SimulationConfig.cpp
 	<boost/property_tree/ptree.hpp>
@@ -30284,10 +30286,20 @@
 	<fstream>
 	"VariableStore.h"
 
-1435330853 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Zone.cpp
+1438866072 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Zone.cpp
 	<fstream>
 	<iostream>
-	"VariableStore.h"
+	"DataStore.h"
 	"SimulationConfig.h"
 	"Zone.h"
+
+1438866169 /home/jake/git/masplatform/No-MASS/FMU/Source/DataStore.h
+	<unordered_map>
+	<vector>
+
+1438866263 source:/home/jake/git/masplatform/No-MASS/FMU/Source/DataStore.cpp
+	<vector>
+	<iostream>
+	<fstream>
+	"DataStore.h"
 

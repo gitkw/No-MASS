@@ -9,10 +9,11 @@ class Agent_Action_Heat_Gains : public Agent_Action
     public:
 
         Agent_Action_Heat_Gains();
-        void setup(int agentid);
         void prestep(int id, double clo, double metabolicRate);
         void step(const Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
         int getPMV();
+
+        void setup(int agentid);
 
     protected:
     private:

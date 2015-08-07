@@ -1,12 +1,12 @@
 
-#include "VariableStore.h"
+#include "DataStore.h"
 #include "Model_ExternalShading.h"
 #include "Agent_Action_Shades.h"
 #include "SimulationConfig.h"
 
 Agent_Action_Shades::Agent_Action_Shades()
 {
-    //ctor
+    name = "Shades";
 }
 
 void Agent_Action_Shades::setup(int shadeID){
@@ -24,7 +24,7 @@ void Agent_Action_Shades::step(const Zone& zone, bool inZone, bool previouslyInZ
         // we take the previous timestep shading state to compute Lumint
         //std::cout << "name: " << name << " Lumint: " << Lumint << std::endl;
         // Evg: Outdoor illuminance in the horizontal plane without obstructions (lux)
-        float Evg = VariableStore::getValue("EnvironmentSiteExteriorHorizontalSkyIlluminance");
+        float Evg = DataStore::getValue("EnvironmentSiteExteriorHorizontalSkyIlluminance");
         // Lumint: Indoor illuminance next to window (lux)
         float Lumint = zone.getDaylightingReferencePoint1Illuminance();
 

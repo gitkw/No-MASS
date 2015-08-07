@@ -39,8 +39,8 @@ void Model_Agents::setup()
     // setup each agent randomly
     for(int a: pop)
     {
-          Agent agent(a);
-          population.push_back(agent);
+
+          population.push_back(Agent(a));
     }
 
     initialiseStates();

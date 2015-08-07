@@ -14,6 +14,10 @@ double Agent_Action::getResult()
 {
     return result;
 }
+std::string Agent_Action::getName()
+{
+    return name;
+}
 
 double Agent_Action::getFutureDurationOfPresenceState(const std::vector<double> &activities) const
 {

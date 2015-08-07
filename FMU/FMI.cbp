@@ -70,6 +70,8 @@
 		<Unit filename="Source/Agent_Action_Shades.h" />
 		<Unit filename="Source/Agent_Action_Window.cpp" />
 		<Unit filename="Source/Agent_Action_Window.h" />
+		<Unit filename="Source/DataStore.cpp" />
+		<Unit filename="Source/DataStore.h" />
 		<Unit filename="Source/EP_IDFObject.cpp" />
 		<Unit filename="Source/EP_IDFObject.h" />
 		<Unit filename="Source/EP_ReadIDF.cpp" />
@@ -126,8 +128,6 @@
 		<Unit filename="Source/State_Washing_Appliance.h" />
 		<Unit filename="Source/Utility.cpp" />
 		<Unit filename="Source/Utility.h" />
-		<Unit filename="Source/VariableStore.cpp" />
-		<Unit filename="Source/VariableStore.h" />
 		<Unit filename="Source/Zone.cpp" />
 		<Unit filename="Source/Zone.h" />
 		<Unit filename="Source/fmiFunctions.cpp" />

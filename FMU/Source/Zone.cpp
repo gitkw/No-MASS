@@ -7,7 +7,7 @@
 
 #include <fstream>
 #include <iostream>
-#include "VariableStore.h"
+#include "DataStore.h"
 #include "SimulationConfig.h"
 #include "Zone.h"
 
@@ -26,15 +26,15 @@ Zone::Zone(std::string zoneName) : name(zoneName) {
     if(active){
         setGroundFloor(SimulationConfig::isZoneGroundFloor(&name));
         variableNameWindow = name + "WindowState";
-        VariableStore::addVariable(variableNameWindow);
+        DataStore::addVariable(variableNameWindow);
         variableNameBlindFraction = name + "BlindFraction";
-        VariableStore::addVariable(variableNameBlindFraction);
+        DataStore::addVariable(variableNameBlindFraction);
         variableNameLight = name + "LightState";
-        VariableStore::addVariable(variableNameLight);
+        DataStore::addVariable(variableNameLight);
         variableNameNumberOfOccupants = name + "NumberOfOccupants";
-        VariableStore::addVariable(variableNameNumberOfOccupants);
+        DataStore::addVariable(variableNameNumberOfOccupants);
         variableNameAverageGains = name + "AverageGains";
-        VariableStore::addVariable(variableNameAverageGains);
+        DataStore::addVariable(variableNameAverageGains);
     }
 }
 
@@ -47,11 +47,11 @@ Zone::~Zone() {
 void Zone::step() {
     stepCount++;
     if(active){
-        VariableStore::addValue(variableNameNumberOfOccupants, occupantFraction);
-        VariableStore::addValue(variableNameAverageGains, currentAgentGains);
-        VariableStore::addValue(variableNameWindow, windowState);
-        VariableStore::addValue(variableNameBlindFraction, blindState);
-        VariableStore::addValue(variableNameLight, lightState);
+        DataStore::addValue(variableNameNumberOfOccupants, occupantFraction);
+        DataStore::addValue(variableNameAverageGains, currentAgentGains);
+        DataStore::addValue(variableNameWindow, windowState);
+        DataStore::addValue(variableNameBlindFraction, blindState);
+        DataStore::addValue(variableNameLight, lightState);
     }
 }
 
@@ -85,19 +85,19 @@ void Zone::setOccupantFraction(double occupantFraction) {
 }
 
 double Zone::getMeanAirTemperature() const {
-    return VariableStore::getValue(name + "ZoneMeanAirTemperature");
+    return DataStore::getValue(name + "ZoneMeanAirTemperature");
 }
 
 double Zone::getAirRelativeHumidity() const {
-    return VariableStore::getValue(name + "ZoneAirRelativeHumidity");
+    return DataStore::getValue(name + "ZoneAirRelativeHumidity");
 }
 
 double Zone::getMeanRadiantTemperature() const {
-    return VariableStore::getValue(name + "ZoneMeanRadiantTemperature");
+    return DataStore::getValue(name + "ZoneMeanRadiantTemperature");
 }
 
 double Zone::getDaylightingReferencePoint1Illuminance() const {
-    return VariableStore::getValue(name + "DaylightingReferencePoint1Illuminance");
+    return DataStore::getValue(name + "DaylightingReferencePoint1Illuminance");
 }
 
 float Zone::getOccupantFraction() const {

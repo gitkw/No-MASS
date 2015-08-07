@@ -9,6 +9,7 @@
 #define	AGENT_H
 #include <unordered_map>
 #include <string>
+#include <memory>
 #include "Model_Activity.h"
 #include "Model_Presence.h"
 #include "StateMachine.h"
@@ -80,21 +81,23 @@ private:
     std::string activity; /** The activities performed in the location */
     State state; /** Occupants current state */
     State previousState; /** Occupants previous state */
-
+/*
     Agent_Action_Window aaw;
     Agent_Action_Lights aal;
     Agent_Action_Shades aas;
     Agent_Action_Heat_Gains aahg;
-
+*/
+    std::vector<std::unique_ptr<Agent_Action>> available_actions;
 
     RLearning rl;
+    bool learn = false;
 
     std::unordered_map<std::string, interationStruct> zoneToInteraction;
     void model_pastAndFutureDurations();
     void model_activity();
-    void random(const Zone &zone);
-    void rLearn(const Zone &zone);
-    void actions(const Zone &zone, double i, double d, double s, double a);
+
+    void rLearn(const Zone &zone, interationStruct *is);
+
     std::string updateLocation(const State& state) const;
     bool currentlyInZone(const Zone &zone) const;
     bool previouslyInZone(const Zone &zone) const;

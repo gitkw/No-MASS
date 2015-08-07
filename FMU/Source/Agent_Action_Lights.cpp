@@ -3,7 +3,7 @@
 
 Agent_Action_Lights::Agent_Action_Lights()
 {
-    //ctor
+    name = "Lights";
 }
 
 

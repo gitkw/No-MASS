@@ -8,10 +8,12 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include <limits>
+#include <memory>
 #include "Model_HeatGains.h"
 #include "Model_Lights.h"
-#include "VariableStore.h"
+#include "DataStore.h"
 #include "SimulationConfig.h"
 #include "StateMachine.h"
 #include "Utility.h"
@@ -25,19 +27,30 @@ Agent::Agent()
 Agent::Agent(int newId) : id(newId)
 {
     std::string idAsString = std::to_string(newId);
-    VariableStore::addVariable("Agent_Activity_" + idAsString);
+    DataStore::addVariable("Agent_Activity_" + idAsString);
     agentStruct agent = SimulationConfig::agents.at(id);
     bedroom = agent.bedroom;
     office = agent.office;
     power = agent.power;
 
     if (SimulationConfig::info.windows){
-        aaw.setup(agent.windowId);
+        std::unique_ptr<Agent_Action_Window> aa(new Agent_Action_Window);
+        aa->setup(agent.windowId);
+        available_actions.push_back(std::move(aa));
     }
     if (SimulationConfig::info.shading){
-        aas.setup(agent.shadeId);
+        std::unique_ptr<Agent_Action_Shades> aa(new Agent_Action_Shades);
+        aa->setup(agent.shadeId);
+        available_actions.push_back(std::move(aa));
     }
-    aahg.setup(id);
+
+    std::unique_ptr<Agent_Action_Heat_Gains> aa(new Agent_Action_Heat_Gains);
+    aa->setup(id);
+    available_actions.push_back(std::move(aa));
+
+    std::unique_ptr<Agent_Action_Lights> aal(new Agent_Action_Lights);
+    available_actions.push_back(std::move(aal));
+
 
     if (SimulationConfig::info.presencePage){
       model_presenceFromPage();
@@ -71,7 +84,7 @@ void Agent::step(StateMachine *stateMachine)
     }
 
     std::string name = "Agent_Activity_" + std::to_string(id);
-    VariableStore::addValue(name.c_str(), activities.at(stepCount));
+    DataStore::addValue(name.c_str(), activities.at(stepCount));
 
 
 
@@ -80,122 +93,82 @@ void Agent::step(StateMachine *stateMachine)
 void Agent::interactWithZone(const Zone &zone)
 {
 
+    std::random_shuffle ( available_actions.begin(), available_actions.end() );
+
+    bool inZone = currentlyInZone(zone);
+    bool preZone = previouslyInZone(zone);
+
+
+    interationStruct interaction;
+    for(std::unique_ptr<Agent_Action> & a : available_actions) {
+//Agent_Action_Heat_Gains
+      a->step(zone, inZone, preZone, activities);
+      if(a->getName() == "HeatGains"){
+        interaction.heatgains = a->getResult();
+        Agent_Action_Heat_Gains *h = dynamic_cast<Agent_Action_Heat_Gains*>(a.get());
+        previous_pmv = pmv;
+        pmv = h->getPMV();
+      }else if(a->getName() == "Windows"){
+        interaction.windowState = a->getResult();
+      }else if(a->getName() == "Lights"){
+        interaction.lightState = a->getResult();
+      }else if(a->getName() == "Shades"){
+        interaction.shadeState = a->getResult();
+      }
+    }
+
     int theCase = SimulationConfig::info.caseOrder;
     switch(theCase)
     {
-        case 0  :
-        {
-            random(zone);
-            break; //optional
-        }
+
         case 1  :
         {
-            rLearn(zone);
-
-
-            break; //optional
+            rLearn(zone, &interaction);
+            break;
         }
     }
 
-}
 
-void Agent::random(const Zone &zone)
-{
-
-    // window ligth shade heat
-    double i = Utility::randomDouble(0,1);
-    double d = Utility::randomDouble(0,1);
-    double s = Utility::randomDouble(0,1);
-    double a = Utility::randomDouble(0,1);
-
-    if(!SimulationConfig::info.lights){
-        d= -1;
-    }
-    if(!SimulationConfig::info.windows){
-        i = -1;
-    }
-    if(!SimulationConfig::info.shading){
-        s = -1;
-    }
-
-    actions(zone, i, d, s, a);
-
-}
-
-void Agent::rLearn(const Zone &zone)
-{
-    double reward = -1;
-    if( pmv == 0)
-    {
-        reward = 1;
-    }
-    // get new state
-    // update q table that is learn
-    rl.updateQ(pmv+3, action, reward, previous_pmv+3);
-    // get action for current state using greedy
-    action = rl.greedySelection(pmv + 3);
-    // do action
-    switch(action)
-    {
-    case 0  :
-        // window ligth shade heat
-        actions(zone, 9.0, 1.0, 0.8, 0.7);
-        break; //optional
-    case 1  :
-        // window ligth shade heat
-        actions(zone, 0.8, 1.0, 0.9, 0.7);
-        break; //optional
-    case 2  :
-        // window ligth shade heat
-        actions(zone, 0.8, 0.9, 1.0, 0.7);
-        break; //optional
-    case 3  :
-        // window ligth shade heat
-        actions(zone, 0.9, 0.8, 1.0, 0.7);
-        break; //optional
-    case 4  :
-        // window ligth shade heat
-        actions(zone, 1.0, 0.8, 0.9, 0.7);
-        break; //optional
-    case 5  :
-        // window ligth shade heat
-        actions(zone, 1.0, 0.9, 0.8, 0.7);
-        break; //optional
-    }
-
-    previous_pmv = pmv;
-
-}
-
-
-void Agent::actions(const Zone &zone, double i, double d, double s, double a){
-
-    interationStruct interaction;
-    while(i+d+s+a > -4)
-    {
-        if(i > d && i > s && i > a)
-        {
-            interaction.windowState = calculateWindowInteractionsOnZone(zone);
-            i = -1;
-        }
-        else if (d > s && d > i && d > a)
-        {
-            interaction.lightState = calculateLightInteractionsOnZone(zone);
-            d = -1;
-        }
-        else if (s > i && s > d && s > a)
-        {
-            interaction.shadeState = calculateExternalShadeInteractionsOnZone(zone);
-            s = -1;
-        }
-        else if (a > i && a > d && a > s)
-        {
-            interaction.heatgains =calculateMetabolicHeatGainsOnZone(zone);
-            a = -1;
-        }
-    }
     zoneToInteraction[zone.getName()] = interaction;
+
+
+
 }
+
+void Agent::rLearn(const Zone &zone, interationStruct *is )
+{
+    bool doRLearn = false;
+    if(zone.getWindowState() != interaction.windowState && zone.getLightState() != interaction.lightState){
+        std::cout << "window light" << std::endl;
+        doRLearn = true;
+    }else if( zone.getLightState() != interaction.lightState && zone.getBlindState() != interaction.shadeState){
+        std::cout << "light shade" << std::endl;
+        doRLearn = true;
+    }else if(zone.getBlindState() != interaction.shadeState && zone.getWindowState() != interaction.windowState){
+        std::cout << "shade window" << std::endl;
+        doRLearn = true;
+    }
+
+    if(learn){
+        double reward = -1;
+        if( pmv == 0)
+        {
+            reward = 1;
+        }
+        // get new state
+        // update q table that is learn
+        rl.updateQ(pmv+3, action, reward, previous_pmv+3);
+        learn = false;
+    }
+
+    if(doRLearn){
+        // get action for current state using greedy
+        action = rl.greedySelection(pmv + 3);
+    }
+
+}
+
+
 
 void Agent::model_activity()
 {
@@ -357,7 +330,7 @@ std::string Agent::updateLocation(const State& s) const
     }
     return tempLocation;
 }
-
+/*
 bool Agent::calculateLightInteractionsOnZone(const Zone &zone)
 {
     bool inZone = currentlyInZone(zone);
@@ -390,7 +363,7 @@ double Agent::calculateMetabolicHeatGainsOnZone(const Zone &zone)
     pmv = aahg.getPMV();
     return aahg.getResult();
 }
-
+*/
 void Agent::postprocess()
 {
     //rl.printQ();

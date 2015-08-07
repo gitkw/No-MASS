@@ -24,7 +24,7 @@
 #include <iostream>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
-#include "VariableStore.h"
+#include "DataStore.h"
 #include "Simulation.h"
 #include "SimulationConfig.h"
 #include "fmuTemplate.h"
@@ -115,7 +115,7 @@ fmiStatus fmiSetReal(fmiComponent c, const fmiValueReference vr[], size_t nvr, c
     save = true;
     for (unsigned int i = 0; i < nvr; i++) {
         //std::cout << value[i] << ":" << valToRefs.at(vr[i]) << " ";
-        VariableStore::addValue(valToRefs.at(vr[i]), value[i]);
+        DataStore::addValue(valToRefs.at(vr[i]), value[i]);
     }
     //std::cout << std::endl;
     ModelInstance* comp = (ModelInstance *)c;
@@ -139,7 +139,7 @@ fmiStatus fmiGetReal(fmiComponent c, const fmiValueReference vr[], size_t nvr, f
     if(save){
         for (unsigned int i = 0; i < nvr; i++) {
             //std::cout <<valToRefs.at(vr[i])<< " " << VariableStore::getValue(valToRefs.at(vr[i]))<<std::endl;
-            value[i] = VariableStore::getValue(valToRefs.at(vr[i]));
+            value[i] = DataStore::getValue(valToRefs.at(vr[i]));
         }
     }
     return fmiOK;
@@ -297,7 +297,7 @@ void loadVariables() {
                 valueReference = v.second.get<int>("<xmlattr>.valueReference");
 
                 if(causality == "input"){
-                    VariableStore::addVariable(name);
+                    DataStore::addVariable(name);
                 }else{
                     double starValue = 0;
                     for(boost::property_tree::ptree::value_type & y: v.second) {
@@ -305,7 +305,7 @@ void loadVariables() {
                             starValue = y.second.get<double>("<xmlattr>.start");
                         }
                     }
-                    VariableStore::addValue(name, starValue);
+                    DataStore::addValue(name, starValue);
                 }
                 valToRefs[valueReference]=name;
             }

@@ -12,7 +12,9 @@ class Agent_Action_Lights : public Agent_Action
         void step(const Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
 
     protected:
+
     private:
+
 };
 
 #endif // AGENT_ACTION_LIGHTS_H

@@ -1,11 +1,12 @@
 
-#include "VariableStore.h"
+#include "DataStore.h"
 #include "Model_HeatGains.h"
 #include "Agent_Action_Heat_Gains.h"
 
 Agent_Action_Heat_Gains::Agent_Action_Heat_Gains()
 {
-    //ctor
+
+    name = "HeatGains";
 
 }
 
@@ -13,12 +14,12 @@ void Agent_Action_Heat_Gains::setup(int agentid){
         this->id = agentid;
 
         idAsString = std::to_string(id);
-        VariableStore::addVariable("AgentGains" + idAsString);
-        VariableStore::addVariable("Agent_Metabolic_Rate_" + idAsString);
-        VariableStore::addVariable("Agent_clo_" + idAsString);
-        VariableStore::addVariable("Agent_ppd_" + idAsString);
-        VariableStore::addVariable("Agent_pmv_" + idAsString);
-        VariableStore::addVariable("Agent_Fanger_Neutral_Temperature_" + idAsString);
+        DataStore::addVariable("AgentGains" + idAsString);
+        DataStore::addVariable("Agent_Metabolic_Rate_" + idAsString);
+        DataStore::addVariable("Agent_clo_" + idAsString);
+        DataStore::addVariable("Agent_ppd_" + idAsString);
+        DataStore::addVariable("Agent_pmv_" + idAsString);
+        DataStore::addVariable("Agent_Fanger_Neutral_Temperature_" + idAsString);
 }
 
 
@@ -57,15 +58,15 @@ void Agent_Action_Heat_Gains::step(const Zone& zone, bool inZone, bool previousl
 
         }
         std::string name = "AgentGains" + idAsString;
-        VariableStore::addValue(name.c_str(), result);
+        DataStore::addValue(name.c_str(), result);
         name = "Agent_Metabolic_Rate_" + idAsString;
-        VariableStore::addValue(name.c_str(), metabolicRate);
+        DataStore::addValue(name.c_str(), metabolicRate);
         name = "Agent_clo_" + idAsString;
-        VariableStore::addValue(name.c_str(), clo);
+        DataStore::addValue(name.c_str(), clo);
         name = "Agent_ppd_" + idAsString;
-        VariableStore::addValue(name.c_str(), ppd);
+        DataStore::addValue(name.c_str(), ppd);
         name = "Agent_pmv_" + idAsString;
-        VariableStore::addValue(name.c_str(), pmv);
+        DataStore::addValue(name.c_str(), pmv);
 
 }
 

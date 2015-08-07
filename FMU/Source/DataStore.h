@@ -11,15 +11,16 @@
 #include <unordered_map>
 #include <vector>
 
-class VariableStore {
+class DataStore {
 
 public:
     static void addVariable(std::string name);
     static void addValue(std::string name, double val);
     static double getValue(std::string name);
+    static double getValueForZone(std::string name, std::string zoneName);
     static void print();
 private:
-    VariableStore();
+    DataStore();
     static std::unordered_map<std::string, std::vector<double> > variableMap;
 };
 

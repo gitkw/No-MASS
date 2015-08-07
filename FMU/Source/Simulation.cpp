@@ -10,7 +10,7 @@
 
 #include "Simulation.h"
 #include "SimulationConfig.h"
-#include "VariableStore.h"
+#include "DataStore.h"
 
 Simulation::Simulation() {
         monthCount.push_back(31);
@@ -40,10 +40,10 @@ Simulation::~Simulation() {
  * Sets up the EnergyPlus processor, the AgentModel and the ZoneManager.
  */
 void Simulation::preprocess() {
-        VariableStore::addVariable("day");
-        VariableStore::addVariable("month");
-        VariableStore::addVariable("hour");
-        VariableStore::addVariable("TimeStep");
+        DataStore::addVariable("day");
+        DataStore::addVariable("month");
+        DataStore::addVariable("hour");
+        DataStore::addVariable("TimeStep");
 
         std::string preferredSlash = "/";
         std::cout << "Looking for config: tmp-fmus"+preferredSlash+"agentFMU.fmu_FMI"+preferredSlash+"SimulationConfig.xml" << std::endl;
@@ -59,7 +59,7 @@ void Simulation::preprocess() {
  */
 void Simulation::postprocess() {
     agentModel.postprocess();
-    VariableStore::print();
+    DataStore::print();
 }
 
 /**
@@ -80,10 +80,10 @@ void Simulation::preTimeStep() {
                 }
                 month = month + 1;
         }
-        VariableStore::addValue("TimeStep", time);
-        VariableStore::addValue("day", day);
-        VariableStore::addValue("hour", hour);
-        VariableStore::addValue("month", month);
+        DataStore::addValue("TimeStep", time);
+        DataStore::addValue("day", day);
+        DataStore::addValue("hour", hour);
+        DataStore::addValue("month", month);
 }
 
 /**
