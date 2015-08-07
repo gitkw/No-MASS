@@ -135,16 +135,16 @@ void Agent::interactWithZone(const Zone &zone)
 
 }
 
-void Agent::rLearn(const Zone &zone, interationStruct *is )
+void Agent::rLearn(const Zone &zone, interationStruct *interaction )
 {
     bool doRLearn = false;
-    if(zone.getWindowState() != interaction.windowState && zone.getLightState() != interaction.lightState){
+    if(zone.getWindowState() != interaction->windowState && zone.getLightState() != interaction->lightState){
         std::cout << "window light" << std::endl;
         doRLearn = true;
-    }else if( zone.getLightState() != interaction.lightState && zone.getBlindState() != interaction.shadeState){
+    }else if( zone.getLightState() != interaction->lightState && zone.getBlindState() != interaction->shadeState){
         std::cout << "light shade" << std::endl;
         doRLearn = true;
-    }else if(zone.getBlindState() != interaction.shadeState && zone.getWindowState() != interaction.windowState){
+    }else if(zone.getBlindState() != interaction->shadeState && zone.getWindowState() != interaction->windowState){
         std::cout << "shade window" << std::endl;
         doRLearn = true;
     }
@@ -164,6 +164,25 @@ void Agent::rLearn(const Zone &zone, interationStruct *is )
     if(doRLearn){
         // get action for current state using greedy
         action = rl.greedySelection(pmv + 3);
+        switch(action)
+        {
+        case 0  :
+            interaction->lightState = zone.getLightState();
+            interaction->shadeState = zone.getBlindState();
+
+            break;
+        case 1  :
+            interaction->lightState = zone.getLightState();
+            interaction->windowState = zone.getWindowState();
+
+            break;
+        case 2  :
+            interaction->shadeState = zone.getBlindState();
+            interaction->windowState = zone.getWindowState();
+
+            break;
+        }
+        learn = true;
     }
 
 }

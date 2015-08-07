@@ -96,7 +96,7 @@ private:
     void model_pastAndFutureDurations();
     void model_activity();
 
-    void rLearn(const Zone &zone, interationStruct *is);
+    void rLearn(const Zone &zone, interationStruct *interaction);
 
     std::string updateLocation(const State& state) const;
     bool currentlyInZone(const Zone &zone) const;
