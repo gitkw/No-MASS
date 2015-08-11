@@ -8,7 +8,6 @@ class State_Cleaning:public State
 {
     public:
         State_Cleaning();
-        virtual ~State_Cleaning();
     protected:
     private:
 };

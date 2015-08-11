@@ -12,7 +12,7 @@
 class Model_Windows : Model_RandomWeibull{
 public:
     Model_Windows();
-    virtual ~Model_Windows();
+    
 
     bool getWindowState() const;
     double getDurationOpen() const;

@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   EP_IDFObject.h
  * Author: jake
  *
@@ -14,8 +14,6 @@ class EP_IDFObject {
 public:
     EP_IDFObject();
     EP_IDFObject(std::string idfLine);
-    
-    virtual ~EP_IDFObject();
     void add_item(std::string s);
     bool is(std::string s);
     std::string at(int i);

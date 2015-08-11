@@ -14,7 +14,6 @@
 class Model_EnergyPlus {
 public:
     Model_EnergyPlus();
-    virtual ~Model_EnergyPlus();
     void setup();
     void beforeStep();
     void step();
@@ -28,4 +27,3 @@ private:
 };
 
 #endif  /* COMP_ENERGYPLUS_H */
-

@@ -19,12 +19,6 @@
 Model_Presence::Model_Presence() {
 }
 
-Model_Presence::Model_Presence(const Model_Presence &orig) {
-}
-
-Model_Presence::~Model_Presence() {
-}
-
 std::vector<int> Model_Presence::calculatePresenceFromActivities(const std::vector<double> activities) {
     std::vector<int> p;
     for(double activity: activities) {

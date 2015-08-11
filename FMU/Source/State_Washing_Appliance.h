@@ -9,7 +9,7 @@ class State_Washing_Appliance:public State
 {
     public:
         State_Washing_Appliance();
-        virtual ~State_Washing_Appliance();
+        
     protected:
     private:
 };

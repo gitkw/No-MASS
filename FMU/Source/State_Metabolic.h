@@ -8,7 +8,7 @@ class State_Metabolic:public State
 {
     public:
         State_Metabolic();
-        virtual ~State_Metabolic();
+        
     protected:
     private:
 };

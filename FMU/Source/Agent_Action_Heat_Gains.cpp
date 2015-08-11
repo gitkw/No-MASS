@@ -67,7 +67,6 @@ void Agent_Action_Heat_Gains::step(const Zone& zone, bool inZone, bool previousl
         DataStore::addValue(name.c_str(), ppd);
         name = "Agent_pmv_" + idAsString;
         DataStore::addValue(name.c_str(), pmv);
-
 }
 
 int Agent_Action_Heat_Gains::getPMV(){

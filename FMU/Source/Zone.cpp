@@ -41,8 +41,7 @@ Zone::Zone(std::string zoneName) : name(zoneName) {
 void Zone::setup(){
 }
 
-Zone::~Zone() {
-}
+
 
 void Zone::step() {
     stepCount++;

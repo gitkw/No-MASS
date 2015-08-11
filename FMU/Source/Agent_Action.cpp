@@ -3,12 +3,10 @@
 
 Agent_Action::Agent_Action()
 {
-    //ctor
+
 }
 
-void Agent_Action::step(const Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities)
-{
-}
+
 
 double Agent_Action::getResult()
 {

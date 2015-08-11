@@ -28,11 +28,6 @@ Simulation::Simulation() {
         time = 0;
 }
 
-Simulation::Simulation(const Simulation &orig) {
-}
-
-Simulation::~Simulation() {
-}
 
 /**
  * @brief Calls the simulation preprocess

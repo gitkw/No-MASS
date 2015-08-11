@@ -10,8 +10,3 @@ State_Cleaning::State_Cleaning()
     location = getLocationFromActivty(&activity);
 
 }
-
-State_Cleaning::~State_Cleaning()
-{
-    //dtor
-}

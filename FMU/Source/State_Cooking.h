@@ -7,7 +7,7 @@ class State_Cooking : public State
 {
     public:
         State_Cooking();
-        virtual ~State_Cooking();
+        
     protected:
     private:
 };

@@ -8,18 +8,18 @@
 class StateMachine
 {
     public:
-        StateMachine();
+      StateMachine();
 
-		void addState(State s);
-		State transistionTo(const int stateID);
-		bool hasState(const int stateID) ;
-		State getPendingState();
+      void addState(State s);
+      State transistionTo(const int stateID);
+      bool hasState(const int stateID) ;
+      State getPendingState();
     protected:
     private:
 
-    int initialStateLocation;
-    State pendingState;
-    std::vector<State> states;
+      int initialStateLocation;
+      State pendingState;
+      std::vector<State> states;
 };
 
 #endif // STATEMACHINE_H

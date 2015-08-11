@@ -15,7 +15,7 @@
 class EP_ReadIDF {
 public:
     EP_ReadIDF();
-    virtual ~EP_ReadIDF();
+
     void loadIDF();
     int timeSteps();
     int timeStepsPerHour();

@@ -10,8 +10,3 @@ State_Audio_Visual::State_Audio_Visual()
 
     //ctor
 }
-
-State_Audio_Visual::~State_Audio_Visual()
-{
-    //dtor
-}

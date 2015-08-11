@@ -21,14 +21,15 @@ class Simulation {
 
 public:
     Simulation();
-    Simulation(const Simulation& orig);
+    ~Simulation(){
+        std::cout<< "killed" << std::endl;
+    }
 
     void preprocess();
     void postprocess();
     void preTimeStep();
     void timeStep();
     void postTimeStep();
-    virtual ~Simulation();
 
 private:
     /**
@@ -46,4 +47,3 @@ private:
 };
 
 #endif	/* SIMULATION_H */
-

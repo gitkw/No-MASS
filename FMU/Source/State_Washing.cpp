@@ -10,8 +10,3 @@ State_Washing::State_Washing()
     location = getLocationFromActivty(&activity);
 
 }
-
-State_Washing::~State_Washing()
-{
-    //dtor
-}

@@ -18,9 +18,6 @@ EP_IDFObject::EP_IDFObject(std::string idfLine) {
     boost::split(items, idfLine, boost::is_any_of(","));
 }
 
-EP_IDFObject::~EP_IDFObject() {
-}
-
 std::vector<std::string> EP_IDFObject::getItems() {
     return items;
 }

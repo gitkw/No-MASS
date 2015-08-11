@@ -11,12 +11,6 @@ Model_HeatGains::Model_HeatGains() {
     maxI = 100;
 }
 
-Model_HeatGains::Model_HeatGains(const Model_HeatGains &orig) {
-}
-
-Model_HeatGains::~Model_HeatGains() {
-}
-
 /**
  * Radiant heat gains (all the sensible radiant stuff).
  * @return Radiant heat gains (all the sensible radiant stuff)

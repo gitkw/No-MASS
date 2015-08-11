@@ -6,7 +6,7 @@ class State_Audio_Visual :public State
 {
     public:
         State_Audio_Visual();
-        virtual ~State_Audio_Visual();
+        
     protected:
     private:
 };

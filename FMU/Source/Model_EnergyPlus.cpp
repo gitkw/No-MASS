@@ -12,9 +12,6 @@
 Model_EnergyPlus::Model_EnergyPlus() {
 }
 
-Model_EnergyPlus::~Model_EnergyPlus() {
-}
-
 void Model_EnergyPlus::setup() {
 
     epIDFReader.loadIDF();

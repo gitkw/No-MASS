@@ -50,12 +50,12 @@ static fmiValueReference vrStates[NUMBER_OF_STATES] = STATES;
 // fname is fmiInstantiateModel or fmiInstantiateSlave
 static fmiComponent instantiateModel(const char* fname, fmiString instanceName, fmiString GUID,
         fmiCallbackFunctions functions, fmiBoolean loggingOn) {
-    ModelInstance* comp = &modelInstance;
+
     if(valToRefs.empty()){
-        comp->sim.preprocess();
+        modelInstance->sim.preprocess();
         loadVariables();
     }
-    return comp;
+    return modelInstance.get();
 }
 
 fmiComponent fmiInstantiateModel(fmiString instanceName, fmiString GUID, fmiCallbackFunctions functions, fmiBoolean loggingOn){
@@ -114,12 +114,12 @@ fmiStatus fmiSetReal(fmiComponent c, const fmiValueReference vr[], size_t nvr, c
     }
     save = true;
     for (unsigned int i = 0; i < nvr; i++) {
-        //std::cout << value[i] << ":" << valToRefs.at(vr[i]) << " ";
+        //std::cout << valToRefs.at(vr[i]) << ":" << value[i] <<  " ";
         DataStore::addValue(valToRefs.at(vr[i]), value[i]);
     }
-    //std::cout << std::endl;
-    ModelInstance* comp = (ModelInstance *)c;
-    comp->sim.preTimeStep();
+   // std::cout << std::endl;
+  //  ModelInstance* comp = (ModelInstance *)c;
+    modelInstance->sim.preTimeStep();
     return fmiOK;
 }
 
@@ -191,8 +191,8 @@ fmiStatus fmiResetSlave(fmiComponent c) {
 
 void fmiFreeSlaveInstance(fmiComponent c) {
     if(save){
-        ModelInstance* comp = &modelInstance;
-        comp->sim.postprocess();
+        //ModelInstance* comp = (ModelInstance *)c;
+        modelInstance->sim.postprocess();
     }
     printf("fmiFreeSlaveInstance\n");
 }
@@ -227,8 +227,8 @@ fmiStatus fmiCancelStep(fmiComponent c) {
 fmiStatus fmiDoStep(fmiComponent c, fmiReal currentCommunicationPoint,
     fmiReal communicationStepSize, fmiBoolean newStep) {
     if(save){
-        ModelInstance* comp = (ModelInstance *)c;
-        comp->sim.timeStep();
+        //ModelInstance* comp = (ModelInstance *)c;
+        modelInstance->sim.timeStep();
     }
     return fmiOK;
 }

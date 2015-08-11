@@ -51,9 +51,9 @@ typedef struct {
 
 } ModelInstance;
 
-ModelInstance modelInstance;
+std::unique_ptr<ModelInstance> modelInstance(new ModelInstance);
+
 bool save;
 
 
-  std::map<int,std::string> valToRefs;
-
+std::map<int,std::string> valToRefs;

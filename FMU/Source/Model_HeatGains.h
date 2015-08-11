@@ -11,8 +11,7 @@
 class Model_HeatGains {
 public:
     Model_HeatGains();
-    Model_HeatGains(const Model_HeatGains &orig);
-    virtual ~Model_HeatGains();
+
     void calculate(
         double metabolicRate,
         double reativeHumidity,
@@ -39,7 +38,7 @@ private:
         double metabolicRate,
         double externalWork,
         double actualMeanRadiantTemperature);
-    
+
     double computePaCIBSEGuideC(double actualMeanRadiantTemperature, double reativeHumidity) const;
 
     double ppd;
@@ -58,4 +57,3 @@ private:
 };
 
 #endif  /* HEATGAIN_H */
-

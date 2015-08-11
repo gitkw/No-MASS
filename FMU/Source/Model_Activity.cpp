@@ -33,18 +33,8 @@
  * out
  */
 
-
-
 Model_Activity::Model_Activity() {
 }
-
-Model_Activity::Model_Activity(const Model_Activity &orig) {
-}
-
-Model_Activity::~Model_Activity() {
-}
-
-
 
 std::vector<double> Model_Activity::getAgentActivities(int agentID) {
 

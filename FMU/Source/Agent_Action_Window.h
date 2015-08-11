@@ -11,14 +11,12 @@ class Agent_Action_Window : public Agent_Action {
          void setup(int windowID);
         void step(const Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
 
-
-    protected:
     private:
-    Model_Windows m_window;
-    std::deque<double> outDoorTemperatures;
+        Model_Windows m_window;
+        std::deque<double> outDoorTemperatures;
 
-    double getPreviousDurationOfAbsenceState(const std::vector<double> &activities) const;
-    double getCurrentDurationOfPresenceState(const std::vector<double> &activities) const;
+        double getPreviousDurationOfAbsenceState(const std::vector<double> &activities) const;
+        double getCurrentDurationOfPresenceState(const std::vector<double> &activities) const;
 };
 
 #endif // AGENT_ACTION_WINDOW_H

@@ -8,7 +8,7 @@ class State_Washing:public State
 {
     public:
         State_Washing();
-        virtual ~State_Washing();
+        
     protected:
     private:
 };

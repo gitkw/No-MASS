@@ -1,3 +1,4 @@
+#include <iostream>
 #include "SimulationConfig.h"
 #include "DataStore.h"
 #include "Agent_Action_Window.h"
@@ -20,12 +21,13 @@ void Agent_Action_Window::setup(int windowID){
 
 void Agent_Action_Window::step(const Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities){
 
-        outDoorTemperatures.push_back(DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature"));
+        double outdoorTemperature = DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
+
+        outDoorTemperatures.push_back(outdoorTemperature);
         if (outDoorTemperatures.size() > (SimulationConfig::info.timeStepsPerHour * 24)) {
                 outDoorTemperatures.pop_front();
         }
 
-        double outdoorTemperature = DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
         double rain = DataStore::getValue("EnvironmentSiteRainStatus");
         double indoorTemperature = zone.getMeanAirTemperature();
         double timeStepLengthInMinutes = SimulationConfig::lengthOfTimestep();

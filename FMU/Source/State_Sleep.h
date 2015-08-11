@@ -6,7 +6,7 @@ class State_Sleep : public State
 {
     public:
         State_Sleep();
-        virtual ~State_Sleep();
+        
     protected:
     private:
 };

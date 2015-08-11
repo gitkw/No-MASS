@@ -16,7 +16,6 @@ public:
     Zone();
     Zone(std::string);
 
-    virtual ~Zone();
     void step();
     void setup();
     void setName(std::string name);

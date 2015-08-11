@@ -12,8 +12,6 @@ Model_Lights::Model_Lights() {
 }
 
 
-Model_Lights::~Model_Lights() {
-}
 // SIMULATION OF ACTIONS ON ELECTRICAL LIGHTING ACCORDING TO LIGHTSWITCH-2002 MODEL
 // Christoph F. Reinhart, Lightswitch-2002: a model for manual and automated control
 // of electric lighting and blinds, Solar Energy 77 (2004) 15-28

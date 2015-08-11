@@ -11,7 +11,7 @@
 class Model_Lights {
 public:
     Model_Lights();
-    virtual ~Model_Lights();
+    
     bool arrival(bool state, double Lumint);
     bool intermediate(bool state, double Lumint);
     bool departure(bool state, double Lumint, double futureDuration);

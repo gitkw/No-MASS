@@ -7,7 +7,7 @@ class State_IT:public State
 {
     public:
         State_IT();
-        virtual ~State_IT();
+        
     protected:
     private:
 };

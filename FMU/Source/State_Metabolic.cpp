@@ -10,8 +10,3 @@ State_Metabolic::State_Metabolic()
     location = getLocationFromActivty(&activity);
 
 }
-
-State_Metabolic::~State_Metabolic()
-{
-    //dtor
-}

@@ -13,15 +13,9 @@
 class Model_Activity {
 public:
     Model_Activity();
-    Model_Activity(const Model_Activity& orig);
-    virtual ~Model_Activity();
-
     static std::vector<double> getAgentActivities(int agentID);
 
 private:
-
-
 };
 
 #endif	/* MODEL_ACTIVITY_H */
-

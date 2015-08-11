@@ -10,8 +10,3 @@ State_IT::State_IT()
     location = getLocationFromActivty(&activity);
 
 }
-
-State_IT::~State_IT()
-{
-    //dtor
-}

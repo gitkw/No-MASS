@@ -10,8 +10,3 @@ State_Washing_Appliance::State_Washing_Appliance()
     location = getLocationFromActivty(&activity);
 
 }
-
-State_Washing_Appliance::~State_Washing_Appliance()
-{
-    //dtor
-}

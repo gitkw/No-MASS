@@ -16,11 +16,11 @@ DataStore::DataStore() {
 }
 
 void DataStore::addVariable(std::string name) {
-    variableMap[name] = std::vector<double>();
+    variableMap.insert(std::make_pair(name, std::vector<double>()));
 }
 
 void DataStore::addValue(std::string name, double value) {
-    variableMap[name].push_back(value);
+    variableMap.at(name).push_back(value);
 }
 
 double DataStore::getValueForZone(std::string name, std::string zoneName){
@@ -39,7 +39,7 @@ double DataStore::getValue(std::string name) {
 }
 
 void DataStore::print(){
-    std::ofstream myfile;
+/*    std::ofstream myfile;
     myfile.open ("agent.csv");
     myfile << "stepCount,";
     for (std::unordered_map<std::string, std::vector<double> >::iterator it=variableMap.begin(); it!=variableMap.end(); ++it){
@@ -57,4 +57,5 @@ void DataStore::print(){
         myfile << std::endl;
     }
     myfile.close();
+    */
 }

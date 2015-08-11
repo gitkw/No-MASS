@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 #include <list>
-#include <iostream>
 #include "SimulationConfig.h"
 #include "Agent.h"
 #include "State_Out.h"
@@ -39,10 +38,8 @@ void Model_Agents::setup()
     // setup each agent randomly
     for(int a: pop)
     {
-
           population.push_back(Agent(a));
     }
-
     initialiseStates();
 
 }

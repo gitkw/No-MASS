@@ -141,8 +141,6 @@ private:
     static void parseWindows(boost::property_tree::ptree::value_type & v);
     static void parseShades(boost::property_tree::ptree::value_type & v);
     SimulationConfig();
-    SimulationConfig(const SimulationConfig& orig);
-    virtual ~SimulationConfig();
 };
 
 #endif	/* SIMULATIONSETUP_H */

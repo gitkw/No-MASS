@@ -10,8 +10,3 @@ State_Cooking::State_Cooking()
     location = getLocationFromActivty(&activity);
 
 }
-
-State_Cooking::~State_Cooking()
-{
-    //dtor
-}

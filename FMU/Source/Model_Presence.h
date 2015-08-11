@@ -18,8 +18,6 @@ public:
     static std::vector<int> calculatePresenceFromPage(const int agentID);
 private:
     Model_Presence();
-    Model_Presence(const Model_Presence& orig);
-    virtual ~Model_Presence();
 
     static double getT11(double pcurr, double pnext, double shuff) ;
     static double getT01(double pcurr, double pnext, double shuff) ;
@@ -29,4 +27,3 @@ private:
 };
 
 #endif	/* MODEL_PRESENCE_H */
-

@@ -10,6 +10,7 @@ class State
 {
     public:
         State();
+        virtual ~State();
 
         int getId() const;
         double getMetabolicRate() const;

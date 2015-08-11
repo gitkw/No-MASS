@@ -42,9 +42,6 @@ Model_Windows::Model_Windows() {
     b10gddep = -0.923;
 }
 
-Model_Windows::~Model_Windows() {
-}
-
 void Model_Windows::setDurationVars(double aop, double bopout, double shapeop){
     this->aop = aop;
     this->bopout = bopout;

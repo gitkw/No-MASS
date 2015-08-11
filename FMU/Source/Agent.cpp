@@ -10,7 +10,7 @@
 #include <iostream>
 #include <algorithm>
 #include <limits>
-#include <memory>
+
 #include "Model_HeatGains.h"
 #include "Model_Lights.h"
 #include "DataStore.h"
@@ -24,6 +24,7 @@ Agent::Agent()
 {
 }
 
+
 Agent::Agent(int newId) : id(newId)
 {
     std::string idAsString = std::to_string(newId);
@@ -33,24 +34,21 @@ Agent::Agent(int newId) : id(newId)
     office = agent.office;
     power = agent.power;
 
+
+    aahg.setup(id);
+    availableActions.push_back(0);
+
     if (SimulationConfig::info.windows){
-        std::unique_ptr<Agent_Action_Window> aa(new Agent_Action_Window);
-        aa->setup(agent.windowId);
-        available_actions.push_back(std::move(aa));
+        aaw.setup(agent.windowId);
+        availableActions.push_back(1);
     }
     if (SimulationConfig::info.shading){
-        std::unique_ptr<Agent_Action_Shades> aa(new Agent_Action_Shades);
-        aa->setup(agent.shadeId);
-        available_actions.push_back(std::move(aa));
+        aas.setup(agent.shadeId);
+        availableActions.push_back(2);
     }
-
-    std::unique_ptr<Agent_Action_Heat_Gains> aa(new Agent_Action_Heat_Gains);
-    aa->setup(id);
-    available_actions.push_back(std::move(aa));
-
-    std::unique_ptr<Agent_Action_Lights> aal(new Agent_Action_Lights);
-    available_actions.push_back(std::move(aal));
-
+    if (SimulationConfig::info.lights){
+        availableActions.push_back(3);
+    }
 
     if (SimulationConfig::info.presencePage){
       model_presenceFromPage();
@@ -85,54 +83,52 @@ void Agent::step(StateMachine *stateMachine)
 
     std::string name = "Agent_Activity_" + std::to_string(id);
     DataStore::addValue(name.c_str(), activities.at(stepCount));
+}
 
+void Agent::actionStep(int action, interationStruct *interaction, const Zone &zone, bool inZone, bool preZone){
+    switch (action) {
+      case 0:
+            aahg.step(zone, inZone, preZone, activities);
+            interaction->heatgains = aahg.getResult();
+            previous_pmv = pmv;
+            pmv = aahg.getPMV();
+        break;
+      case 1:
+            aaw.step(zone, inZone, preZone, activities);
+            interaction->windowState = aaw.getResult();
+        break;
+      case 2:
+            aas.step(zone, inZone, preZone, activities);
+            interaction->windowState = aas.getResult();
+        break;
+      case 3:
+            aal.step(zone, inZone, preZone, activities);
+            interaction->windowState = aal.getResult();
+        break;
 
-
+      }
 }
 
 void Agent::interactWithZone(const Zone &zone)
 {
-
-    std::random_shuffle ( available_actions.begin(), available_actions.end() );
-
+    interationStruct interaction;
     bool inZone = currentlyInZone(zone);
     bool preZone = previouslyInZone(zone);
 
-
-    interationStruct interaction;
-    for(std::unique_ptr<Agent_Action> & a : available_actions) {
-//Agent_Action_Heat_Gains
-      a->step(zone, inZone, preZone, activities);
-      if(a->getName() == "HeatGains"){
-        interaction.heatgains = a->getResult();
-        Agent_Action_Heat_Gains *h = dynamic_cast<Agent_Action_Heat_Gains*>(a.get());
-        previous_pmv = pmv;
-        pmv = h->getPMV();
-      }else if(a->getName() == "Windows"){
-        interaction.windowState = a->getResult();
-      }else if(a->getName() == "Lights"){
-        interaction.lightState = a->getResult();
-      }else if(a->getName() == "Shades"){
-        interaction.shadeState = a->getResult();
-      }
+    std::random_shuffle ( availableActions.begin(), availableActions.end() );
+    for(int a : availableActions) {
+        actionStep(a, &interaction, zone, inZone, preZone);
     }
 
-    int theCase = SimulationConfig::info.caseOrder;
-    switch(theCase)
+    switch(SimulationConfig::info.caseOrder)
     {
-
         case 1  :
         {
-            rLearn(zone, &interaction);
+           // rLearn(zone, &interaction);
             break;
         }
     }
-
-
     zoneToInteraction[zone.getName()] = interaction;
-
-
-
 }
 
 void Agent::rLearn(const Zone &zone, interationStruct *interaction )

@@ -9,8 +9,3 @@ State_Sleep::State_Sleep()
     activity = "Sleep";
     location = getLocationFromActivty(&activity);
 }
-
-State_Sleep::~State_Sleep()
-{
-    //dtor
-}

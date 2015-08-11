@@ -44,8 +44,6 @@ EP_ReadIDF::EP_ReadIDF() {
         numberOfTimeSteps = -1;
 }
 
-EP_ReadIDF::~EP_ReadIDF() {
-}
 
 bool EP_ReadIDF::processLine(std::stringstream *ss, std::string line) {
         bool ret = false;

@@ -479,14 +479,6 @@ void SimulationConfig::parseConfiguration(std::string filename)
 
 }
 
-SimulationConfig::SimulationConfig(const SimulationConfig &orig)
-{
-}
-
-SimulationConfig::~SimulationConfig()
-{
-}
-
 std::string SimulationConfig::getZoneNameFromActivity(std::string activity)
 {
     std::string zoneName = "Out"; //Default out of zone
