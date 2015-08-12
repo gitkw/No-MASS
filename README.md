@@ -10,14 +10,14 @@ No-MASS can be built on windows using mingw64. This is more complicated and diff
 ## Checkout
 
 Clone the repository using git
-'''Bash
+```sh
 git clone https://github.com/jacoblchapman/No-MASS.git
 
 cd No-MASS
 
 git submodule update --init --recursive
 
-'''
+```
 
 Alternativly use a GUI such as GitHub Desktop or SourceTree.
 
@@ -25,21 +25,21 @@ Alternativly use a GUI such as GitHub Desktop or SourceTree.
 
 Build the boost libraries using the make script
 
-'''Bash
+```sh
 cd Boost
 
 make
 
 cd ..
-'''
+```
 
 Build the No-MASS using make (or using CodeBlocks GUI)
 
-'''Bash
+```sh
 cd FMU
 
 make
-'''
+```
 
 ## Running
 
