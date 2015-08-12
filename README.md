@@ -2,12 +2,14 @@
 ## Current Status Of Build
 ![Build](https://magnum.travis-ci.com/jacoblchapman/No-MASS.svg?token=hNH6EHukhSBPUpNQNYH3&branch=Master "build")
 
+## Guide
+
 This guide is for **linux only**.
 Use a compiler with at least the c++11 standard. Most modern linux systems have this by default, if not it can be installed easily.
 
 No-MASS can be built on windows using mingw64. This is more complicated and differs in each windows version.
 
-## Checkout
+### Checkout
 
 Clone the repository using git
 ```sh
@@ -21,7 +23,7 @@ git submodule update --init --recursive
 
 Alternativly use a GUI such as GitHub Desktop or SourceTree.
 
-## Compiling
+### Compiling
 
 Build the boost libraries using the make script
 
@@ -41,7 +43,7 @@ cd FMU
 make
 ```
 
-## Running
+### Running
 
 Take the compiled library (FMI.so or FML.dll) and place into the FMU zip file with the model description file and the SimulationConfig file.
 
