@@ -56,7 +56,6 @@
 		</Linker>
 		<ExtraCommands>
 			<Add after="cp ./bin/Debug/libFMI.so ../../../EnergyPlus/tmp-fmus/agentFMU.fmu_FMI/binaries/linux64/FMI.so" />
-			<Add after="cbp2make -in FMI.cbp -out makefile" />
 			<Mode after="always" />
 		</ExtraCommands>
 		<Unit filename="Source/Agent.cpp" />
