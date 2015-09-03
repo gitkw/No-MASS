@@ -19,13 +19,11 @@
 				<Compiler>
 					<Add option="-std=c++11" />
 					<Add option="-Wall" />
-					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="-Werror" />
 					<Add directory="Source" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="-Wl,-z,defs" />
 				</Linker>
 			</Target>
@@ -94,8 +92,10 @@
 		<Unit filename="Source/Model_RandomWeibull.h" />
 		<Unit filename="Source/Model_Windows.cpp" />
 		<Unit filename="Source/Model_Windows.h" />
-		<Unit filename="Source/RLearning.cpp" />
-		<Unit filename="Source/RLearning.h" />
+		<Unit filename="Source/QLearning.cpp" />
+		<Unit filename="Source/QLearning.h" />
+		<Unit filename="Source/QLearning_PMV.cpp" />
+		<Unit filename="Source/QLearning_PMV.h" />
 		<Unit filename="Source/Simulation.cpp" />
 		<Unit filename="Source/Simulation.h" />
 		<Unit filename="Source/SimulationConfig.cpp" />

@@ -10,6 +10,7 @@
 #include <iostream>
 #include <algorithm>
 #include <limits>
+#include <memory>
 
 #include "Model_HeatGains.h"
 #include "Model_Lights.h"
@@ -17,6 +18,7 @@
 #include "SimulationConfig.h"
 #include "StateMachine.h"
 #include "Utility.h"
+#include "QLearning_PMV.h"
 
 #include "Agent.h"
 
@@ -33,9 +35,9 @@ Agent::Agent(int newId) : id(newId)
     bedroom = agent.bedroom;
     office = agent.office;
     power = agent.power;
-
-    rl.setId(id);
-    rl.setup();
+    ql = std::unique_ptr<QLearning_PMV>(new QLearning_PMV);
+    ql->setId(id);
+    ql->setup();
     aahg.setup(id);
     availableActions.push_back(0);
 
@@ -86,7 +88,7 @@ void Agent::step(StateMachine *stateMachine)
     DataStore::addValue(name.c_str(), activities.at(stepCount));
 }
 
-void Agent::actionStep(int action, interationStruct *interaction, const Zone &zone, bool inZone, bool preZone){
+void Agent::actionStep(int action, ActionValues *interaction, const Zone &zone, bool inZone, bool preZone){
     switch (action) {
       case 0:
             aahg.prestep(clo, metabolicRate);
@@ -113,7 +115,7 @@ void Agent::actionStep(int action, interationStruct *interaction, const Zone &zo
 
 void Agent::interactWithZone(const Zone &zone)
 {
-    interationStruct interaction;
+    ActionValues interaction;
     bool inZone = currentlyInZone(zone);
     bool preZone = previouslyInZone(zone);
 
@@ -126,68 +128,13 @@ void Agent::interactWithZone(const Zone &zone)
     {
         case 1  :
         {
-            rLearn(zone, &interaction);
+//            ql->learn(zone, &interaction);
             break;
         }
     }
     zoneToInteraction[zone.getName()] = interaction;
 }
 
-void Agent::rLearn(const Zone &zone, interationStruct *interaction )
-{
-    bool doRLearn = false;
-    if(zone.getWindowState() != interaction->windowState && zone.getLightState() != interaction->lightState){
-        //std::cout << "window light" << std::endl;
-        doRLearn = true;
-    }else if( zone.getLightState() != interaction->lightState && zone.getBlindState() != interaction->shadeState){
-        //std::cout << "light shade" << std::endl;
-        doRLearn = true;
-    }else if(zone.getBlindState() != interaction->shadeState && zone.getWindowState() != interaction->windowState){
-        //std::cout << "shade window" << std::endl;
-        doRLearn = true;
-    }
-
-    if(learn){
-
-        double reward = -1;
-        if( pmv == 0)
-        {
-            reward = 1;
-        }
-        // get new state
-        // update q table that is learn
-        rl.updateQ(pmv+3, action, reward, previous_pmv+3);
-
-        learn = false;
-    }
-
-
-
-    if(doRLearn){
-        // get action for current state using greedy
-        action = rl.greedySelection(pmv + 3);
-        switch(action)
-        {
-        case 0  ://window
-            interaction->lightState = zone.getLightState();
-            interaction->shadeState = zone.getBlindState();
-
-            break;
-        case 1  ://shade
-            interaction->lightState = zone.getLightState();
-            interaction->windowState = zone.getWindowState();
-
-            break;
-        case 2  ://light
-            interaction->shadeState = zone.getBlindState();
-            interaction->windowState = zone.getWindowState();
-
-            break;
-        }
-        learn = true;
-    }
-
-}
 
 
 
@@ -387,5 +334,5 @@ double Agent::calculateMetabolicHeatGainsOnZone(const Zone &zone)
 */
 void Agent::postprocess()
 {
-    rl.printQ();
+    ql->printQ();
 }

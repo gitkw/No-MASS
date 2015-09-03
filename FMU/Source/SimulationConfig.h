@@ -105,7 +105,7 @@ struct simulationStruct {
     bool shading;
     bool presencePage;
     double timeStepsPerHour;
-    double rlearn;
+    double qlearn;
     int timeSteps;
     int startDay;
     int startMonth;

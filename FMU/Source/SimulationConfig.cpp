@@ -445,9 +445,9 @@ void SimulationConfig::parseConfiguration(std::string filename)
         {
             Utility::setSeed(v.second.get_value<int>());
         }
-        else if (v.first == "rlearn")
+        else if (v.first == "qlearn")
         {
-            SimulationConfig::info.rlearn = v.second.get_value<double>();
+            SimulationConfig::info.qlearn = v.second.get_value<double>();
         }
         else if (v.first == "simulateAgents")
         {

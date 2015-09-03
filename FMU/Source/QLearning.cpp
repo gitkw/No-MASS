@@ -8,39 +8,39 @@
 
 #include "SimulationConfig.h"
 #include "Utility.h"
-#include "RLearning.h"
+#include "QLearning.h"
 
-RLearning::RLearning()
+QLearning::QLearning()
 {
 }
 
-void RLearning::setup(){
-    epsilon = SimulationConfig::info.rlearn;
+void QLearning::setup(){
+    epsilon = SimulationConfig::info.qlearn;
     std::ifstream in_file;
     in_file.open("rlearning" + std::to_string(id) + ".dat");
     if(in_file.fail())
     {
         for(int i =0; i < states; i++){
+            qTable.push_back(std::vector<double>());
             for(int j =0; j < actions; j++){
-                qTable[i][j] = 0;
+                qTable[i].push_back(1);
             }
         }
     }else{
         for (int count =0; count < states; count++){
-            int act =0;
+            qTable.push_back(std::vector<double>());
             std::string a;
             in_file >> a;
             std::stringstream ss(a);
             std::string item;
             while (std::getline(ss, item, ',')) {
-                qTable[count][act] = std::stod(item);
-                act++;
+                qTable[count].push_back(std::stod(item));
             }
         }
     }
 }
 
-int RLearning::greedySelection(int s){
+int QLearning::greedySelection(int s){
     int a;
 
     if (Utility::randomDouble(0,1) < 1-epsilon){
@@ -52,7 +52,7 @@ int RLearning::greedySelection(int s){
     return a;
 }
 
-int RLearning::getBestAction(int s)
+int QLearning::getBestAction(int s)
 {
 
     int m = 0;
@@ -67,12 +67,12 @@ int RLearning::getBestAction(int s)
 }
 
 
-void RLearning::updateQ(int s, int a, double r, int sp){
-        double maxQ = *std::max_element(qTable[sp],qTable[sp]+actions);
-        qTable[s][a] = qTable[s][a] + alpha *  ( r + gamma*maxQ - qTable[s][a] );
+void QLearning::updateQ(int s, int a, double r, int sp){
+        double maxQ = *std::max_element(qTable[sp].begin(),qTable[sp].end());
+        qTable[s][a] = qTable[s][a] + alpha * ( r + gamma * maxQ - qTable[s][a] );
 }
 
-void RLearning::printQ(){
+void QLearning::printQ(){
 
 
     std::ofstream myfile;
@@ -89,6 +89,6 @@ void RLearning::printQ(){
 
 }
 
-void RLearning::setId(int id){
+void QLearning::setId(int id){
     this->id = id;
 }

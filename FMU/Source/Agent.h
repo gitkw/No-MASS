@@ -9,6 +9,7 @@
 #define	AGENT_H
 #include <unordered_map>
 #include <string>
+#include <memory>
 
 #include "Model_Activity.h"
 #include "Model_Presence.h"
@@ -17,7 +18,7 @@
 
 #include "Model_Lights.h"
 #include "Model_ExternalShading.h"
-#include "RLearning.h"
+#include "QLearning.h"
 #include "Agent_Action_Window.h"
 #include "Agent_Action_Lights.h"
 #include "Agent_Action_Shades.h"
@@ -27,7 +28,7 @@
  * @details Contains all information about the occupants and there associated interactions
  */
 
-struct interationStruct {
+struct ActionValues {
     bool lightState;
     bool windowState;
     double shadeState;
@@ -90,18 +91,18 @@ private:
 
     std::vector<int> availableActions;
 
+    std::unique_ptr<QLearning> ql;
 
-    RLearning rl;
     bool learn = false;
 
-    std::unordered_map<std::string, interationStruct> zoneToInteraction;
+    std::unordered_map<std::string, ActionValues> zoneToInteraction;
     void model_pastAndFutureDurations();
     void model_activity();
 
-    void actionStep(int action, interationStruct *interaction, const Zone &zone, bool inZone, bool preZone);
+    void actionStep(int action, ActionValues *interaction, const Zone &zone, bool inZone, bool preZone);
 
 
-    void rLearn(const Zone &zone, interationStruct *interaction);
+    void rLearn(const Zone &zone, ActionValues *interaction);
 
     std::string updateLocation(const State& state) const;
     bool currentlyInZone(const Zone &zone) const;
