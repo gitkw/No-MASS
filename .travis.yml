@@ -1,7 +1,5 @@
 language: cpp
 
-#sudo: true
-
 compiler:
   - gcc
 
@@ -13,7 +11,9 @@ addons:
     - g++-4.9
 
 before_install:
-  - export CXX="g++-4.9" CC="gcc-4.9";
+  - export CXX="g++-4.9"
+  - export CC="g++-4.9"
+  - export LD="g++-4.9"
   # download submodules
   - git submodule update --init --recursive
 
