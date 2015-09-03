@@ -34,7 +34,8 @@ Agent::Agent(int newId) : id(newId)
     office = agent.office;
     power = agent.power;
 
-
+    rl.setId(id);
+    rl.setup();
     aahg.setup(id);
     availableActions.push_back(0);
 
@@ -88,6 +89,7 @@ void Agent::step(StateMachine *stateMachine)
 void Agent::actionStep(int action, interationStruct *interaction, const Zone &zone, bool inZone, bool preZone){
     switch (action) {
       case 0:
+            aahg.prestep(clo, metabolicRate);
             aahg.step(zone, inZone, preZone, activities);
             interaction->heatgains = aahg.getResult();
             previous_pmv = pmv;
@@ -124,7 +126,7 @@ void Agent::interactWithZone(const Zone &zone)
     {
         case 1  :
         {
-           // rLearn(zone, &interaction);
+            rLearn(zone, &interaction);
             break;
         }
     }
@@ -135,17 +137,18 @@ void Agent::rLearn(const Zone &zone, interationStruct *interaction )
 {
     bool doRLearn = false;
     if(zone.getWindowState() != interaction->windowState && zone.getLightState() != interaction->lightState){
-        std::cout << "window light" << std::endl;
+        //std::cout << "window light" << std::endl;
         doRLearn = true;
     }else if( zone.getLightState() != interaction->lightState && zone.getBlindState() != interaction->shadeState){
-        std::cout << "light shade" << std::endl;
+        //std::cout << "light shade" << std::endl;
         doRLearn = true;
     }else if(zone.getBlindState() != interaction->shadeState && zone.getWindowState() != interaction->windowState){
-        std::cout << "shade window" << std::endl;
+        //std::cout << "shade window" << std::endl;
         doRLearn = true;
     }
 
     if(learn){
+
         double reward = -1;
         if( pmv == 0)
         {
@@ -154,25 +157,28 @@ void Agent::rLearn(const Zone &zone, interationStruct *interaction )
         // get new state
         // update q table that is learn
         rl.updateQ(pmv+3, action, reward, previous_pmv+3);
+
         learn = false;
     }
+
+
 
     if(doRLearn){
         // get action for current state using greedy
         action = rl.greedySelection(pmv + 3);
         switch(action)
         {
-        case 0  :
+        case 0  ://window
             interaction->lightState = zone.getLightState();
             interaction->shadeState = zone.getBlindState();
 
             break;
-        case 1  :
+        case 1  ://shade
             interaction->lightState = zone.getLightState();
             interaction->windowState = zone.getWindowState();
 
             break;
-        case 2  :
+        case 2  ://light
             interaction->shadeState = zone.getBlindState();
             interaction->windowState = zone.getWindowState();
 
@@ -381,5 +387,5 @@ double Agent::calculateMetabolicHeatGainsOnZone(const Zone &zone)
 */
 void Agent::postprocess()
 {
-    //rl.printQ();
+    rl.printQ();
 }

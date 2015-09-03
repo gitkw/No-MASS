@@ -103,9 +103,10 @@ struct simulationStruct {
     bool windows;
     bool lights;
     bool shading;
-    int timeSteps;
-    double timeStepsPerHour;
     bool presencePage;
+    double timeStepsPerHour;
+    double rlearn;
+    int timeSteps;
     int startDay;
     int startMonth;
     int endDay;

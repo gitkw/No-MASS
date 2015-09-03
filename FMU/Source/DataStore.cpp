@@ -20,7 +20,9 @@ void DataStore::addVariable(std::string name) {
 }
 
 void DataStore::addValue(std::string name, double value) {
-    variableMap.at(name).push_back(value);
+
+
+    variableMap[name].push_back(value);
 }
 
 double DataStore::getValueForZone(std::string name, std::string zoneName){
@@ -35,6 +37,7 @@ double DataStore::getValue(std::string name) {
         std::cout << std::flush;
         exit(-1);
     }
+
     return variableMap[name].back();
 }
 

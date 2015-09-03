@@ -4,6 +4,7 @@
  *
  * Created on September 15, 2013, 5:03 PM
  */
+
 #include <cmath>
 #include "Model_HeatGains.h"
 
@@ -87,6 +88,7 @@ void Model_HeatGains::aHCTCLcalc(
         counter++;
     }
     tcl = 100 * xn - 273;
+
 }
 
 /**
@@ -136,6 +138,7 @@ void Model_HeatGains::calculate(
     pmv = TS * (metabolicRate - externalWork
             - vapourDiffusion - sweatEvaporation - latentRespirationHeatGains - dryRespiration
             - radiantHeatGains - convectiveHeatGains);
+
     ppd = 100 - 95 * exp(
             -0.03353 * pow(pmv, 4)
             - 0.2179 * pow(pmv, 2)

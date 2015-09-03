@@ -445,6 +445,10 @@ void SimulationConfig::parseConfiguration(std::string filename)
         {
             Utility::setSeed(v.second.get_value<int>());
         }
+        else if (v.first == "rlearn")
+        {
+            SimulationConfig::info.rlearn = v.second.get_value<double>();
+        }
         else if (v.first == "simulateAgents")
         {
             SimulationConfig::info.simulateAgents = v.second.get_value<bool>();

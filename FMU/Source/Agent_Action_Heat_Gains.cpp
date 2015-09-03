@@ -1,4 +1,4 @@
-
+#include <iostream>
 #include "DataStore.h"
 #include "Model_HeatGains.h"
 #include "Agent_Action_Heat_Gains.h"
@@ -23,7 +23,7 @@ void Agent_Action_Heat_Gains::setup(int agentid){
 }
 
 
-void Agent_Action_Heat_Gains::prestep(int id, double clo, double metabolicRate){
+void Agent_Action_Heat_Gains::prestep(double clo, double metabolicRate){
     this->clo = clo;
     this->metabolicRate = metabolicRate;
 
@@ -50,11 +50,19 @@ void Agent_Action_Heat_Gains::step(const Zone& zone, bool inZone, bool previousl
                 double airHumid = zone.getAirRelativeHumidity();
                 double meanRadient = zone.getMeanRadiantTemperature();
 
+                /*
+                std::cout << "metabolicRate: " << metabolicRate << std::endl;
+                std::cout << "airHumid: " << airHumid << std::endl;
+                std::cout << "meanRadient: " << meanRadient << std::endl;
+                std::cout << "airTemp: " << airTemp << std::endl;
+                std::cout << "clo: " << clo << std::endl;
+                */
+
                 h.calculate(metabolicRate, airHumid, meanRadient, 0, airTemp, clo, 0);
                 result = h.getAllHeatGains();
                 ppd = h.getPpd();
                 pmv = h.getPmv();
-                //std::cout << "PMV: " << pmv << std::endl;
+
 
         }
         std::string name = "AgentGains" + idAsString;

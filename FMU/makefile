@@ -5,28 +5,28 @@
 
 WORKDIR = `pwd`
 
-CC = gcc-4.9
-CXX = g++-4.9
+CC = gcc
+CXX = g++
 AR = ar
-LD = g++-4.9
+LD = g++
 WINDRES = windres
 
 INC = -I../Boost/Boost-Source
 CFLAGS = -std=c++11 -Wall -fPIC
-RESINC =
+RESINC = 
 LIBDIR = -L../Boost/Boost-Source/stage/lib
-LIB =
-LDFLAGS =
+LIB = 
+LDFLAGS = 
 
 INC_DEBUG = $(INC) -ISource
-CFLAGS_DEBUG = $(CFLAGS) -std=c++11 -Wall -pg -g -Werror
+CFLAGS_DEBUG = $(CFLAGS) -std=c++11 -Wall -g -Werror
 RESINC_DEBUG = $(RESINC)
 RCFLAGS_DEBUG = $(RCFLAGS)
 LIBDIR_DEBUG = $(LIBDIR)
 LIB_DEBUG = $(LIB)
 LDFLAGS_DEBUG = $(LDFLAGS) -pg -Wl,-z,defs
 OBJDIR_DEBUG = obj/Debug
-DEP_DEBUG =
+DEP_DEBUG = 
 OUT_DEBUG = bin/Debug/FMI.so
 
 INC_RELEASE = $(INC) -ISource
@@ -37,7 +37,7 @@ LIBDIR_RELEASE = $(LIBDIR)
 LIB_RELEASE = $(LIB)
 LDFLAGS_RELEASE = $(LDFLAGS) -s
 OBJDIR_RELEASE = obj/Release
-DEP_RELEASE =
+DEP_RELEASE = 
 OUT_RELEASE = bin/Release/FMI.so
 
 OBJ_DEBUG = $(OBJDIR_DEBUG)/Source/State_Cleaning.o $(OBJDIR_DEBUG)/Source/State_Out.o $(OBJDIR_DEBUG)/Source/State_Metabolic.o $(OBJDIR_DEBUG)/Source/State_IT.o $(OBJDIR_DEBUG)/Source/State_Cooking.o $(OBJDIR_DEBUG)/Source/State_Passive.o $(OBJDIR_DEBUG)/Source/State_Audio_Visual.o $(OBJDIR_DEBUG)/Source/StateMachine.o $(OBJDIR_DEBUG)/Source/State.o $(OBJDIR_DEBUG)/Source/SimulationConfig.o $(OBJDIR_DEBUG)/Source/fmuTemplate.o $(OBJDIR_DEBUG)/Source/fmiFunctions.o $(OBJDIR_DEBUG)/Source/Zone.o $(OBJDIR_DEBUG)/Source/Utility.o $(OBJDIR_DEBUG)/Source/Simulation.o $(OBJDIR_DEBUG)/Source/State_Washing_Appliance.o $(OBJDIR_DEBUG)/Source/State_Washing.o $(OBJDIR_DEBUG)/Source/State_Sleep.o $(OBJDIR_DEBUG)/Source/State_Present.o $(OBJDIR_DEBUG)/Source/Model_Activity.o $(OBJDIR_DEBUG)/Source/EP_ReadIDF.o $(OBJDIR_DEBUG)/Source/EP_IDFObject.o $(OBJDIR_DEBUG)/Source/DataStore.o $(OBJDIR_DEBUG)/Source/Agent_Action_Window.o $(OBJDIR_DEBUG)/Source/Agent_Action_Shades.o $(OBJDIR_DEBUG)/Source/Agent_Action_Lights.o $(OBJDIR_DEBUG)/Source/Agent_Action_Heat_Gains.o $(OBJDIR_DEBUG)/Source/Agent_Action.o $(OBJDIR_DEBUG)/Source/Model_Lights.o $(OBJDIR_DEBUG)/Source/RLearning.o $(OBJDIR_DEBUG)/Source/Model_Windows.o $(OBJDIR_DEBUG)/Source/Model_RandomWeibull.o $(OBJDIR_DEBUG)/Source/Model_Presence.o $(OBJDIR_DEBUG)/Source/Agent.o $(OBJDIR_DEBUG)/Source/Model_HeatGains.o $(OBJDIR_DEBUG)/Source/Model_ExternalShading.o $(OBJDIR_DEBUG)/Source/Model_EnergyPlus.o $(OBJDIR_DEBUG)/Source/Model_Agents.o
@@ -48,17 +48,16 @@ all: before_build build_debug build_release after_build
 
 clean: clean_debug clean_release
 
-before_build:
+before_build: 
 
-after_build:
+after_build: 
 	cp ./bin/Debug/libFMI.so ../../../EnergyPlus/tmp-fmus/agentFMU.fmu_FMI/binaries/linux64/FMI.so
-	cbp2make -in FMI.cbp -out makefile
 
-before_debug:
+before_debug: 
 	test -d bin/Debug || mkdir -p bin/Debug
 	test -d $(OBJDIR_DEBUG)/Source || mkdir -p $(OBJDIR_DEBUG)/Source
 
-after_debug:
+after_debug: 
 
 build_debug: before_debug out_debug after_debug
 
@@ -181,16 +180,16 @@ $(OBJDIR_DEBUG)/Source/Model_EnergyPlus.o: Source/Model_EnergyPlus.cpp
 $(OBJDIR_DEBUG)/Source/Model_Agents.o: Source/Model_Agents.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Model_Agents.cpp -o $(OBJDIR_DEBUG)/Source/Model_Agents.o
 
-clean_debug:
+clean_debug: 
 	rm -f $(OBJ_DEBUG) $(OUT_DEBUG)
 	rm -rf bin/Debug
 	rm -rf $(OBJDIR_DEBUG)/Source
 
-before_release:
+before_release: 
 	test -d bin/Release || mkdir -p bin/Release
 	test -d $(OBJDIR_RELEASE)/Source || mkdir -p $(OBJDIR_RELEASE)/Source
 
-after_release:
+after_release: 
 
 build_release: before_release out_release after_release
 
@@ -313,9 +312,10 @@ $(OBJDIR_RELEASE)/Source/Model_EnergyPlus.o: Source/Model_EnergyPlus.cpp
 $(OBJDIR_RELEASE)/Source/Model_Agents.o: Source/Model_Agents.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Model_Agents.cpp -o $(OBJDIR_RELEASE)/Source/Model_Agents.o
 
-clean_release:
+clean_release: 
 	rm -f $(OBJ_RELEASE) $(OUT_RELEASE)
 	rm -rf bin/Release
 	rm -rf $(OBJDIR_RELEASE)/Source
 
 .PHONY: before_build after_build before_debug after_debug clean_debug before_release after_release clean_release
+
