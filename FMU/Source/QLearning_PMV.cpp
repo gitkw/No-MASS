@@ -6,8 +6,6 @@ QLearning_PMV::QLearning_PMV()
     actions = 3;
 }
 
-
-
 void QLearning_PMV::learn(const Zone &zone, ActionValues *act )
 {
     bool doRLearn = false;
@@ -24,23 +22,22 @@ void QLearning_PMV::learn(const Zone &zone, ActionValues *act )
 
     if(learnNext){
 
-        double reward = -1;
-        if( pmv == 0)
-        {
+        reward = -1;
+        if(state == 0){
             reward = 1;
         }
         // get new state
         // update q table that is learn
-        ql->updateQ(pmv+3, action, reward, previous_pmv+3);
+        updateQ(state+3, action, reward, previous_state+3);
 
         learnNext = false;
     }
 
-
-
     if(doRLearn){
+        previous_state = state;
+        previous_reward = reward;
         // get action for current state using greedy
-        action = ql->greedySelection(pmv + 3);
+        action = greedySelection(state + 3);
         switch(action)
         {
         case 0  ://window

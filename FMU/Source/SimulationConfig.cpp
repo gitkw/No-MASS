@@ -447,7 +447,11 @@ void SimulationConfig::parseConfiguration(std::string filename)
         }
         else if (v.first == "qlearn")
         {
-            SimulationConfig::info.qlearn = v.second.get_value<double>();
+            SimulationConfig::info.qlearn = v.second.get_value<int>();
+        }
+        else if (v.first == "qlearnep")
+        {
+            SimulationConfig::info.qlearnep = v.second.get_value<double>();
         }
         else if (v.first == "simulateAgents")
         {

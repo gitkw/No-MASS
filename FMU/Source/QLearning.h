@@ -1,8 +1,8 @@
-#ifndef RLEARNING_H
-#define RLEARNING_H
+#ifndef QLEARNING_H
+#define QLEARNING_H
 
 #include <vector>
-#include "Agent.h"
+#include "Zone.h"
 
 class QLearning
 {
@@ -12,6 +12,8 @@ class QLearning
         void updateQ(int s, int a, double r, int sp);
         void printQ();
         void setId(int id);
+        void setState(int state);
+        void setReward(int reward);
         void setup();
         virtual void learn(const Zone &zone, struct ActionValues *act );
     protected:
@@ -19,6 +21,11 @@ class QLearning
         int states = 0;
         int actions = 0;
         bool learnNext = false;
+        int reward;
+        int previous_reward;
+        int state;
+        int previous_state;
+        int action;
     private:
         std::vector<std::vector<double>> qTable;
         double epsilon = 8.0;   // probability of a random action selection
@@ -27,6 +34,8 @@ class QLearning
         int id;
 
         int getBestAction(int s);
+
+
 };
 
-#endif // RLEARNING_H
+#endif // QLEARNING_H

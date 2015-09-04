@@ -35,6 +35,7 @@ public:
     void setGroundFloor(bool groundFloor);
     double getGroundFloor() const;
 
+    double getAirSystemSensibleHeatingRate() const;
     double getLightState() const;
     double getMeanAirTemperature() const;
     double getAirRelativeHumidity() const;

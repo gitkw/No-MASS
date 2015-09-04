@@ -99,6 +99,10 @@ double Zone::getDaylightingReferencePoint1Illuminance() const {
     return DataStore::getValue(name + "DaylightingReferencePoint1Illuminance");
 }
 
+double Zone::getAirSystemSensibleHeatingRate() const {
+    return DataStore::getValue(name + "ZoneAirSystemSensibleHeatingRate");
+}
+
 float Zone::getOccupantFraction() const {
     return occupantFraction;
 }

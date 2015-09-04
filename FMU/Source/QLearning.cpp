@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <list>
-
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -15,7 +14,7 @@ QLearning::QLearning()
 }
 
 void QLearning::setup(){
-    epsilon = SimulationConfig::info.qlearn;
+    epsilon = SimulationConfig::info.qlearnep;
     std::ifstream in_file;
     in_file.open("rlearning" + std::to_string(id) + ".dat");
     if(in_file.fail())
@@ -74,7 +73,6 @@ void QLearning::updateQ(int s, int a, double r, int sp){
 
 void QLearning::printQ(){
 
-
     std::ofstream myfile;
     myfile.open ("rlearning" + std::to_string(id) + ".dat");
 
@@ -91,4 +89,15 @@ void QLearning::printQ(){
 
 void QLearning::setId(int id){
     this->id = id;
+}
+
+void QLearning::setState(int state){
+    this->state = state;
+}
+
+void QLearning::setReward(int reward){
+    this->reward = reward;
+}
+
+void QLearning::learn(const Zone &zone, struct ActionValues *act ){
 }

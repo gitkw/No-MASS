@@ -19,6 +19,7 @@
 #include "StateMachine.h"
 #include "Utility.h"
 #include "QLearning_PMV.h"
+#include "QLearning_HeatingRate.h"
 
 #include "Agent.h"
 
@@ -35,7 +36,16 @@ Agent::Agent(int newId) : id(newId)
     bedroom = agent.bedroom;
     office = agent.office;
     power = agent.power;
-    ql = std::unique_ptr<QLearning_PMV>(new QLearning_PMV);
+
+    switch (SimulationConfig::info.qlearn) {
+      case 0:
+        ql = std::unique_ptr<QLearning_PMV>(new QLearning_PMV);
+        break;
+      case 1:
+        ql = std::unique_ptr<QLearning_HeatingRate>(new QLearning_HeatingRate);
+        break;
+    }
+
     ql->setId(id);
     ql->setup();
     aahg.setup(id);
@@ -103,11 +113,11 @@ void Agent::actionStep(int action, ActionValues *interaction, const Zone &zone, 
         break;
       case 2:
             aas.step(zone, inZone, preZone, activities);
-            interaction->windowState = aas.getResult();
+            interaction->shadeState = aas.getResult();
         break;
       case 3:
             aal.step(zone, inZone, preZone, activities);
-            interaction->windowState = aal.getResult();
+            interaction->lightState = aal.getResult();
         break;
 
       }
@@ -128,10 +138,22 @@ void Agent::interactWithZone(const Zone &zone)
     {
         case 1  :
         {
-//            ql->learn(zone, &interaction);
+            switch (SimulationConfig::info.qlearn) {
+              case 0:
+                ql->setState(pmv);
+                ql->setReward(pmv);
+
+                break;
+              case 1:
+                //ql->setState(zone.getAirSystemSensibleHeatingRate());
+                ql->setReward(zone.getAirSystemSensibleHeatingRate());
+                break;
+            }
+            ql->learn(zone, &interaction);
             break;
         }
     }
+
     zoneToInteraction[zone.getName()] = interaction;
 }
 

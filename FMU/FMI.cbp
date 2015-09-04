@@ -94,6 +94,8 @@
 		<Unit filename="Source/Model_Windows.h" />
 		<Unit filename="Source/QLearning.cpp" />
 		<Unit filename="Source/QLearning.h" />
+		<Unit filename="Source/QLearning_HeatingRate.cpp" />
+		<Unit filename="Source/QLearning_HeatingRate.h" />
 		<Unit filename="Source/QLearning_PMV.cpp" />
 		<Unit filename="Source/QLearning_PMV.h" />
 		<Unit filename="Source/Simulation.cpp" />
