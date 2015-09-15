@@ -128,37 +128,37 @@ ScheduleTypeLimits, Temperature,  -60, 200, CONTINUOUS;
 ScheduleTypeLimits, Control Type,   0,   4, DISCRETE;
 ScheduleTypeLimits, On/Off,         0,   1, DISCRETE;
 
-Schedule:Compact, 
+Schedule:Compact,
       On,                                         ! Name
       Any Number,                                 ! Type
       Through: 12/31,                             ! Type
       For: AllDays,                               ! All days in year
       Until: 24:00,                               ! All hours in day
-       1;     
+       1;
 
-Schedule:Compact, 
+Schedule:Compact,
       Off,                                        ! Name
       Any Number,                                 ! Type
       Through: 12/31,                             ! Type
       For: AllDays,                               ! All days in year
       Until: 24:00,                               ! All hours in day
-       0;     
+       0;
 
-Schedule:Compact, 
+Schedule:Compact,
       Work efficiency,                            ! Name
       Any Number,                                 ! Type
       Through: 12/31,                             ! Type
       For: AllDays,                               ! All days in year
       Until: 24:00,                               ! All hours in day
-       0;     
+       0;
 Schedule:Compact,
       OpaqueShade,                                ! Name
       Any Number,                                 ! Type
       Through: 12/31,                             ! Type
       For: AllDays,                               ! All days in year
       Until: 24:00,                               ! All hours in day
-       0;     
-       
+       0;
+
 Schedule:Compact,
     Zone Comfort Control Type Sched,              !- Name
     Control Type,                                 !- Schedule Type Limits Name
@@ -177,7 +177,7 @@ Schedule:Compact,
     For: AllOtherDays,                            !- Field 2
     Until: 24:00,                                 !- Field 3
     0;
-      
+
 ! off heating day
 Schedule:Day:Hourly,  0, Any Number,
    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
@@ -244,7 +244,7 @@ Schedule:Week:Daily, Winter Control Type Week Sch - heat,
 
 
 
-Material:NoMass, 
+Material:NoMass,
 LinearBridgingLayer,                  ! Material Name
 Rough,                                ! Roughness
 1 ,                                   ! Resistance {M**2K/W}
@@ -353,13 +353,13 @@ Until: 24:00, 0;
 
 Schedule:Compact, 20001,
 Any Number,
-Through: 12/31, 
+Through: 12/31,
 For: Weekdays Weekends SummerDesignDays,
 Until: 24:00,  24,
 For: WinterDesignDays,
 Until: 24:00, 0,
 For: AllOtherDays,
-Until: 24:00,  24;  
+Until: 24:00,  24;
 
 WindowMaterial:Gas,1002,                          !- AIR 13MM
    Air,                                           !- Gas type (Air - Argon - Krypton - Xenon - SF6 - Custom)
@@ -621,7 +621,7 @@ WindowProperty:ShadingControl,1001,               !- Name of shading control
    ,                                              !- Slat angle schedule name
    0;                                             !- Setpoint 2
 
-HeatBalanceAlgorithm, 
+HeatBalanceAlgorithm,
    ConductionTransferFunction,                    !- Heat Balance Algorithm: CTF or CondFD
    2000;                                          !- Max Surface Temperature Limit
 ShadowCalculation, AverageOverDaysInFrequency, 20,  15000, SutherlandHodgman, SimpleSkyDiffuseModeling;  !- Interval between shading calcs
@@ -835,7 +835,7 @@ Zone, Block1:Zone1,                               !- Zone Name
          -.4,                                     !- Wind direction #7 (deg)
          -.5;                                     !- Wind direction #8 (deg)
 
-   ! Block 1, Zone 1, Wall - 12.600 m2 - 90.0°, Surface Area: 12.600m2
+   ! Block 1, Zone 1, Wall - 12.600 m2 - 90.0ï¿½, Surface Area: 12.600m2
    BuildingSurface:Detailed,                      !- Surface
       Block1:Zone1_Wall_2_0_0,                    !- Surface name
       Wall, Project wall,                         !- Class and Construction Name
@@ -879,7 +879,7 @@ Zone, Block1:Zone1,                               !- Zone Name
          -.2,                                     !- Wind direction #7 (deg)
          -.35;                                    !- Wind direction #8 (deg)
 
-   ! Block 1, Zone 1, Wall - 9.800 m2 - 0.0°, Surface Area: 9.800m2
+   ! Block 1, Zone 1, Wall - 9.800 m2 - 0.0ï¿½, Surface Area: 9.800m2
    BuildingSurface:Detailed,                      !- Surface
       Block1:Zone1_Wall_3_0_0,                    !- Surface name
       Wall, Project wall,                         !- Class and Construction Name
@@ -923,7 +923,7 @@ Zone, Block1:Zone1,                               !- Zone Name
          -.3,                                     !- Wind direction #7 (deg)
           .1;                                     !- Wind direction #8 (deg)
 
-   ! Block 1, Zone 1, Wall - 12.600 m2 - 270.0°, Surface Area: 12.600m2
+   ! Block 1, Zone 1, Wall - 12.600 m2 - 270.0ï¿½, Surface Area: 12.600m2
    BuildingSurface:Detailed,                      !- Surface
       Block1:Zone1_Wall_4_0_0,                    !- Surface name
       Wall, Project wall,                         !- Class and Construction Name
@@ -967,7 +967,7 @@ Zone, Block1:Zone1,                               !- Zone Name
           .4,                                     !- Wind direction #7 (deg)
           .1;                                     !- Wind direction #8 (deg)
 
-   ! Block 1, Zone 1, Wall - 9.800 m2 - 180.0°, Surface Area: 9.800m2
+   ! Block 1, Zone 1, Wall - 9.800 m2 - 180.0ï¿½, Surface Area: 9.800m2
    BuildingSurface:Detailed,                      !- Surface
       Block1:Zone1_Wall_5_0_0,                    !- Surface name
       Wall, Project wall,                         !- Class and Construction Name
@@ -1027,7 +1027,7 @@ Zone, Block1:Zone1,                               !- Zone Name
          -.02546911,-5.2076251359, 1.8906440255,  !- Vertex 3
          -2.8310691,-5.2076251359, 1.8906440255;  !- Vertex 4
 
-      AirflowNetwork:MultiZone:Component:DetailedOpening, 
+      AirflowNetwork:MultiZone:Component:DetailedOpening,
          Block1:Zone1_Wall_5_0_0_0_0_0_Win,       !- Name - Win
          .00014,                                  !- Air Mass Flow Coefficient When Window or Door Is Closed (kg/s @ 1Pa per m crack)
          .65,                                     !- Air Mass Flow Exponent When Window or Door Is Closed (dimensionless)
@@ -1724,3 +1724,10 @@ ExternalInterface:FunctionalMockupUnitImport:From:Variable,
   agentFMU.fmu,                            !- FMU Filename,
   FMI,                                     !- FMU Instance Name,
   EMSepTimeStep;                           !- FMU Variable Name
+
+ExternalInterface:FunctionalMockupUnitImport:From:Variable,
+  Block1:Zone1,                            !- EnergyPlus Key Value,
+  Zone Air System Sensible Heating Rate,   !- EnergyPlus Variable Name,
+  agentFMU.fmu,                            !- FMU Filename,
+  FMI,                                     !- FMU Instance Name,
+  Block1:Zone1ZoneAirSystemSensibleHeatingRate; !- FMU Variable Name
