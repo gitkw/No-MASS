@@ -1,8 +1,8 @@
 #ifndef QLEARNING_HEATINGRATE_H
 #define QLEARNING_HEATINGRATE_H
 
-#include <QLearning.h>
-#include <Agent.h>
+#include "QLearning.h"
+#include "Agent.h"
 
 class QLearning_HeatingRate : public QLearning
 {

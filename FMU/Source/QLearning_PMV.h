@@ -1,8 +1,8 @@
 #ifndef QLEARNING_PMV_H
 #define QLEARNING_PMV_H
 
-#include <Agent.h>
-#include <QLearning.h>
+#include "QLearning.h"
+#include "Agent.h"
 
 
 class QLearning_PMV : public QLearning
