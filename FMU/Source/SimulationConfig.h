@@ -29,6 +29,16 @@ struct agentStruct {
     int windowId;
     int shadeId;
     std::map<int, std::string> profile;
+
+
+    std::string age;
+    std::string computer;
+    std::string civstat;
+    std::string unemp;
+    std::string retired;
+    std::string edtry;
+    std::string famstat;
+    std::string sex;
 };
 
 struct shadeStruct {
@@ -109,6 +119,7 @@ struct simulationStruct {
     int timeSteps;
     int startDay;
     int startMonth;
+    int startDayOfWeek;
     int endDay;
     int endMonth;
     int timePeriod;
@@ -132,6 +143,7 @@ public:
     static double lengthOfTimestep();
     static void step();
     static int getStepCount();
+    static std::string ActivityFile;
 private:
     static int stepCount;
     static std::vector<std::string> splitZoneActivities(std::string types);
