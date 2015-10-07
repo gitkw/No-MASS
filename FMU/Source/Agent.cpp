@@ -132,12 +132,10 @@ void Agent::interactWithZone(const Zone &zone)
     zoneToInteraction[zone.getName()] = interaction;
 }
 
-
-
-
 void Agent::model_activity()
 {
-    activities = Model_Activity::getAgentActivities(id);
+    Model_Activity ma;
+    activities = ma.getAgentActivities(id);
 }
 
 void Agent::model_presenceFromActivities()

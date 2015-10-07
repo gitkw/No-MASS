@@ -20,9 +20,14 @@ before_install:
 before_script:
   - cd Boost
   - make
-  - cd ../FMU
 
-script: make
+
+script:
+  - cd ../FMU
+  - make
+  - cd ../tests
+  - make
+  - ./unittest
 
 after_success:
 

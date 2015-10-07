@@ -5,8 +5,6 @@
 
 WORKDIR = `pwd`
 
-
-
 INC = -I../Boost/Boost-Source
 CFLAGS = -std=c++11 -Wall -fPIC
 RESINC =
@@ -36,9 +34,9 @@ OBJDIR_RELEASE = obj/Release
 DEP_RELEASE =
 OUT_RELEASE = bin/Release/FMI.so
 
-OBJ_DEBUG = $(OBJDIR_DEBUG)/Source/State_Audio_Visual.o $(OBJDIR_DEBUG)/Source/State_Out.o $(OBJDIR_DEBUG)/Source/State_Metabolic.o $(OBJDIR_DEBUG)/Source/State_IT.o $(OBJDIR_DEBUG)/Source/State_Cooking.o $(OBJDIR_DEBUG)/Source/State_Cleaning.o $(OBJDIR_DEBUG)/Source/StateMachine.o $(OBJDIR_DEBUG)/Source/State.o $(OBJDIR_DEBUG)/Source/SimulationConfig.o $(OBJDIR_DEBUG)/Source/Simulation.o $(OBJDIR_DEBUG)/Source/fmuTemplate.o $(OBJDIR_DEBUG)/Source/fmiFunctions.o $(OBJDIR_DEBUG)/Source/Zone.o $(OBJDIR_DEBUG)/Source/Utility.o $(OBJDIR_DEBUG)/Source/QLearning_PMV.o $(OBJDIR_DEBUG)/Source/State_Washing_Appliance.o $(OBJDIR_DEBUG)/Source/State_Washing.o $(OBJDIR_DEBUG)/Source/State_Sleep.o $(OBJDIR_DEBUG)/Source/State_Present.o $(OBJDIR_DEBUG)/Source/State_Passive.o $(OBJDIR_DEBUG)/Source/Agent_Action_Window.o $(OBJDIR_DEBUG)/Source/Model_Activity.o $(OBJDIR_DEBUG)/Source/EP_ReadIDF.o $(OBJDIR_DEBUG)/Source/EP_IDFObject.o $(OBJDIR_DEBUG)/Source/DataStore.o $(OBJDIR_DEBUG)/Source/Model_Agents.o $(OBJDIR_DEBUG)/Source/Agent_Action_Shades.o $(OBJDIR_DEBUG)/Source/Agent_Action_Lights.o $(OBJDIR_DEBUG)/Source/Agent_Action_Heat_Gains.o $(OBJDIR_DEBUG)/Source/Agent_Action.o $(OBJDIR_DEBUG)/Source/Model_Presence.o $(OBJDIR_DEBUG)/Source/QLearning_HeatingRate.o $(OBJDIR_DEBUG)/Source/QLearning.o $(OBJDIR_DEBUG)/Source/Model_Windows.o $(OBJDIR_DEBUG)/Source/Model_RandomWeibull.o $(OBJDIR_DEBUG)/Source/Agent.o $(OBJDIR_DEBUG)/Source/Model_Lights.o $(OBJDIR_DEBUG)/Source/Model_HeatGains.o $(OBJDIR_DEBUG)/Source/Model_ExternalShading.o $(OBJDIR_DEBUG)/Source/Model_EnergyPlus.o
+OBJ_DEBUG = $(OBJDIR_DEBUG)/Source/State_Cleaning.o $(OBJDIR_DEBUG)/Source/State_Out.o $(OBJDIR_DEBUG)/Source/State_Metabolic.o $(OBJDIR_DEBUG)/Source/State_IT.o $(OBJDIR_DEBUG)/Source/State_Cooking.o $(OBJDIR_DEBUG)/Source/State_Passive.o $(OBJDIR_DEBUG)/Source/State_Audio_Visual.o $(OBJDIR_DEBUG)/Source/StateMachine.o $(OBJDIR_DEBUG)/Source/State.o $(OBJDIR_DEBUG)/Source/SimulationConfig.o $(OBJDIR_DEBUG)/Source/fmuTemplate.o $(OBJDIR_DEBUG)/Source/fmiFunctions.o $(OBJDIR_DEBUG)/Source/Zone.o $(OBJDIR_DEBUG)/Source/Utility.o $(OBJDIR_DEBUG)/Source/State_Washing_Appliance.o $(OBJDIR_DEBUG)/Source/State_Washing.o $(OBJDIR_DEBUG)/Source/State_Sleep.o $(OBJDIR_DEBUG)/Source/State_Present.o $(OBJDIR_DEBUG)/Source/Model_Activity.o $(OBJDIR_DEBUG)/Source/EP_ReadIDF.o $(OBJDIR_DEBUG)/Source/EP_IDFObject.o $(OBJDIR_DEBUG)/Source/DataStore.o $(OBJDIR_DEBUG)/Source/Agent_Action_Window.o $(OBJDIR_DEBUG)/Source/Agent_Action_Shades.o $(OBJDIR_DEBUG)/Source/Agent_Action_Lights.o $(OBJDIR_DEBUG)/Source/Agent_Action_Heat_Gains.o $(OBJDIR_DEBUG)/Source/Agent_Action.o $(OBJDIR_DEBUG)/Source/Model_Lights.o $(OBJDIR_DEBUG)/Source/Simulation.o $(OBJDIR_DEBUG)/Source/Model_Windows.o $(OBJDIR_DEBUG)/Source/Model_RandomWeibull.o $(OBJDIR_DEBUG)/Source/Model_Presence.o $(OBJDIR_DEBUG)/Source/Agent.o $(OBJDIR_DEBUG)/Source/Model_HeatGains.o $(OBJDIR_DEBUG)/Source/Model_ExternalShading.o $(OBJDIR_DEBUG)/Source/Model_EnergyPlus.o $(OBJDIR_DEBUG)/Source/Model_Agents.o
 
-OBJ_RELEASE = $(OBJDIR_RELEASE)/Source/State_Audio_Visual.o $(OBJDIR_RELEASE)/Source/State_Out.o $(OBJDIR_RELEASE)/Source/State_Metabolic.o $(OBJDIR_RELEASE)/Source/State_IT.o $(OBJDIR_RELEASE)/Source/State_Cooking.o $(OBJDIR_RELEASE)/Source/State_Cleaning.o $(OBJDIR_RELEASE)/Source/StateMachine.o $(OBJDIR_RELEASE)/Source/State.o $(OBJDIR_RELEASE)/Source/SimulationConfig.o $(OBJDIR_RELEASE)/Source/Simulation.o $(OBJDIR_RELEASE)/Source/fmuTemplate.o $(OBJDIR_RELEASE)/Source/fmiFunctions.o $(OBJDIR_RELEASE)/Source/Zone.o $(OBJDIR_RELEASE)/Source/Utility.o $(OBJDIR_RELEASE)/Source/QLearning_PMV.o $(OBJDIR_RELEASE)/Source/State_Washing_Appliance.o $(OBJDIR_RELEASE)/Source/State_Washing.o $(OBJDIR_RELEASE)/Source/State_Sleep.o $(OBJDIR_RELEASE)/Source/State_Present.o $(OBJDIR_RELEASE)/Source/State_Passive.o $(OBJDIR_RELEASE)/Source/Agent_Action_Window.o $(OBJDIR_RELEASE)/Source/Model_Activity.o $(OBJDIR_RELEASE)/Source/EP_ReadIDF.o $(OBJDIR_RELEASE)/Source/EP_IDFObject.o $(OBJDIR_RELEASE)/Source/DataStore.o $(OBJDIR_RELEASE)/Source/Model_Agents.o $(OBJDIR_RELEASE)/Source/Agent_Action_Shades.o $(OBJDIR_RELEASE)/Source/Agent_Action_Lights.o $(OBJDIR_RELEASE)/Source/Agent_Action_Heat_Gains.o $(OBJDIR_RELEASE)/Source/Agent_Action.o $(OBJDIR_RELEASE)/Source/Model_Presence.o $(OBJDIR_RELEASE)/Source/QLearning_HeatingRate.o $(OBJDIR_RELEASE)/Source/QLearning.o $(OBJDIR_RELEASE)/Source/Model_Windows.o $(OBJDIR_RELEASE)/Source/Model_RandomWeibull.o $(OBJDIR_RELEASE)/Source/Agent.o $(OBJDIR_RELEASE)/Source/Model_Lights.o $(OBJDIR_RELEASE)/Source/Model_HeatGains.o $(OBJDIR_RELEASE)/Source/Model_ExternalShading.o $(OBJDIR_RELEASE)/Source/Model_EnergyPlus.o
+OBJ_RELEASE = $(OBJDIR_RELEASE)/Source/State_Cleaning.o $(OBJDIR_RELEASE)/Source/State_Out.o $(OBJDIR_RELEASE)/Source/State_Metabolic.o $(OBJDIR_RELEASE)/Source/State_IT.o $(OBJDIR_RELEASE)/Source/State_Cooking.o $(OBJDIR_RELEASE)/Source/State_Passive.o $(OBJDIR_RELEASE)/Source/State_Audio_Visual.o $(OBJDIR_RELEASE)/Source/StateMachine.o $(OBJDIR_RELEASE)/Source/State.o $(OBJDIR_RELEASE)/Source/SimulationConfig.o $(OBJDIR_RELEASE)/Source/fmuTemplate.o $(OBJDIR_RELEASE)/Source/fmiFunctions.o $(OBJDIR_RELEASE)/Source/Zone.o $(OBJDIR_RELEASE)/Source/Utility.o $(OBJDIR_RELEASE)/Source/State_Washing_Appliance.o $(OBJDIR_RELEASE)/Source/State_Washing.o $(OBJDIR_RELEASE)/Source/State_Sleep.o $(OBJDIR_RELEASE)/Source/State_Present.o $(OBJDIR_RELEASE)/Source/Model_Activity.o $(OBJDIR_RELEASE)/Source/EP_ReadIDF.o $(OBJDIR_RELEASE)/Source/EP_IDFObject.o $(OBJDIR_RELEASE)/Source/DataStore.o $(OBJDIR_RELEASE)/Source/Agent_Action_Window.o $(OBJDIR_RELEASE)/Source/Agent_Action_Shades.o $(OBJDIR_RELEASE)/Source/Agent_Action_Lights.o $(OBJDIR_RELEASE)/Source/Agent_Action_Heat_Gains.o $(OBJDIR_RELEASE)/Source/Agent_Action.o $(OBJDIR_RELEASE)/Source/Model_Lights.o $(OBJDIR_RELEASE)/Source/Simulation.o $(OBJDIR_RELEASE)/Source/Model_Windows.o $(OBJDIR_RELEASE)/Source/Model_RandomWeibull.o $(OBJDIR_RELEASE)/Source/Model_Presence.o $(OBJDIR_RELEASE)/Source/Agent.o $(OBJDIR_RELEASE)/Source/Model_HeatGains.o $(OBJDIR_RELEASE)/Source/Model_ExternalShading.o $(OBJDIR_RELEASE)/Source/Model_EnergyPlus.o $(OBJDIR_RELEASE)/Source/Model_Agents.o
 
 all: before_build build_debug build_release after_build
 
@@ -47,7 +45,6 @@ clean: clean_debug clean_release
 before_build:
 
 after_build:
-	
 
 before_debug:
 	test -d bin/Debug || mkdir -p bin/Debug
@@ -62,8 +59,8 @@ debug: before_build build_debug after_build
 out_debug: before_debug $(OBJ_DEBUG) $(DEP_DEBUG)
 	$(LD) -shared $(LIBDIR_DEBUG) $(OBJ_DEBUG)  -o $(OUT_DEBUG) $(LDFLAGS_DEBUG) $(LIB_DEBUG)
 
-$(OBJDIR_DEBUG)/Source/State_Audio_Visual.o: Source/State_Audio_Visual.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/State_Audio_Visual.cpp -o $(OBJDIR_DEBUG)/Source/State_Audio_Visual.o
+$(OBJDIR_DEBUG)/Source/State_Cleaning.o: Source/State_Cleaning.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/State_Cleaning.cpp -o $(OBJDIR_DEBUG)/Source/State_Cleaning.o
 
 $(OBJDIR_DEBUG)/Source/State_Out.o: Source/State_Out.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/State_Out.cpp -o $(OBJDIR_DEBUG)/Source/State_Out.o
@@ -77,8 +74,11 @@ $(OBJDIR_DEBUG)/Source/State_IT.o: Source/State_IT.cpp
 $(OBJDIR_DEBUG)/Source/State_Cooking.o: Source/State_Cooking.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/State_Cooking.cpp -o $(OBJDIR_DEBUG)/Source/State_Cooking.o
 
-$(OBJDIR_DEBUG)/Source/State_Cleaning.o: Source/State_Cleaning.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/State_Cleaning.cpp -o $(OBJDIR_DEBUG)/Source/State_Cleaning.o
+$(OBJDIR_DEBUG)/Source/State_Passive.o: Source/State_Passive.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/State_Passive.cpp -o $(OBJDIR_DEBUG)/Source/State_Passive.o
+
+$(OBJDIR_DEBUG)/Source/State_Audio_Visual.o: Source/State_Audio_Visual.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/State_Audio_Visual.cpp -o $(OBJDIR_DEBUG)/Source/State_Audio_Visual.o
 
 $(OBJDIR_DEBUG)/Source/StateMachine.o: Source/StateMachine.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/StateMachine.cpp -o $(OBJDIR_DEBUG)/Source/StateMachine.o
@@ -88,9 +88,6 @@ $(OBJDIR_DEBUG)/Source/State.o: Source/State.cpp
 
 $(OBJDIR_DEBUG)/Source/SimulationConfig.o: Source/SimulationConfig.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/SimulationConfig.cpp -o $(OBJDIR_DEBUG)/Source/SimulationConfig.o
-
-$(OBJDIR_DEBUG)/Source/Simulation.o: Source/Simulation.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Simulation.cpp -o $(OBJDIR_DEBUG)/Source/Simulation.o
 
 $(OBJDIR_DEBUG)/Source/fmuTemplate.o: Source/fmuTemplate.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/fmuTemplate.cpp -o $(OBJDIR_DEBUG)/Source/fmuTemplate.o
@@ -104,9 +101,6 @@ $(OBJDIR_DEBUG)/Source/Zone.o: Source/Zone.cpp
 $(OBJDIR_DEBUG)/Source/Utility.o: Source/Utility.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Utility.cpp -o $(OBJDIR_DEBUG)/Source/Utility.o
 
-$(OBJDIR_DEBUG)/Source/QLearning_PMV.o: Source/QLearning_PMV.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/QLearning_PMV.cpp -o $(OBJDIR_DEBUG)/Source/QLearning_PMV.o
-
 $(OBJDIR_DEBUG)/Source/State_Washing_Appliance.o: Source/State_Washing_Appliance.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/State_Washing_Appliance.cpp -o $(OBJDIR_DEBUG)/Source/State_Washing_Appliance.o
 
@@ -118,12 +112,6 @@ $(OBJDIR_DEBUG)/Source/State_Sleep.o: Source/State_Sleep.cpp
 
 $(OBJDIR_DEBUG)/Source/State_Present.o: Source/State_Present.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/State_Present.cpp -o $(OBJDIR_DEBUG)/Source/State_Present.o
-
-$(OBJDIR_DEBUG)/Source/State_Passive.o: Source/State_Passive.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/State_Passive.cpp -o $(OBJDIR_DEBUG)/Source/State_Passive.o
-
-$(OBJDIR_DEBUG)/Source/Agent_Action_Window.o: Source/Agent_Action_Window.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Agent_Action_Window.cpp -o $(OBJDIR_DEBUG)/Source/Agent_Action_Window.o
 
 $(OBJDIR_DEBUG)/Source/Model_Activity.o: Source/Model_Activity.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Model_Activity.cpp -o $(OBJDIR_DEBUG)/Source/Model_Activity.o
@@ -137,8 +125,8 @@ $(OBJDIR_DEBUG)/Source/EP_IDFObject.o: Source/EP_IDFObject.cpp
 $(OBJDIR_DEBUG)/Source/DataStore.o: Source/DataStore.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/DataStore.cpp -o $(OBJDIR_DEBUG)/Source/DataStore.o
 
-$(OBJDIR_DEBUG)/Source/Model_Agents.o: Source/Model_Agents.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Model_Agents.cpp -o $(OBJDIR_DEBUG)/Source/Model_Agents.o
+$(OBJDIR_DEBUG)/Source/Agent_Action_Window.o: Source/Agent_Action_Window.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Agent_Action_Window.cpp -o $(OBJDIR_DEBUG)/Source/Agent_Action_Window.o
 
 $(OBJDIR_DEBUG)/Source/Agent_Action_Shades.o: Source/Agent_Action_Shades.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Agent_Action_Shades.cpp -o $(OBJDIR_DEBUG)/Source/Agent_Action_Shades.o
@@ -152,14 +140,11 @@ $(OBJDIR_DEBUG)/Source/Agent_Action_Heat_Gains.o: Source/Agent_Action_Heat_Gains
 $(OBJDIR_DEBUG)/Source/Agent_Action.o: Source/Agent_Action.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Agent_Action.cpp -o $(OBJDIR_DEBUG)/Source/Agent_Action.o
 
-$(OBJDIR_DEBUG)/Source/Model_Presence.o: Source/Model_Presence.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Model_Presence.cpp -o $(OBJDIR_DEBUG)/Source/Model_Presence.o
+$(OBJDIR_DEBUG)/Source/Model_Lights.o: Source/Model_Lights.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Model_Lights.cpp -o $(OBJDIR_DEBUG)/Source/Model_Lights.o
 
-$(OBJDIR_DEBUG)/Source/QLearning_HeatingRate.o: Source/QLearning_HeatingRate.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/QLearning_HeatingRate.cpp -o $(OBJDIR_DEBUG)/Source/QLearning_HeatingRate.o
-
-$(OBJDIR_DEBUG)/Source/QLearning.o: Source/QLearning.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/QLearning.cpp -o $(OBJDIR_DEBUG)/Source/QLearning.o
+$(OBJDIR_DEBUG)/Source/Simulation.o: Source/Simulation.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Simulation.cpp -o $(OBJDIR_DEBUG)/Source/Simulation.o
 
 $(OBJDIR_DEBUG)/Source/Model_Windows.o: Source/Model_Windows.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Model_Windows.cpp -o $(OBJDIR_DEBUG)/Source/Model_Windows.o
@@ -167,11 +152,11 @@ $(OBJDIR_DEBUG)/Source/Model_Windows.o: Source/Model_Windows.cpp
 $(OBJDIR_DEBUG)/Source/Model_RandomWeibull.o: Source/Model_RandomWeibull.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Model_RandomWeibull.cpp -o $(OBJDIR_DEBUG)/Source/Model_RandomWeibull.o
 
+$(OBJDIR_DEBUG)/Source/Model_Presence.o: Source/Model_Presence.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Model_Presence.cpp -o $(OBJDIR_DEBUG)/Source/Model_Presence.o
+
 $(OBJDIR_DEBUG)/Source/Agent.o: Source/Agent.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Agent.cpp -o $(OBJDIR_DEBUG)/Source/Agent.o
-
-$(OBJDIR_DEBUG)/Source/Model_Lights.o: Source/Model_Lights.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Model_Lights.cpp -o $(OBJDIR_DEBUG)/Source/Model_Lights.o
 
 $(OBJDIR_DEBUG)/Source/Model_HeatGains.o: Source/Model_HeatGains.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Model_HeatGains.cpp -o $(OBJDIR_DEBUG)/Source/Model_HeatGains.o
@@ -181,6 +166,9 @@ $(OBJDIR_DEBUG)/Source/Model_ExternalShading.o: Source/Model_ExternalShading.cpp
 
 $(OBJDIR_DEBUG)/Source/Model_EnergyPlus.o: Source/Model_EnergyPlus.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Model_EnergyPlus.cpp -o $(OBJDIR_DEBUG)/Source/Model_EnergyPlus.o
+
+$(OBJDIR_DEBUG)/Source/Model_Agents.o: Source/Model_Agents.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c Source/Model_Agents.cpp -o $(OBJDIR_DEBUG)/Source/Model_Agents.o
 
 clean_debug:
 	rm -f $(OBJ_DEBUG) $(OUT_DEBUG)
@@ -200,8 +188,8 @@ release: before_build build_release after_build
 out_release: before_release $(OBJ_RELEASE) $(DEP_RELEASE)
 	$(LD) -shared $(LIBDIR_RELEASE) $(OBJ_RELEASE)  -o $(OUT_RELEASE) $(LDFLAGS_RELEASE) $(LIB_RELEASE)
 
-$(OBJDIR_RELEASE)/Source/State_Audio_Visual.o: Source/State_Audio_Visual.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/State_Audio_Visual.cpp -o $(OBJDIR_RELEASE)/Source/State_Audio_Visual.o
+$(OBJDIR_RELEASE)/Source/State_Cleaning.o: Source/State_Cleaning.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/State_Cleaning.cpp -o $(OBJDIR_RELEASE)/Source/State_Cleaning.o
 
 $(OBJDIR_RELEASE)/Source/State_Out.o: Source/State_Out.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/State_Out.cpp -o $(OBJDIR_RELEASE)/Source/State_Out.o
@@ -215,8 +203,11 @@ $(OBJDIR_RELEASE)/Source/State_IT.o: Source/State_IT.cpp
 $(OBJDIR_RELEASE)/Source/State_Cooking.o: Source/State_Cooking.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/State_Cooking.cpp -o $(OBJDIR_RELEASE)/Source/State_Cooking.o
 
-$(OBJDIR_RELEASE)/Source/State_Cleaning.o: Source/State_Cleaning.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/State_Cleaning.cpp -o $(OBJDIR_RELEASE)/Source/State_Cleaning.o
+$(OBJDIR_RELEASE)/Source/State_Passive.o: Source/State_Passive.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/State_Passive.cpp -o $(OBJDIR_RELEASE)/Source/State_Passive.o
+
+$(OBJDIR_RELEASE)/Source/State_Audio_Visual.o: Source/State_Audio_Visual.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/State_Audio_Visual.cpp -o $(OBJDIR_RELEASE)/Source/State_Audio_Visual.o
 
 $(OBJDIR_RELEASE)/Source/StateMachine.o: Source/StateMachine.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/StateMachine.cpp -o $(OBJDIR_RELEASE)/Source/StateMachine.o
@@ -226,9 +217,6 @@ $(OBJDIR_RELEASE)/Source/State.o: Source/State.cpp
 
 $(OBJDIR_RELEASE)/Source/SimulationConfig.o: Source/SimulationConfig.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/SimulationConfig.cpp -o $(OBJDIR_RELEASE)/Source/SimulationConfig.o
-
-$(OBJDIR_RELEASE)/Source/Simulation.o: Source/Simulation.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Simulation.cpp -o $(OBJDIR_RELEASE)/Source/Simulation.o
 
 $(OBJDIR_RELEASE)/Source/fmuTemplate.o: Source/fmuTemplate.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/fmuTemplate.cpp -o $(OBJDIR_RELEASE)/Source/fmuTemplate.o
@@ -242,9 +230,6 @@ $(OBJDIR_RELEASE)/Source/Zone.o: Source/Zone.cpp
 $(OBJDIR_RELEASE)/Source/Utility.o: Source/Utility.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Utility.cpp -o $(OBJDIR_RELEASE)/Source/Utility.o
 
-$(OBJDIR_RELEASE)/Source/QLearning_PMV.o: Source/QLearning_PMV.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/QLearning_PMV.cpp -o $(OBJDIR_RELEASE)/Source/QLearning_PMV.o
-
 $(OBJDIR_RELEASE)/Source/State_Washing_Appliance.o: Source/State_Washing_Appliance.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/State_Washing_Appliance.cpp -o $(OBJDIR_RELEASE)/Source/State_Washing_Appliance.o
 
@@ -256,12 +241,6 @@ $(OBJDIR_RELEASE)/Source/State_Sleep.o: Source/State_Sleep.cpp
 
 $(OBJDIR_RELEASE)/Source/State_Present.o: Source/State_Present.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/State_Present.cpp -o $(OBJDIR_RELEASE)/Source/State_Present.o
-
-$(OBJDIR_RELEASE)/Source/State_Passive.o: Source/State_Passive.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/State_Passive.cpp -o $(OBJDIR_RELEASE)/Source/State_Passive.o
-
-$(OBJDIR_RELEASE)/Source/Agent_Action_Window.o: Source/Agent_Action_Window.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Agent_Action_Window.cpp -o $(OBJDIR_RELEASE)/Source/Agent_Action_Window.o
 
 $(OBJDIR_RELEASE)/Source/Model_Activity.o: Source/Model_Activity.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Model_Activity.cpp -o $(OBJDIR_RELEASE)/Source/Model_Activity.o
@@ -275,8 +254,8 @@ $(OBJDIR_RELEASE)/Source/EP_IDFObject.o: Source/EP_IDFObject.cpp
 $(OBJDIR_RELEASE)/Source/DataStore.o: Source/DataStore.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/DataStore.cpp -o $(OBJDIR_RELEASE)/Source/DataStore.o
 
-$(OBJDIR_RELEASE)/Source/Model_Agents.o: Source/Model_Agents.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Model_Agents.cpp -o $(OBJDIR_RELEASE)/Source/Model_Agents.o
+$(OBJDIR_RELEASE)/Source/Agent_Action_Window.o: Source/Agent_Action_Window.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Agent_Action_Window.cpp -o $(OBJDIR_RELEASE)/Source/Agent_Action_Window.o
 
 $(OBJDIR_RELEASE)/Source/Agent_Action_Shades.o: Source/Agent_Action_Shades.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Agent_Action_Shades.cpp -o $(OBJDIR_RELEASE)/Source/Agent_Action_Shades.o
@@ -290,14 +269,11 @@ $(OBJDIR_RELEASE)/Source/Agent_Action_Heat_Gains.o: Source/Agent_Action_Heat_Gai
 $(OBJDIR_RELEASE)/Source/Agent_Action.o: Source/Agent_Action.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Agent_Action.cpp -o $(OBJDIR_RELEASE)/Source/Agent_Action.o
 
-$(OBJDIR_RELEASE)/Source/Model_Presence.o: Source/Model_Presence.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Model_Presence.cpp -o $(OBJDIR_RELEASE)/Source/Model_Presence.o
+$(OBJDIR_RELEASE)/Source/Model_Lights.o: Source/Model_Lights.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Model_Lights.cpp -o $(OBJDIR_RELEASE)/Source/Model_Lights.o
 
-$(OBJDIR_RELEASE)/Source/QLearning_HeatingRate.o: Source/QLearning_HeatingRate.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/QLearning_HeatingRate.cpp -o $(OBJDIR_RELEASE)/Source/QLearning_HeatingRate.o
-
-$(OBJDIR_RELEASE)/Source/QLearning.o: Source/QLearning.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/QLearning.cpp -o $(OBJDIR_RELEASE)/Source/QLearning.o
+$(OBJDIR_RELEASE)/Source/Simulation.o: Source/Simulation.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Simulation.cpp -o $(OBJDIR_RELEASE)/Source/Simulation.o
 
 $(OBJDIR_RELEASE)/Source/Model_Windows.o: Source/Model_Windows.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Model_Windows.cpp -o $(OBJDIR_RELEASE)/Source/Model_Windows.o
@@ -305,11 +281,11 @@ $(OBJDIR_RELEASE)/Source/Model_Windows.o: Source/Model_Windows.cpp
 $(OBJDIR_RELEASE)/Source/Model_RandomWeibull.o: Source/Model_RandomWeibull.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Model_RandomWeibull.cpp -o $(OBJDIR_RELEASE)/Source/Model_RandomWeibull.o
 
+$(OBJDIR_RELEASE)/Source/Model_Presence.o: Source/Model_Presence.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Model_Presence.cpp -o $(OBJDIR_RELEASE)/Source/Model_Presence.o
+
 $(OBJDIR_RELEASE)/Source/Agent.o: Source/Agent.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Agent.cpp -o $(OBJDIR_RELEASE)/Source/Agent.o
-
-$(OBJDIR_RELEASE)/Source/Model_Lights.o: Source/Model_Lights.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Model_Lights.cpp -o $(OBJDIR_RELEASE)/Source/Model_Lights.o
 
 $(OBJDIR_RELEASE)/Source/Model_HeatGains.o: Source/Model_HeatGains.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Model_HeatGains.cpp -o $(OBJDIR_RELEASE)/Source/Model_HeatGains.o
@@ -319,6 +295,9 @@ $(OBJDIR_RELEASE)/Source/Model_ExternalShading.o: Source/Model_ExternalShading.c
 
 $(OBJDIR_RELEASE)/Source/Model_EnergyPlus.o: Source/Model_EnergyPlus.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Model_EnergyPlus.cpp -o $(OBJDIR_RELEASE)/Source/Model_EnergyPlus.o
+
+$(OBJDIR_RELEASE)/Source/Model_Agents.o: Source/Model_Agents.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c Source/Model_Agents.cpp -o $(OBJDIR_RELEASE)/Source/Model_Agents.o
 
 clean_release:
 	rm -f $(OBJ_RELEASE) $(OUT_RELEASE)
