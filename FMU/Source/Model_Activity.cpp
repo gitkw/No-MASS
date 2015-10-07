@@ -44,53 +44,76 @@ std::vector<double> Model_Activity::getAgentActivities(const int agentID){
     if(SimulationConfig::ActivityFile == ""){
         return disaggregate(agentID);
     }else{
+        parseConfiguration(SimulationConfig::ActivityFile);
         return multinominal(agentID);
     }
 
 }
 
 
-std::string Model_Activity::getSeason(const int month) const{
+std::string Model_Activity::getSeasonString(const int month) const{
   std::string season;
+  switch(month){
+    case 0:
+      season = "season1";
+      break;
+    case 1:
+      season = "season2";
+      break;
+    case 2:
+      season = "season3";
+      break;
+    default:
+      season = "season4";
+  }
+  return season;
+}
+
+int Model_Activity::getSeasonInt(const int month) const{
+  int season;
   switch(month){
     case 12:
     case 1:
     case 2:
-      season = "season4";
+      season = 3;
       break;
     case 3:
     case 4:
     case 5:
-      season = "season1";
+      season = 0;
       break;
     case 6:
     case 7:
     case 8:
-      season = "season2";
+      season = 1;
     break;
     default:
-      season = "season3";
+      season = 2;
   }
   return season;
 }
 
 std::string Model_Activity::getDay(const int day) const{
-
   return "day" + std::to_string(day);
 }
 
-std::vector<double> Model_Activity::multinominal(const int agentID){
+double Model_Activity::multinominalActivity(const double *p) const{
+  double activity;
+  double sum = 0;
+  double drand = Utility::randomDouble(0.0,1.0);
+  for(int i =0; i < 10; i++){
+    sum += p[i];
+    if(sum >= drand)
+    {
+        activity = i;
+        break;
+    }
+  }
+  return activity;
+}
 
-    std::vector<double> activities;
-    parseConfiguration(SimulationConfig::ActivityFile);
-    static const int daysInMonth[] = {31,28,31,30,31,30,31,31,30,31,30,31};
-    int tsph = SimulationConfig::info.timeStepsPerHour;
-    int hourCount = -1;
-    int month = SimulationConfig::info.startMonth;
-    int day = SimulationConfig::info.startDay;
-    int dayOfWeek = SimulationConfig::info.startDayOfWeek;
-    std::string season = getSeason(month);
-    std::string dayString = getDay(dayOfWeek);
+void Model_Activity::multinominalP(double p[4][7][24][10], const int agentID) const{
+
     std::string age = SimulationConfig::agents.at(agentID).age;
     std::string computer = SimulationConfig::agents.at(agentID).computer;
     std::string civstat = SimulationConfig::agents.at(agentID).civstat;
@@ -99,15 +122,74 @@ std::vector<double> Model_Activity::multinominal(const int agentID){
     std::string edtry = SimulationConfig::agents.at(agentID).edtry;
     std::string famstat = SimulationConfig::agents.at(agentID).famstat;
     std::string sex = SimulationConfig::agents.at(agentID).sex;
+
+    for(int iSeason = 0; iSeason <4; iSeason++){
+      std::string seasonString = getSeasonString(iSeason);
+      for(int iDay = 0; iDay <7; iDay++){
+        std::string dayString = getDay(iDay+1);
+        for(int iHour = 0; iHour <24; iHour++){
+          double g[10];
+          double d = 0;
+          int hour = iHour +1;
+          if(iHour < 6){
+            hour = 1;
+          }
+
+          for(int i =0; i < 9; i++){
+
+            g[i] = dictionary.at(hour).at("Intercept").at(0) +
+                   dictionary.at(hour).at(age).at(i) +
+                   dictionary.at(hour).at(seasonString).at(i) +
+                   dictionary.at(hour).at(computer).at(i) +
+                   dictionary.at(hour).at(civstat).at(i) +
+                   dictionary.at(hour).at(unemp).at(i) +
+                   dictionary.at(hour).at(retired).at(i) +
+                   dictionary.at(hour).at(edtry).at(i) +
+                   dictionary.at(hour).at(famstat).at(i) +
+                   dictionary.at(hour).at(dayString).at(i) +
+                   dictionary.at(hour).at(sex).at(i);
+            d += std::exp(g[i]);
+          }
+          g[9] = 0;
+          d += 1; // == std::exp(g[9]) == exp(0) == 1;
+          double sum = 0;
+          for(int i =0; i < 10; i++){
+            p[iSeason][iDay][iHour][i] = std::exp(g[i]) / d;
+            sum += p[iSeason][iDay][iHour][i];
+          }
+          assert(std::abs(1.0-sum) < std::numeric_limits<double>::epsilon() * std::abs(1.0+sum)* 2);
+        }
+      }
+    }
+}
+
+std::vector<double> Model_Activity::multinominal(const int agentID) const{
+
+    double p[4][7][24][10];
+    multinominalP(p,agentID);
+
+    std::vector<double> activities;
+
+    static const int daysInMonth[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+
+    int tsph = SimulationConfig::info.timeStepsPerHour;
+    int hourCount = 0;
+    int hour = hourCount;
+    int month = SimulationConfig::info.startMonth -1;
+    int day = SimulationConfig::info.startDay -1;
+    int dayOfWeek = SimulationConfig::info.startDayOfWeek-1;
+
+    int season = getSeasonInt(month);
+
     for (int i = 0; i <= SimulationConfig::info.timeSteps; i++) {
-        if(i % tsph == 0 || hourCount < 0){
+        if(i % tsph == 0 || hourCount < 1){
             hourCount++;
-            if(hourCount == 24){
-                hourCount = 0;
+            if(hourCount > 24){
+                hourCount = 1;
                 day++;
                 dayOfWeek++;
-                if(dayOfWeek > 7){
-                  dayOfWeek =1;
+                if(dayOfWeek > 6){
+                  dayOfWeek =0;
                 }
                 if(day > daysInMonth[month]){
                   month++;
@@ -115,49 +197,15 @@ std::vector<double> Model_Activity::multinominal(const int agentID){
                   if(month == 13){
                     month = 1;
                   }
-                  season = getSeason(month);
+                  season = getSeasonInt(month);
                 }
-                std::string dayString = getDay(dayOfWeek);
+            }
+            if(hourCount < 6){
+              hour = 0;
             }
         }
-
-
-        int hour = hourCount;
-        if(hourCount < 7){
-          hour = 1;
-        }
-
-
-        std::map<std::string, std::vector<double>> items = dictionary.at(hour);
-
-        double g[10];
-        //g1 = A0 + A1*X1+ A2*X2+……..+ An*Xn.
-        double d =0;
-        for(int i =0; i < 9; i++){
-          g[i] = items.at("Intercept").at(0) + items.at(age).at(i) + items.at(season).at(i) + items.at(computer).at(i) + items.at(civstat).at(i) + items.at(unemp).at(i) + items.at(retired).at(i) + items.at(edtry).at(i) + items.at(famstat).at(i) + items.at(dayString).at(i) + items.at(sex).at(i);
-          d += std::exp(g[i]);
-        }
-        g[9] = 0;
-        d += std::exp(g[9]);
-
-        double sum = 0;
-        std::array< double, 10 > P;
-        double drand = Utility::randomDouble(0.0,1.0);
-        for(int i =0; i < 10; i++){
-          P[i] = std::exp(g[i]) / d;
-          sum += P[i];
-          if(sum >= drand)
-          {
-              activities.push_back(i);
-              break;
-          }
-        }
-        std::cout << sum << std::endl;
-        //check prob equal to 1
-        assert(std::abs(1.0-sum) < std::numeric_limits<double>::epsilon() * std::abs(1.0+sum)* 2);
-
+        activities.push_back(multinominalActivity(p[season][dayOfWeek][hour]));
     }
-
     return activities;
 }
 
@@ -198,9 +246,7 @@ void Model_Activity::parseConfiguration(const std::string filename)
 
         }
         std::pair<int, std::map<std::string, std::vector<double>>> y(hour, items);
-
         dictionary.insert(y);
-
     }
 
 }

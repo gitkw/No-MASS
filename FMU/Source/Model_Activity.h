@@ -18,11 +18,14 @@ public:
 
 private:
     void parseConfiguration(const std::string filename);
-    std::vector<double> disaggregate(const int agentID) const;
-    std::vector<double> multinominal(const int agentID);
-    std::string getSeason(const int month) const;
-    std::string getDay(const int day) const;
+    double multinominalActivity(const double *p) const;
+    void multinominalP(double p[4][7][24][10], const int agentID) const;
 
+    std::vector<double> disaggregate(const int agentID) const;
+    std::vector<double> multinominal(const int agentID) const;
+    std::string getSeasonString(const int month) const;
+    int getSeasonInt(const int month) const;
+    std::string getDay(const int day) const;
     std::map<int, std::map<std::string, std::vector<double>>> dictionary;
 
 };

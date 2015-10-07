@@ -35,14 +35,12 @@ TEST(Activity, multinominal) {
     Model_Activity ma;
     std::vector<double> activities = ma.getAgentActivities(0);
     EXPECT_EQ(activities.at(0), 9);
-    EXPECT_EQ(activities.at(1000), 4);
-    EXPECT_EQ(activities.at(2000), 0);
-    EXPECT_EQ(activities.at(3000), 0);
-    EXPECT_EQ(activities.at(4000), 0);
+    EXPECT_EQ(activities.at(1000), 9);
+    EXPECT_EQ(activities.at(2000), 9);
+    EXPECT_EQ(activities.at(3000), 9);
+    EXPECT_EQ(activities.at(4000), 8);
     EXPECT_EQ(activities.at(5000), 9);
-    EXPECT_EQ(activities.at(6000), 6);
-
-
+    EXPECT_EQ(activities.at(6000), 9);
 
 }
 /*
