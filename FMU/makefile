@@ -4,7 +4,7 @@
 
 
 WORKDIR = `pwd`
-
+LD = $(CXX)
 INC = -I../Boost/Boost-Source
 CFLAGS = -std=c++11 -Wall -fPIC
 RESINC =

@@ -19,6 +19,7 @@ struct ZoneStruct {
     std::string name;
     std::string activity;
     bool groundFloor;
+    int windowCount;
 };
 
 struct agentStruct {

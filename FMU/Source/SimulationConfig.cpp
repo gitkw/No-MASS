@@ -57,6 +57,11 @@ void SimulationConfig::parseBuilding(boost::property_tree::ptree::value_type & v
                     //std::cout << "type: " << childschild.second.data() << std::endl;
                     zone.second.groundFloor = childschild.second.get_value<bool>();
                 }
+                else if (childschild.first == "windowCount")
+                {
+                    //std::cout << "type: " << childschild.second.data() << std::endl;
+                    zone.second.windowCount = childschild.second.get_value<int>();
+                }
             }
             std::cout << "Name: " << zone.first << " Activity: " << zone.second.activity;
             std::cout << " Floor: " << zone.second.groundFloor << std::endl;
@@ -175,7 +180,7 @@ void SimulationConfig::parseAgents(boost::property_tree::ptree::value_type & v)
                 {
                     agent.famstat = childschild.second.data();
                 }
-                
+
             }
             agents.push_back(agent);
         }

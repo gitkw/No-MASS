@@ -7,6 +7,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 #include "DataStore.h"
 #include "SimulationConfig.h"
 #include "Zone.h"
@@ -23,10 +24,16 @@ Zone::Zone(std::string zoneName) : name(zoneName) {
     lightState = 0;
     windowState = 0;
     setActive(SimulationConfig::activeZone(&name));
+
     if(active){
+        int windowCount = SimulationConfig::zones.at(name).windowCount;
         setGroundFloor(SimulationConfig::isZoneGroundFloor(&name));
-        variableNameWindow = name + "WindowState";
-        DataStore::addVariable(variableNameWindow);
+        for(int i = 0; i < windowCount; i ++){
+          std::string windowName = name + "WindowState" + std::to_string(i);
+          variableNameWindow.push_back(windowName);
+          DataStore::addVariable(windowName);
+        }
+
         variableNameBlindFraction = name + "BlindFraction";
         DataStore::addVariable(variableNameBlindFraction);
         variableNameLight = name + "LightState";
@@ -48,7 +55,9 @@ void Zone::step() {
     if(active){
         DataStore::addValue(variableNameNumberOfOccupants, occupantFraction);
         DataStore::addValue(variableNameAverageGains, currentAgentGains);
-        DataStore::addValue(variableNameWindow, windowState);
+        for(std::string name : variableNameWindow){
+          DataStore::addValue(name, windowState);
+        }
         DataStore::addValue(variableNameBlindFraction, blindState);
         DataStore::addValue(variableNameLight, lightState);
     }
