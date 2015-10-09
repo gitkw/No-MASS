@@ -146,6 +146,7 @@ public:
     static void step();
     static int getStepCount();
     static std::string ActivityFile;
+    static std::string FmuLocation;
 private:
     static int stepCount;
     static std::vector<std::string> splitZoneActivities(std::string types);

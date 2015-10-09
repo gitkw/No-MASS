@@ -22,6 +22,8 @@ std::vector<stateStruct> SimulationConfig::states;
 simulationStruct SimulationConfig::info;
 int SimulationConfig::stepCount = -1;
 std::string SimulationConfig::ActivityFile;
+std::string SimulationConfig::FmuLocation;
+
 
 SimulationConfig::SimulationConfig()
 {

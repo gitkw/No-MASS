@@ -41,8 +41,8 @@ void Simulation::preprocess() {
         DataStore::addVariable("TimeStep");
 
         std::string preferredSlash = "/";
-        std::cout << "Looking for config: tmp-fmus"+preferredSlash+"agentFMU.fmu_FMI"+preferredSlash+"SimulationConfig.xml" << std::endl;
-        SimulationConfig::parseConfiguration("tmp-fmus"+preferredSlash+"agentFMU.fmu_FMI"+preferredSlash+"SimulationConfig.xml");
+        std::cout << "Looking for config: " + SimulationConfig::FmuLocation + preferredSlash+"SimulationConfig.xml" << std::endl;
+        SimulationConfig::parseConfiguration( SimulationConfig::FmuLocation +preferredSlash+"SimulationConfig.xml");
         energySolver.setup();
         agentModel.setZones(energySolver.getZones());
         agentModel.setup();

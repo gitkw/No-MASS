@@ -51,8 +51,7 @@ public:
 
 private:
     std::string name;
-    int stepCount;
-  
+
     bool groundFloor;
     double currentAgentGains;
     double blindState;

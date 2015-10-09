@@ -17,7 +17,7 @@ Zone::Zone() {
 }
 
 Zone::Zone(std::string zoneName) : name(zoneName) {
-    stepCount = -1;
+
     occupantFraction = 0;
     currentAgentGains = 0;
     blindState = 1;
@@ -51,7 +51,7 @@ void Zone::setup(){
 
 
 void Zone::step() {
-    stepCount++;
+
     if(active){
         DataStore::addValue(variableNameNumberOfOccupants, occupantFraction);
         DataStore::addValue(variableNameAverageGains, currentAgentGains);
