@@ -10,7 +10,7 @@
 TEST(Activity, Dissagregate) {
     SimulationConfig::agents.clear();
 
-    SimulationConfig::parseConfiguration("Files/SimulationConfig.xml");
+    SimulationConfig::parseConfiguration("tests/Files/SimulationConfig.xml");
     SimulationConfig::info.timeSteps = 105182;
     SimulationConfig::info.timeStepsPerHour = 6;
     Model_Activity ma;
@@ -28,7 +28,7 @@ TEST(Activity, Dissagregate) {
 TEST(Activity, multinominal) {
     SimulationConfig::agents.clear();
 
-    SimulationConfig::parseConfiguration("Files/SimulationConfig1.xml");
+    SimulationConfig::parseConfiguration("tests/Files/SimulationConfig1.xml");
     SimulationConfig::info.timeSteps = 105182;
     SimulationConfig::info.timeStepsPerHour = 6;
     SimulationConfig::info.startDayOfWeek = 1;

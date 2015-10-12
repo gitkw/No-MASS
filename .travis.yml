@@ -9,6 +9,7 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.9
+    - cmake
 
 before_install:
   - export CXX="g++-4.9"
@@ -24,10 +25,9 @@ before_script:
 
 script:
   - cd ../FMU
+  - cmake -Dtest=ON ./
   - make
-  - cd ../tests
-  - make
-  - ./unittest
+  - ./runUnitTests
 
 after_success:
 
