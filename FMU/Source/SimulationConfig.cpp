@@ -21,6 +21,9 @@ std::vector<agentStruct> SimulationConfig::agents;
 std::vector<stateStruct> SimulationConfig::states;
 simulationStruct SimulationConfig::info;
 int SimulationConfig::stepCount = -1;
+std::string SimulationConfig::ActivityFile;
+std::string SimulationConfig::FmuLocation;
+std::string SimulationConfig::idfFileLocation = "in.idf";
 
 SimulationConfig::SimulationConfig()
 {
@@ -56,6 +59,11 @@ void SimulationConfig::parseBuilding(boost::property_tree::ptree::value_type & v
                     //std::cout << "type: " << childschild.second.data() << std::endl;
                     zone.second.groundFloor = childschild.second.get_value<bool>();
                 }
+                else if (childschild.first == "windowCount")
+                {
+                    //std::cout << "type: " << childschild.second.data() << std::endl;
+                    zone.second.windowCount = childschild.second.get_value<int>();
+                }
             }
             std::cout << "Name: " << zone.first << " Activity: " << zone.second.activity;
             std::cout << " Floor: " << zone.second.groundFloor << std::endl;
@@ -70,7 +78,7 @@ void SimulationConfig::parseBuilding(boost::property_tree::ptree::value_type & v
 }
 void SimulationConfig::parseAgents(boost::property_tree::ptree::value_type & v)
 {
-
+    SimulationConfig::ActivityFile = "";
     for(boost::property_tree::ptree::value_type & child: v.second)
     {
         if (child.first == "agent")
@@ -80,7 +88,6 @@ void SimulationConfig::parseAgents(boost::property_tree::ptree::value_type & v)
             {
                 if (childschild.first == "profile")
                 {
-                    agent.aggregated = true;
                     for(boost::property_tree::ptree::value_type & childschildchild: childschild.second)
                     {
                         std::string text = childschildchild.first;
@@ -105,6 +112,9 @@ void SimulationConfig::parseAgents(boost::property_tree::ptree::value_type & v)
 
                             a.second = childschildchild.second.get_value<std::string>();
                             agent.profile.insert(a);
+                        }
+                        else if(text == "file"){
+                            SimulationConfig::ActivityFile = childschildchild.second.get_value<std::string>();
                         }
                         else{
                             text.erase(0,1);
@@ -135,6 +145,43 @@ void SimulationConfig::parseAgents(boost::property_tree::ptree::value_type & v)
                 {
                     agent.shadeId = childschild.second.get_value<int>();
                 }
+                else if(childschild.first == "office")
+                {
+                    agent.office = childschild.second.data();
+                }
+                else if(childschild.first == "edtry")
+                {
+                    agent.edtry = childschild.second.data();
+                }
+                else if(childschild.first == "age")
+                {
+                    agent.age = childschild.second.data();
+                }
+                else if(childschild.first == "computer")
+                {
+                    agent.computer = childschild.second.data();
+                }
+                else if(childschild.first == "civstat")
+                {
+                    agent.civstat = childschild.second.data();
+                }
+                else if(childschild.first == "unemp")
+                {
+                    agent.unemp = childschild.second.data();
+                }
+                else if(childschild.first == "retired")
+                {
+                    agent.retired = childschild.second.data();
+                }
+                else if(childschild.first == "sex")
+                {
+                    agent.sex = childschild.second.data();
+                }
+                else if(childschild.first == "famstat")
+                {
+                    agent.famstat = childschild.second.data();
+                }
+
             }
             agents.push_back(agent);
         }

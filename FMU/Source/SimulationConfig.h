@@ -19,6 +19,7 @@ struct ZoneStruct {
     std::string name;
     std::string activity;
     bool groundFloor;
+    int windowCount;
 };
 
 struct agentStruct {
@@ -29,7 +30,16 @@ struct agentStruct {
     int windowId;
     int shadeId;
     std::map<int, std::string> profile;
-    bool aggregated;
+
+
+    std::string age;
+    std::string computer;
+    std::string civstat;
+    std::string unemp;
+    std::string retired;
+    std::string edtry;
+    std::string famstat;
+    std::string sex;
 };
 
 struct shadeStruct {
@@ -111,6 +121,7 @@ struct simulationStruct {
     int timeSteps;
     int startDay;
     int startMonth;
+    int startDayOfWeek;
     int endDay;
     int endMonth;
     int timePeriod;
@@ -134,8 +145,11 @@ public:
     static double lengthOfTimestep();
     static void step();
     static int getStepCount();
-private:
     static int stepCount;
+    static std::string ActivityFile;
+    static std::string FmuLocation;
+    static std::string idfFileLocation;
+private:
     static std::vector<std::string> splitZoneActivities(std::string types);
     static void parseBuilding(boost::property_tree::ptree::value_type & v);
     static void parseAgents(boost::property_tree::ptree::value_type & v);

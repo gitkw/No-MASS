@@ -171,11 +171,18 @@ fmiComponent fmiInstantiateSlave(fmiString  instanceName, fmiString  GUID,
     fmiBoolean interactive, fmiCallbackFunctions functions, fmiBoolean loggingOn) {
     // ignoring arguments: fmuLocation, mimeType, timeout, visible, interactive
     printf("fmiInstantiateSlave\n");
+
+    SimulationConfig::FmuLocation = fmuLocation;
     return instantiateModel("fmiInstantiateSlave", instanceName, GUID, functions, loggingOn);
 }
 
 fmiStatus fmiInitializeSlave(fmiComponent c, fmiReal tStart, fmiBoolean StopTimeDefined, fmiReal tStop) {
    printf("fmiInitializeSlave\n");
+
+
+    /*std::cout << tStart <<std::endl;
+    std::cout << StopTimeDefined <<std::endl;
+    std::cout << tStop <<std::endl;*/
     return fmiOK;
 }
 
@@ -226,9 +233,17 @@ fmiStatus fmiCancelStep(fmiComponent c) {
  */
 fmiStatus fmiDoStep(fmiComponent c, fmiReal currentCommunicationPoint,
     fmiReal communicationStepSize, fmiBoolean newStep) {
+/*
+    std::cout << currentCommunicationPoint <<std::endl;
+    std::cout << communicationStepSize <<std::endl;
+    std::cout << newStep <<std::endl;
+
+*/
     if(save){
         //ModelInstance* comp = (ModelInstance *)c;
         modelInstance->sim.timeStep();
+
+
     }
     return fmiOK;
 }

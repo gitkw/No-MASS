@@ -18,7 +18,7 @@
 
 #include "Model_Lights.h"
 #include "Model_ExternalShading.h"
-#include "QLearning.h"
+
 #include "Agent_Action_Window.h"
 #include "Agent_Action_Lights.h"
 #include "Agent_Action_Shades.h"
@@ -89,7 +89,7 @@ private:
 
     std::vector<int> availableActions;
 
-    std::unique_ptr<QLearning> ql;
+
 
     bool learn = false;
 

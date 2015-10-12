@@ -22,7 +22,7 @@ class Simulation {
 public:
     Simulation();
     ~Simulation(){
-        std::cout<< "killed" << std::endl;
+      
     }
 
     void preprocess();

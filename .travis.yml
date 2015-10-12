@@ -9,10 +9,12 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.9
+    - gcc-4.9
+    - cmake
 
 before_install:
   - export CXX="g++-4.9"
-  - export CC="g++-4.9"
+  - export CC="gcc-4.9"
   - export LD="g++-4.9"
   # download submodules
   - git submodule update --init --recursive
@@ -20,9 +22,13 @@ before_install:
 before_script:
   - cd Boost
   - make
-  - cd ../FMU
 
-script: make
+
+script:
+  - cd ../FMU
+  - cmake -Dtest=ON ./
+  - make
+  - ./runUnitTests
 
 after_success:
 

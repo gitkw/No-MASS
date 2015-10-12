@@ -91,7 +91,7 @@ int EP_ReadIDF::getOrCreateZone(std::string name) {
 }
 
 void EP_ReadIDF::loadIDF() {
-        std::ifstream file("in.idf", std::ios_base::in | std::ios_base::binary);
+        std::ifstream file(SimulationConfig::idfFileLocation, std::ios_base::in | std::ios_base::binary);
         if (file.is_open()) {
                 boost::iostreams::filtering_istream in;
                 in.push(file);

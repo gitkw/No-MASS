@@ -1724,10 +1724,3 @@ ExternalInterface:FunctionalMockupUnitImport:From:Variable,
   agentFMU.fmu,                            !- FMU Filename,
   FMI,                                     !- FMU Instance Name,
   EMSepTimeStep;                           !- FMU Variable Name
-
-ExternalInterface:FunctionalMockupUnitImport:From:Variable,
-  Block1:Zone1,                            !- EnergyPlus Key Value,
-  Zone Air System Sensible Heating Rate,   !- EnergyPlus Variable Name,
-  agentFMU.fmu,                            !- FMU Filename,
-  FMI,                                     !- FMU Instance Name,
-  Block1:Zone1ZoneAirSystemSensibleHeatingRate; !- FMU Variable Name

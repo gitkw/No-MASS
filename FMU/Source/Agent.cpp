@@ -18,8 +18,7 @@
 #include "SimulationConfig.h"
 #include "StateMachine.h"
 #include "Utility.h"
-#include "QLearning_PMV.h"
-#include "QLearning_HeatingRate.h"
+
 
 #include "Agent.h"
 
@@ -37,17 +36,6 @@ Agent::Agent(int newId) : id(newId)
     office = agent.office;
     power = agent.power;
 
-    switch (SimulationConfig::info.qlearn) {
-      case 0:
-        ql = std::unique_ptr<QLearning_PMV>(new QLearning_PMV);
-        break;
-      case 1:
-        ql = std::unique_ptr<QLearning_HeatingRate>(new QLearning_HeatingRate);
-        break;
-    }
-
-    ql->setId(id);
-    ql->setup();
     aahg.setup(id);
     availableActions.push_back(0);
 
@@ -134,33 +122,16 @@ void Agent::interactWithZone(const Zone &zone)
         actionStep(a, &interaction, zone, inZone, preZone);
     }
 
-    switch(SimulationConfig::info.caseOrder)
-    {
-        case 1  :
-        {
-            switch (SimulationConfig::info.qlearn) {
-              case 0:
-                ql->setState(pmv);
-                ql->setReward(pmv);
 
-                break;
-              case 1:
-                //ql->setState(zone.getAirSystemSensibleHeatingRate());
-                ql->setReward(zone.getAirSystemSensibleHeatingRate());
-                break;
-            }
-            ql->learn(zone, &interaction);
-            break;
-        }
-    }
+
 
     zoneToInteraction[zone.getName()] = interaction;
 }
 
-
 void Agent::model_activity()
 {
-    activities = Model_Activity::preProcessActivities(id);
+    Model_Activity ma;
+    activities = ma.preProcessActivities(id);
 }
 
 void Agent::model_presenceFromActivities()
@@ -232,9 +203,6 @@ bool Agent::InteractionOnZone(const Zone &zone) const
 {
     return currentlyInZone(zone) || previouslyInZone(zone);
 }
-
-
-
 
 bool Agent::isInZone(std::string zoneName) const
 {
@@ -308,5 +276,5 @@ double Agent::calculateMetabolicHeatGainsOnZone(const Zone &zone)
 */
 void Agent::postprocess()
 {
-    ql->printQ();
+
 }

@@ -51,7 +51,7 @@ public:
 
 private:
     std::string name;
-    int stepCount;
+
     bool groundFloor;
     double currentAgentGains;
     double blindState;
@@ -59,7 +59,7 @@ private:
     bool windowState;
     double occupantFraction;
 
-    std::string variableNameWindow;
+    std::vector<std::string> variableNameWindow;
     std::string variableNameBlindFraction;
     std::string variableNameNumberOfOccupants;
     std::string variableNameAverageGains;
@@ -70,4 +70,3 @@ private:
 };
 
 #endif	/* ZONE_H */
-

@@ -6,8 +6,6 @@ Agent_Action::Agent_Action()
 
 }
 
-
-
 double Agent_Action::getResult()
 {
     return result;
