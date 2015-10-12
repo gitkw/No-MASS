@@ -85,23 +85,16 @@ include_directories(${PROJECT_SOURCE_DIR}/Source)
 
 ADD_LIBRARY(FMI SHARED ${SRC})
 
-
-
-SET(GCC_COVERAGE_COMPILE_FLAGS "-Wall -Wextra ")
-SET(GCC_COVERAGE_LINK_FLAGS    "-static")
-
+SET(GCC_COVERAGE_COMPILE_FLAGS_FMI "-Wall -Wextra ")
+SET(GCC_COVERAGE_LINK_FLAGS_FMI    "-static")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11")
+SET(CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE} -O2")
 
 SET_TARGET_PROPERTIES(FMI PROPERTIES
-  CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE} -O2"
- )
-SET_TARGET_PROPERTIES(FMI PROPERTIES
-  CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}"
+ CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS_FMI}"
+ CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS_FMI}"
 )
-SET_TARGET_PROPERTIES(FMI PROPERTIES
- CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}"
- )
 
 
 ################################
@@ -124,7 +117,6 @@ if (test)
   # Unit Tests
   ##############
 
-
   SET( TESTSRC
     tests/source/unittest_Simulation.cc
     tests/source/unittest_SimulationConfig.cc
@@ -141,5 +133,5 @@ if (test)
   # Extra linking for the project.
   target_link_libraries(runUnitTests FMI)
 
-
+  add_test(runUnitTests runUnitTests)
 endif()
