@@ -19,16 +19,21 @@
 Model_Presence::Model_Presence() {
 }
 
-std::vector<int> Model_Presence::calculatePresenceFromActivities(const std::vector<double> activities) {
-    std::vector<int> p;
+int Model_Presence::presentForFutureSteps() const
+{
+    return presenceForFutureSteps.at(SimulationConfig::getStepCount());
+}
+
+void Model_Presence::calculatePresenceFromActivities(const std::vector<double> activities) {
+
     for(double activity: activities) {
         if (activity != 9) {
-            p.push_back(1);
+            presenceState.push_back(1);
         } else {
-            p.push_back(0);
+            presenceState.push_back(0);
         }
     }
-    return p;
+
 }
 
 int Model_Presence::calculateNumberOfDays(const int startDay, const int startMonth, const int endDay, const int endMonth){
@@ -41,7 +46,7 @@ int Model_Presence::calculateNumberOfDays(const int startDay, const int startMon
     return days;
 }
 
-std::vector<int> Model_Presence::calculatePresenceFromPage(const int agentID) {
+void Model_Presence::calculatePresenceFromPage(const int agentID) {
 
     float pMon[24];
     float pTue[24];
@@ -165,10 +170,17 @@ std::vector<int> Model_Presence::calculatePresenceFromPage(const int agentID) {
 
     // remove the first element of the vector (which was just for starting the process)
     occ.erase(occ.begin());
+    presenceState = occ;
 
-    return occ;
 }
 
+bool Model_Presence::at(const int i) const{
+    return presenceState.at(i);
+}
+
+unsigned int Model_Presence::size() const{
+    return presenceState.size();
+}
 
 double Model_Presence::getT01(const double pcurr, const double pnext, const double shuff) {
     // This function returns the transition probabilities T01

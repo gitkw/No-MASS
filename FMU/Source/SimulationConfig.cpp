@@ -76,11 +76,11 @@ void SimulationConfig::parseAgents(boost::property_tree::ptree::value_type & v)
         if (child.first == "agent")
         {
             agentStruct agent;
-
             for(boost::property_tree::ptree::value_type & childschild: child.second)
             {
                 if (childschild.first == "profile")
                 {
+                    agent.aggregated = true;
                     for(boost::property_tree::ptree::value_type & childschildchild: childschild.second)
                     {
                         std::string text = childschildchild.first;

@@ -83,12 +83,12 @@ void Agent::step(StateMachine *stateMachine)
     clo = state.getClo();
     activity = state.getActivity();
 
-    if(presentAt(stepCount))
+    if(presence.at(stepCount))
     {
         interactWithZone(*zonePtr);
     }
 
-    if( stepCount > 0 && previousState.getId() != state.getId() && presentAt(stepCount - 1))
+    if( stepCount > 0 && previousState.getId() != state.getId() && presence.at(stepCount - 1))
     {
         zonePtr = previousState.getZonePtr();
         interactWithZone(*zonePtr);
@@ -158,23 +158,21 @@ void Agent::interactWithZone(const Zone &zone)
 }
 
 
-
-
 void Agent::model_activity()
 {
-    activities = Model_Activity::getAgentActivities(id);
+    activities = Model_Activity::preProcessActivities(id);
 }
 
 void Agent::model_presenceFromActivities()
 {
     model_activity();
-    presence = Model_Presence::calculatePresenceFromActivities(activities);
-    model_pastAndFutureDurations();
+    presence.calculatePresenceFromActivities(activities);
+
 }
 
 void Agent::model_presenceFromPage()
 {
-    presence = Model_Presence::calculatePresenceFromPage(id);
+    presence.calculatePresenceFromPage(id);
     for (unsigned int i = 0; i < presence.size(); ++i)
     {
         if (presence.at(i))
@@ -186,53 +184,9 @@ void Agent::model_presenceFromPage()
             activities.push_back(9);
         }
     }
-    model_pastAndFutureDurations();
+
 }
 
-void Agent::model_pastAndFutureDurations()
-{
-    int lengthOfTimeStepSeconds = (60 * (60 / SimulationConfig::info.timeStepsPerHour));
-    currentDurationOfPresenceState.push_back(0);
-
-    for (unsigned int i = 1; i < presence.size(); ++i)
-    {
-        // std::cout << occupantFractions.at(i) << std::endl;
-        bool currentPresence = presence.at(i) > 0;
-        bool previousPresence = presence.at(i - 1) > 0;
-        if (currentPresence == previousPresence)
-        {
-            currentDurationOfPresenceState.push_back(currentDurationOfPresenceState[i - 1] + lengthOfTimeStepSeconds);
-        }
-        else
-        {
-            currentDurationOfPresenceState.push_back(0);
-        }
-    }
-    presenceForFutureSteps.assign(presence.size(), std::numeric_limits<int>::quiet_NaN());
-    for (unsigned int i = 1; i+1 < presence.size(); ++i)
-    {
-        bool currentPresence = presence.at(i-1) > 0;
-        bool futurePresence = presence.at(i) > 0;
-        if (currentPresence && !futurePresence)
-        {
-            unsigned int j = i + 1;
-            while (presence.at(j) == 0 && j < presence.size())
-            {
-                j++;
-                if (j >= presence.size())
-                {
-                    break;
-                }
-            }
-            presenceForFutureSteps[i] = currentDurationOfPresenceState[j - 1];
-        }
-    }
-}
-
-bool Agent::presentAt(int step) const
-{
-    return presence.at(step);
-}
 
 double Agent::getCurrentRadientGains() const
 {
@@ -279,10 +233,8 @@ bool Agent::InteractionOnZone(const Zone &zone) const
     return currentlyInZone(zone) || previouslyInZone(zone);
 }
 
-int Agent::presentForFutureSteps() const
-{
-    return presenceForFutureSteps.at(SimulationConfig::getStepCount());
-}
+
+
 
 bool Agent::isInZone(std::string zoneName) const
 {

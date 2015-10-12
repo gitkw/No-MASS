@@ -29,6 +29,7 @@ struct agentStruct {
     int windowId;
     int shadeId;
     std::map<int, std::string> profile;
+    bool aggregated;
 };
 
 struct shadeStruct {

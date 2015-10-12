@@ -13,7 +13,7 @@
 class Model_Activity {
 public:
     Model_Activity();
-    static std::vector<double> getAgentActivities(int agentID);
+    static std::vector<double> preProcessActivities(int agentID);
 
 private:
 };

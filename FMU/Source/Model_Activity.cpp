@@ -36,10 +36,16 @@
 Model_Activity::Model_Activity() {
 }
 
-std::vector<double> Model_Activity::getAgentActivities(int agentID) {
+std::vector<double> Model_Activity::preProcessActivities(int agentID) {
 
     double probabilities[24][10];
-    std::map<int, std::string> probMap = SimulationConfig::agents.at(agentID).profile;
+    std::map<int, std::string> probMap;
+    if(SimulationConfig::agents.at(agentID).aggregated){
+        probMap = SimulationConfig::agents.at(agentID).profile;
+
+    }else{
+
+    }
     for(int hour = 0; hour < 24; hour++) {
         std::vector<std::string> tokProbs;
         boost::split(tokProbs, probMap.at(hour), boost::is_any_of(","));

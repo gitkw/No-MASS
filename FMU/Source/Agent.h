@@ -42,20 +42,19 @@ public:
     Agent();
     Agent(int newId);
 
-
     void step(StateMachine *sm);
     void zoneInteractions();
     void postprocess();
     void model_presenceFromActivities();
     void model_presenceFromPage();
-    bool presentAt(int step) const;
+    void interactWithZone(const Zone &zone);
+
     bool isInZone(std::string zoneName) const;
     bool InteractionOnZone(const Zone &zone) const;
-    int presentForFutureSteps() const;
+
     double getCurrentRadientGains() const;
     double getPower() const;
 
-    void interactWithZone(const Zone &zone);
     bool getDesiredLightState(const Zone &zone) const;
     bool getDesiredWindowState(const Zone &zone) const;
     bool getDesiredShadeState(const Zone &zone) const;
@@ -71,9 +70,6 @@ private:
     double power;
     double currentRadientGains;
     std::vector<double> activities;
-    std::vector<int> presence;
-    std::vector<int> presenceForFutureSteps;
-    std::vector<int> currentDurationOfPresenceState;
 
     double metabolicRate; /** Metabolic Rate of the occupant */
     double clo; /** clothing value of the occupant */
@@ -88,6 +84,8 @@ private:
     Agent_Action_Lights aal;
     Agent_Action_Shades aas;
     Agent_Action_Heat_Gains aahg;
+
+    Model_Presence presence;
 
     std::vector<int> availableActions;
 
