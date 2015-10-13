@@ -8,6 +8,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include "Log.h"
 #include "DataStore.h"
 
 std::unordered_map<std::string, std::vector<double> > DataStore::variableMap;
@@ -20,25 +21,26 @@ void DataStore::addVariable(std::string name) {
 }
 
 void DataStore::addValue(std::string name, double value) {
-
-
     variableMap[name].push_back(value);
 }
 
 double DataStore::getValueForZone(std::string name, std::string zoneName){
-
     return getValue(zoneName + name);
 }
 
 double DataStore::getValue(std::string name) {
     if (variableMap.find(name) == variableMap.end()) {
-        std::cout << "Forgot to define: " << name << std::endl;
-        std::cout << "Check the Zone Name is correct in the NoMass Simulation File" << std::endl;
-        std::cout << std::flush;
-        exit(-1);
+        LOG << "Forgot to define: " << name;
+        LOG << "Check the Zone Name is correct in the NoMass Simulation File";
+        LOG.error();
+        return 0;
     }
 
     return variableMap[name].back();
+}
+
+void DataStore::clear(){
+    variableMap.clear();
 }
 
 void DataStore::print(){

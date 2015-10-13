@@ -26,10 +26,8 @@
 
 Model_Agents::Model_Agents()
 {
-    stepCount = 0;
+
 }
-
-
 void Model_Agents::setup()
 {
     int populationSize = SimulationConfig::numberOfAgents();
@@ -51,15 +49,11 @@ void Model_Agents::setZones(std::vector<Zone> zones)
 
 void Model_Agents::initialiseStates()
 {
-    State_Out out;
-    matchStateToZone(out);
-    stateMachine.addState(out);
     State_Present present;
     if (SimulationConfig::info.presencePage)
     {
         State_IT it;
         matchStateToZone(it);
-        it.getZonePtr()->getName();
         present.addState(it);
     }
     else
@@ -93,7 +87,9 @@ void Model_Agents::initialiseStates()
         present.addState(it);
     }
     stateMachine.addState(present);
-
+    State_Out out;
+    matchStateToZone(out);
+    stateMachine.addState(out);
 }
 
 void Model_Agents::matchStateToZone(State &s)
@@ -118,7 +114,6 @@ void Model_Agents::step()
         population[a].step(&stateMachine);
     }
 
-    stepCount++;
     for(Zone &zone: zones)
     {
         if(!zone.isActive())

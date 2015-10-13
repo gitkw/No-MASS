@@ -24,6 +24,7 @@
 #include <iostream>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
+#include "Log.h"
 #include "DataStore.h"
 #include "Simulation.h"
 #include "SimulationConfig.h"
@@ -68,19 +69,21 @@ fmiComponent fmiInstantiateModel(fmiString instanceName, fmiString GUID, fmiCall
 
 fmiStatus fmiInitialize(fmiComponent c, fmiBoolean toleranceControlled,
                                      fmiReal relativeTolerance, fmiEventInfo* eventInfo){
+    if(LOG.getError()){
+     LOG.printLog();
+     return fmiError;
+    }
     return fmiOK;
 }
 
 // fname is fmiTerminate or fmiTerminateSlave
 static fmiStatus terminate(const char* fname, fmiComponent c){
-   printf("terminate\n");
 
     return fmiOK;
 }
 
 // fname is freeModelInstance of freeSlaveInstance
 void freeInstance(char* fname, fmiComponent c) {
-   printf("freeInstance\n");
 }
 
 
@@ -120,6 +123,10 @@ fmiStatus fmiSetReal(fmiComponent c, const fmiValueReference vr[], size_t nvr, c
    // std::cout << std::endl;
   //  ModelInstance* comp = (ModelInstance *)c;
     modelInstance->sim.preTimeStep();
+    if(LOG.getError()){
+      LOG.printLog();
+      return fmiError;
+    }
     return fmiOK;
 }
 
@@ -141,6 +148,10 @@ fmiStatus fmiGetReal(fmiComponent c, const fmiValueReference vr[], size_t nvr, f
             //std::cout <<valToRefs.at(vr[i])<< " " << VariableStore::getValue(valToRefs.at(vr[i]))<<std::endl;
             value[i] = DataStore::getValue(valToRefs.at(vr[i]));
         }
+    }
+    if(LOG.getError()){
+      LOG.printLog();
+      return fmiError;
     }
     return fmiOK;
 }
@@ -170,15 +181,12 @@ fmiComponent fmiInstantiateSlave(fmiString  instanceName, fmiString  GUID,
     fmiString  fmuLocation, fmiString  mimeType, fmiReal timeout, fmiBoolean visible,
     fmiBoolean interactive, fmiCallbackFunctions functions, fmiBoolean loggingOn) {
     // ignoring arguments: fmuLocation, mimeType, timeout, visible, interactive
-    printf("fmiInstantiateSlave\n");
 
     SimulationConfig::FmuLocation = fmuLocation;
     return instantiateModel("fmiInstantiateSlave", instanceName, GUID, functions, loggingOn);
 }
 
 fmiStatus fmiInitializeSlave(fmiComponent c, fmiReal tStart, fmiBoolean StopTimeDefined, fmiReal tStop) {
-   printf("fmiInitializeSlave\n");
-
 
     /*std::cout << tStart <<std::endl;
     std::cout << StopTimeDefined <<std::endl;
@@ -187,12 +195,10 @@ fmiStatus fmiInitializeSlave(fmiComponent c, fmiReal tStart, fmiBoolean StopTime
 }
 
 fmiStatus fmiTerminateSlave(fmiComponent c) {
-    printf("fmiTerminateSlave\n");
     return terminate("fmiTerminateSlave", c);
 }
 
 fmiStatus fmiResetSlave(fmiComponent c) {
-    printf("fmiResetSlave\n");
     return fmiOK;
 }
 
@@ -201,23 +207,19 @@ void fmiFreeSlaveInstance(fmiComponent c) {
         //ModelInstance* comp = (ModelInstance *)c;
         modelInstance->sim.postprocess();
     }
-    printf("fmiFreeSlaveInstance\n");
 }
 
 fmiStatus fmiSetRealInputDerivatives(fmiComponent c, const fmiValueReference vr[], size_t nvr,
     const fmiInteger order[], const fmiReal value[]) {
-    printf("fmiSetRealInputDerivatives\n");
     return fmiWarning;
 }
 
 fmiStatus fmiGetRealOutputDerivatives(fmiComponent c, const fmiValueReference vr[], size_t  nvr,
     const fmiInteger order[], fmiReal value[]) {
-  printf("fmiGetRealOutputDerivatives\n");
     return fmiWarning;
 }
 
 fmiStatus fmiCancelStep(fmiComponent c) {
-   printf("fmiCancelStep\n");
     return fmiError;
 }
 
@@ -242,39 +244,36 @@ fmiStatus fmiDoStep(fmiComponent c, fmiReal currentCommunicationPoint,
     if(save){
         //ModelInstance* comp = (ModelInstance *)c;
         modelInstance->sim.timeStep();
+    }
 
-
+    if(LOG.getError()){
+      LOG.printLog();
+      return fmiError;
     }
     return fmiOK;
 }
 
 static fmiStatus getStatus(const char* fname, fmiComponent c, const fmiStatusKind s) {
-    printf("getStatus\n");
     return fmiError;
 }
 
 fmiStatus fmiGetStatus(fmiComponent c, const fmiStatusKind s, fmiStatus* value) {
-    printf("fmiGetStatus\n");
     return getStatus("fmiGetStatus", c, s);
 }
 
 fmiStatus fmiGetRealStatus(fmiComponent c, const fmiStatusKind s, fmiReal* value){
-    printf("fmiGetRealStatus\n");
     return getStatus("fmiGetRealStatus", c, s);
 }
 
 fmiStatus fmiGetIntegerStatus(fmiComponent c, const fmiStatusKind s, fmiInteger* value){
-   printf("fmiGetIntegerStatus\n");
     return getStatus("fmiGetIntegerStatus", c, s);
 }
 
 fmiStatus fmiGetBooleanStatus(fmiComponent c, const fmiStatusKind s, fmiBoolean* value){
-   printf("fmiGetBooleanStatus\n");
     return getStatus("fmiGetBooleanStatus", c, s);
 }
 
 fmiStatus fmiGetStringStatus(fmiComponent c, const fmiStatusKind s, fmiString*  value){
-   printf("fmiGetStringStatus\n");
     return getStatus("fmiGetStringStatus", c, s);
 }
 
@@ -328,6 +327,7 @@ void loadVariables() {
     }
     std::cout << " Loaded XML file: -" << filename << "-" << std::endl;
 }
+
  fmiStatus fmiGetModelTypesPlatform(){return fmiOK;}
  fmiStatus fmiFreeModelInstance(){return fmiOK;}
  fmiStatus fmiSetTime(){return fmiOK;}

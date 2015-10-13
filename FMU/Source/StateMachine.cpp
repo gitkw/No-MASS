@@ -1,11 +1,13 @@
 #include <iostream>
 #include "StateMachine.h"
 
-
-
 StateMachine::StateMachine()
 {
     //ctor
+}
+
+unsigned int StateMachine::numberOfStates() const{
+	return states.size();
 }
 
 void StateMachine::addState(State s)
@@ -14,29 +16,11 @@ void StateMachine::addState(State s)
 }
 
 State StateMachine::transistionTo(const int stateID){
-    if(!hasState(stateID)){
-        for(auto s : states){
-            if(s.hasState( stateID)){
-                //std::cout << "id: " << stateID << " " << s.getNextState().getLocation() << std::endl;
-                return s.getNextState();
-            }
-        }
-    }
-    return getPendingState();
-}
-
-bool StateMachine::hasState(const int stateID){
-    bool b = false;
     for(auto s : states){
-        if(s.getId() == stateID){
-            pendingState = s;
-            b = true;
-            break;
-        }
+			if(s.getId() == stateID){
+					return s;
+			}else if(s.hasState( stateID)){
+          return s.getState( stateID);
+      }
     }
-
-    return b;
-}
-State StateMachine::getPendingState(){
-    return pendingState;
 }

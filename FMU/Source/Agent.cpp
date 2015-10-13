@@ -66,24 +66,27 @@ void Agent::step(StateMachine *stateMachine)
     int newStateID = activities.at(stepCount);
     previousState = state;
     state = stateMachine->transistionTo(newStateID);
-    Zone* zonePtr = state.getZonePtr();
-    metabolicRate = state.getMetabolicRate();
-    clo = state.getClo();
-    activity = state.getActivity();
 
     if(presence.at(stepCount))
     {
+        metabolicRate = state.getMetabolicRate();
+        clo = state.getClo();
+        activity = state.getActivity();
+        Zone* zonePtr = state.getZonePtr();
         interactWithZone(*zonePtr);
     }
 
     if( stepCount > 0 && previousState.getId() != state.getId() && presence.at(stepCount - 1))
     {
-        zonePtr = previousState.getZonePtr();
+        metabolicRate = previousState.getMetabolicRate();
+        clo = previousState.getClo();
+        activity = previousState.getActivity();
+        Zone* zonePtr = previousState.getZonePtr();
         interactWithZone(*zonePtr);
     }
 
     std::string name = "Agent_Activity_" + std::to_string(id);
-    DataStore::addValue(name.c_str(), activities.at(stepCount));
+    DataStore::addValue(name.c_str(), newStateID);
 }
 
 void Agent::actionStep(int action, ActionValues *interaction, const Zone &zone, bool inZone, bool preZone){
@@ -121,9 +124,6 @@ void Agent::interactWithZone(const Zone &zone)
     for(int a : availableActions) {
         actionStep(a, &interaction, zone, inZone, preZone);
     }
-
-
-
 
     zoneToInteraction[zone.getName()] = interaction;
 }

@@ -5,24 +5,26 @@
 
 
 
-
 class State
 {
     public:
         State();
         virtual ~State();
 
+        virtual bool hasState(const int stateID) const;
+        virtual State getState(const int stateID) const;
+
+        void addState(State s);
+        void setZonePtr(Zone* zoneptr);
         int getId() const;
+        unsigned int numberOfSubStates() const;
         double getMetabolicRate() const;
         double getClo() const;
+        std::string getActivity() const;
         std::string getLocationFromActivty(const std::string *activity);
         std::string getLocation() const;
-        std::string getActivity() const;
         Zone* getZonePtr() const;
-		void addState(State s);
-        virtual bool hasState(const int stateID);
-        State getNextState();
-        void setZonePtr(Zone* zoneptr);
+
     protected:
         int id;
         double metabolicRate;
@@ -30,6 +32,9 @@ class State
         std::string location;
         std::string activity;
         Zone* zone;
+
+        std::vector<State> states;
+
     private:
 
 };

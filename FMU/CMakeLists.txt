@@ -20,6 +20,8 @@ Source/EP_IDFObject.cpp
 Source/EP_IDFObject.h
 Source/EP_ReadIDF.cpp
 Source/EP_ReadIDF.h
+Source/Log.cpp
+Source/Log.h
 Source/Model_Activity.cpp
 Source/Model_Activity.h
 Source/Model_Agents.cpp
@@ -123,6 +125,8 @@ if (test)
     tests/source/unittest_Model_Activity.cc
     tests/source/unittest_Model_HeatGains.cc
     tests/source/unittest_SimulationConfig.cc
+    tests/source/unittest_StateMachine.cc
+    tests/source/unittest_Log.cc
   )
 
   add_executable(runUnitTests ${TESTSRC})

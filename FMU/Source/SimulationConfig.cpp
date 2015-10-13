@@ -12,6 +12,7 @@
 #include <iostream>
 #include <map>
 #include "SimulationConfig.h"
+#include "Log.h"
 #include "Utility.h"
 
 std::map<std::string, ZoneStruct> SimulationConfig::zones;
@@ -31,7 +32,7 @@ SimulationConfig::SimulationConfig()
 
 void SimulationConfig::parseBuilding(boost::property_tree::ptree::value_type & v)
 {
-
+    zones.clear();
     for(boost::property_tree::ptree::value_type & child: v.second)
     {
         if (child.first == "zone")
@@ -43,8 +44,6 @@ void SimulationConfig::parseBuilding(boost::property_tree::ptree::value_type & v
 
                 if (childschild.first == "name")
                 {
-
-                    //std::cout << "name: " << childschild.second.data() << std::endl;
                     zone.first = childschild.second.data();
                     zone.second.name = childschild.second.data();
                 }
@@ -65,12 +64,13 @@ void SimulationConfig::parseBuilding(boost::property_tree::ptree::value_type & v
                     zone.second.windowCount = childschild.second.get_value<int>();
                 }
             }
-            std::cout << "Name: " << zone.first << " Activity: " << zone.second.activity;
-            std::cout << " Floor: " << zone.second.groundFloor << std::endl;
+            //std::cout << "Name: " << zone.first << " Activity: " << zone.second.activity;
+            //std::cout << " Floor: " << zone.second.groundFloor << std::endl;
             if(zone.second.activity == "")
             {
-                std::cout << "Did not define activities for zone: " << zone.second.name << std::endl;
-                exit(-1);
+                LOG << "Did not define activities for zone: " << zone.second.name;
+                LOG.error();
+                zone.second.activity = "NONE";
             }
             zones.insert(zone);
         }
@@ -78,6 +78,7 @@ void SimulationConfig::parseBuilding(boost::property_tree::ptree::value_type & v
 }
 void SimulationConfig::parseAgents(boost::property_tree::ptree::value_type & v)
 {
+    agents.clear();
     SimulationConfig::ActivityFile = "";
     for(boost::property_tree::ptree::value_type & child: v.second)
     {
@@ -190,7 +191,7 @@ void SimulationConfig::parseAgents(boost::property_tree::ptree::value_type & v)
 
 void SimulationConfig::parseStates(boost::property_tree::ptree::value_type & v)
 {
-
+    states.clear();
     for(boost::property_tree::ptree::value_type & child: v.second)
     {
         if (child.first == "state")
@@ -243,6 +244,7 @@ void SimulationConfig::parseModels(boost::property_tree::ptree::value_type & v)
 
 void SimulationConfig::parseWindows(boost::property_tree::ptree::value_type & v)
 {
+    windows.clear();
     for(boost::property_tree::ptree::value_type & child: v.second)
     {
         if (child.first == "enabled")
@@ -355,6 +357,7 @@ void SimulationConfig::parseWindows(boost::property_tree::ptree::value_type & v)
 
 void SimulationConfig::parseShades(boost::property_tree::ptree::value_type & v)
 {
+    shades.clear();
     for(boost::property_tree::ptree::value_type & child: v.second)
     {
         if (child.first == "enabled")
@@ -530,7 +533,7 @@ void SimulationConfig::parseConfiguration(std::string filename)
         }
 
     }
-    std::cout << "Loaded XML file: -" << filename << "-" << std::endl;
+  //  std::cout << "Loaded XML file: -" << filename << "-" << std::endl;
 
 }
 

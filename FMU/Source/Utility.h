@@ -37,4 +37,3 @@ private:
 };
 
 #endif	/* UTILITY_H */
-

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <simulation>
   <seed>0</seed>
   <projectName>testGUI</projectName>
@@ -8,20 +9,18 @@
   <simulateAgents>1</simulateAgents>
   <numberOfAgents>2</numberOfAgents>
   <presencePage>1</presencePage>
-  <models>
-    <windows>1</windows>
-    <shading>1</shading>
-    <lights>1</lights>
-  </models>
   <building>
     <zone>
       <name>Block1:Zone1</name>
       <activities>IT</activities>
       <groundFloor>1</groundFloor>
+      <windowCount>1</windowCount>
     </zone>
   </building>
   <agents>
     <agent>
+      <shade>1</shade>
+      <window>1</window>
       <office>Block1:Zone1</office>
       <power>0.5</power>
       <profile>
@@ -35,6 +34,8 @@
       </profile>
     </agent>
     <agent>
+      <shade>1</shade>
+      <window>1</window>
       <power>0.5</power>
       <office>Block1:Zone1</office>
       <profile>
@@ -44,7 +45,67 @@
         <thursday>0.024,0.024,0.024,0.024,0.024,0.024,0.024,0.029,0.265,0.373,0.271,0.368,0.193,0.361,0.402,0.357,0.324,0.367,0.094,0.067,0.032,0.032,0.030,0.030</thursday>
         <friday>0.030,0.029,0.029,0.029,0.029,0.029,0.029,0.055,0.327,0.367,0.304,0.373,0.215,0.317,0.280,0.239,0.197,0.125,0.066,0.069,0.031,0.029,0.027,0.027</friday>
         <saturday>0.028,0.030,0.029,0.029,0.030,0.029,0.029,0.030,0.030,0.030,0.035,0.037,0.030,0.032,0.041,0.045,0.042,0.034,0.035,0.032,0.027,0.024,0.021,0.021</saturday>
-        <sunday>0.021,0.021,0.021,0.021,0.021,0.021,0.021,0.021,0.024,0.025,0.032,0.045,0.040,0.041,0.033,0.032,0.033,0.031,0.031,0.028,0.026,0.027,0.025,0.025</sunday>      </profile>
+        <sunday>0.021,0.021,0.021,0.021,0.021,0.021,0.021,0.021,0.024,0.025,0.032,0.045,0.040,0.041,0.033,0.032,0.033,0.031,0.031,0.028,0.026,0.027,0.025,0.025</sunday>
+      </profile>
     </agent>
   </agents>
+  <models>
+    <shades>
+      <enabled>1</enabled>
+      <shade>
+        <id>1</id>
+        <name>001-28-X</name>
+        <a01arr>-6.39</a01arr>
+        <b01inarr>0.00141</b01inarr>
+        <b01sarr>2.17</b01sarr>
+        <a10arr>-2.71</a10arr>
+        <b10inarr>-0.00364</b10inarr>
+        <b10sarr>-3.139</b10sarr>
+        <a01int>-6.66</a01int>
+        <b01inint>0.00086</b01inint>
+        <b01sint>1.27</b01sint>
+        <a10int>-3.87</a10int>
+        <b10inint>-0.00358</b10inint>
+        <b10sint>-2.683</b10sint>
+        <afullraise>0.435</afullraise>
+        <boutfullraise>1.95</boutfullraise>
+        <bsfullraise>-0.0000231</bsfullraise>
+        <bsfulllower>0.00000091</bsfulllower>
+        <boutfulllower>-2.23</boutfulllower>
+        <afulllower>-0.27</afulllower>
+        <aSFlower>-2.294</aSFlower>
+        <bSFlower>1.522</bSFlower>
+        <shapelower>1.708</shapelower>
+      </shade>
+    </shades>
+    <windows>
+      <enabled>1</enabled>
+      <window>
+        <id>1</id>
+        <aop>2.151</aop>
+        <bopout>0.172</bopout>
+        <shapeop>0.418</shapeop>
+        <a01arr>-13.88</a01arr>
+        <b01inarr>0.312</b01inarr>
+        <b01outarr>0.0433</b01outarr>
+        <b01absprevarr>1.862</b01absprevarr>
+        <b01rnarr>-0.45</b01rnarr>
+        <a01int>-12.23</a01int>
+        <b01inint>0.281</b01inint>
+        <b01outint>0.0271</b01outint>
+        <b01presint>-0.000878</b01presint>
+        <b01rnint>-0.336</b01rnint>
+        <a01dep>-8.75</a01dep>
+        <b01outdep>0.1371</b01outdep>
+        <b01absdep>0.84</b01absdep>
+        <b01gddep>0.83</b01gddep>
+        <a10dep>-8.54</a10dep>
+        <b10indep>0.213</b10indep>
+        <b10outdep>-0.0911</b10outdep>
+        <b10absdep>1.614</b10absdep>
+        <b10gddep>-0.923</b10gddep>
+      </window>
+    </windows>
+    <lights>1</lights>
+  </models>
 </simulation>

@@ -26,6 +26,7 @@ Simulation::Simulation() {
         monthCount.push_back(334);
         monthCount.push_back(365);
         time = 0;
+        DataStore::clear();
 }
 
 
@@ -35,18 +36,23 @@ Simulation::Simulation() {
  * Sets up the EnergyPlus processor, the AgentModel and the ZoneManager.
  */
 void Simulation::preprocess() {
-        DataStore::addVariable("day");
-        DataStore::addVariable("month");
-        DataStore::addVariable("hour");
-        DataStore::addVariable("TimeStep");
+        parseConfiguration(SimulationConfig::FmuLocation + "/SimulationConfig.xml");
+        setupSimulationModel();
+}
 
-        SimulationConfig::stepCount = -1;
-        std::string preferredSlash = "/";
-        std::cout << "Looking for config: " + SimulationConfig::FmuLocation + preferredSlash+"SimulationConfig.xml" << std::endl;
-        SimulationConfig::parseConfiguration( SimulationConfig::FmuLocation +preferredSlash+"SimulationConfig.xml");
-        energySolver.setup();
-        agentModel.setZones(energySolver.getZones());
-        agentModel.setup();
+void Simulation::parseConfiguration(const std::string file){
+    SimulationConfig::parseConfiguration(file);
+}
+
+void Simulation::setupSimulationModel(){
+    SimulationConfig::stepCount = -1;
+    DataStore::addVariable("day");
+    DataStore::addVariable("month");
+    DataStore::addVariable("hour");
+    DataStore::addVariable("TimeStep");
+    energySolver.setup();
+    agentModel.setZones(energySolver.getZones());
+    agentModel.setup();
 }
 
 /**

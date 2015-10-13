@@ -16,7 +16,7 @@
 class Model_Agents{
 public:
     Model_Agents();
-    
+
     void setup();
     void step();
     void setAgentGainsForZone(Zone *zone);
@@ -32,7 +32,6 @@ private:
     void matchStateToZone(State &s);
     std::vector<float> presenceProfile;
     std::vector<Agent> population;
-    int stepCount;
     StateMachine stateMachine;
     std::vector<Zone> zones;
 };

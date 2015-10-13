@@ -19,6 +19,7 @@ public:
     static double getValue(std::string name);
     static double getValueForZone(std::string name, std::string zoneName);
     static void print();
+    static void clear();
 private:
     DataStore();
     static std::unordered_map<std::string, std::vector<double> > variableMap;

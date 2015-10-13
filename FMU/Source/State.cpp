@@ -1,14 +1,15 @@
 
+#include <iostream>
+
 #include "SimulationConfig.h"
 #include "State.h"
-#include "StateMachine.h"
 
-StateMachine stateMachine;
+State::State(){}
+State::~State(){}
 
-State::State()
-{}
-State::~State()
-{}
+unsigned int State::numberOfSubStates() const{
+	return states.size();
+}
 
 int State::getId() const{
     return id;
@@ -34,15 +35,34 @@ std::string State::getLocationFromActivty(const std::string *activty){
 
 void State::addState(State s)
 {
-	stateMachine.addState(s);
+	states.push_back(s);
 }
-bool State::hasState(const int stateID)
+
+bool State::hasState(const int stateID) const
 {
-	return stateMachine.hasState(stateID);
+  bool found = false;
+  for(State s : states){
+      if(s.getId() == stateID || s.hasState(stateID)){
+          found = true;
+        break;
+      }
+  }
+  return found;
 }
-State State::getNextState(){
-    return stateMachine.getPendingState();
+
+State State::getState(const int stateID) const
+{
+
+  for(State s : states){
+    if(s.getId() == stateID){
+      return s;
+    }else if(s.hasState(stateID)){
+      return s.getState(stateID);
+    }
+  }
+
 }
+
 Zone* State::getZonePtr() const{
     return zone;
 }

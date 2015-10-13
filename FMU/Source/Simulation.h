@@ -21,11 +21,10 @@ class Simulation {
 
 public:
     Simulation();
-    ~Simulation(){
-      
-    }
 
     void preprocess();
+    void parseConfiguration(const std::string file);
+    void setupSimulationModel();
     void postprocess();
     void preTimeStep();
     void timeStep();
@@ -42,7 +41,6 @@ private:
     Model_Agents agentModel;
     int time;
     std::vector<int> monthCount;
-    std::vector<std::string> sendValues;
 
 };
 
