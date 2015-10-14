@@ -24,10 +24,8 @@
 #include "Model_Presence.h"
 #include "Model_Agents.h"
 
-Model_Agents::Model_Agents()
-{
+Model_Agents::Model_Agents(){}
 
-}
 void Model_Agents::setup()
 {
     int populationSize = SimulationConfig::numberOfAgents();
@@ -39,7 +37,6 @@ void Model_Agents::setup()
           population.push_back(Agent(a));
     }
     initialiseStates();
-
 }
 
 void Model_Agents::setZones(std::vector<Zone> zones)
@@ -144,7 +141,7 @@ void Model_Agents::setAgentGainsForZone(Zone *zone)
 
     for(Agent &agent: population)
     {
-        if (agent.isInZone(zone->getName()))
+        if  (agent.currentlyInZone(*zone))
         {
             numberOfAgents++;
             totalRadientGains += agent.getCurrentRadientGains();
@@ -338,13 +335,14 @@ void Model_Agents::setAgentCountForZone(Zone *zone)
     double numberOfAgents = 0;
     for(Agent &agent: population)
     {
-        if (agent.isInZone(zone->getName()))
+        if (agent.currentlyInZone(*zone))
         {
             numberOfAgents++;
         }
     }
-    double fractionsOfOccuapants = numberOfAgents / (double)population.size();
-    zone->setOccupantFraction(fractionsOfOccuapants);
+    //double fractionsOfOccuapants = numberOfAgents / (double)population.size();
+    //zone->setOccupantFraction(fractionsOfOccuapants);
+    zone->setOccupantFraction(numberOfAgents);
 }
 
 

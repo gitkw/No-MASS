@@ -49,15 +49,16 @@ public:
     void model_presenceFromPage();
     void interactWithZone(const Zone &zone);
 
-    bool isInZone(std::string zoneName) const;
+
+    bool currentlyInZone(const Zone &zone) const;
     bool InteractionOnZone(const Zone &zone) const;
+    bool getDesiredLightState(const Zone &zone) const;
+    bool getDesiredWindowState(const Zone &zone) const;
+    bool getDesiredShadeState(const Zone &zone) const;
 
     double getCurrentRadientGains() const;
     double getPower() const;
 
-    bool getDesiredLightState(const Zone &zone) const;
-    bool getDesiredWindowState(const Zone &zone) const;
-    bool getDesiredShadeState(const Zone &zone) const;
     std::string getLocationType(int step,StateMachine *sm);
     std::string getLocationName(int step,StateMachine *sm);
 
@@ -103,7 +104,6 @@ private:
     void rLearn(const Zone &zone, ActionValues *interaction);
 
     std::string updateLocation(const State& state) const;
-    bool currentlyInZone(const Zone &zone) const;
     bool previouslyInZone(const Zone &zone) const;
     bool calculateLightInteractionsOnZone(const Zone &zone);
     bool calculateWindowInteractionsOnZone(const Zone &zone);

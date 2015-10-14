@@ -12,6 +12,7 @@
 #include <vector>
 #include "Model_EnergyPlus.h"
 #include "Model_Agents.h"
+#include "Log.h"
 
 /**
  * @brief Main NoMASS simulation manager
@@ -21,6 +22,9 @@ class Simulation {
 
 public:
     Simulation();
+    ~Simulation(){
+        LOG.printLog();
+    }
 
     void preprocess();
     void parseConfiguration(const std::string file);

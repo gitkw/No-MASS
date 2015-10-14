@@ -70,7 +70,6 @@ fmiComponent fmiInstantiateModel(fmiString instanceName, fmiString GUID, fmiCall
 fmiStatus fmiInitialize(fmiComponent c, fmiBoolean toleranceControlled,
                                      fmiReal relativeTolerance, fmiEventInfo* eventInfo){
     if(LOG.getError()){
-     LOG.printLog();
      return fmiError;
     }
     return fmiOK;
@@ -124,7 +123,6 @@ fmiStatus fmiSetReal(fmiComponent c, const fmiValueReference vr[], size_t nvr, c
   //  ModelInstance* comp = (ModelInstance *)c;
     modelInstance->sim.preTimeStep();
     if(LOG.getError()){
-      LOG.printLog();
       return fmiError;
     }
     return fmiOK;
@@ -150,7 +148,6 @@ fmiStatus fmiGetReal(fmiComponent c, const fmiValueReference vr[], size_t nvr, f
         }
     }
     if(LOG.getError()){
-      LOG.printLog();
       return fmiError;
     }
     return fmiOK;
@@ -247,7 +244,6 @@ fmiStatus fmiDoStep(fmiComponent c, fmiReal currentCommunicationPoint,
     }
 
     if(LOG.getError()){
-      LOG.printLog();
       return fmiError;
     }
     return fmiOK;
@@ -283,9 +279,9 @@ fmiStatus fmiGetStringStatus(fmiComponent c, const fmiStatusKind s, fmiString*  
  */
 void loadVariables() {
 
-    std::string preferredSlash ="/";
-    std::string filename = "tmp-fmus"+preferredSlash+"agentFMU.fmu_FMI"+preferredSlash+"modelDescription.xml";
-    std::cout << " Loading XML file: -" << filename << "-" << std::endl;
+    std::string filename = SimulationConfig::FmuLocation + "/modelDescription.xml";
+
+    LOG << " Loading XML file: -" << filename << "-\n";
     // Create an empty property tree object
     boost::property_tree::ptree pt;
   //  std::string temp = "~/Dropbox/AgentConfigurationFiles/simpleOfficeNoBlindsNoWindowsNoLightsNoGains/testGUI.xml";
@@ -325,7 +321,7 @@ void loadVariables() {
             }
         }
     }
-    std::cout << " Loaded XML file: -" << filename << "-" << std::endl;
+    LOG << " Loaded XML file: -" << filename << "-\n";
 }
 
  fmiStatus fmiGetModelTypesPlatform(){return fmiOK;}

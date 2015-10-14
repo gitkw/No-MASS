@@ -30,8 +30,10 @@ double DataStore::getValueForZone(std::string name, std::string zoneName){
 
 double DataStore::getValue(std::string name) {
     if (variableMap.find(name) == variableMap.end()) {
-        LOG << "Forgot to define: " << name;
-        LOG << "Check the Zone Name is correct in the NoMass Simulation File";
+        LOG << "Cannot find the variable: " << name;
+        LOG << "\nThis could happen for a number of reasons:\n";
+        LOG << " - Check the Zone Name is correct in the NoMass simulation configuration file\n";
+        LOG << " - Check that all variable are defined in the model description file\n";
         LOG.error();
         return 0;
     }

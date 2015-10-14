@@ -16,25 +16,19 @@
 class Log
 {
    public:
-      Log(){
-        
-      }
+      Log();
 
       template<typename T>
       Log &operator << (const T &t){
-         buf << t;
+         if(!errorFlag){
+           buf << t;
+         }
          return * this;
       }
 
-      void printLog(){
-        std::cout << buf;
-      }
-      void error(){
-        errorFlag = true;
-      }
-      bool getError(){
-        return errorFlag;
-      }
+      void printLog();
+      void error();
+      bool getError();
 
    private:
       static std::stringstream buf;

@@ -68,7 +68,9 @@ void SimulationConfig::parseBuilding(boost::property_tree::ptree::value_type & v
             //std::cout << " Floor: " << zone.second.groundFloor << std::endl;
             if(zone.second.activity == "")
             {
-                LOG << "Did not define activities for zone: " << zone.second.name;
+                LOG << "Please define activities for zone: " << zone.second.name << "\n";
+                LOG << "This can be done manually in the No-MASS simulation configuration file\n";
+                LOG << "Or through DesignBuilders detailed occupant interface\n";
                 LOG.error();
                 zone.second.activity = "NONE";
             }
@@ -531,9 +533,8 @@ void SimulationConfig::parseConfiguration(std::string filename)
         {
             parseModels(v);
         }
-
     }
-  //  std::cout << "Loaded XML file: -" << filename << "-" << std::endl;
+    LOG << "Loaded No-MASS configuration without problems file: -" << filename << "-\n";
 
 }
 

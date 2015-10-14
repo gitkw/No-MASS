@@ -204,10 +204,6 @@ bool Agent::InteractionOnZone(const Zone &zone) const
     return currentlyInZone(zone) || previouslyInZone(zone);
 }
 
-bool Agent::isInZone(std::string zoneName) const
-{
-    return (state.getZonePtr()->getName() == zoneName);
-}
 
 std::string Agent::getLocationType(int step, StateMachine *sm)
 {
