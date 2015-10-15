@@ -16,11 +16,13 @@ void StateMachine::addState(State s)
 }
 
 State StateMachine::transistionTo(const int stateID){
+    State x;
     for(auto s : states){
-			if(s.getId() == stateID){
-					return s;
-			}else if(s.hasState( stateID)){
-          return s.getState( stateID);
-      }
+        if(s.getId() == stateID){
+            x = s;
+        }else if(s.hasState( stateID)){
+            x = s.getState( stateID);
+        }
     }
+    return x;
 }

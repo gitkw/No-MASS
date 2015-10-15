@@ -57,7 +57,7 @@ TEST(Simulation, HeatGainsOnly) {
 
 
 TEST(Simulation, HeatGainsWindowsOnly) {
-/*
+
   SimulationConfig::idfFileLocation = "tests/Files/in.idf";
   SimulationConfig::FmuLocation = "tests/Files";
   Simulation s;
@@ -65,6 +65,7 @@ TEST(Simulation, HeatGainsWindowsOnly) {
   s.parseConfiguration(SimulationConfig::FmuLocation + "/SimulationConfig.xml");
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
+  SimulationConfig::info.windows = true;
   s.setupSimulationModel();
 
 
@@ -81,8 +82,8 @@ TEST(Simulation, HeatGainsWindowsOnly) {
   EXPECT_EQ(WindowState, 0);
   s.postTimeStep();
   s.postprocess();
-
-  for(int i =1; i< 100; i++){
+  int i =1;
+  for(; i < 100; i++){
     s.preTimeStep();
     s.timeStep();
     EXPECT_EQ(SimulationConfig::getStepCount(),i);
@@ -91,13 +92,13 @@ TEST(Simulation, HeatGainsWindowsOnly) {
     s.postTimeStep();
   }
 
-  DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature", 50);
-  DataStore::addValue("Block1:Zone1ZoneAirRelativeHumidity", 21);
-  DataStore::addValue("Block1:Zone1ZoneMeanRadiantTemperature", 21);
-  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 18);
+  DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature", 100);
+  DataStore::addValue("Block1:Zone1ZoneAirRelativeHumidity", 100);
+  DataStore::addValue("Block1:Zone1ZoneMeanRadiantTemperature", 100);
+  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 15);
   DataStore::addValue("EnvironmentSiteRainStatus", 0);
 
-  for(int i =100; i< 500; i++){
+  for(i =100;; i++){
     s.preTimeStep();
     s.timeStep();
     EXPECT_EQ(SimulationConfig::getStepCount(),i);
@@ -105,29 +106,11 @@ TEST(Simulation, HeatGainsWindowsOnly) {
     int occs = DataStore::getValue("Block1:Zone1NumberOfOccupants");
     if(occs > 0){
       EXPECT_EQ(WindowState,1);
+      break;
     }
     s.postTimeStep();
   }
 
-  DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature", 5);
-  DataStore::addValue("Block1:Zone1ZoneAirRelativeHumidity", 21);
-  DataStore::addValue("Block1:Zone1ZoneMeanRadiantTemperature", 21);
-  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 18);
-  DataStore::addValue("EnvironmentSiteRainStatus", 0);
-
-  for(int i =500; i< 1000; i++){
-    s.preTimeStep();
-    s.timeStep();
-    EXPECT_EQ(SimulationConfig::getStepCount(),i);
-    WindowState = DataStore::getValue("Block1:Zone1WindowState0");
-    int occs = DataStore::getValue("Block1:Zone1NumberOfOccupants");
-
-    EXPECT_EQ(WindowState,0);
-
-    s.postTimeStep();
-  }
-
-
   s.postprocess();
-*/
+
 }

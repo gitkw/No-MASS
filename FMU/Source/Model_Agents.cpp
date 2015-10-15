@@ -144,7 +144,7 @@ void Model_Agents::setAgentGainsForZone(Zone *zone)
         if  (agent.currentlyInZone(*zone))
         {
             numberOfAgents++;
-            totalRadientGains += agent.getCurrentRadientGains();
+            totalRadientGains += agent.getCurrentRadientGains(*zone);
             //std::cout << "zonename: " << zoneName << " totalgains " << totalRadientGains << std::endl;
         }
     }

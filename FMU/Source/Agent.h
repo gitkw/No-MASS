@@ -55,8 +55,7 @@ public:
     bool getDesiredLightState(const Zone &zone) const;
     bool getDesiredWindowState(const Zone &zone) const;
     bool getDesiredShadeState(const Zone &zone) const;
-
-    double getCurrentRadientGains() const;
+    double getCurrentRadientGains(const Zone &zone) const;
     double getPower() const;
 
     std::string getLocationType(int step,StateMachine *sm);

@@ -22133,7 +22133,7 @@
 
 1444401522 D
 
-1444842089 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent.cpp
+1444902860 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent.cpp
 	<string>
 	<vector>
 	<iostream>
@@ -27637,7 +27637,7 @@
 	<boost/iterator/iterator_facade.hpp>
 	<boost/ref.hpp>
 
-1444842208 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent.h
+1444900409 /home/jake/git/masplatform/No-MASS/FMU/Source/Agent.h
 	<unordered_map>
 	<string>
 	<memory>
@@ -27652,7 +27652,7 @@
 	"Agent_Action_Shades.h"
 	"Agent_Action_Heat_Gains.h"
 
-1444726893 /home/jake/git/masplatform/No-MASS/FMU/Source/Model_Activity.h
+1444899653 /home/jake/git/masplatform/No-MASS/FMU/Source/Model_Activity.h
 	<vector>
 	<SimulationConfig.h>
 
@@ -27686,7 +27686,7 @@
 	"SimulationConfig.h"
 	"Agent_Action.h"
 
-1444057595 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Heat_Gains.cpp
+1444901580 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Agent_Action_Heat_Gains.cpp
 	<iostream>
 	"DataStore.h"
 	"Model_HeatGains.h"
@@ -30169,7 +30169,7 @@
 
 1444057595 /home/jake/git/masplatform/No-MASS/FMU/Source/fmiPlatformTypes.h
 
-1444726893 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Model_Activity.cpp
+1444899653 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Model_Activity.cpp
 	<boost/iostreams/filtering_stream.hpp>
 	<boost/lexical_cast.hpp>
 	<boost/algorithm/string.hpp>
@@ -30188,7 +30188,7 @@
 	<cassert>
 	"Model_Activity.h"
 
-1444057595 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Model_Agents.cpp
+1444900453 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Model_Agents.cpp
 	<string>
 	<vector>
 	<list>
@@ -30263,7 +30263,17 @@
 	"Utility.h"
 	"Model_Lights.h"
 
-1444057595 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Model_Presence.cpp
+1444726893 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Model_Presence.cpp
+	<boost/iostreams/filtering_stream.hpp>
+	<boost/lexical_cast.hpp>
+	<boost/algorithm/string.hpp>
+	<ctime>
+	<vector>
+	<cassert>
+	<algorithm>
+	"Utility.h"
+	"SimulationConfig.h"
+	"Model_Presence.h"
 
 1444057595 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Model_RandomWeibull.cpp
 	<cmath>
@@ -30288,19 +30298,27 @@
 	"Utility.h"
 	"RLearning.h"
 
-1444401522 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Simulation.cpp
+1444731521 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Simulation.cpp
 	<iostream>
 	<string>
 	"Simulation.h"
 	"SimulationConfig.h"
 	"DataStore.h"
 
-1444400710 source:/home/jake/git/masplatform/No-MASS/FMU/Source/SimulationConfig.cpp
+1444823877 source:/home/jake/git/masplatform/No-MASS/FMU/Source/SimulationConfig.cpp
+	<boost/property_tree/ptree.hpp>
+	<boost/property_tree/xml_parser.hpp>
+	<boost/lexical_cast.hpp>
+	<iostream>
+	<map>
+	"SimulationConfig.h"
+	"Log.h"
+	"Utility.h"
 
-1444057595 source:/home/jake/git/masplatform/No-MASS/FMU/Source/State.cpp
+1444904116 source:/home/jake/git/masplatform/No-MASS/FMU/Source/State.cpp
+	<iostream>
 	"SimulationConfig.h"
 	"State.h"
-	"StateMachine.h"
 
 1444057595 source:/home/jake/git/masplatform/No-MASS/FMU/Source/State_Audio_Visual.cpp
 	"State_Audio_Visual.h"
@@ -30335,7 +30353,7 @@
 1444057595 source:/home/jake/git/masplatform/No-MASS/FMU/Source/State_Washing_Appliance.cpp
 	"State_Washing_Appliance.h"
 
-1444057595 source:/home/jake/git/masplatform/No-MASS/FMU/Source/StateMachine.cpp
+1444904230 source:/home/jake/git/masplatform/No-MASS/FMU/Source/StateMachine.cpp
 	<iostream>
 	"StateMachine.h"
 
@@ -38587,7 +38605,11 @@
 	"SimulationConfig.h"
 	"Zone.h"
 
-1444823139 /home/jake/git/masplatform/No-MASS/FMU/Source/Log.h
+1444899653 /home/jake/git/masplatform/No-MASS/FMU/Source/Log.h
 	<sstream>
 	<iostream>
+
+1444899653 source:/home/jake/git/masplatform/No-MASS/FMU/Source/Log.cpp
+	<fstream>
+	"Log.h"
 

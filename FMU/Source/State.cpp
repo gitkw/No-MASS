@@ -52,15 +52,17 @@ bool State::hasState(const int stateID) const
 
 State State::getState(const int stateID) const
 {
-
+  State x;
   for(State s : states){
     if(s.getId() == stateID){
-      return s;
+      x = s;
+      break;
     }else if(s.hasState(stateID)){
-      return s.getState(stateID);
+      x = s.getState(stateID);
+      break;
     }
   }
-
+  return x;
 }
 
 Zone* State::getZonePtr() const{

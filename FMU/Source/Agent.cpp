@@ -90,6 +90,9 @@ void Agent::actionStep(int action, ActionValues *interaction, const Zone &zone, 
             aahg.prestep(clo, metabolicRate);
             aahg.step(zone, inZone, preZone, activities);
             interaction->heatgains = aahg.getResult();
+
+          //  std::cout << "  interaction->heatgains: " <<   interaction->heatgains << std::endl;
+          //  std::cout << "  ZoneName: " <<   zone.getName() << std::endl;
             previous_pmv = pmv;
             pmv = aahg.getPMV();
         break;
@@ -154,9 +157,9 @@ void Agent::model_presenceFromPage()
 }
 
 
-double Agent::getCurrentRadientGains() const
+double Agent::getCurrentRadientGains(const Zone &zone) const
 {
-    return currentRadientGains;
+    return zoneToInteraction.at(zone.getName()).heatgains;
 }
 
 double Agent::getPower() const

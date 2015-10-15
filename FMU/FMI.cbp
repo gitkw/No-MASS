@@ -74,6 +74,8 @@
 		<Unit filename="Source/EP_IDFObject.h" />
 		<Unit filename="Source/EP_ReadIDF.cpp" />
 		<Unit filename="Source/EP_ReadIDF.h" />
+		<Unit filename="Source/Log.cpp" />
+		<Unit filename="Source/Log.h" />
 		<Unit filename="Source/Model_Activity.cpp" />
 		<Unit filename="Source/Model_Activity.h" />
 		<Unit filename="Source/Model_Agents.cpp" />

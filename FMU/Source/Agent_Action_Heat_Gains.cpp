@@ -62,7 +62,7 @@ void Agent_Action_Heat_Gains::step(const Zone& zone, bool inZone, bool previousl
                 result = h.getAllHeatGains();
                 ppd = h.getPpd();
                 pmv = h.getPmv();
-
+          //      std::cout << "result: " << result << std::endl;
 
         }
         std::string name = "AgentGains" + idAsString;

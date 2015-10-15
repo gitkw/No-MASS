@@ -211,7 +211,7 @@ TEST(Activity, multinominal) {
           found = true;
         }
       }
-      
+
       ASSERT_EQ(found, true);
       found = false;
     }
