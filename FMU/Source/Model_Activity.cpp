@@ -97,8 +97,8 @@ std::string Model_Activity::getDay(const int day) const{
   return "day" + std::to_string(day);
 }
 
-double Model_Activity::multinominalActivity(const double *p) const{
-  double activity;
+int Model_Activity::multinominalActivity(const double *p) const{
+  int activity;
   double sum = 0;
   double drand = Utility::randomDouble(0.0,1.0);
   for(int i =0; i < 10; i++){
@@ -137,7 +137,7 @@ void Model_Activity::multinominalP(double p[4][7][24][10], const int agentID) co
 
           for(int i =0; i < 9; i++){
 
-            g[i] = dictionary.at(hour).at("Intercept").at(0) +
+            g[i] = dictionary.at(hour).at("Intercept").at(i) +
                    dictionary.at(hour).at(age).at(i) +
                    dictionary.at(hour).at(seasonString).at(i) +
                    dictionary.at(hour).at(computer).at(i) +

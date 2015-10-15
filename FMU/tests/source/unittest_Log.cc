@@ -14,6 +14,7 @@ TEST(Log, error) {
   EXPECT_EQ(LOG.getError(), false);
   LOG.error();
   EXPECT_EQ(LOG.getError(), true);
+  LOG.reset();
 
 
 }

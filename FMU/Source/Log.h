@@ -28,6 +28,7 @@ class Log
 
       void printLog();
       void error();
+      void reset();
       bool getError();
 
    private:

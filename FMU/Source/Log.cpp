@@ -39,6 +39,10 @@ void Log::error(){
   errorFlag = true;
 }
 
+void Log::reset(){
+  errorFlag = false;
+}
+
 bool Log::getError(){
   return errorFlag;
 }

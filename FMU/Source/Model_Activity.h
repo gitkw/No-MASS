@@ -15,11 +15,11 @@ class Model_Activity {
 public:
     Model_Activity();
     std::vector<double> preProcessActivities(int agentID);
+    void multinominalP(double p[4][7][24][10], const int agentID) const;
+    int multinominalActivity(const double *p) const;
 
 private:
     void parseConfiguration(const std::string filename);
-    double multinominalActivity(const double *p) const;
-    void multinominalP(double p[4][7][24][10], const int agentID) const;
 
     std::vector<double> disaggregate(const int agentID) const;
     std::vector<double> multinominal(const int agentID) const;

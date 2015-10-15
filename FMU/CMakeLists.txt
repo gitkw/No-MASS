@@ -127,6 +127,7 @@ if (test)
     tests/source/unittest_SimulationConfig.cc
     tests/source/unittest_StateMachine.cc
     tests/source/unittest_Log.cc
+    tests/source/unittest_Agent.cc
   )
 
   add_executable(runUnitTests ${TESTSRC})

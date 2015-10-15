@@ -18,14 +18,9 @@
 #include "SimulationConfig.h"
 #include "StateMachine.h"
 #include "Utility.h"
-
-
 #include "Agent.h"
 
-Agent::Agent()
-{
-}
-
+Agent::Agent(){}
 
 Agent::Agent(int newId) : id(newId)
 {
