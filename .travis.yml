@@ -7,9 +7,8 @@ compiler:
   - gcc
 
 cache:
-  - apt
   directories:
-  - Boost/Boost-Source
+    - Boost/Boost-Source
 
 addons:
   apt:
