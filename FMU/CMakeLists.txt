@@ -1,4 +1,41 @@
 cmake_minimum_required (VERSION 2.6)
+
+
+################################
+# Options
+################################
+
+option(tests "tests" OFF)
+option(CrossCompile32 "CrossCompile32" OFF)
+option(CrossCompile64 "CrossCompile64" OFF)
+
+################################
+# Cross Compiling
+################################
+
+if(CrossCompile32 OR CrossCompile64)
+  SET(CMAKE_SYSTEM_NAME Windows)
+  set(COMPILER_PREFIX "i686-w64-mingw32")
+  if(CrossCompile64)
+    set(COMPILER_PREFIX "x86_64-w64-mingw32")
+  endif()
+  find_program(CMAKE_RC_COMPILER NAMES ${COMPILER_PREFIX}-windres)
+  SET(CMAKE_RC_COMPILER ${COMPILER_PREFIX}-windres)
+  find_program(CMAKE_C_COMPILER NAMES ${COMPILER_PREFIX}-gcc)
+  SET(CMAKE_C_COMPILER ${COMPILER_PREFIX}-gcc)
+  find_program(CMAKE_CXX_COMPILER NAMES ${COMPILER_PREFIX}-g++)
+  SET(CMAKE_CXX_COMPILER ${COMPILER_PREFIX}-g++)
+
+  set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+  set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+  set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+
+endif()
+
+################################
+# Project
+################################
+
 project (FMI)
 
 SET( SRC
@@ -40,6 +77,10 @@ Source/Model_RandomWeibull.cpp
 Source/Model_RandomWeibull.h
 Source/Model_Windows.cpp
 Source/Model_Windows.h
+Source/Model_ExternalShading.cpp
+Source/Model_ExternalShading.h
+Source/Model_Appliance_Ownership.cpp
+Source/Model_Appliance_Ownership.h
 Source/Simulation.cpp
 Source/Simulation.h
 Source/SimulationConfig.cpp
@@ -90,18 +131,22 @@ ADD_LIBRARY(FMI SHARED ${SRC})
 
 SET(GCC_COVERAGE_COMPILE_FLAGS_FMI "-Wall -Wextra -Werror")
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 -static -fPIC")
+if(MINGW)
+  SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -static")
+  string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+endif()
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
 SET(CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE} -O2")
 
 SET_TARGET_PROPERTIES(FMI PROPERTIES
  CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS_FMI}"
 )
 
-string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+
 ################################
 # Testing
 ################################
-if (test)
+if (tests)
 
 
   SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -pthread" )

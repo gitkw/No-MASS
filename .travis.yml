@@ -11,6 +11,7 @@ addons:
     - g++-4.9
     - gcc-4.9
     - cmake
+    - mingw-w64
 
 before_install:
   - export CXX="g++-4.9"
@@ -20,15 +21,26 @@ before_install:
   - git submodule update --init --recursive
 
 before_script:
+  - mkdir FMU/build
+  - mkdir FMU/build32
+  - mkdir FMU/build64
   - cd Boost
   - make
 
 
 script:
-  - cd ../FMU
-  - cmake -Dtest=ON ./
+  - cd ../FMU/build
+  - cmake -Dtest=ON ../
   - make
   - ./runUnitTests
+  - cd ../build64
+  - cmake -CrossCompile64=ON ../
+  - make
+  - cp libFMI.dll libFMI64.dll
+  - cd ../build32
+  - cmake -CrossCompile32=ON ../
+  - make
+  - cp libFMI.dll libFMI32.dll
 
 after_success:
 
@@ -43,3 +55,13 @@ env:
 
 os:
   - linux
+
+
+deploy:
+  provider: releases
+  api-key: "e9ce95182cc7c302f0f74029411c7d912a6afcfa "
+  file:
+    - "FMU/build/libFMI.so"
+    - "FMU/build32/libFMI32.dll"
+    - "FMU/build64/libFMI64.dll"
+  skip_cleanup: true
