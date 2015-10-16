@@ -6,6 +6,11 @@ dist: trusty
 compiler:
   - gcc
 
+cache:
+  - apt
+  directories:
+  - Boost/Boost-Source
+
 addons:
   apt:
     sources:
