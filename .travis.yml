@@ -43,12 +43,12 @@ before_script:
 script:
   - cd ../FMU/buildDebug
   - cmake -Dtests=on -DCMAKE_BUILD_TYPE=Debug ../
-  #- make
-  #- mv runUnitTests ../
-  - cd ../
-  #- ./runUnitTests
+  - make
+  - mv runUnitTests ../
+  - cd ..
+  - ./runUnitTests
   - cd ./build
-  - cmake  -DCMAKE_BUILD_TYPE=Release ../
+  - cmake -DCMAKE_BUILD_TYPE=Release ../
   - make
   - cd ../build64
   - cmake -DCrossCompile64=ON -DCMAKE_BUILD_TYPE=Release ../
@@ -60,16 +60,11 @@ script:
   - mv libFMI.dll libFMI32.dll
   - cd ../../
 
-after_success:
-
 notifications:
   email: false
 
-env:
-
 os:
   - linux
-
 
 deploy:
   provider: releases
