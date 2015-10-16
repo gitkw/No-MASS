@@ -11,14 +11,15 @@ addons:
     - g++-4.9
     - gcc-4.9
     - cmake
-    - gcc-mingw-w64-i686
-    - g++-mingw-w64-i686
-    - binutils-mingw-w64-i686
-    - mingw-w64-dev
-    - gcc-mingw-w64-x86-64
-    - g++-mingw-w64-x86-64
-    - binutils-mingw-w64-x86-64
-    - mingw-w64-dev
+    # Need travis to update from precise
+    #- gcc-mingw-w64-i686
+    #- g++-mingw-w64-i686
+    #- binutils-mingw-w64-i686
+    #- mingw-w64-dev
+    #- gcc-mingw-w64-x86-64
+    #- g++-mingw-w64-x86-64
+    #- binutils-mingw-w64-x86-64
+    #- mingw-w64-dev
 
 
 before_install:
@@ -40,15 +41,17 @@ script:
   - cd ../FMU/build
   - cmake -Dtests=ON ../
   - make
+  - mv runUnitTests ../
+  - cd ../
   - ./runUnitTests
-  - cd ../build64
-  - cmake -DCrossCompile64=ON ../
-  - make
-  - cp libFMI.dll libFMI64.dll
-  - cd ../build32
-  - cmake -DCrossCompile32=ON ../
-  - make
-  - cp libFMI.dll libFMI32.dll
+  #- cd ../build64
+  #- cmake -DCrossCompile64=ON ../
+  #- make
+  #- cp libFMI.dll libFMI64.dll
+  #- cd ../build32
+  #- cmake -DCrossCompile32=ON ../
+  #- make
+  #- cp libFMI.dll libFMI32.dll
 
 after_success:
 
@@ -70,6 +73,6 @@ deploy:
   api-key: "e9ce95182cc7c302f0f74029411c7d912a6afcfa "
   file:
     - "FMU/build/libFMI.so"
-    - "FMU/build32/libFMI32.dll"
-    - "FMU/build64/libFMI64.dll"
+    #- "FMU/build32/libFMI32.dll"
+    #- "FMU/build64/libFMI64.dll"
   skip_cleanup: true
