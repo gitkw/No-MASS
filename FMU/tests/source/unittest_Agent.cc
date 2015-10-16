@@ -91,9 +91,9 @@ TEST(Agent, error) {
 
 
   Agent a(0);
-/*
-  a.step(&stateMachine);
 
+  a.step(&stateMachine);
+/*
   while(!a.currentlyInZone(z_MasterBedroom)){
     SimulationConfig::step();
     a.step(&stateMachine);
