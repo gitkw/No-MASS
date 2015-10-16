@@ -54,10 +54,6 @@ script:
 
 after_success:
 
-branches:
-  only:
-    - Master
-
 notifications:
   email: false
 
