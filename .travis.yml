@@ -11,7 +11,15 @@ addons:
     - g++-4.9
     - gcc-4.9
     - cmake
-    - mingw-w64
+    - gcc-mingw-w64-i686
+    - g++-mingw-w64-i686
+    - binutils-mingw-w64-i686
+    - mingw-w64-dev
+    - gcc-mingw-w64-x86-64
+    - g++-mingw-w64-x86-64
+    - binutils-mingw-w64-x86-64
+    - mingw-w64-dev
+
 
 before_install:
   - export CXX="g++-4.9"
