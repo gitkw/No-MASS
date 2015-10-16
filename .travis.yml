@@ -38,15 +38,15 @@ before_script:
 
 script:
   - cd ../FMU/build
-  - cmake -Dtest=ON ../
+  - cmake -Dtests=ON ../
   - make
   - ./runUnitTests
   - cd ../build64
-  - cmake -CrossCompile64=ON ../
+  - cmake -DCrossCompile64=ON ../
   - make
   - cp libFMI.dll libFMI64.dll
   - cd ../build32
-  - cmake -CrossCompile32=ON ../
+  - cmake -DCrossCompile32=ON ../
   - make
   - cp libFMI.dll libFMI32.dll
 
