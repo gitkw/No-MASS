@@ -31,24 +31,28 @@ before_install:
 
 before_script:
   - mkdir FMU/build
+  - mkdir FMU/buildDebug
   - mkdir FMU/build32
   - mkdir FMU/build64
   - cd Boost
   - make
 
 script:
-  - cd ../FMU/build
-  - cmake -Dtests=ON ../
+  - cd ../FMU/buildDebug
+  - cmake -Dtests=on -DCMAKE_BUILD_TYPE=Debug ../
   - make
   - mv runUnitTests ../
   - cd ../
-  #- ./runUnitTests
-  - cd ./build64
-  - cmake -DCrossCompile64=ON ../
+  - ./runUnitTests
+  - cd ../build
+  - cmake  -DCMAKE_BUILD_TYPE=Release ../
+  - make
+  - cd ../build64
+  - cmake -DCrossCompile64=ON -DCMAKE_BUILD_TYPE=Release ../
   - make
   - mv libFMI.dll libFMI64.dll
   - cd ../build32
-  - cmake -DCrossCompile32=ON ../
+  - cmake -DCrossCompile32=ON -DCMAKE_BUILD_TYPE=Release ../
   - make
   - mv libFMI.dll libFMI32.dll
   - cd ../../
