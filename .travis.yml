@@ -72,4 +72,5 @@ deploy:
     - "FMU/build32/libFMI32.dll"
     - "FMU/build64/libFMI64.dll"
   skip_cleanup: true
-  all_branches: true
+    on:
+    tags: true
