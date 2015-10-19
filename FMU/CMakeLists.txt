@@ -81,6 +81,8 @@ Source/Model_ExternalShading.cpp
 Source/Model_ExternalShading.h
 Source/Model_Appliance_Ownership.cpp
 Source/Model_Appliance_Ownership.h
+Source/Model_Appliance_Usage.cpp
+Source/Model_Appliance_Usage.h
 Source/Simulation.cpp
 Source/Simulation.h
 Source/SimulationConfig.cpp
@@ -166,6 +168,8 @@ if (tests)
     tests/source/unittest_SimulationConfig.cc
     tests/source/unittest_Model_Activity.cc
     tests/source/unittest_Model_HeatGains.cc
+    tests/source/unittest_Model_Appliance_Usage.cc
+    tests/source/unittest_Model_Appliance_Ownership.cc
     tests/source/unittest_SimulationConfig.cc
     tests/source/unittest_StateMachine.cc
     tests/source/unittest_Log.cc

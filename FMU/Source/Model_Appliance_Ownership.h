@@ -1,65 +1,20 @@
-#ifndef APPLIANCE_H
-#define	APPLIANCE_H
+#ifndef MODEL_APPLIANCE_OWNERSHIP_H
+#define	MODEL_APPLIANCE_OWNERSHIP_H
 
-#include <iostream>
-#include <cmath>
-#include <random>
-#include <fstream>
-#include <array>
-#include <cassert>
-
-
-
-class Appliance {
+class Model_Appliance_Ownership {
 
     public:
-      Appliance();
-      std::array< double, 10 > profile();
-      void setAppliance(const int app);
-      bool onAt(const int timeStep);
-      int getState();
-      double ownership();
-      double getPower();
-      double getMeanFraction();
-      double printer();
+      Model_Appliance_Ownership();
 
-    private:
-      double* currentOn;
-      double** currentTransitionx;
-      double* currentMeanF;
-      double currentMaxPower;
+      double microware() const;
+      double fridge() const;
 
-      int currentState;
-
-      double maxPowerTv = 56.2;
-      double maxPowerWashingMachine = 82.34494;
-
-      double onTv[144] = {0.1276,0.1112,0.0951,0.083,0.0727,0.0636,0.0554,0.0498,0.0451,0.0412,0.0384,0.036,0.0335,0.0327,0.0315,0.0304,0.0298,0.0287,0.0279,0.0274,0.0267,0.0264,0.026,0.0262,0.0254,0.0249,0.0247,0.0249,0.0248,0.0247,0.0246,0.0244,0.0249,0.0251,0.0257,0.0281,0.0293,0.0307,0.0349,0.0395,0.0485,0.0667,0.082,0.097,0.1107,0.1236,0.1373,0.1489,0.1485,0.1373,0.1332,0.1324,0.1297,0.1319,0.134,0.1337,0.1338,0.1351,0.1362,0.1356,0.1367,0.1362,0.1368,0.1378,0.14,0.1421,0.1451,0.1495,0.1538,0.1631,0.171,0.1797,0.1895,0.2036,0.2164,0.231,0.2413,0.246,0.2417,0.2333,0.2253,0.218,0.2129,0.2097,0.2059,0.2036,0.201,0.1927,0.1831,0.1787,0.1754,0.1707,0.1695,0.1666,0.1645,0.1649,0.1653,0.167,0.1724,0.182,0.1907,0.1985,0.2067,0.2146,0.2224,0.2298,0.2388,0.2489,0.2623,0.2746,0.2838,0.2896,0.2973,0.3008,0.3007,0.3066,0.3125,0.3271,0.3435,0.3578,0.3682,0.3763,0.3864,0.3934,0.4048,0.41,0.4152,0.4179,0.419,0.4175,0.4119,0.4056,0.398,0.3861,0.3564,0.3103,0.2708,0.2382,0.2115,0.1901,0.1713,0.1546,0.1411,0.1287};
-      double onWashingMachine[144] = {0.03767,0.0236,0.02125,0.01776,0.01685,0.01516,0.01444,0.01334,0.01211,0.01111,0.01061,0.01563,0.01497,0.01393,0.01321,0.01262,0.01227,0.01356,0.01346,0.01296,0.0129,0.01171,0.01007,0.00907,0.0081,0.00813,0.00734,0.00694,0.00672,0.00694,0.007,0.00741,0.00797,0.00832,0.00985,0.01139,0.01293,0.01622,0.01983,0.02341,0.02931,0.03643,0.04651,0.05514,0.06396,0.07306,0.08172,0.09063,0.09826,0.10158,0.10585,0.10704,0.10902,0.10999,0.11222,0.11533,0.11774,0.11875,0.1195,0.11894,0.11868,0.11614,0.11523,0.11423,0.11247,0.11147,0.10993,0.1082,0.10566,0.10497,0.10328,0.10513,0.10745,0.10858,0.10776,0.10528,0.10572,0.10337,0.1045,0.1051,0.10538,0.10601,0.10466,0.10208,0.09813,0.09418,0.08887,0.08398,0.08024,0.0783,0.07557,0.07296,0.06938,0.06772,0.06643,0.06502,0.06217,0.06163,0.05975,0.05997,0.06104,0.06248,0.06116,0.06339,0.06443,0.06493,0.06593,0.06643,0.06772,0.06766,0.07058,0.07202,0.07249,0.07378,0.07387,0.07346,0.07371,0.0735,0.07312,0.07215,0.07114,0.06898,0.06756,0.06794,0.0681,0.06719,0.06738,0.06439,0.06198,0.06035,0.0568,0.05391,0.05034,0.0482,0.04742,0.04541,0.04488,0.0434,0.04161,0.03926,0.03574,0.03235,0.03082,0.04121};
-
-      double transitionsWashingMachinex[2] = {0.552,1};
-      double currentTransition[2][2] = {
-              {0.744705,0.255295},
-              {0.315092,0.684908}
-            };
-      double transitionsTv[4] = {0.322,0.418,0.966,1};
-
-
-      double meanFWashingMachine[2] = {0.0308,0.2955};
-
-      double meanFTv[4] = {0.7711,0.4708,0.1054,0.9356};
-
-      int stateWashingMachine = 0;
-      std::random_device rd;
-      std::mt19937 mt;
-
-      double currentstates[2][2] = {
-              {0.0,0.0},
-              {0.0,0.0}
-            };
-
-
+      double cooker(const int age, const int employment, const int bedrooms, const int education) const;
+      double dishwasher(const int socclass, const int internet, const int cohabitants, const int hometype, const int ownrent, const int bedrooms, const int internetreg, const int houseyear) const;
+      double tvless21(const int sex, const int internet, const int cohabitants, const int over15, const int education) const;
+      double tvmore21(const int sex, const int employment, const int cohabitants, const int hometype, const int ownrent, const int bedrooms, const int education, const int internetregother) const;
+      double washingMachine(const int sex, const int ownrent, const int bedrooms, const int internetregother) const;
 
 };
 
-#endif	/* APPLIANCE_H */
+#endif	/* MODEL_APPLIANCE_OWNERSHIP_H */
