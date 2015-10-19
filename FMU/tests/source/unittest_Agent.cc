@@ -91,7 +91,7 @@ TEST(Agent, error) {
 
 
   Agent a(0);
-/*
+
   a.step(&stateMachine);
 
   while(!a.currentlyInZone(z_MasterBedroom)){
@@ -105,7 +105,7 @@ TEST(Agent, error) {
     a.step(&stateMachine);
   }
   ASSERT_NEAR(a.getCurrentRadientGains(z_Kitchen), 99.4269,0.001);
-
+/*
   while(!a.currentlyInZone(z_Bathroom)){
     SimulationConfig::step();
     a.step(&stateMachine);
