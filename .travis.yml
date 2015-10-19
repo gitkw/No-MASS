@@ -6,7 +6,7 @@ dist: trusty
 compiler:
   - gcc
 
-cache:apt
+cache: apt
 
 addons:
   apt:
