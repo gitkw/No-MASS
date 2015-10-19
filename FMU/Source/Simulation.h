@@ -23,7 +23,6 @@ class Simulation {
 public:
     Simulation();
     ~Simulation(){
-        LOG.printLog();
     }
 
     void preprocess();

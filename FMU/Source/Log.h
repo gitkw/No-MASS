@@ -22,11 +22,12 @@ class Log
       Log &operator << (const T &t){
          if(!errorFlag){
            buf << t;
+           std::cout << t;
          }
          return * this;
       }
 
-      void printLog();
+      static void printLog();
       void error();
       void reset();
       bool getError();

@@ -37,7 +37,9 @@ Simulation::Simulation() {
  */
 void Simulation::preprocess() {
         parseConfiguration(SimulationConfig::FmuLocation + "/SimulationConfig.xml");
-        setupSimulationModel();
+        if(!LOG.getError()){
+            setupSimulationModel();
+        }
 }
 
 void Simulation::parseConfiguration(const std::string file){

@@ -186,6 +186,20 @@ void SimulationConfig::parseAgents(boost::property_tree::ptree::value_type & v)
                 }
 
             }
+
+            if(SimulationConfig::info.presencePage && agent.profile.size() != 7)
+            {
+                LOG << "Occupant presence has not been defined using the Page method\n";
+                LOG << "Please add a presence profile for each day of the week in the No-MASS simulation configuration file\n";
+                LOG << "In DesignBuilder please select the correct activity profile\n";
+                LOG.error();
+            }else if(!SimulationConfig::info.presencePage && agent.profile.size() != 24 && SimulationConfig::ActivityFile == "")
+            {
+                LOG << "The activity profile is not defined for each hour using the Said method\n";
+                LOG << "Please add a activity profile for hour in the No-MASS simulation configuration file\n";
+                LOG << "In DesignBuilder please select the correct activity profile\n";
+                LOG.error();
+            }
             agents.push_back(agent);
         }
     }

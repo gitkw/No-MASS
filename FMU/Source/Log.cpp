@@ -6,6 +6,7 @@
  */
 
 #include <fstream>
+#include <iostream>
 #include "Log.h"
 // Define the static member, somewhere in an implementation file.
 std::stringstream Log::buf;
@@ -16,9 +17,8 @@ Log::Log(){}
 void Log::printLog(){
 
   if(errorFlag){
-    std::cout << Log::buf.str();
     std::ofstream outfile;
-    outfile.open("eplusout.err", std::ios_base::app);
+    outfile.open("No-MASS.err", std::ios_base::app);
     outfile << "   *************"  << std::endl;
     outfile << "   ************* ===== Final No-MASS (Detailed Occupancy) Error Summary ====="  << std::endl;
     std::string line;
@@ -37,6 +37,7 @@ void Log::printLog(){
 
 void Log::error(){
   errorFlag = true;
+  Log::printLog();
 }
 
 void Log::reset(){
