@@ -189,34 +189,70 @@ std::vector<T> Model_Appliance_Usage::as_vector(
     return r;
 }
 
+template <typename T>
+std::vector<std::vector<T>> Model_Appliance_Usage::as_vector_vector(
+  boost::property_tree::ptree::value_type & child) {
+
+    std::vector<std::vector<T>> r;
+    for (boost::property_tree::ptree::value_type & x: child.second) {
+      r.push_back(as_vector<T>(x));
+    }
+    return r;
+}
+
 void Model_Appliance_Usage::parseCountryUsage(
   boost::property_tree::ptree::value_type & v) {
         for (boost::property_tree::ptree::value_type & child : v.second) {
-                if (v.first == "maxPowerTv") {
-                        maxPowerTv = v.second.get_value<double>();
-                } else if (v.first == "maxPowerWashingMachine") {
-                        maxPowerWashingMachine = v.second.get_value<double>();
-                } else if (v.first == "maxPowerMicroWave") {
-                        maxPowerMicroWave = v.second.get_value<double>();
-                } else if (v.first == "maxPowerCooker") {
-                        maxPowerCooker = v.second.get_value<double>();
-                } else if (v.first == "maxPowerDishWasher") {
-                        maxPowerDishWasher = v.second.get_value<double>();
-                } else if (v.first == "maxPowerFridge") {
-                        maxPowerFridge = v.second.get_value<double>();
-                } else if (v.first == "meanFWashingMachine") {
-                        meanFWashingMachine = as_vector<double>(v);
-                } else if (v.first == "meanFTv") {
-                        meanFTv  = as_vector<double>(v);
-                } else if (v.first == "meanFCooker") {
-                        meanFCooker  = as_vector<double>(v);
-                } else if (v.first == "meanFMicrowave") {
-                        meanFMicrowave  = as_vector<double>(v);
-                } else if (v.first == "meanFFridge") {
-                        meanFFridge  = as_vector<double>(v);
-                } else if (v.first == "meanFDishWasher") {
-                        meanFDishWasher  = as_vector<double>(v);
-                }
+            if (child.first == "maxPowerTv") {
+                    maxPowerTv = child.second.get_value<double>();
+            } else if (child.first == "maxPowerWashingMachine") {
+                    maxPowerWashingMachine = child.second.get_value<double>();
+            } else if (child.first == "maxPowerMicroWave") {
+                    maxPowerMicroWave = child.second.get_value<double>();
+            } else if (child.first == "maxPowerCooker") {
+                    maxPowerCooker = child.second.get_value<double>();
+            } else if (child.first == "maxPowerDishWasher") {
+                    maxPowerDishWasher = child.second.get_value<double>();
+            } else if (child.first == "maxPowerFridge") {
+                    maxPowerFridge = child.second.get_value<double>();
+            } else if (child.first == "meanFWashingMachine") {
+                    meanFWashingMachine = as_vector<double>(child);
+            } else if (child.first == "meanFTv") {
+                    meanFTv  = as_vector<double>(child);
+            } else if (child.first == "meanFCooker") {
+                    meanFCooker  = as_vector<double>(child);
+            } else if (child.first == "meanFMicrowave") {
+                    meanFMicrowave  = as_vector<double>(child);
+            } else if (child.first == "meanFFridge") {
+                    meanFFridge  = as_vector<double>(child);
+            } else if (child.first == "meanFDishWasher") {
+                    meanFDishWasher  = as_vector<double>(child);
+            } else if (child.first == "onTv"){
+                    onTv = as_vector<double>(child);
+            } else if (child.first == "onWashingMachine"){
+                    onWashingMachine = as_vector<double>(child);
+            } else if (child.first == "onMicroWave"){
+                    onMicroWave = as_vector<double>(child);
+            } else if (child.first == "onCooker"){
+                    onCooker = as_vector<double>(child);
+            } else if (child.first == "onDishWasher"){
+                    onDishWasher = as_vector<double>(child);
+            } else if (child.first == "onFridge"){
+                    onFridge = as_vector<double>(child);
+            } else if (child.first == "transitionsCooker"){
+                    transitionsCooker = as_vector_vector<double>(child);
+            } else if (child.first == "transitionsMicroWave"){
+                    transitionsMicroWave = as_vector_vector<double>(child);
+            } else if (child.first == "transitionsTv"){
+                    transitionsTv = as_vector_vector<double>(child);
+            } else if (child.first == "transitionsWashingMachine"){
+                    transitionsWashingMachine = as_vector_vector<double>(child);
+            } else if (child.first == "transitionsDishWasher"){
+                    transitionsDishWasher = as_vector_vector<double>(child);
+            } else if (child.first == "transitionsFridge"){
+                    transitionsFridge = as_vector_vector<double>(child);
+            }
+
         }
 }
 
@@ -237,7 +273,7 @@ void Model_Appliance_Usage::parseConfiguration(const std::string filename) {
 
         if (child.first == "Usage") {
         for (boost::property_tree::ptree::value_type & childchild : child.second) {
-                if (childchild.first == "county") {
+                if (childchild.first == "country") {
                     std::string currentCountry = childchild.second.get_value<std::string>();
                     if (currentCountry == country) {
                             parseCountryUsage(child);
