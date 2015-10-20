@@ -486,15 +486,14 @@ void SimulationConfig::parseShades(boost::property_tree::ptree::value_type & v)
  *
  * @param filename location of the simulation file to parse.
  */
-void SimulationConfig::parseConfiguration(std::string filename)
-{
-
+void SimulationConfig::parseConfiguration(std::string filename) {
+    namespace bpt = boost::property_tree;
     // Create an empty property tree object
-    boost::property_tree::ptree pt;
+    bpt::ptree pt;
     // Load the XML file into the property tree. If reading fails
     // (cannot open file, parse error), an exception is thrown.
 
-    boost::property_tree::read_xml(filename, pt);
+    bpt::read_xml(filename, pt);
     // Iterate over the debug.modules section and store all found
     // modules in the m_modules set. The get_child() function
     // returns a reference to the child at the specified path; if
@@ -504,9 +503,7 @@ void SimulationConfig::parseConfiguration(std::string filename)
     info.windows = false;
     info.shading = false;
     info.lights = false;
-    for(boost::property_tree::ptree::value_type & v: pt.get_child("simulation"))
-    {
-
+    for (bpt::ptree::value_type & v : pt.get_child("simulation")) {
         if (v.first == "seed")
         {
             Utility::setSeed(v.second.get_value<int>());

@@ -1,9 +1,4 @@
-/*
- * File:   Model_Activity.cpp
- * Author: jake
- *
- * Created on September 17, 2013, 3:13 PM
- */
+// Copyright 2015 Jacob Chapman
 
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/lexical_cast.hpp>
@@ -11,8 +6,9 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 
-#include "SimulationConfig.h"
-#include "Utility.h"
+#include <map>
+#include <limits>
+#include <utility>
 #include <vector>
 #include <cctype>
 #include <iostream>     // cout, endl
@@ -20,8 +16,10 @@
 #include <string>
 #include <algorithm>    // copy
 #include <iterator>     // ostream_operator
-#include <string>
 #include <cassert>
+
+#include "SimulationConfig.h"
+#include "Utility.h"
 #include "Model_Activity.h"
 
 /**
@@ -41,19 +39,18 @@ Model_Activity::Model_Activity() {
 }
 
 std::vector<double> Model_Activity::preProcessActivities(int agentID) {
-    if(SimulationConfig::ActivityFile == ""){
+    if (SimulationConfig::ActivityFile == "") {
         return disaggregate(agentID);
-    }else{
+    } else {
         parseConfiguration(SimulationConfig::ActivityFile);
         return multinominal(agentID);
     }
-
 }
 
 
-std::string Model_Activity::getSeasonString(const int month) const{
+std::string Model_Activity::getSeasonString(const int month) const {
   std::string season;
-  switch(month){
+  switch (month) {
     case 0:
       season = "season1";
       break;
@@ -69,9 +66,9 @@ std::string Model_Activity::getSeasonString(const int month) const{
   return season;
 }
 
-int Model_Activity::getSeasonInt(const int month) const{
+int Model_Activity::getSeasonInt(const int month) const {
   int season;
-  switch(month){
+  switch (month) {
     case 12:
     case 1:
     case 2:
@@ -93,18 +90,17 @@ int Model_Activity::getSeasonInt(const int month) const{
   return season;
 }
 
-std::string Model_Activity::getDay(const int day) const{
+std::string Model_Activity::getDay(const int day) const {
   return "day" + std::to_string(day);
 }
 
-int Model_Activity::multinominalActivity(const double *p) const{
+int Model_Activity::multinominalActivity(const double *p) const {
   int activity;
   double sum = 0;
-  double drand = Utility::randomDouble(0.0,1.0);
-  for(int i =0; i < 10; i++){
+  double drand = Utility::randomDouble(0.0, 1.0);
+  for (int i =0; i < 10; i++) {
     sum += p[i];
-    if(sum >= drand)
-    {
+    if (sum >= drand) {
         activity = i;
         break;
     }
@@ -112,7 +108,8 @@ int Model_Activity::multinominalActivity(const double *p) const{
   return activity;
 }
 
-void Model_Activity::multinominalP(double p[4][7][24][10], const int agentID) const{
+void Model_Activity::multinominalP(
+    double p[4][7][24][10], const int agentID) const {
 
     std::string age = SimulationConfig::agents.at(agentID).age;
     std::string computer = SimulationConfig::agents.at(agentID).computer;
@@ -123,20 +120,19 @@ void Model_Activity::multinominalP(double p[4][7][24][10], const int agentID) co
     std::string famstat = SimulationConfig::agents.at(agentID).famstat;
     std::string sex = SimulationConfig::agents.at(agentID).sex;
 
-    for(int iSeason = 0; iSeason <4; iSeason++){
+    for (int iSeason = 0; iSeason <4; iSeason++) {
       std::string seasonString = getSeasonString(iSeason);
-      for(int iDay = 0; iDay <7; iDay++){
+      for (int iDay = 0; iDay <7; iDay++) {
         std::string dayString = getDay(iDay+1);
-        for(int iHour = 0; iHour <24; iHour++){
+        for (int iHour = 0; iHour <24; iHour++) {
           double g[10];
           double d = 0;
           int hour = iHour +1;
-          if(iHour < 6){
+          if (iHour < 6) {
             hour = 1;
           }
 
-          for(int i =0; i < 9; i++){
-
+          for (int i =0; i < 9; i++) {
             g[i] = dictionary.at(hour).at("Intercept").at(i) +
                    dictionary.at(hour).at(age).at(i) +
                    dictionary.at(hour).at(seasonString).at(i) +
@@ -151,26 +147,27 @@ void Model_Activity::multinominalP(double p[4][7][24][10], const int agentID) co
             d += std::exp(g[i]);
           }
           g[9] = 0;
-          d += 1; // == std::exp(g[9]) == exp(0) == 1;
+          d += 1;  // == std::exp(g[9]) == exp(0) == 1;
           double sum = 0;
-          for(int i =0; i < 10; i++){
+          for (int i =0; i < 10; i++) {
             p[iSeason][iDay][iHour][i] = std::exp(g[i]) / d;
             sum += p[iSeason][iDay][iHour][i];
           }
-          assert(std::abs(1.0-sum) < std::numeric_limits<double>::epsilon() * std::abs(1.0+sum)* 2);
+          assert(std::abs(1.0-sum) <
+            std::numeric_limits<double>::epsilon() * std::abs(1.0+sum)* 2);
         }
       }
     }
 }
 
-std::vector<double> Model_Activity::multinominal(const int agentID) const{
-
+std::vector<double> Model_Activity::multinominal(const int agentID) const {
     double p[4][7][24][10];
-    multinominalP(p,agentID);
+    multinominalP(p, agentID);
 
     std::vector<double> activities;
 
-    static const int daysInMonth[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+    static const int daysInMonth[] =
+      {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     int tsph = SimulationConfig::info.timeStepsPerHour;
     int hourCount = 0;
@@ -182,25 +179,25 @@ std::vector<double> Model_Activity::multinominal(const int agentID) const{
     int season = getSeasonInt(month);
 
     for (int i = 0; i <= SimulationConfig::info.timeSteps; i++) {
-        if(i % tsph == 0 || hourCount < 1){
+        if (i % tsph == 0 || hourCount < 1) {
             hourCount++;
-            if(hourCount > 24){
+            if (hourCount > 24) {
                 hourCount = 1;
                 day++;
                 dayOfWeek++;
-                if(dayOfWeek > 6){
-                  dayOfWeek =0;
+                if (dayOfWeek > 6) {
+                  dayOfWeek = 0;
                 }
-                if(day > daysInMonth[month]){
+                if (day > daysInMonth[month]) {
                   month++;
                   day = 1;
-                  if(month == 13){
+                  if (month == 13) {
                     month = 1;
                   }
                   season = getSeasonInt(month);
                 }
             }
-            if(hourCount < 6){
+            if (hourCount < 6) {
               hour = 0;
             }
         }
@@ -209,61 +206,56 @@ std::vector<double> Model_Activity::multinominal(const int agentID) const{
     return activities;
 }
 
-void Model_Activity::parseConfiguration(const std::string filename)
-{
-
+void Model_Activity::parseConfiguration(const std::string filename) {
+    namespace bpt = boost::property_tree;
     // Create an empty property tree object
-    boost::property_tree::ptree pt;
+    bpt::ptree pt;
     // Load the XML file into the property tree. If reading fails
     // (cannot open file, parse error), an exception is thrown.
 
-    boost::property_tree::read_xml(filename, pt);
+    bpt::read_xml(filename, pt);
     // Iterate over the debug.modules section and store all found
     // modules in the m_modules set. The get_child() function
     // returns a reference to the child at the specified path; if
     // there is no such child, it throws. Property tree iterators
     // are models of BidirectionalIterator.
 
-
-    for(boost::property_tree::ptree::value_type & child: pt.get_child("Activity")){
-
+    for (bpt::ptree::value_type & child : pt.get_child("Activity")) {
         std::string inter = child.first;
-        inter.erase(0,8);
+        inter.erase(0, 8);
         int hour = boost::lexical_cast<int>(inter);
         std::map<std::string, std::vector<double>> items;
-        for(boost::property_tree::ptree::value_type & childchild: child.second)
-        {
+        for (bpt::ptree::value_type & childchild : child.second) {
             std::string name = childchild.first;
             std::string cofList = childchild.second.get_value<std::string>();
             std::vector<std::string> tokProbs;
             std::vector<double> tokProbsD;
             boost::split(tokProbs, cofList, boost::is_any_of(","));
-            for(std::string strProb: tokProbs) {
+            for (std::string strProb : tokProbs) {
                 tokProbsD.push_back(boost::lexical_cast<double>(strProb));
             }
-            std::pair<std::string,std::vector<double>> x(name, tokProbsD);
+            std::pair<std::string, std::vector<double>> x(name, tokProbsD);
             items.insert(x);
-
         }
-        std::pair<int, std::map<std::string, std::vector<double>>> y(hour, items);
+        std::pair<int, std::map<std::string, std::vector<double>>>
+          y(hour, items);
         dictionary.insert(y);
     }
-
 }
 
 
-std::vector<double> Model_Activity::disaggregate(const int agentID) const{
-
+std::vector<double> Model_Activity::disaggregate(const int agentID) const {
     double probabilities[24][10];
     std::map<int, std::string> probMap;
     probMap = SimulationConfig::agents.at(agentID).profile;
 
-    for(int hour = 0; hour < 24; hour++) {
+    for (int hour = 0; hour < 24; hour++) {
         std::vector<std::string> tokProbs;
         boost::split(tokProbs, probMap.at(hour), boost::is_any_of(","));
         int activity = 0;
-        for(std::string strProb: tokProbs) {
-            probabilities[hour][activity] = boost::lexical_cast<double>(strProb);
+        for (std::string strProb : tokProbs) {
+            probabilities[hour][activity] =
+              boost::lexical_cast<double>(strProb);
             activity++;
         }
     }
@@ -273,18 +265,17 @@ std::vector<double> Model_Activity::disaggregate(const int agentID) const{
     int tsph = SimulationConfig::info.timeStepsPerHour;
     int hourCount = -1;
     for (int i = 0; i <= SimulationConfig::info.timeSteps; i++) {
-        if(i % tsph == 0 || hourCount < 0){
+        if (i % tsph == 0 || hourCount < 0) {
             hourCount++;
-            if(hourCount == 24){
+            if (hourCount == 24) {
                 hourCount = 0;
             }
         }
-        double drand = Utility::randomDouble(0.0,1.0);
+        double drand = Utility::randomDouble(0.0, 1.0);
         double totalProb = 0;
-        for(int j = 0; j < 10; j++){
+        for (int j = 0; j < 10; j++) {
             totalProb += probabilities[hourCount][j];
-            if(totalProb >= drand)
-            {
+            if (totalProb >= drand) {
                 activities.push_back(j);
                 break;
             }

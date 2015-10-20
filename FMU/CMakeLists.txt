@@ -5,7 +5,7 @@ cmake_minimum_required (VERSION 2.6)
 # Options
 ################################
 
-option(tests "tests" OFF)
+option(Tests "Tests" OFF)
 option(CrossCompile32 "CrossCompile32" OFF)
 option(CrossCompile64 "CrossCompile64" OFF)
 
@@ -146,7 +146,7 @@ SET_TARGET_PROPERTIES(FMI PROPERTIES
 ################################
 # Testing
 ################################
-if (tests)
+if (Tests)
 
 
   SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -pthread" )
