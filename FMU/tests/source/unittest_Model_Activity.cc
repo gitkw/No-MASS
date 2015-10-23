@@ -1,6 +1,7 @@
 
 
 #include <limits.h>
+#include <string>
 #include "Model_Activity.h"
 #include "SimulationConfig.h"
 #include "Utility.h"
@@ -172,13 +173,27 @@ TEST(Activity, multinominalP) {
     double sum = 0;
     for(int s = 0; s < 4; s++){
       for(int d = 0; d < 7; d++){
+
+
+        std::string file2 = "season" + std::to_string(s) + "day" + std::to_string(d) + "sex2famstat3edtry1age2computer0civstat1unemp0retired1.csv";
+        std::ofstream myfile2;
+        myfile2.open (file2);
+
         for(int h = 0; h < 24; h++){
+
           sum = 0;
           for(int i = 0; i < 10; i++){
             sum += p[s][d][h][i];
+            myfile2 << p[s][d][h][i];
+            if(i < 9){
+              myfile2 << ",";
+            }
           }
+          myfile2 << std::endl;
           ASSERT_NEAR(sum, 1,0.000000001);
         }
+
+        myfile2.close();
       }
     }
 

@@ -16,6 +16,8 @@ class Model_Appliance_Usage {
       double getMeanFraction(const int app);
       bool onAt(const int app, const int timeStep) const;
       void parseConfiguration(const std::string filename);
+      void setCountry(std::string name);
+      std::string getCountry();
 
     private:
       template <typename T>

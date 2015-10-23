@@ -10,6 +10,8 @@
 TEST(Appliance_Usage, on) {
 
   Model_Appliance_Usage mau;
+  std::string country = "France";
+  mau.setCountry(country);
   mau.parseConfiguration("tests/Files/ApplianceUsage.xml");
 
   double onTv[144] = {0.1276,0.1112,0.0951,0.083,0.0727,0.0636,0.0554,0.0498,0.0451,0.0412,0.0384,0.036,0.0335,0.0327,0.0315,0.0304,0.0298,0.0287,0.0279,0.0274,0.0267,0.0264,0.026,0.0262,0.0254,0.0249,0.0247,0.0249,0.0248,0.0247,0.0246,0.0244,0.0249,0.0251,0.0257,0.0281,0.0293,0.0307,0.0349,0.0395,0.0485,0.0667,0.082,0.097,0.1107,0.1236,0.1373,0.1489,0.1485,0.1373,0.1332,0.1324,0.1297,0.1319,0.134,0.1337,0.1338,0.1351,0.1362,0.1356,0.1367,0.1362,0.1368,0.1378,0.14,0.1421,0.1451,0.1495,0.1538,0.1631,0.171,0.1797,0.1895,0.2036,0.2164,0.231,0.2413,0.246,0.2417,0.2333,0.2253,0.218,0.2129,0.2097,0.2059,0.2036,0.201,0.1927,0.1831,0.1787,0.1754,0.1707,0.1695,0.1666,0.1645,0.1649,0.1653,0.167,0.1724,0.182,0.1907,0.1985,0.2067,0.2146,0.2224,0.2298,0.2388,0.2489,0.2623,0.2746,0.2838,0.2896,0.2973,0.3008,0.3007,0.3066,0.3125,0.3271,0.3435,0.3578,0.3682,0.3763,0.3864,0.3934,0.4048,0.41,0.4152,0.4179,0.419,0.4175,0.4119,0.4056,0.398,0.3861,0.3564,0.3103,0.2708,0.2382,0.2115,0.1901,0.1713,0.1546,0.1411,0.1287};
@@ -31,22 +33,22 @@ TEST(Appliance_Usage, on) {
     std::string file = "";
     switch(app){
       case 0:
-          file = "switchoncooker.csv";
+          file = "switchon" + country + "cooker.csv";
         break;
       case 1:
-          file = "switchonmicrowave.csv";
+          file = "switchon" + country + "microwave.csv";
         break;
       case 2:
-          file = "switchontv.csv";
+          file = "switchon" + country + "tv.csv";
         break;
       case 3:
-          file = "switchonwashingmachine.csv";
+          file = "switchon" + country + "washingmachine.csv";
         break;
       case 4:
-          file = "switchondishwasher.csv";
+          file = "switchon" + country + "dishwasher.csv";
         break;
       case 5:
-          file = "switchonfridge.csv";
+          file = "switchon" + country + "fridge.csv";
         break;
     }
 
@@ -86,6 +88,8 @@ TEST(Appliance_Usage, on) {
 TEST(Appliance_Usage, comsumption) {
 
   Model_Appliance_Usage mau;
+  std::string country = "France";
+  mau.setCountry(country);
   mau.parseConfiguration("tests/Files/ApplianceUsage.xml");
   int sims = 365;
   for(int app = 0; app < 6; app++){
@@ -100,22 +104,22 @@ TEST(Appliance_Usage, comsumption) {
     std::string file = "";
     switch(app){
       case 0:
-          file = "consumptioncooker.csv";
+          file = "consumption" + country + "cooker.csv";
         break;
       case 1:
-          file = "consumptionmicrowave.csv";
+          file = "consumption" + country + "microwave.csv";
         break;
       case 2:
-          file = "consumptiontv.csv";
+          file = "consumption" + country + "tv.csv";
         break;
       case 3:
-          file = "consumptionwashingmachine.csv";
+          file = "consumption" + country + "washingmachine.csv";
         break;
       case 4:
-          file = "consumptiondishwasher.csv";
+          file = "consumption" + country + "dishwasher.csv";
         break;
       case 5:
-          file = "consumptionfridge.csv";
+          file = "consumption" + country + "fridge.csv";
         break;
     }
     std::ofstream myfile;
@@ -137,6 +141,8 @@ TEST(Appliance_Usage, comsumption) {
 TEST(Appliance_Usage, meanF) {
 
   Model_Appliance_Usage mau;
+  std::string country = "France";
+  mau.setCountry(country);
   mau.parseConfiguration("tests/Files/ApplianceUsage.xml");
   int sims = 365;
   for(int app = 0; app < 6; app++){
@@ -152,22 +158,22 @@ TEST(Appliance_Usage, meanF) {
     std::string file2 = "";
     switch(app){
       case 0:
-          file2 = "meanpowercooker.csv";
+          file2 = "meanpower" + country + "cooker.csv";
         break;
       case 1:
-          file2 = "meanpowermicrowave.csv";
+          file2 = "meanpower" + country + "microwave.csv";
         break;
       case 2:
-          file2 = "meanpowertv.csv";
+          file2 = "meanpower" + country + "tv.csv";
         break;
       case 3:
-          file2 = "meanpowerwashingmachine.csv";
+          file2 = "meanpower" + country + "washingmachine.csv";
         break;
       case 4:
-          file2 = "meanpowerdishwasher.csv";
+          file2 = "meanpower" + country + "dishwasher.csv";
         break;
       case 5:
-          file2 = "meanpowerfridge.csv";
+          file2 = "meanpower" + country + "fridge.csv";
         break;
     }
     std::ofstream myfile2;

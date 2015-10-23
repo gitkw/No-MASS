@@ -18,9 +18,16 @@ Model_Appliance_Usage::Model_Appliance_Usage() {
         stateCooker = Utility::randomInt(0.0, 1.0);
         stateDishWasher = Utility::randomInt(0.0, 1.0);
         stateFridge = Utility::randomInt(0.0, 1.0);
-        country = "France";
+
 }
 
+void Model_Appliance_Usage::setCountry(std::string name){
+  country = name;
+}
+
+std::string Model_Appliance_Usage::getCountry(){
+  return country;
+}
 
 double Model_Appliance_Usage::consumption(const int app, const int timeStep) {
         double result = 0.0;
