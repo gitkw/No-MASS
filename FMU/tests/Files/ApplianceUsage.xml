@@ -5,11 +5,11 @@
     <country>France</country>
 
     <maxPowerTv>56.2</maxPowerTv>
-    <maxPowerWashingMachine>82.34494</maxPowerWashingMachine>
+    <maxPowerWashingMachine>823.4494</maxPowerWashingMachine>
     <maxPowerMicroWave>625</maxPowerMicroWave>
     <maxPowerCooker>1058</maxPowerCooker>
-    <maxPowerDishWasher>893.6591</maxPowerDishWasher>
-    <maxPowerFridge>400</maxPowerFridge>
+    <maxPowerDishWasher>503</maxPowerDishWasher>
+    <maxPowerFridge>37</maxPowerFridge>
     <meanFWashingMachine>0.0308,0.2955</meanFWashingMachine>
     <meanFTv>0.7711,0.4708,0.1054,0.9356</meanFTv>
     <meanFCooker>0.2184,0.3080,0.0228</meanFCooker>
@@ -67,7 +67,7 @@
       <maxPowerWashingMachine>663</maxPowerWashingMachine>
       <maxPowerMicroWave>525</maxPowerMicroWave>
       <maxPowerCooker>800</maxPowerCooker>
-      <maxPowerDishWasher>890</maxPowerDishWasher>
+      <maxPowerDishWasher>503</maxPowerDishWasher>
       <maxPowerFridge>37</maxPowerFridge>
       <meanFWashingMachine>0.0308,0.2955</meanFWashingMachine>
       <meanFTv>0.7711,0.4708,0.1054,0.9356</meanFTv>
