@@ -118,7 +118,7 @@ TEST(Activity, multinominalActivity) {
 
   double p[10] = {0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1};
 
-  double top = 10000000;
+  double top = 10000;
 
   double px[10] = {0,0,0,0,0,0,0,0,0,0};
   for(int i = 0; i < top; i++){
@@ -128,7 +128,7 @@ TEST(Activity, multinominalActivity) {
   }
 
   for(int i = 0; i < 10; i++){
-    ASSERT_NEAR(px[i] / top, 0.1,0.001);
+    ASSERT_NEAR(px[i] / top, 0.1,0.005);
     px[i] = 0;
   }
 
@@ -145,16 +145,16 @@ TEST(Activity, multinominalActivity) {
       px[activity] = px[activity] + 1;
   }
 
-  ASSERT_NEAR(px[0] / top, 0.036,0.001);
-  ASSERT_NEAR(px[1] / top, 0.124,0.001);
-  ASSERT_NEAR(px[2] / top, 0.082,0.001);
-  ASSERT_NEAR(px[3] / top, 0.003,0.001);
-  ASSERT_NEAR(px[4] / top, 0.027,0.001);
-  ASSERT_NEAR(px[5] / top, 0.030,0.001);
-  ASSERT_NEAR(px[6] / top, 0.114,0.001);
-  ASSERT_NEAR(px[7] / top, 0.010,0.001);
-  ASSERT_NEAR(px[8] / top, 0.043,0.001);
-  ASSERT_NEAR(px[9] / top, 0.527,0.001);
+  ASSERT_NEAR(px[0] / top, 0.036,0.005);
+  ASSERT_NEAR(px[1] / top, 0.124,0.005);
+  ASSERT_NEAR(px[2] / top, 0.082,0.005);
+  ASSERT_NEAR(px[3] / top, 0.003,0.005);
+  ASSERT_NEAR(px[4] / top, 0.027,0.005);
+  ASSERT_NEAR(px[5] / top, 0.030,0.005);
+  ASSERT_NEAR(px[6] / top, 0.114,0.005);
+  ASSERT_NEAR(px[7] / top, 0.010,0.005);
+  ASSERT_NEAR(px[8] / top, 0.043,0.005);
+  ASSERT_NEAR(px[9] / top, 0.527,0.05);
 
 }
 
