@@ -1,24 +1,23 @@
-/*
- * File:   Comp_Agent.h
- * Author: jake
- *
- * Created on September 15, 2013, 4:21 PM
- */
+// Copyright 2015 Jacob Chapman
 
-#ifndef COMP_AGENT_H
-#define	COMP_AGENT_H
+#ifndef BUILDING_H
+#define	BUILDING_H
 #include <vector>
 #include <memory>
+#include "SimulationConfig.h"
 #include "Agent.h"
 #include "StateMachine.h"
 #include "Zone.h"
 
-class Model_Agents{
+class Building{
 public:
-    Model_Agents();
+    Building();
 
-    void setup();
+    void setup(const buildingStruct &b);
     void step();
+    void postprocess();
+
+private:
     void setAgentGainsForZone(Zone *zone);
     void setAgentWindowDecisionForZone(Zone *zone);
     void setAgentLightDecisionForZone(Zone *zone);
@@ -26,14 +25,13 @@ public:
     void setAgentCountForZone(Zone *zone);
     void initialiseStates();
     void setZones(std::vector<Zone> zones);
-    void postprocess();
 
-private:
     void matchStateToZone(State &s);
     std::vector<float> presenceProfile;
     std::vector<Agent> population;
     StateMachine stateMachine;
     std::vector<Zone> zones;
+    std::string name;
 };
 
-#endif	/* COMP_AGENT_H */
+#endif	/* BUILDING_H */

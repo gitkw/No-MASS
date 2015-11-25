@@ -1,16 +1,18 @@
 <simulation>
-    <projectName>testGUI</projectName>
     <seed>0</seed>
-    <simulateBuilding>1</simulateBuilding>
-    <GUI>0</GUI>
-    <simulateAgents>1</simulateAgents>
-    <numberOfAgents>2</numberOfAgents>
-    <presencePage>0</presencePage>
+    <timeStepsPerHour>12</timeStepsPerHour>
+    <beginMonth>1</beginMonth>
+    <endMonth>12</endMonth>
+    <beginDay>1</beginDay>
+    <endDay>31</endDay>
     <models>
         <windows>1</windows>
         <shading>1</shading>
         <lights>1</lights>
+        <presencePage>0</presencePage>
     </models>
+
+    <buildings>
     <building>
         <zone>
             <name>Block1:Kitchen</name>
@@ -37,37 +39,40 @@
             <activities>IT</activities>
             <groundFloor>0</groundFloor>
         </zone>
+        <agents>
+            <agent>
+
+                <age>age2</age>
+                <computer>computer0</computer>
+                <civstat>civstat1</civstat>
+                <unemp>unemp0</unemp>
+                <retired>retired1</retired>
+                <edtry>edtry1</edtry>
+                <famstat>famstat3</famstat>
+                <sex>sex2</sex>
+                <bedroom>Block2:MasterBedroom</bedroom>
+                <profile>
+                  <file>tests/Files/Activity.xml</file>
+                </profile>
+            </agent>
+            <agent>
+                <age>age2</age>
+                <computer>computer0</computer>
+                <civstat>civstat1</civstat>
+                <unemp>unemp0</unemp>
+                <retired>retired1</retired>
+                <edtry>edtry1</edtry>
+                <famstat>famstat3</famstat>
+                <sex>sex2</sex>
+
+                <bedroom>Block2:MasterBedroom</bedroom>
+                <profile>
+                  <file>tests/Files/Activity.xml</file>
+                </profile>
+            </agent>
+
+            </agents>
     </building>
-    <agents>
-        <agent>
 
-            <age>age2</age>
-            <computer>computer0</computer>
-            <civstat>civstat1</civstat>
-            <unemp>unemp0</unemp>
-            <retired>retired1</retired>
-            <edtry>edtry1</edtry>
-            <famstat>famstat3</famstat>
-            <sex>sex2</sex>
-            <bedroom>Block2:MasterBedroom</bedroom>
-            <profile>
-              <file>tests/Files/Activity.xml</file>
-            </profile>
-        </agent>
-        <agent>
-            <age>age2</age>
-            <computer>computer0</computer>
-            <civstat>civstat1</civstat>
-            <unemp>unemp0</unemp>
-            <retired>retired1</retired>
-            <edtry>edtry1</edtry>
-            <famstat>famstat3</famstat>
-            <sex>sex2</sex>
-
-            <bedroom>Block2:MasterBedroom</bedroom>
-            <profile>
-              <file>tests/Files/Activity.xml</file>
-            </profile>
-        </agent>
-    </agents>
+  </buildings>
 </simulation>

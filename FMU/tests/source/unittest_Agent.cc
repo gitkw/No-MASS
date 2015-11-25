@@ -1,3 +1,4 @@
+// Copyright 2015 Jacob Chapman
 
 #include <limits.h>
 
@@ -18,9 +19,8 @@
 #include "Agent.h"
 #include "gtest/gtest.h"
 
-TEST(Agent, error) {
+TEST(Agent, Build) {
   SimulationConfig::parseConfiguration("tests/Files/SimulationConfig2.xml");
-
 
   SimulationConfig::stepCount = 0;
   SimulationConfig::info.windows = false;
@@ -28,6 +28,13 @@ TEST(Agent, error) {
   SimulationConfig::info.lights = false;
   StateMachine stateMachine;
   State_Out out;
+
+
+  ZoneStruct zs;
+  zs.name = "Out";
+  Zone z_Out("", zs);
+
+  out.setZonePtr(&(z_Out));
   stateMachine.addState(out);
   State_Present present;
 
@@ -52,12 +59,16 @@ TEST(Agent, error) {
   DataStore::addValue("Block2:OfficeZoneAirRelativeHumidity", 21);
   DataStore::addValue("Block2:OfficeZoneMeanRadiantTemperature", 21);
 
-
-  Zone z_Kitchen("Block1:Kitchen");
-  Zone z_LivingRoom("Block1:LivingRoom");
-  Zone z_Bathroom("Block2:Bathroom");
-  Zone z_MasterBedroom("Block2:MasterBedroom");
-  Zone z_Office("Block2:Office");
+  zs.name = "Block1:Kitchen";
+  Zone z_Kitchen("", zs);
+  zs.name = "Block1:LivingRoom";
+  Zone z_LivingRoom("", zs);
+  zs.name = "Block2:Bathroom";
+  Zone z_Bathroom("", zs);
+  zs.name = "Block2:MasterBedroom";
+  Zone z_MasterBedroom("", zs);
+  zs.name = "Block2:Office";
+  Zone z_Office("", zs);
 
   State_Sleep sleep;
   sleep.setZonePtr(&(z_MasterBedroom));
@@ -86,7 +97,9 @@ TEST(Agent, error) {
   present.addState(cooking);
   present.addState(metabolic);
   present.addState(it);
+
   stateMachine.addState(present);
+
 
 
 
@@ -94,17 +107,17 @@ TEST(Agent, error) {
 
   a.step(&stateMachine);
 
-  while(!a.currentlyInZone(z_MasterBedroom)){
+  while (!a.currentlyInZone(z_MasterBedroom)) {
     SimulationConfig::step();
     a.step(&stateMachine);
   }
-  ASSERT_NEAR(a.getCurrentRadientGains(z_MasterBedroom), 46.9452,0.001);
+  ASSERT_NEAR(a.getCurrentRadientGains(z_MasterBedroom), 46.9452, 0.001);
 
-  while(!a.currentlyInZone(z_Kitchen)){
+  while (!a.currentlyInZone(z_Kitchen)) {
     SimulationConfig::step();
     a.step(&stateMachine);
   }
-  ASSERT_NEAR(a.getCurrentRadientGains(z_Kitchen), 99.4269,0.001);
+  ASSERT_NEAR(a.getCurrentRadientGains(z_Kitchen), 99.4269, 0.001);
 /*
   while(!a.currentlyInZone(z_Bathroom)){
     SimulationConfig::step();
@@ -125,5 +138,4 @@ TEST(Agent, error) {
   ASSERT_NEAR(a.getCurrentRadientGains(z_LivingRoom), 70.069288,0.001);
 
 */
-
 }

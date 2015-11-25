@@ -1,17 +1,12 @@
-/*
- * File:   Simulation.h
- * Author: jake
- *
- * Created on September 13, 2013, 10:12 AM
- */
+// Copyright 2015 Jacob Chapman
+
 
 #ifndef SIMULATION_H
 #define	SIMULATION_H
 
 #include <string>
 #include <vector>
-#include "Model_EnergyPlus.h"
-#include "Model_Agents.h"
+#include "Building.h"
 #include "Log.h"
 
 /**
@@ -34,16 +29,13 @@ public:
     void postTimeStep();
 
 private:
-    /**
-     * EnergyPlus model
-     */
-    Model_EnergyPlus energySolver;
-    /**
-     * Manages the Agents
-     */
-    Model_Agents agentModel;
     int time;
     std::vector<int> monthCount;
+    
+    /**
+     * Manages the Buildings
+     */
+    std::vector<Building> buildings;
 
 };
 

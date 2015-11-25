@@ -1,16 +1,12 @@
-/*
- * File:   Simulation.cpp
- * Author: jake
- *
- * Created on September 13, 2013, 10:12 AM
- */
+// Copyright 2015 Jacob Chapman
 
 #include <iostream>
 #include <string>
 
-#include "Simulation.h"
 #include "SimulationConfig.h"
 #include "DataStore.h"
+#include "Building.h"
+#include "Simulation.h"
 
 Simulation::Simulation() {
         monthCount.push_back(31);
@@ -36,25 +32,27 @@ Simulation::Simulation() {
  * Sets up the EnergyPlus processor, the AgentModel and the ZoneManager.
  */
 void Simulation::preprocess() {
-        parseConfiguration(SimulationConfig::FmuLocation + "/SimulationConfig.xml");
-        if(!LOG.getError()){
+        parseConfiguration(SimulationConfig::FmuLocation
+            + "/SimulationConfig.xml");
+        if (!LOG.getError()) {
             setupSimulationModel();
         }
 }
 
-void Simulation::parseConfiguration(const std::string file){
+void Simulation::parseConfiguration(const std::string file) {
     SimulationConfig::parseConfiguration(file);
 }
 
-void Simulation::setupSimulationModel(){
+void Simulation::setupSimulationModel() {
     SimulationConfig::stepCount = -1;
     DataStore::addVariable("day");
     DataStore::addVariable("month");
     DataStore::addVariable("hour");
     DataStore::addVariable("TimeStep");
-    energySolver.setup();
-    agentModel.setZones(energySolver.getZones());
-    agentModel.setup();
+    for (buildingStruct b : SimulationConfig::buildings) {
+      buildings.push_back(Building());
+      buildings.back().setup(b);
+    }
 }
 
 /**
@@ -62,7 +60,9 @@ void Simulation::setupSimulationModel(){
  *
  */
 void Simulation::postprocess() {
-    agentModel.postprocess();
+    for (Building &b : buildings) {
+        b.postprocess();
+    }
     DataStore::print();
 }
 
@@ -76,7 +76,7 @@ void Simulation::preTimeStep() {
         if (static_cast<int>(time) % (86400*10) == 0) {
                 std::cout << "day: " << day << std::endl;
         }
-#endif // DEBUG
+#endif  // DEBUG
         int month = 1;
         for (int mc : monthCount) {
                 if (mc > day || month + 1 > 12) {
@@ -98,7 +98,9 @@ void Simulation::preTimeStep() {
 void Simulation::timeStep() {
         SimulationConfig::step();
         time = time + (3600 / SimulationConfig::info.timeStepsPerHour);
-        agentModel.step();
+        for (Building &b : buildings) {
+            b.step();
+        }
 }
 
 /**

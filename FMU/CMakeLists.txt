@@ -53,18 +53,10 @@ Source/Agent_Action_Window.cpp
 Source/Agent_Action_Window.h
 Source/DataStore.cpp
 Source/DataStore.h
-Source/EP_IDFObject.cpp
-Source/EP_IDFObject.h
-Source/EP_ReadIDF.cpp
-Source/EP_ReadIDF.h
 Source/Log.cpp
 Source/Log.h
 Source/Model_Activity.cpp
 Source/Model_Activity.h
-Source/Model_Agents.cpp
-Source/Model_Agents.h
-Source/Model_EnergyPlus.cpp
-Source/Model_EnergyPlus.h
 Source/Model_ExternalShading.cpp
 Source/Model_ExternalShading.h
 Source/Model_HeatGains.cpp
@@ -115,6 +107,8 @@ Source/State_Washing_Appliance.cpp
 Source/State_Washing_Appliance.h
 Source/Utility.cpp
 Source/Utility.h
+Source/Building.cpp
+Source/Building.h
 Source/Zone.cpp
 Source/Zone.h
 Source/fmiFunctions.cpp
@@ -174,6 +168,7 @@ if (Tests)
     tests/source/unittest_StateMachine.cc
     tests/source/unittest_Log.cc
     tests/source/unittest_Agent.cc
+    tests/source/unittest_Building.cc
   )
 
   add_executable(runUnitTests ${TESTSRC})

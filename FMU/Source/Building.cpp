@@ -1,12 +1,9 @@
-/*
- * File:   Comp_Agent.cpp
- * Author: jake
- *
- * Created on September 15, 2013, 4:21 PM
- */
+// Copyright 2015 Jacob Chapman
+
 #include <string>
 #include <vector>
 #include <list>
+#include <utility>
 #include "SimulationConfig.h"
 #include "Agent.h"
 #include "State_Out.h"
@@ -22,39 +19,39 @@
 #include "State_Metabolic.h"
 #include "Utility.h"
 #include "Model_Presence.h"
-#include "Model_Agents.h"
+#include "Building.h"
 
-Model_Agents::Model_Agents(){}
+Building::Building() {
+}
 
-void Model_Agents::setup()
-{
-    int populationSize = SimulationConfig::numberOfAgents();
-
-    std::list<int> pop = Utility::randomIntList(populationSize, 0, populationSize);
+void Building::setup(const buildingStruct &b) {
+    name = b.name;
+    for (std::pair<std::string, ZoneStruct> z : b.zones) {
+      zones.push_back(Zone(name, z.second));
+    }
+    ZoneStruct zs;
+    zs.name = "Out";
+    zones.push_back(Zone(name, zs));
+    int popSize = SimulationConfig::numberOfAgents();
+    std::list<int> pop = Utility::randomIntList(popSize, 0, popSize);
     // setup each agent randomly
-    for(int a: pop)
-    {
+    for (int a : pop) {
           population.push_back(Agent(a));
     }
     initialiseStates();
 }
 
-void Model_Agents::setZones(std::vector<Zone> zones)
-{
+void Building::setZones(std::vector<Zone> zones) {
     this->zones = zones;
 }
 
-void Model_Agents::initialiseStates()
-{
+void Building::initialiseStates() {
     State_Present present;
-    if (SimulationConfig::info.presencePage)
-    {
+    if (SimulationConfig::info.presencePage) {
         State_IT it;
         matchStateToZone(it);
         present.addState(it);
-    }
-    else
-    {
+    } else {
         State_Sleep sleep;
         matchStateToZone(sleep);
         State_Passive passive;
@@ -89,43 +86,38 @@ void Model_Agents::initialiseStates()
     stateMachine.addState(out);
 }
 
-void Model_Agents::matchStateToZone(State &s)
-{
-    std::string zoneName = SimulationConfig::getZoneNameFromActivity(s.getActivity());
-    for(unsigned int i =0; i < zones.size(); i++)
-    {
-        if(zoneName == zones[i].getName())
-        {
+void Building::matchStateToZone(State &s) {
+    std::string zoneName =
+      SimulationConfig::getZoneNameFromActivity(s.getActivity());
+    for (unsigned int i =0; i < zones.size(); i++) {
+        if (zoneName == zones[i].getName()) {
             s.setZonePtr(&(zones[i]));
             break;
         }
     }
 }
 
-void Model_Agents::step()
-{
-    std::list<int> pop = Utility::randomIntList(population.size(), 0, population.size());
+void Building::step() {
+    int popSize = population.size();
+    std::list<int> pop = Utility::randomIntList(popSize, 0, popSize);
     // step each agent randomly
-    for(int a: pop)
-    {
+    for (int a : pop) {
         population[a].step(&stateMachine);
     }
 
-    for(Zone &zone: zones)
-    {
-        if(!zone.isActive())
-        {
+    for (Zone &zone : zones) {
+        if (!zone.isActive()) {
             continue;
         }
         setAgentCountForZone(&zone);
 
-        if(SimulationConfig::info.windows){
+        if (SimulationConfig::info.windows) {
             setAgentWindowDecisionForZone(&zone);
         }
-        if(SimulationConfig::info.shading){
+        if (SimulationConfig::info.shading) {
             setAgentBlindDecisionForZone(&zone);
         }
-        if(SimulationConfig::info.lights){
+        if (SimulationConfig::info.lights) {
             setAgentLightDecisionForZone(&zone);
         }
         setAgentGainsForZone(&zone);
@@ -133,67 +125,50 @@ void Model_Agents::step()
     }
 }
 
-void Model_Agents::setAgentGainsForZone(Zone *zone)
-{
+void Building::setAgentGainsForZone(Zone *zone) {
     double numberOfAgents = 0;
     double totalRadientGains = 0;
     double aveRadientGains = 0;
 
-    for(Agent &agent: population)
-    {
-        if  (agent.currentlyInZone(*zone))
-        {
+    for (Agent &agent : population) {
+        if  (agent.currentlyInZone(*zone)) {
             numberOfAgents++;
             totalRadientGains += agent.getCurrentRadientGains(*zone);
-            //std::cout << "zonename: " << zoneName << " totalgains " << totalRadientGains << std::endl;
         }
     }
-    if (totalRadientGains > 0)
-    {
+    if (totalRadientGains > 0) {
         aveRadientGains = totalRadientGains / numberOfAgents;
     }
     zone->setCurrentAgentGains(aveRadientGains);
 }
 
-void Model_Agents::setAgentWindowDecisionForZone(Zone *zone)
-{
+void Building::setAgentWindowDecisionForZone(Zone *zone) {
     double open = 0;
     double close = 0;
     double numberOfActiveAgents = 0;
-    for(Agent &agent: population)
-    {
-        if (agent.InteractionOnZone(*zone))
-        {
+    for (Agent &agent : population) {
+        if (agent.InteractionOnZone(*zone)) {
             numberOfActiveAgents++;
             double power = agent.getPower();
-            if(agent.getDesiredWindowState(*zone))
-            {
+            if (agent.getDesiredWindowState(*zone)) {
                 open = open + power;
-            }
-            else
-            {
+            } else {
                 close = close + power;
             }
         }
     }
-    if(numberOfActiveAgents > 0.0)
-    {
-        if(open < close)
-        {
+    if (numberOfActiveAgents > 0.0) {
+        if (open < close) {
             zone->setWindowState(false);
-        }
-        else if (open > close)
-        {
+        } else if (open > close) {
             zone->setWindowState(true);
-        }
-        else
-        {
+        } else {
             zone->setWindowState(Utility::tossACoin());
         }
     }
 }
-void Model_Agents::setAgentBlindDecisionForZone(Zone *zone)
-{
+
+void Building::setAgentBlindDecisionForZone(Zone *zone) {
     double currentState = zone->getBlindState();
     double totalIncrease = 0;
     double totalDecrease = 0;
@@ -204,28 +179,21 @@ void Model_Agents::setAgentBlindDecisionForZone(Zone *zone)
     double decreasePower = 0;
     double samePower = 0;
 
-    for(Agent &agent: population)
-    {
-        if (agent.InteractionOnZone(*zone))
-        {
+    for (Agent &agent : population) {
+        if (agent.InteractionOnZone(*zone)) {
             double d = agent.getDesiredShadeState(*zone);
             double power = agent.getPower();
 
-            if(d < currentState)
-            {
+            if (d < currentState) {
                 decrease++;
                 totalDecrease = totalDecrease + d;
                 decreasePower = decreasePower + power;
 
-            }
-            else if(d > currentState)
-            {
+            } else if (d > currentState) {
                 increase++;
                 totalIncrease = totalIncrease + d;
                 increasePower = increasePower + power;
-            }
-            else
-            {
+            } else {
                 same++;
                 samePower = samePower + power;
             }
@@ -233,123 +201,80 @@ void Model_Agents::setAgentBlindDecisionForZone(Zone *zone)
     }
 
     double state = currentState;
-    if(samePower > increasePower && samePower > decreasePower)
-    {
+    if (samePower > increasePower && samePower > decreasePower) {
         state = currentState;
-    }
-    else if (samePower < increasePower && increasePower > decreasePower)
-    {
+    } else if (samePower < increasePower && increasePower > decreasePower) {
         state = totalIncrease;
-    }
-    else if (samePower < decreasePower && increasePower < decreasePower)
-    {
+    } else if (samePower < decreasePower && increasePower < decreasePower) {
         state = totalDecrease;
-    }
-    else if (samePower == increasePower && samePower > decreasePower)
-    {
-        if (Utility::tossACoin())
-        {
+    } else if (samePower == increasePower && samePower > decreasePower) {
+        if (Utility::tossACoin()) {
             state = totalIncrease;
         }
-    }
-    else if (samePower > increasePower && samePower == decreasePower)
-    {
-        if (Utility::tossACoin())
-        {
+    } else if (samePower > increasePower && samePower == decreasePower) {
+        if (Utility::tossACoin()) {
             state = totalDecrease;
         }
-    }
-    else if (samePower < increasePower && samePower < decreasePower && increasePower == decreasePower)
-    {
-        if (Utility::tossACoin())
-        {
+    } else if (samePower < increasePower
+        && samePower < decreasePower
+        && increasePower == decreasePower) {
+        if (Utility::tossACoin()) {
             state = totalIncrease;
-        }
-        else
-        {
+        } else {
             state = totalDecrease;
         }
-    }
-    else if ((samePower == increasePower) == decreasePower)
-    {
-        double i = Utility::randomDouble(0,1);
-        double d = Utility::randomDouble(0,1);
-        double s = Utility::randomDouble(0,1);
-        if(i > d && i > s)
-        {
+    } else if ((samePower == increasePower) == decreasePower) {
+        double i = Utility::randomDouble(0, 1);
+        double d = Utility::randomDouble(0, 1);
+        double s = Utility::randomDouble(0, 1);
+        if (i > d && i > s) {
             state = totalIncrease;
-        }
-        else if (d > s && d > i)
-        {
+        } else if (d > s && d > i) {
             state = totalDecrease;
-        }
-        else if (s > i && s > d)
-        {
+        } else if (s > i && s > d) {
             state = currentState;
         }
     }
     zone->setBlindState(state);
-    //std::cout << increase << ", " << decrease << ", " << same << ", " << zone->getName() << ", " << zone->getBlindState() << std::endl;
 }
-void Model_Agents::setAgentLightDecisionForZone(Zone *zone)
-{
+void Building::setAgentLightDecisionForZone(Zone *zone) {
     double open = 0;
     double close = 0;
     double numberOfActiveAgents = 0;
-    for(Agent &agent: population)
-    {
-        if (agent.InteractionOnZone(*zone))
-        {
+    for (Agent &agent : population) {
+        if (agent.InteractionOnZone(*zone)) {
             numberOfActiveAgents++;
             double power = agent.getPower();
-            if(agent.getDesiredLightState(*zone))
-            {
+            if (agent.getDesiredLightState(*zone)) {
                 open = open + power;
-            }
-            else
-            {
+            } else {
                 close = close + power;
             }
         }
     }
-    if(numberOfActiveAgents > 0.0)
-    {
-        if(open < close)
-        {
+    if (numberOfActiveAgents > 0.0) {
+        if (open < close) {
             zone->setLightState(false);
-        }
-        else if (open > close)
-        {
+        } else if (open > close) {
             zone->setLightState(true);
-        }
-        else
-        {
+        } else {
             zone->setLightState(Utility::tossACoin());
         }
     }
 }
 
-void Model_Agents::setAgentCountForZone(Zone *zone)
-{
-
+void Building::setAgentCountForZone(Zone *zone) {
     double numberOfAgents = 0;
-    for(Agent &agent: population)
-    {
-        if (agent.currentlyInZone(*zone))
-        {
+    for (Agent &agent : population) {
+        if (agent.currentlyInZone(*zone)) {
             numberOfAgents++;
         }
     }
-    //double fractionsOfOccuapants = numberOfAgents / (double)population.size();
-    //zone->setOccupantFraction(fractionsOfOccuapants);
     zone->setOccupantFraction(numberOfAgents);
 }
 
-
-void Model_Agents::postprocess()
-{
-    for(Agent &agent: population)
-    {
+void Building::postprocess() {
+    for (Agent &agent : population) {
         agent.postprocess();
     }
 }

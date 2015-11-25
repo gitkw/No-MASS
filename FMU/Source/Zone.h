@@ -7,14 +7,18 @@
 
 #ifndef ZONE_H
 #define	ZONE_H
-#include "Model_Windows.h"
 #include <string>
 #include <vector>
 #include <deque>
+
+
+#include "SimulationConfig.h"
+#include "Model_Windows.h"
+
 class Zone {
 public:
     Zone();
-    Zone(std::string);
+    Zone(std::string, const ZoneStruct zoneStruct);
 
     void step();
     void setup();

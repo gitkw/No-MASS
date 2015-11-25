@@ -1,9 +1,4 @@
-/*
- * File:   Zone.cpp
- * Author: jake
- *
- * Created on September 24, 2013, 10:11 AM
- */
+// Copyright 2015 Jacob Chapman
 
 #include <fstream>
 #include <iostream>
@@ -13,11 +8,10 @@
 #include "Zone.h"
 
 Zone::Zone() {
-
 }
 
-Zone::Zone(std::string zoneName) : name(zoneName) {
-
+Zone::Zone(const std::string buldingName, const ZoneStruct zoneStruct)
+  : name(zoneStruct.name) {
     occupantFraction = 0;
     currentAgentGains = 0;
     blindState = 1;
@@ -25,10 +19,10 @@ Zone::Zone(std::string zoneName) : name(zoneName) {
     windowState = 0;
     setActive(SimulationConfig::activeZone(&name));
 
-    if(active){
-        int windowCount = SimulationConfig::zones.at(name).windowCount;
+    if (active) {
+        int windowCount = zoneStruct.windowCount;
         setGroundFloor(SimulationConfig::isZoneGroundFloor(&name));
-        for(int i = 0; i < windowCount; i ++){
+        for (int i = 0; i < windowCount; i ++) {
           std::string windowName = name + "WindowState" + std::to_string(i);
           variableNameWindow.push_back(windowName);
           DataStore::addVariable(windowName);
@@ -45,17 +39,14 @@ Zone::Zone(std::string zoneName) : name(zoneName) {
     }
 }
 
-void Zone::setup(){
+void Zone::setup() {
 }
 
-
-
 void Zone::step() {
-
-    if(active){
+    if (active) {
         DataStore::addValue(variableNameNumberOfOccupants, occupantFraction);
         DataStore::addValue(variableNameAverageGains, currentAgentGains);
-        for(std::string name : variableNameWindow){
+        for (std::string name : variableNameWindow) {
           DataStore::addValue(name, windowState);
         }
         DataStore::addValue(variableNameBlindFraction, blindState);
@@ -140,9 +131,10 @@ double Zone::getLightState() const {
     return lightState;
 }
 
-void Zone::setWindowState(bool windowState){
+void Zone::setWindowState(bool windowState) {
     this->windowState = windowState;
 }
-void Zone::setBlindState(double state){
+
+void Zone::setBlindState(double state) {
     this->blindState = state;
 }

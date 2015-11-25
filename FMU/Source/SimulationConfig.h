@@ -101,11 +101,9 @@ struct windowStruct {
     double b10gddep;
 };
 
-struct stateStruct {
+struct buildingStruct {
+    std::map<std::string, ZoneStruct> zones;
     std::string name;
-    std::string location;
-    int met;
-    int clo;
 };
 
 struct simulationStruct {
@@ -131,15 +129,15 @@ struct simulationStruct {
 class SimulationConfig {
 public:
     static std::vector<std::string> getActivities(std::string* name);
+    static ZoneStruct getZone(std::string* zoneName);
     static void parseConfiguration(std::string);
     static bool activeZone(std::string* zoneName);
     static bool isZoneGroundFloor(std::string* zoneName);
     static std::string getZoneNameFromActivity(std::string activityName);
-    static std::map<std::string, ZoneStruct> zones;
+    static std::vector<buildingStruct> buildings;
     static std::vector<agentStruct> agents;
     static std::map<int, windowStruct> windows;
     static std::map<int, shadeStruct> shades;
-    static std::vector<stateStruct> states;
     static simulationStruct info;
     static int numberOfAgents();
     static double lengthOfTimestep();
@@ -150,11 +148,12 @@ public:
     static std::string FmuLocation;
     static std::string idfFileLocation;
 private:
+    static void timeSteps();
     static std::vector<std::string> splitZoneActivities(std::string types);
     static void parseBuilding(boost::property_tree::ptree::value_type & v);
+    static void parseBuildings(boost::property_tree::ptree::value_type & v);
     static void parseAgents(boost::property_tree::ptree::value_type & v);
     static void parseModels(boost::property_tree::ptree::value_type & v);
-    static void parseStates(boost::property_tree::ptree::value_type & v);
     static void parseWindows(boost::property_tree::ptree::value_type & v);
     static void parseShades(boost::property_tree::ptree::value_type & v);
     SimulationConfig();
