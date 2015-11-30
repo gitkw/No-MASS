@@ -20,12 +20,17 @@
 #include "gtest/gtest.h"
 
 TEST(StateMachine, statesPage) {
-  SimulationConfig::parseConfiguration("tests/Files/SimulationConfig.xml");
   ZoneStruct zs;
   zs.name = "Block1:Zone1";
   Zone z("", zs);
+
+  ZoneStruct zs_out;
+  zs_out.name = "Out";
+  Zone z_out("", zs_out);
+
   StateMachine stateMachine;
   State_Out out;
+  out.setZonePtr(&(z_out));
   stateMachine.addState(out);
 
   EXPECT_EQ(stateMachine.numberOfStates(),  1);
@@ -56,19 +61,21 @@ TEST(StateMachine, statesPage) {
   EXPECT_EQ(s.getId(), 3);
   EXPECT_EQ(s.getMetabolicRate(), 116);
   EXPECT_EQ(s.getClo(), 1);
-  EXPECT_EQ(s.getLocation(), "Block1:Zone1");
   EXPECT_EQ(s.getActivity(), "IT");
+  EXPECT_EQ(s.getLocation(), "Block1:Zone1");
 //  EXPECT_EQ(s.getZonePtr()->getName(), "Block1:Zone1");
 }
 
 TEST(StateMachine, statesActivity) {
-  SimulationConfig::parseConfiguration("tests/Files/SimulationConfig1.xml");
+  ZoneStruct zs_out;
+  zs_out.name = "Out";
+  Zone z_out("", zs_out);
+
   StateMachine stateMachine;
   State_Out out;
+  out.setZonePtr(&(z_out));
   stateMachine.addState(out);
   State_Present present;
-
-
   EXPECT_EQ(stateMachine.numberOfStates(), 1);
   EXPECT_EQ(out.numberOfSubStates(), 0);
   ZoneStruct zs;

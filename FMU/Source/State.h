@@ -29,7 +29,6 @@ class State
         int id;
         double metabolicRate;
         double clo;
-        std::string location;
         std::string activity;
         Zone* zone;
 
