@@ -30,10 +30,6 @@ std::string State::getActivity() const {
     return activity;
 }
 
-std::string State::getLocationFromActivty(const std::string *activty) {
-    return SimulationConfig::getZoneNameFromActivity(*activty);
-}
-
 void State::addState(State s) {
   states.push_back(s);
 }

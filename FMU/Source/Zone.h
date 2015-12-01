@@ -1,16 +1,9 @@
-/*
- * File:   Zone.h
- * Author: jake
- *
- * Created on September 24, 2013, 10:11 AM
- */
+// Copyright 2015 Jacob Chapman
 
 #ifndef ZONE_H
 #define	ZONE_H
 #include <string>
 #include <vector>
-#include <deque>
-
 
 #include "SimulationConfig.h"
 #include "Model_Windows.h"
@@ -23,22 +16,23 @@ public:
     void step();
     void setup();
     void setName(std::string name);
-    std::string getName() const;
-
     void setCurrentAgentGains(double currentAgentGains);
-    double getCurrentAgentGains() const;
-    double getWindowState() const;
+    void setGroundFloor(bool groundFloor);
+    void setActive(bool active);
+    void setWindowDurationOpen(double windowDurationOpen);
+    void setWindowState(bool windowState);
+    void setLightState(bool lightState);
+    void setBlindState(double state);
+    void setOccupantFraction(double occupantFraction);
+
+    bool isActive() const;
+    bool hasActivity(std::string activity) const;
     int getCurrentOccupantCount() const;
     float getOccupantFraction() const;
+    double getCurrentAgentGains() const;
+    double getWindowState() const;
     double getBlindState() const;
-
-
-
-    void setActive(bool active);
-    bool isActive() const;
-    void setGroundFloor(bool groundFloor);
     double getGroundFloor() const;
-
     double getAirSystemSensibleHeatingRate() const;
     double getLightState() const;
     double getMeanAirTemperature() const;
@@ -46,30 +40,25 @@ public:
     double getMeanRadiantTemperature() const;
     double getDaylightingReferencePoint1Illuminance() const;
     double getWindowDurationOpen() const;
-    void setWindowDurationOpen(double windowDurationOpen);
-    void setWindowState(bool windowState);
-    void setLightState(bool lightState);
-    void setBlindState(double state);
-    void setOccupantFraction(double occupantFraction);
-
+    std::string getName() const;
 
 private:
-    std::string name;
-
+  
     bool groundFloor;
-    double currentAgentGains;
-    double blindState;
+    bool active;
     bool lightState;
     bool windowState;
+    double currentAgentGains;
+    double blindState;
     double occupantFraction;
 
-    std::vector<std::string> variableNameWindow;
+    std::string name;
     std::string variableNameBlindFraction;
     std::string variableNameNumberOfOccupants;
     std::string variableNameAverageGains;
     std::string variableNameLight;
-
-    bool active;
+    std::vector<std::string> variableNameWindow;
+    std::vector<std::string> activities;
 
 };
 

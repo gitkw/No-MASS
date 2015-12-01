@@ -20,12 +20,22 @@ simulationStruct SimulationConfig::info;
 int SimulationConfig::stepCount = -1;
 std::string SimulationConfig::ActivityFile;
 std::string SimulationConfig::FmuLocation;
-std::string SimulationConfig::idfFileLocation = "in.idf";
-
 
 namespace bpt = boost::property_tree;
 
 SimulationConfig::SimulationConfig() {
+}
+
+
+void SimulationConfig::reset() {
+  buildings.clear();
+  agents.clear();
+  windows.clear();
+  shades.clear();
+  info = simulationStruct();
+  int stepCount = -1;
+  ActivityFile = "";
+  FmuLocation = "";
 }
 
 void SimulationConfig::parseBuildings(
@@ -42,6 +52,12 @@ void SimulationConfig::parseBuilding(
   bpt::ptree::value_type & v) {
     buildingStruct b;
     b.name = buildings.size();
+
+    std::pair<std::string, ZoneStruct> zsOut;
+    zsOut.first = "Out";
+    zsOut.second.name = "Out";
+    zsOut.second.activities.push_back("Out");
+    b.zones.insert(zsOut);
     for (bpt::ptree::value_type & child : v.second) {
         if (child.first == "name") {
             b.name = child.second.data();
@@ -56,7 +72,8 @@ void SimulationConfig::parseBuilding(
                     zone.second.name = schild.second.data();
                 } else if (schild.first == "activities"
                           || schild.first == "activity") {
-                    zone.second.activity = schild.second.data();
+                    zone.second.activities =
+                      Utility::splitCSV(schild.second.data());
                 } else if (schild.first == "groundFloor") {
                     zone.second.groundFloor =
                       schild.second.get_value<bool>();
@@ -66,14 +83,13 @@ void SimulationConfig::parseBuilding(
                 }
             }
 
-            if (zone.second.activity == "") {
+            if (zone.second.activities.empty()) {
                 LOG << "Please define activities for zone: ";
                 LOG << zone.second.name << "\n";
                 LOG << "This can be done manually in the No-MASS simulation ";
                 LOG << "configuration file\nOr through DesignBuilders";
                 LOG << " detailed occupant interface\n";
                 LOG.error();
-                zone.second.activity = "NONE";
             }
             b.zones.insert(zone);
         }
@@ -362,53 +378,6 @@ void SimulationConfig::parseConfiguration(std::string filename) {
     LOG << filename << "-\n";
 }
 
-std::string SimulationConfig::getZoneNameFromActivity(std::string activity) {
-    std::string zoneName = "Out";  // Default out of zone
-    bool found = false;
-    for (buildingStruct b : buildings) {
-      for (std::pair<std::string, ZoneStruct> it : b.zones) {
-          std::vector<std::string> activities =
-            splitZoneActivities(it.second.activity);
-          for (std::string eachActivity : activities) {
-              if (eachActivity == activity) {
-                  zoneName = it.first;
-                  found = true;
-                  break;
-              }
-          }
-          if (found) {
-              break;
-          }
-      }
-    }
-    return zoneName;
-}
-
-std::vector<std::string> SimulationConfig::splitZoneActivities(
-    std::string typeString) {
-    std::vector<std::string> types;
-    const char *str = typeString.c_str();
-    char c = ',';
-    do {
-        const char *begin = str;
-        while (*str != c && *str) {
-            str++;
-        }
-        types.push_back(std::string(begin, str));
-    } while (0 != *str++);
-    return types;
-}
-
-std::vector<std::string> SimulationConfig::getActivities(std::string* name) {
-    std::vector<std::string> activities;
-    if (activeZone(name)) {
-        ZoneStruct zone = getZone(name);
-        activities = splitZoneActivities(zone.activity);
-    }
-    return activities;
-}
-
-
 ZoneStruct SimulationConfig::getZone(std::string* zoneName) {
   ZoneStruct zone;
   for (buildingStruct b : buildings) {
@@ -422,10 +391,12 @@ ZoneStruct SimulationConfig::getZone(std::string* zoneName) {
 
 bool SimulationConfig::activeZone(std::string* zoneName) {
   bool active = false;
-  for (buildingStruct b : buildings) {
-    if (b.zones.find(*zoneName) != b.zones.end()) {
-      active = true;
-      break;
+  if (*zoneName != "Out") {
+    for (buildingStruct b : buildings) {
+      if (b.zones.find(*zoneName) != b.zones.end()) {
+        active = true;
+        break;
+      }
     }
   }
   return active;

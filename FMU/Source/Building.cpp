@@ -29,9 +29,6 @@ void Building::setup(const buildingStruct &b) {
     for (std::pair<std::string, ZoneStruct> z : b.zones) {
       zones.push_back(Zone(name, z.second));
     }
-    ZoneStruct zs;
-    zs.name = "Out";
-    zones.push_back(Zone(name, zs));
     int popSize = SimulationConfig::numberOfAgents();
     std::list<int> pop = Utility::randomIntList(popSize, 0, popSize);
     // setup each agent randomly
@@ -87,13 +84,11 @@ void Building::initialiseStates() {
 }
 
 void Building::matchStateToZone(State &s) {
-    std::string zoneName =
-      SimulationConfig::getZoneNameFromActivity(s.getActivity());
     for (unsigned int i =0; i < zones.size(); i++) {
-        if (zoneName == zones[i].getName()) {
-            s.setZonePtr(&(zones[i]));
-            break;
-        }
+      if (zones[i].hasActivity(s.getActivity())) {
+          s.setZonePtr(&(zones[i]));
+          break;
+      }
     }
 }
 
@@ -277,4 +272,14 @@ void Building::postprocess() {
     for (Agent &agent : population) {
         agent.postprocess();
     }
+}
+
+bool Building::hasZone(const std::string& zoneName) const {
+  bool has = false;
+  for (Zone const & z : zones) {
+    if (zoneName == z.getName()) {
+      has = true;
+    }
+  }
+  return has;
 }

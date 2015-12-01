@@ -12,20 +12,19 @@
 #include "Model_Appliance_Usage.h"
 
 Model_Appliance_Usage::Model_Appliance_Usage() {
-        stateTv = Utility::randomInt(0.0, 1.0);
-        stateWashingMachine = Utility::randomInt(0.0, 1.0);
-        stateMicroWave = Utility::randomInt(0.0, 1.0);
-        stateCooker = Utility::randomInt(0.0, 1.0);
-        stateDishWasher = Utility::randomInt(0.0, 1.0);
-        stateFridge = Utility::randomInt(0.0, 1.0);
-
+  stateTv = Utility::randomInt(0.0, 1.0);
+  stateWashingMachine = Utility::randomInt(0.0, 1.0);
+  stateMicroWave = Utility::randomInt(0.0, 1.0);
+  stateCooker = Utility::randomInt(0.0, 1.0);
+  stateDishWasher = Utility::randomInt(0.0, 1.0);
+  stateFridge = Utility::randomInt(0.0, 1.0);
 }
 
-void Model_Appliance_Usage::setCountry(std::string name){
+void Model_Appliance_Usage::setCountry(std::string name) {
   country = name;
 }
 
-std::string Model_Appliance_Usage::getCountry(){
+std::string Model_Appliance_Usage::getCountry() {
   return country;
 }
 
@@ -199,9 +198,8 @@ std::vector<T> Model_Appliance_Usage::as_vector(
 template <typename T>
 std::vector<std::vector<T>> Model_Appliance_Usage::as_vector_vector(
   boost::property_tree::ptree::value_type & child) {
-
     std::vector<std::vector<T>> r;
-    for (boost::property_tree::ptree::value_type & x: child.second) {
+    for (boost::property_tree::ptree::value_type & x : child.second) {
       r.push_back(as_vector<T>(x));
     }
     return r;
@@ -234,32 +232,31 @@ void Model_Appliance_Usage::parseCountryUsage(
                     meanFFridge  = as_vector<double>(child);
             } else if (child.first == "meanFDishWasher") {
                     meanFDishWasher  = as_vector<double>(child);
-            } else if (child.first == "onTv"){
+            } else if (child.first == "onTv") {
                     onTv = as_vector<double>(child);
-            } else if (child.first == "onWashingMachine"){
+            } else if (child.first == "onWashingMachine") {
                     onWashingMachine = as_vector<double>(child);
-            } else if (child.first == "onMicroWave"){
+            } else if (child.first == "onMicroWave") {
                     onMicroWave = as_vector<double>(child);
-            } else if (child.first == "onCooker"){
+            } else if (child.first == "onCooker") {
                     onCooker = as_vector<double>(child);
-            } else if (child.first == "onDishWasher"){
+            } else if (child.first == "onDishWasher") {
                     onDishWasher = as_vector<double>(child);
-            } else if (child.first == "onFridge"){
+            } else if (child.first == "onFridge") {
                     onFridge = as_vector<double>(child);
-            } else if (child.first == "transitionsCooker"){
+            } else if (child.first == "transitionsCooker") {
                     transitionsCooker = as_vector_vector<double>(child);
-            } else if (child.first == "transitionsMicroWave"){
+            } else if (child.first == "transitionsMicroWave") {
                     transitionsMicroWave = as_vector_vector<double>(child);
-            } else if (child.first == "transitionsTv"){
+            } else if (child.first == "transitionsTv") {
                     transitionsTv = as_vector_vector<double>(child);
-            } else if (child.first == "transitionsWashingMachine"){
+            } else if (child.first == "transitionsWashingMachine") {
                     transitionsWashingMachine = as_vector_vector<double>(child);
-            } else if (child.first == "transitionsDishWasher"){
+            } else if (child.first == "transitionsDishWasher") {
                     transitionsDishWasher = as_vector_vector<double>(child);
-            } else if (child.first == "transitionsFridge"){
+            } else if (child.first == "transitionsFridge") {
                     transitionsFridge = as_vector_vector<double>(child);
             }
-
         }
 }
 
@@ -277,18 +274,16 @@ void Model_Appliance_Usage::parseConfiguration(const std::string filename) {
     // there is no such child, it throws. Property tree iterators
     // are models of BidirectionalIterator.
     for (bpt::ptree::value_type& child : pt.get_child("Appliance")) {
-
         if (child.first == "Usage") {
-        for (boost::property_tree::ptree::value_type & childchild : child.second) {
+        for (bpt::ptree::value_type & childchild : child.second) {
                 if (childchild.first == "country") {
-                    std::string currentCountry = childchild.second.get_value<std::string>();
+                    std::string currentCountry =
+                      childchild.second.get_value<std::string>();
                     if (currentCountry == country) {
                             parseCountryUsage(child);
                     }
                 }
             }
-
         }
-
     }
 }

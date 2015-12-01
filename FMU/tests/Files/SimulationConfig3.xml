@@ -58,7 +58,7 @@
         <agent>
           <shade>1</shade>
           <window>1</window>
-          <office>Block1:Zone1</office>
+          <office>Block2:Zone1</office>
           <power>0.5</power>
           <profile>
             <monday>0.021,0.021,0.021,0.021,0.021,0.021,0.021,0.025,0.250,0.422,0.309,0.377,0.187,0.375,0.426,0.396,0.375,0.432,0.084,0.070,0.047,0.039,0.038,0.038</monday>

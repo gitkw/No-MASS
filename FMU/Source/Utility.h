@@ -28,7 +28,7 @@ public:
     static bool tossACoin();
     static void setSeed(int seed);
     static std::list<int> randomIntList(int number, int min, int max);
-
+    static std::vector<std::string> splitCSV(std::string typeString);
 private:
     Utility();
     static boost::random::mt19937 gen;

@@ -21,7 +21,6 @@ class State
         double getMetabolicRate() const;
         double getClo() const;
         std::string getActivity() const;
-        std::string getLocationFromActivty(const std::string *activity);
         std::string getLocation() const;
         Zone* getZonePtr() const;
 

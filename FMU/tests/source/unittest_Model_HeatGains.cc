@@ -1,4 +1,4 @@
-
+// Copyright 2015 Jacob Chapman
 
 #include <limits.h>
 #include "Model_HeatGains.h"

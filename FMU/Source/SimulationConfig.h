@@ -17,7 +17,7 @@
 
 struct ZoneStruct {
     std::string name;
-    std::string activity;
+    std::vector<std::string> activities;
     bool groundFloor;
     int windowCount;
 };
@@ -128,12 +128,11 @@ struct simulationStruct {
 
 class SimulationConfig {
 public:
-    static std::vector<std::string> getActivities(std::string* name);
     static ZoneStruct getZone(std::string* zoneName);
     static void parseConfiguration(std::string);
+    static void reset();
     static bool activeZone(std::string* zoneName);
     static bool isZoneGroundFloor(std::string* zoneName);
-    static std::string getZoneNameFromActivity(std::string activityName);
     static std::vector<buildingStruct> buildings;
     static std::vector<agentStruct> agents;
     static std::map<int, windowStruct> windows;
@@ -146,10 +145,9 @@ public:
     static int stepCount;
     static std::string ActivityFile;
     static std::string FmuLocation;
-    static std::string idfFileLocation;
+
 private:
     static void timeSteps();
-    static std::vector<std::string> splitZoneActivities(std::string types);
     static void parseBuilding(boost::property_tree::ptree::value_type & v);
     static void parseBuildings(boost::property_tree::ptree::value_type & v);
     static void parseAgents(boost::property_tree::ptree::value_type & v);

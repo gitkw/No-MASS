@@ -11,14 +11,15 @@ Zone::Zone() {
 }
 
 Zone::Zone(const std::string buldingName, const ZoneStruct zoneStruct)
-  : name(zoneStruct.name) {
+  : name(zoneStruct.name), activities(zoneStruct.activities) {
     occupantFraction = 0;
     currentAgentGains = 0;
     blindState = 1;
     lightState = 0;
     windowState = 0;
-    setActive(SimulationConfig::activeZone(&name));
 
+
+    setActive(SimulationConfig::activeZone(&name));
     if (active) {
         int windowCount = zoneStruct.windowCount;
         setGroundFloor(SimulationConfig::isZoneGroundFloor(&name));
@@ -46,7 +47,7 @@ void Zone::step() {
     if (active) {
         DataStore::addValue(variableNameNumberOfOccupants, occupantFraction);
         DataStore::addValue(variableNameAverageGains, currentAgentGains);
-        for (std::string name : variableNameWindow) {
+        for (std::string & name : variableNameWindow) {
           DataStore::addValue(name, windowState);
         }
         DataStore::addValue(variableNameBlindFraction, blindState);
@@ -113,6 +114,17 @@ void Zone::setActive(bool active) {
 
 bool Zone::isActive() const {
     return active;
+}
+
+bool Zone::hasActivity(std::string activity) const {
+  bool found = false;
+  for (std::string const& act : activities) {
+    if (act == activity) {
+      found = true;
+      break;
+    }
+  }
+  return found;
 }
 
 void Zone::setGroundFloor(bool groundFloor) {

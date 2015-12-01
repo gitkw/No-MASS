@@ -1,6 +1,7 @@
 #ifndef AGENT_ACTION_WINDOW_H
 #define AGENT_ACTION_WINDOW_H
 
+#include <deque>
 #include "Agent_Action.h"
 #include "Model_Windows.h"
 #include "Zone.h"
