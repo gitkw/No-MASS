@@ -28,7 +28,8 @@ void Agent_Action_Window::step(const Zone& zone, bool inZone, bool previouslyInZ
                 outDoorTemperatures.pop_front();
         }
 
-        double rain = DataStore::getValue("EnvironmentSiteRainStatus");
+        //double rain = DataStore::getValue("EnvironmentSiteRainStatus");
+        double rain = 0;
         double indoorTemperature = zone.getMeanAirTemperature();
         double timeStepLengthInMinutes = SimulationConfig::lengthOfTimestep();
 
@@ -47,13 +48,12 @@ void Agent_Action_Window::step(const Zone& zone, bool inZone, bool previouslyInZ
                 dailyMeanTemperature = dailyMeanTemperature / (double)outDoorTemperatures.size();
 
                 double groundFloor = zone.getGroundFloor();
-                double futureDuration = getFutureDurationOfPresenceState(activities);
+                //double futureDuration = getFutureDurationOfPresenceState(activities);
+                double futureDuration = 0;
                 m_window.departure(indoorTemperature, dailyMeanTemperature, futureDuration, groundFloor);
         }
 
         result = m_window.getWindowState();
-
-
 }
 
 double Agent_Action_Window::getPreviousDurationOfAbsenceState(const std::vector<double> &activities) const {
@@ -84,4 +84,3 @@ double Agent_Action_Window::getCurrentDurationOfPresenceState(const std::vector<
         }
         return cdp;
 }
-
