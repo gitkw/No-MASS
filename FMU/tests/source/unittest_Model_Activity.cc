@@ -29,7 +29,8 @@ void Test_Activity::AfterConfiguration() {
 }
 
 TEST_F(Test_Activity, Dissagregate) {
-    SimulationConfig::parseConfiguration("tests/Files/SimulationConfig2.xml");
+    SimulationConfig::parseConfiguration
+      ("../tests/Files/SimulationConfig2.xml");
     AfterConfiguration();
     EXPECT_EQ(activities.at(0), 0);
     EXPECT_EQ(activities.at(1000), 0);
@@ -164,7 +165,7 @@ TEST_F(Test_Activity, multinominalActivity) {
 }
 
 TEST_F(Test_Activity, multinominalP) {
-    SimulationConfig::parseConfiguration("tests/Files/SimulationConfig1.xml");
+    SimulationConfig::parseConfiguration("../tests/Files/SimulationConfig1.xml");
 
     AfterConfiguration();
 
@@ -199,7 +200,8 @@ TEST_F(Test_Activity, multinominalP) {
 }
 
 TEST_F(Test_Activity, multinominal) {
-    SimulationConfig::parseConfiguration("tests/Files/SimulationConfig1.xml");
+    SimulationConfig::parseConfiguration
+      ("../tests/Files/SimulationConfig1.xml");
     AfterConfiguration();
 
     ASSERT_EQ(activities.at(0), 0);

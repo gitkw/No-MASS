@@ -23,6 +23,7 @@ public:
     void setWindowState(bool windowState);
     void setLightState(bool lightState);
     void setBlindState(double state);
+    void setHeatingState(double state);
     void setOccupantFraction(double occupantFraction);
 
     bool isActive() const;
@@ -43,7 +44,7 @@ public:
     std::string getName() const;
 
 private:
-  
+
     bool groundFloor;
     bool active;
     bool lightState;
@@ -51,12 +52,14 @@ private:
     double currentAgentGains;
     double blindState;
     double occupantFraction;
+    double heatingState;
 
     std::string name;
     std::string variableNameBlindFraction;
     std::string variableNameNumberOfOccupants;
     std::string variableNameAverageGains;
     std::string variableNameLight;
+    std::string variableNameHeating;
     std::vector<std::string> variableNameWindow;
     std::vector<std::string> activities;
 

@@ -115,9 +115,21 @@ void Building::step() {
         if (SimulationConfig::info.lights) {
             setAgentLightDecisionForZone(&zone);
         }
+        setAgentHeatDecisionsForZone(&zone);
         setAgentGainsForZone(&zone);
         zone.step();
     }
+}
+
+void Building::setAgentHeatDecisionsForZone(Zone *zone) {
+    bool enableHeating = false;
+    for (Agent &agent : population) {
+      if (agent.getDesiredHeatState(*zone)) {
+        enableHeating = true;
+        break;
+      }
+    }
+    zone->setHeatingState(enableHeating);
 }
 
 void Building::setAgentGainsForZone(Zone *zone) {

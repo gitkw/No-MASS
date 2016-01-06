@@ -31,14 +31,25 @@ Agent::Agent(int newId) : id(newId) {
 
     if (SimulationConfig::info.windows) {
         aaw.setup(agent.windowId);
+        aaw.setOpenDuringCooking(agent.WindowOpenDuringCooking);
+        aaw.setOpenDuringWashing(agent.WindowOpenDuringWashing);
         availableActions.push_back(1);
     }
     if (SimulationConfig::info.shading) {
         aas.setup(agent.shadeId);
+        aas.setClosedDuringSleep(agent.ShadeClosedDuringSleep);
+        aas.setClosedDuringWashing(agent.ShadeClosedDuringWashing);
+        aas.setClosedDuringNight(agent.ShadeClosedDuringNight);
         availableActions.push_back(2);
     }
     if (SimulationConfig::info.lights) {
         availableActions.push_back(3);
+        aal.setOffDuringNight(agent.LightOffDuringNight);
+        aal.setOffDuringAudioVisual(agent.LightOffDuringAudioVisual);
+        aal.setOffShadeDuringOut(agent.LightOffDuringOut);
+    }
+    if (agent.HeatOnPresence) {
+        availableActions.push_back(4);
     }
 
     if (SimulationConfig::info.presencePage) {
@@ -53,7 +64,7 @@ void Agent::step(StateMachine *stateMachine) {
     int newStateID = activities.at(stepCount);
     previousState = state;
     state = stateMachine->transistionTo(newStateID);
-    int pre = presence.at(stepCount);
+
     if (presence.at(stepCount)) {
         metabolicRate = state.getMetabolicRate();
         clo = state.getClo();
@@ -96,6 +107,11 @@ void Agent::actionStep(int action, ActionValues *interaction, const Zone &zone,
       case 3:
             aal.step(zone, inZone, preZone, activities);
             interaction->lightState = aal.getResult();
+        break;
+      case 4:
+            aah.step(zone, inZone, preZone, activities);
+            // interaction->heatState = aah.getResult();
+            heatState = aah.getResult();
         break;
       }
 }
@@ -153,6 +169,10 @@ bool Agent::getDesiredWindowState(const Zone &zone) const {
 
 bool Agent::getDesiredShadeState(const Zone &zone) const {
     return zoneToInteraction.at(zone.getName()).shadeState;
+}
+
+bool Agent::getDesiredHeatState(const Zone &zone) const {
+    return heatState;
 }
 
 bool Agent::currentlyInZone(const Zone &zone) const {

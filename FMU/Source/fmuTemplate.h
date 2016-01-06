@@ -53,7 +53,8 @@ typedef struct {
 
 std::unique_ptr<ModelInstance> modelInstance(new ModelInstance);
 
-bool save;
+
+int period;
 
 
 std::map<int,std::string> valToRefs;

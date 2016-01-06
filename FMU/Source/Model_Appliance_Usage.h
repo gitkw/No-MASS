@@ -30,6 +30,7 @@ class Model_Appliance_Usage {
       void parseCountryUsage(boost::property_tree::ptree::value_type & v);
 
       std::string country;
+
       int stateTv;
       int stateWashingMachine;
       int stateMicroWave;

@@ -12,12 +12,13 @@
 class Model_Windows : Model_RandomWeibull{
 public:
     Model_Windows();
-    
 
+
+    void setWindowState(bool windowState);
     bool getWindowState() const;
-    double getDurationOpen() const;
 
-    void setWindowState(bool state);
+    void setDurationOpen(double durationOpen);
+    double getDurationOpen() const;
 
     void arrival(double indoorTemperature, double outdoorTemperature, double previousDuration, bool rain, double timeStepLengthInMinutes );
     void intermediate(double indoorTemperature, double outdoorTemperature, double currentDuration, bool rain, double timeStepLengthInMinutes);

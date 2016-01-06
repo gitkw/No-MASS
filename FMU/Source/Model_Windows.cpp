@@ -1,9 +1,5 @@
-/*
- * File:   Comp_WindowsOpening.cpp
- * Author: jake
- *
- * Created on September 18, 2013, 10:19 AM
- */
+// Copyright 2015 Jacob Chapman
+
 #include <cmath>
 #include <deque>
 #include <iostream>
@@ -42,13 +38,14 @@ Model_Windows::Model_Windows() {
     b10gddep = -0.923;
 }
 
-void Model_Windows::setDurationVars(double aop, double bopout, double shapeop){
+void Model_Windows::setDurationVars(double aop, double bopout, double shapeop) {
     this->aop = aop;
     this->bopout = bopout;
     this->shapeop = shapeop;
 }
 
-void Model_Windows::setArrivalVars(double a01arr, double b01inarr, double b01outarr, double b01absprevarr, double b01rnarr) {
+void Model_Windows::setArrivalVars(double a01arr, double b01inarr,
+      double b01outarr, double b01absprevarr, double b01rnarr) {
     this->a01arr = a01arr;
     this->a01arr = a01arr;
     this->b01inarr = b01inarr;
@@ -57,7 +54,8 @@ void Model_Windows::setArrivalVars(double a01arr, double b01inarr, double b01out
     this->b01rnarr = b01rnarr;
 }
 
-void Model_Windows::setInterVars(double a01int, double b01inint, double b01outint, double b01presint, double b01rnint){
+void Model_Windows::setInterVars(double a01int, double b01inint,
+      double b01outint, double b01presint, double b01rnint) {
   this->a01int = a01int;
   this->b01inint = b01inint;
   this->b01outint = b01outint;
@@ -65,7 +63,9 @@ void Model_Windows::setInterVars(double a01int, double b01inint, double b01outin
   this->b01rnint = b01rnint;
 }
 
-void Model_Windows::setDepartureVars(double a01dep, double b01outdep, double b01absdep, double b01gddep, double a10dep, double b10indep, double b10outdep, double b10absdep, double b10gddep){
+void Model_Windows::setDepartureVars(double a01dep, double b01outdep,
+    double b01absdep, double b01gddep, double a10dep, double b10indep,
+    double b10outdep, double b10absdep, double b10gddep) {
   this->a01dep = a01dep;
   this->b01outdep = b01outdep;
   this->b01absdep = b01absdep;
@@ -81,26 +81,32 @@ void Model_Windows::setWindowState(bool state) {
     this->state = state;
 }
 
-bool Model_Windows::getWindowState() const{
+bool Model_Windows::getWindowState() const {
     return state;
 }
 
-double Model_Windows::getDurationOpen() const{
+void Model_Windows::setDurationOpen(double durationOpen) {
+    this->durationOpen = durationOpen;
+}
+
+double Model_Windows::getDurationOpen() const {
     return durationOpen;
 }
 
-double Model_Windows::calculateDurationOpen(double outdoorTemperature){
-
+double Model_Windows::calculateDurationOpen(double outdoorTemperature) {
     return randomWeibull(exp(aop + bopout * outdoorTemperature), shapeop);
 }
 
-void Model_Windows::arrival(double indoorTemperature, double outdoorTemperature, double previousDuration, bool rain, double timeStepLengthInMinutes) {
-
+void Model_Windows::arrival(double indoorTemperature, double outdoorTemperature,
+    double previousDuration, bool rain, double timeStepLengthInMinutes) {
     double Rain = (rain ? 1.f : 0.f);
-
-    //log(1/a)= 0.871
+    //  log(1/a)= 0.871
     if (!state) {
-        float m = a01arr + b01inarr * indoorTemperature + b01outarr * outdoorTemperature + b01rnarr * Rain + b01absprevarr * ((previousDuration > 8.f * 60.f * 60.f) ? 1.f : 0.f);
+        float m = a01arr + b01inarr * indoorTemperature +
+                  b01outarr * outdoorTemperature +
+                  b01rnarr * Rain +
+                  b01absprevarr *
+                  ((previousDuration > 8.f * 60.f * 60.f) ? 1.f : 0.f);
         float prob01arr = exp(m) / (1.f + exp(m));
         double drand = randomDouble();
         if (drand < prob01arr) {
@@ -120,16 +126,18 @@ void Model_Windows::arrival(double indoorTemperature, double outdoorTemperature,
             durationOpen = durationOpen - timeStepLengthInMinutes;
         }
     }
-
 }
 
-void Model_Windows::intermediate(double indoorTemperature, double outdoorTemperature, double currentDuration, bool rain, double timeStepLengthInMinutes) {
+void Model_Windows::intermediate(double indoorTemperature,
+    double outdoorTemperature, double currentDuration, bool rain,
+    double timeStepLengthInMinutes) {
 
     double Rain = (rain ? 1.f : 0.f);
-
-
     if (!state) {
-        double m = a01int + b01inint * indoorTemperature + b01outint * outdoorTemperature + b01presint * currentDuration + b01rnint * Rain;
+        double m = a01int + b01inint * indoorTemperature +
+                      b01outint * outdoorTemperature +
+                      b01presint * currentDuration +
+                      b01rnint * Rain;
         float prob01int = exp(m) / (1.f + exp(m));
         double drand = randomDouble();
         if (drand < prob01int) {
@@ -148,14 +156,13 @@ void Model_Windows::intermediate(double indoorTemperature, double outdoorTempera
             durationOpen = durationOpen - timeStepLengthInMinutes;
         }
     }
-
 }
 
-void Model_Windows::departure(double indoorTemperature, double dailyMeanTemperature, double futureDuration, double groundFloor ) {
+void Model_Windows::departure(double indoorTemperature,
+    double dailyMeanTemperature, double futureDuration, double groundFloor ) {
 
     // double durationOpen;
     double drand = randomDouble();
-
 
     double durationLongerThanEightHours = 0.0;
 
@@ -163,7 +170,9 @@ void Model_Windows::departure(double indoorTemperature, double dailyMeanTemperat
         durationLongerThanEightHours = 1.0;
     }
     if (!state) {
-        double m = a01dep + b01outdep * dailyMeanTemperature + b01absdep * durationLongerThanEightHours + b01gddep * groundFloor;
+        double m = a01dep + b01outdep * dailyMeanTemperature +
+                  b01absdep * durationLongerThanEightHours +
+                  b01gddep * groundFloor;
         float prob01deplong = exp(m) / (1.f + exp(m));
         if (drand < prob01deplong) {
             state = 1;
@@ -172,7 +181,10 @@ void Model_Windows::departure(double indoorTemperature, double dailyMeanTemperat
             durationOpen = 0.f;
         }
     } else {
-        double m = a10dep + b10indep * indoorTemperature + b10outdep * dailyMeanTemperature + b10absdep * durationLongerThanEightHours + b10gddep * groundFloor;
+        double m = a10dep + b10indep * indoorTemperature +
+                    b10outdep * dailyMeanTemperature +
+                    b10absdep * durationLongerThanEightHours +
+                    b10gddep * groundFloor;
         float prob10deplong = exp(m) / (1.f + exp(m));
         if (drand < prob10deplong) {
             state = 0;
@@ -181,5 +193,4 @@ void Model_Windows::departure(double indoorTemperature, double dailyMeanTemperat
             state = 1;
         }
     }
-
 }

@@ -3,18 +3,21 @@
 
 #include "Agent_Action.h"
 
-
 class Agent_Action_Lights : public Agent_Action
 {
-    public:
-        Agent_Action_Lights();
+  public:
+    Agent_Action_Lights();
+    void step(const Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
 
-        void step(const Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
+    void setOffDuringNight(bool OffDuringNight);
+    void setOffDuringAudioVisual(bool OffDuringAudioVisual);
+    void setOffShadeDuringOut(bool OffDuringOut);
 
-    protected:
-
-    private:
-
+  private:
+    
+    bool OffDuringNight;
+    bool OffDuringAudioVisual;
+    bool OffDuringOut;
 };
 
 #endif // AGENT_ACTION_LIGHTS_H

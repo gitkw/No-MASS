@@ -64,7 +64,7 @@ double Model_Appliance_Usage::getTransitionAt(const int app,
 
 double Model_Appliance_Usage::getPower(const int app) {
         double power = 0;
-        int state;
+
         switch (app) {
         case 0:
                 power = getMeanFraction(app) * maxPowerCooker;

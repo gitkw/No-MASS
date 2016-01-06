@@ -3,7 +3,6 @@
 
 #include "Agent_Action.h"
 
-
 class Agent_Action_Shades : public Agent_Action
 {
     public:
@@ -11,10 +10,15 @@ class Agent_Action_Shades : public Agent_Action
 
         void setup(int windowID);
         void step(const Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
-    protected:
 
+        void setClosedDuringSleep(bool ShadeClosedDuringSleep);
+        void setClosedDuringWashing(bool ShadeClosedDuringWashing);
+        void setClosedDuringNight(bool ShadeClosedDuringNight);
     private:
         Model_ExternalShading m_blindUsage;
+        bool ShadeClosedDuringSleep;
+        bool ShadeClosedDuringWashing;
+        bool ShadeClosedDuringNight;
 
 };
 

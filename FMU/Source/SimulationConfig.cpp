@@ -33,7 +33,7 @@ void SimulationConfig::reset() {
   windows.clear();
   shades.clear();
   info = simulationStruct();
-  int stepCount = -1;
+  stepCount = -1;
   ActivityFile = "";
   FmuLocation = "";
 }
@@ -164,8 +164,33 @@ void SimulationConfig::parseAgents(bpt::ptree::value_type & v) {
                     agent.sex = schild.second.data();
                 } else if (schild.first == "famstat") {
                     agent.famstat = schild.second.data();
+                } else if (schild.first == "ShadeClosedDuringSleep") {
+                    agent.ShadeClosedDuringSleep
+                        = schild.second.get_value<bool>();
+                } else if (schild.first == "ShadeClosedDuringWashing") {
+                    agent.ShadeClosedDuringWashing
+                        = schild.second.get_value<bool>();
+                } else if (schild.first == "ShadeClosedDuringNight") {
+                    agent.ShadeClosedDuringNight
+                        = schild.second.get_value<bool>();
+                } else if (schild.first == "LightOffDuringNight") {
+                    agent.LightOffDuringNight
+                        = schild.second.get_value<bool>();
+                } else if (schild.first == "LightOffDuringAudioVisual") {
+                    agent.LightOffDuringAudioVisual
+                        = schild.second.get_value<bool>();
+                } else if (schild.first == "LightOffDuringOut") {
+                    agent.LightOffDuringOut
+                        = schild.second.get_value<bool>();
+                } else if (schild.first == "WindowOpenDuringCooking") {
+                    agent.WindowOpenDuringCooking
+                        = schild.second.get_value<bool>();
+                } else if (schild.first == "WindowOpenDuringWashing") {
+                    agent.WindowOpenDuringWashing
+                        = schild.second.get_value<bool>();
                 }
             }
+
 
             if (SimulationConfig::info.presencePage
                 && agent.profile.size() != 7) {

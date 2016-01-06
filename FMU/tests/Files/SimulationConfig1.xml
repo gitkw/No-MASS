@@ -52,7 +52,7 @@
                 <sex>sex2</sex>
                 <bedroom>Block2:MasterBedroom</bedroom>
                 <profile>
-                  <file>tests/Files/Activity.xml</file>
+                  <file>../tests/Files/Activity.xml</file>
                 </profile>
             </agent>
             <agent>
@@ -67,7 +67,7 @@
 
                 <bedroom>Block2:MasterBedroom</bedroom>
                 <profile>
-                  <file>tests/Files/Activity.xml</file>
+                  <file>../tests/Files/Activity.xml</file>
                 </profile>
             </agent>
 

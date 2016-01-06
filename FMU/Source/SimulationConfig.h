@@ -31,7 +31,6 @@ struct agentStruct {
     int shadeId;
     std::map<int, std::string> profile;
 
-
     std::string age;
     std::string computer;
     std::string civstat;
@@ -40,6 +39,17 @@ struct agentStruct {
     std::string edtry;
     std::string famstat;
     std::string sex;
+
+    bool HeatOnPresence;
+    bool ShadeClosedDuringSleep;
+    bool ShadeClosedDuringWashing;
+    bool ShadeClosedDuringNight;
+    bool LightOffDuringNight;
+    bool LightOffDuringAudioVisual;
+    bool LightOffDuringOut;
+    bool WindowOpenDuringCooking;
+    bool WindowOpenDuringWashing;
+
 };
 
 struct shadeStruct {
@@ -122,7 +132,6 @@ struct simulationStruct {
     int startDayOfWeek;
     int endDay;
     int endMonth;
-    int timePeriod;
     int caseOrder;
 };
 

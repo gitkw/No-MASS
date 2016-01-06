@@ -20,7 +20,7 @@
 #include "gtest/gtest.h"
 
 TEST(Agent, Build) {
-  SimulationConfig::parseConfiguration("tests/Files/SimulationConfig2.xml");
+  SimulationConfig::parseConfiguration("../tests/Files/SimulationConfig2.xml");
 
   SimulationConfig::stepCount = 0;
   SimulationConfig::info.windows = false;

@@ -21,6 +21,7 @@
 
 #include "Agent_Action_Window.h"
 #include "Agent_Action_Lights.h"
+#include "Agent_Action_Heating.h"
 #include "Agent_Action_Shades.h"
 #include "Agent_Action_Heat_Gains.h"
 /**
@@ -55,6 +56,7 @@ public:
     bool getDesiredLightState(const Zone &zone) const;
     bool getDesiredWindowState(const Zone &zone) const;
     bool getDesiredShadeState(const Zone &zone) const;
+    bool getDesiredHeatState(const Zone &zone) const;
     double getCurrentRadientGains(const Zone &zone) const;
     double getPower() const;
 
@@ -66,6 +68,7 @@ private:
     int pmv;
     int previous_pmv;
     int action;
+    bool heatState;
 
     double power;
     double currentRadientGains;
@@ -82,6 +85,7 @@ private:
 
     Agent_Action_Window aaw;
     Agent_Action_Lights aal;
+    Agent_Action_Heating aah;
     Agent_Action_Shades aas;
     Agent_Action_Heat_Gains aahg;
 

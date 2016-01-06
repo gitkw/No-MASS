@@ -23,6 +23,7 @@ private:
     void setAgentWindowDecisionForZone(Zone *zone);
     void setAgentLightDecisionForZone(Zone *zone);
     void setAgentBlindDecisionForZone(Zone *zone);
+    void setAgentHeatDecisionsForZone(Zone *zone);
     void setAgentCountForZone(Zone *zone);
     void initialiseStates();
     void setZones(std::vector<Zone> zones);

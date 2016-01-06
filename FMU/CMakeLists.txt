@@ -51,6 +51,8 @@ Source/Agent_Action_Shades.cpp
 Source/Agent_Action_Shades.h
 Source/Agent_Action_Window.cpp
 Source/Agent_Action_Window.h
+Source/Agent_Action_Heating.cpp
+Source/Agent_Action_Heating.h
 Source/DataStore.cpp
 Source/DataStore.h
 Source/Log.cpp
@@ -69,8 +71,6 @@ Source/Model_RandomWeibull.cpp
 Source/Model_RandomWeibull.h
 Source/Model_Windows.cpp
 Source/Model_Windows.h
-Source/Model_ExternalShading.cpp
-Source/Model_ExternalShading.h
 Source/Model_Appliance_Ownership.cpp
 Source/Model_Appliance_Ownership.h
 Source/Model_Appliance_Usage.cpp
@@ -161,14 +161,15 @@ if (Tests)
     tests/source/unittest_Simulation.cc
     tests/source/unittest_SimulationConfig.cc
     tests/source/unittest_Model_Activity.cc
+    tests/source/unittest_Model_Windows.cc
     tests/source/unittest_Model_HeatGains.cc
     tests/source/unittest_Model_Appliance_Usage.cc
     tests/source/unittest_Model_Appliance_Ownership.cc
-    tests/source/unittest_SimulationConfig.cc
     tests/source/unittest_StateMachine.cc
     tests/source/unittest_Log.cc
     tests/source/unittest_Agent.cc
     tests/source/unittest_Building.cc
+    tests/source/unittest_Agent_Action_Window.cc
   )
 
   add_executable(runUnitTests ${TESTSRC})

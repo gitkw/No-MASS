@@ -9,7 +9,7 @@
 #include "gtest/gtest.h"
 
 TEST(Simulation, HeatGainsOnly) {
-  SimulationConfig::FmuLocation = "tests/Files";
+  SimulationConfig::FmuLocation = "../tests/Files";
   Simulation s;
   s.parseConfiguration(SimulationConfig::FmuLocation + "/SimulationConfig.xml");
   SimulationConfig::info.windows = false;
@@ -50,7 +50,7 @@ TEST(Simulation, HeatGainsOnly) {
 
 
 TEST(Simulation, HeatGainsWindowsOnly) {
-  SimulationConfig::FmuLocation = "tests/Files";
+  SimulationConfig::FmuLocation = "../tests/Files";
   Simulation s;
 
   s.parseConfiguration(SimulationConfig::FmuLocation + "/SimulationConfig.xml");

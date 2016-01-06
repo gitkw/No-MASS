@@ -42,8 +42,6 @@ script:
   - cd ../FMU/buildDebug
   - cmake -DTests=on -DCMAKE_BUILD_TYPE=Debug ../
   - make
-  - mv runUnitTests ../
-  - cd ..
   - ./runUnitTests
   - cd ./build
   - cmake -DCMAKE_BUILD_TYPE=Release ../

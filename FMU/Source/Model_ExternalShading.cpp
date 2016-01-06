@@ -1,16 +1,11 @@
-/*
- * File:   Model_BlindUsage.cpp
- * Author: jake
- *
- * Created on September 28, 2013, 1:27 PM
- */
+// Copyright 2015 Jacob Chapman
+
 #include <cmath>
 #include <algorithm>
 #include "Utility.h"
 #include "Model_ExternalShading.h"
 
 Model_ExternalShading::Model_ExternalShading() {
-
   a01arr = -7.41;
   b01inarr = 0.001035;
   b01sarr = 2.17;
@@ -38,7 +33,6 @@ Model_ExternalShading::Model_ExternalShading() {
   bsfulllower = 0.00000091;
   boutfulllower = -2.23;
   afulllower = -0.27;
-
 }
 /*
 void Model_ExternalShading::calculate(double state, double Lumint, double Evg, bool currentlyOccupied, bool previouslyOccupied) {
@@ -64,7 +58,9 @@ void Model_ExternalShading::calculate(double state, double Lumint, double Evg, b
 }
 */
 
-void Model_ExternalShading::setFullVars(float afullraise, float boutfullraise, float bsfullraise, float bsfulllower, float boutfulllower, float afulllower){
+void Model_ExternalShading::setFullVars(float afullraise, float boutfullraise,
+    float bsfullraise, float bsfulllower, float boutfulllower,
+    float afulllower) {
 
   this->afullraise = afullraise;
   this->boutfullraise = boutfullraise;
@@ -75,13 +71,15 @@ void Model_ExternalShading::setFullVars(float afullraise, float boutfullraise, f
   this->afulllower = afulllower;
 }
 
-void Model_ExternalShading::setDurationVars(float aSFlower, float bSFlower, float shapelower){
+void Model_ExternalShading::setDurationVars(float aSFlower, float bSFlower,
+    float shapelower) {
   this->aSFlower = aSFlower;
   this->bSFlower = bSFlower;
   this->shapelower = shapelower;
 }
 
-void Model_ExternalShading::setArrivalVars(float a01arr, float b01inarr, float b01sarr, float a10arr, float b10inarr, float b10sarr){
+void Model_ExternalShading::setArrivalVars(float a01arr, float b01inarr,
+    float b01sarr, float a10arr, float b10inarr, float b10sarr) {
   this->a01arr = a01arr;
   this->b01inarr = b01inarr;
   this->b01sarr = b01sarr;
@@ -89,10 +87,10 @@ void Model_ExternalShading::setArrivalVars(float a01arr, float b01inarr, float b
   this->a10arr = a10arr;
   this->b10inarr = b10inarr;
   this->b10sarr = b10sarr;
-
 }
 
-void Model_ExternalShading::setInterVars(float a01int, float b01inint, float b01sint, float a10int, float b10inint, float b10sint){
+void Model_ExternalShading::setInterVars(float a01int, float b01inint,
+    float b01sint, float a10int, float b10inint, float b10sint) {
   // Probability of lowering during presence
   this->a01int = a01int;
   this->b01inint = b01inint;
@@ -102,7 +100,6 @@ void Model_ExternalShading::setInterVars(float a01int, float b01inint, float b01
   this->b10inint = b10inint;
   this->b10sint = b10sint;
 }
-
 
 double Model_ExternalShading::arrival(double state, double Lumint, double Evg) {
     double currentShadingState;
@@ -138,12 +135,13 @@ double Model_ExternalShading::arrival(double state, double Lumint, double Evg) {
 }
 
 
-double Model_ExternalShading::intermediate(bool state, double Lumint, double Evg){
-
+double Model_ExternalShading::intermediate(bool state, double Lumint,
+      double Evg) {
     return departure(state, Lumint, Evg);
 }
 
-double Model_ExternalShading::departure(double state, double Lumint, double Evg) {
+double Model_ExternalShading::departure(double state, double Lumint,
+      double Evg) {
     double currentShadingState;
     float problower = 0.f;
     float probraise = 0.f;
@@ -177,55 +175,62 @@ double Model_ExternalShading::departure(double state, double Lumint, double Evg)
     return currentShadingState;
 }
 
-double Model_ExternalShading::arrivalRaising(double state, double Lumint, double Evg) {
-    double currentShadingState;
-    double m_totraise = afullraise + boutfullraise * Evg + bsfullraise * (state);
-    float ptotraise = probability(m_totraise);
-    double r = randomDouble();
-    if (r < ptotraise) {
-        currentShadingState = 1.f;
-    } else {
-        currentShadingState = 0.01f * round(100.f * randomDouble((state), 1.f));
-    }
-    return currentShadingState;
+double Model_ExternalShading::arrivalRaising(double state, double Lumint,
+      double Evg) {
+  double currentShadingState;
+  double m_totraise = afullraise + boutfullraise * Evg + bsfullraise * (state);
+  float ptotraise = probability(m_totraise);
+  double r = randomDouble();
+  if (r < ptotraise) {
+      currentShadingState = 1.f;
+  } else {
+      currentShadingState = 0.01f * round(100.f * randomDouble((state), 1.f));
+  }
+  return currentShadingState;
 }
 
-double Model_ExternalShading::arrivalLowering(double state, double Lumint, double Evg) {
-    double currentShadingState;
-    double m_totlow = afulllower + boutfulllower * Evg + bsfulllower * (state);
-    float ptotlow = probability(m_totlow);
-    if (randomDouble() < ptotlow) {
-        currentShadingState = 0.f;
-    } else {
-
-        float Reduction = randomWeibull(exp(aSFlower + bSFlower * (state)), shapelower);
-        currentShadingState = (0.01f * round(100.f * std::max((state) - Reduction, 0.01)));
-    }
-    return currentShadingState;
+double Model_ExternalShading::arrivalLowering(double state, double Lumint,
+    double Evg) {
+  double currentShadingState;
+  double m_totlow = afulllower + boutfulllower * Evg + bsfulllower * (state);
+  float ptotlow = probability(m_totlow);
+  if (randomDouble() < ptotlow) {
+      currentShadingState = 0.f;
+  } else {
+      float Reduction =
+          randomWeibull(exp(aSFlower + bSFlower * (state)), shapelower);
+      currentShadingState =
+        0.01f * round(100.f * std::max((state) - Reduction, 0.01));
+  }
+  return currentShadingState;
 }
 
-double Model_ExternalShading::departureLowering(double state, double Lumint, double Evg) {
-    double currentShadingState;
-    double m_ptotlow = afulllower + boutfulllower * Evg + bsfulllower * (state);
-    float ptotlow = probability(m_ptotlow);
-    if (randomDouble() < ptotlow) {
-        currentShadingState = (0.f);
-    } else {
-        float Reduction = randomWeibull(exp(aSFlower + bSFlower * (state)), shapelower);
-        currentShadingState = (0.01f * round(100.f * std::max((state) - Reduction, 0.01)));
-    }
-    return currentShadingState;
+double Model_ExternalShading::departureLowering(double state, double Lumint,
+    double Evg) {
+  double currentShadingState;
+  double m_ptotlow = afulllower + boutfulllower * Evg + bsfulllower * (state);
+  float ptotlow = probability(m_ptotlow);
+  if (randomDouble() < ptotlow) {
+      currentShadingState = (0.f);
+  } else {
+      float Reduction =
+          randomWeibull(exp(aSFlower + bSFlower * (state)), shapelower);
+      currentShadingState =
+          0.01f * round(100.f * std::max((state) - Reduction, 0.01));
+  }
+  return currentShadingState;
 }
 
-double Model_ExternalShading::departureRaising(double state, double Lumint, double Evg) {
-    double currentShadingState;
-    double m_totraise = afullraise + boutfullraise * Evg + bsfullraise * (state);
-    float ptotraise = probability(m_totraise);
+double Model_ExternalShading::departureRaising(double state, double Lumint,
+    double Evg) {
+  double currentShadingState;
+  double m_totraise = afullraise + boutfullraise * Evg + bsfullraise * (state);
+  float ptotraise = probability(m_totraise);
 
-    if (randomDouble(0.f, 1.f) < ptotraise) {
-        currentShadingState = (1.f);
-    } else {
-        currentShadingState = (0.01f * round(100.f * randomDouble((state), 1.f)));
-    }
-    return currentShadingState;
+  if (randomDouble(0.f, 1.f) < ptotraise) {
+      currentShadingState = (1.f);
+  } else {
+      currentShadingState = 0.01f * round(100.f * randomDouble((state), 1.f));
+  }
+  return currentShadingState;
 }
