@@ -43,7 +43,7 @@ script:
   - cmake -DTests=on -DCMAKE_BUILD_TYPE=Debug ../
   - make
   - ./runUnitTests
-  - cd ./build
+  - cd ../build
   - cmake -DCMAKE_BUILD_TYPE=Release ../
   - make
   - cd ../build64

@@ -170,17 +170,11 @@ void SimulationConfig::parseAgents(bpt::ptree::value_type & v) {
                 } else if (schild.first == "ShadeClosedDuringWashing") {
                     agent.ShadeClosedDuringWashing
                         = schild.second.get_value<bool>();
-                } else if (schild.first == "ShadeClosedDuringNight") {
-                    agent.ShadeClosedDuringNight
-                        = schild.second.get_value<bool>();
-                } else if (schild.first == "LightOffDuringNight") {
-                    agent.LightOffDuringNight
-                        = schild.second.get_value<bool>();
                 } else if (schild.first == "LightOffDuringAudioVisual") {
                     agent.LightOffDuringAudioVisual
                         = schild.second.get_value<bool>();
-                } else if (schild.first == "LightOffDuringOut") {
-                    agent.LightOffDuringOut
+                } else if (schild.first == "LightOffDuringSleep") {
+                    agent.LightOffDuringSleep
                         = schild.second.get_value<bool>();
                 } else if (schild.first == "WindowOpenDuringCooking") {
                     agent.WindowOpenDuringCooking
@@ -356,51 +350,54 @@ void SimulationConfig::parseShades(bpt::ptree::value_type & v) {
  * @param filename location of the simulation file to parse.
  */
 void SimulationConfig::parseConfiguration(std::string filename) {
-    // Create an empty property tree object
-    bpt::ptree pt;
-    // Load the XML file into the property tree. If reading fails
-    // (cannot open file, parse error), an exception is thrown.
+  // Create an empty property tree object
+  bpt::ptree pt;
+  // Load the XML file into the property tree. If reading fails
+  // (cannot open file, parse error), an exception is thrown.
 
-    bpt::read_xml(filename, pt);
-    // Iterate over the debug.modules section and store all found
-    // modules in the m_modules set. The get_child() function
-    // returns a reference to the child at the specified path; if
-    // there is no such child, it throws. Property tree iterators
-    // are models of BidirectionalIterator.
-    stepCount = -1;
-    info.windows = false;
-    info.shading = false;
-    info.lights = false;
-    for (bpt::ptree::value_type & v : pt.get_child("simulation")) {
-        if (v.first == "seed") {
-            Utility::setSeed(v.second.get_value<int>());
-        } else if (v.first == "endDay") {
-            SimulationConfig::info.endDay = v.second.get_value<int>();
-        } else if (v.first == "timeStepsPerHour") {
-            SimulationConfig::info.timeStepsPerHour = v.second.get_value<int>();
-        } else if (v.first == "beginMonth") {
-            SimulationConfig::info.startMonth = v.second.get_value<int>();
-        } else if (v.first == "endMonth") {
-            SimulationConfig::info.endMonth = v.second.get_value<int>();
-        } else if (v.first == "beginDay") {
-            SimulationConfig::info.startDay = v.second.get_value<int>();
-        } else if (v.first == "qlearn") {
-            SimulationConfig::info.qlearn = v.second.get_value<int>();
-        } else if (v.first == "qlearnep") {
-            SimulationConfig::info.qlearnep = v.second.get_value<double>();
-        } else if (v.first == "simulateAgents") {
-            SimulationConfig::info.simulateAgents = v.second.get_value<bool>();
-        } else if (v.first == "case") {
-            SimulationConfig::info.caseOrder = v.second.get_value<int>();
-        } else if (v.first == "buildings") {
-            parseBuildings(v);
-        } else if (v.first == "models") {
-            parseModels(v);
-        }
+  bpt::read_xml(filename, pt);
+  // Iterate over the debug.modules section and store all found
+  // modules in the m_modules set. The get_child() function
+  // returns a reference to the child at the specified path; if
+  // there is no such child, it throws. Property tree iterators
+  // are models of BidirectionalIterator.
+  stepCount = -1;
+  info.windows = false;
+  info.shading = false;
+  info.lights = false;
+  for (bpt::ptree::value_type & v : pt.get_child("simulation")) {
+    if (v.first == "seed") {
+        Utility::setSeed(v.second.get_value<int>());
+    } else if (v.first == "endDay") {
+        SimulationConfig::info.endDay = v.second.get_value<int>();
+    } else if (v.first == "timeStepsPerHour") {
+        SimulationConfig::info.timeStepsPerHour = v.second.get_value<int>();
+    } else if (v.first == "beginMonth") {
+        SimulationConfig::info.startMonth = v.second.get_value<int>();
+    } else if (v.first == "endMonth") {
+        SimulationConfig::info.endMonth = v.second.get_value<int>();
+    } else if (v.first == "beginDay") {
+        SimulationConfig::info.startDay = v.second.get_value<int>();
+    } else if (v.first == "qlearn") {
+        SimulationConfig::info.qlearn = v.second.get_value<int>();
+    } else if (v.first == "qlearnep") {
+        SimulationConfig::info.qlearnep = v.second.get_value<double>();
+    } else if (v.first == "simulateAgents") {
+        SimulationConfig::info.simulateAgents = v.second.get_value<bool>();
+    } else if (v.first == "case") {
+        SimulationConfig::info.caseOrder = v.second.get_value<int>();
+    } else if (v.first == "ShadeClosedDuringNight") {
+       SimulationConfig::info.ShadeClosedDuringNight
+          = v.second.get_value<bool>();
+    } else if (v.first == "buildings") {
+        parseBuildings(v);
+    } else if (v.first == "models") {
+        parseModels(v);
     }
-    timeSteps();
-    LOG << "Loaded No-MASS configuration without problems file: -";
-    LOG << filename << "-\n";
+  }
+  timeSteps();
+  LOG << "Loaded No-MASS configuration without problems file: -";
+  LOG << filename << "-\n";
 }
 
 ZoneStruct SimulationConfig::getZone(std::string* zoneName) {

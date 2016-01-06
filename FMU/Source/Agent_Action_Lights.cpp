@@ -13,12 +13,8 @@ void Agent_Action_Lights::setOffDuringAudioVisual(bool OffDuringAudioVisual) {
   this->OffDuringAudioVisual = OffDuringAudioVisual;
 }
 
-void Agent_Action_Lights::setOffShadeDuringOut(bool LightOffDuringOut) {
-  this->OffDuringOut = OffDuringOut;
-}
-
-void Agent_Action_Lights::setOffDuringNight(bool OffDuringNight) {
-  this->OffDuringNight = OffDuringNight;
+void Agent_Action_Lights::setOffDuringSleep(bool OffDuringSleep) {
+  this->OffDuringSleep = OffDuringSleep;
 }
 
 void Agent_Action_Lights::step(const Zone& zone, bool inZone,
@@ -37,8 +33,11 @@ void Agent_Action_Lights::step(const Zone& zone, bool inZone,
             lightState = m_lightUsage.departure(lightState, Lumint, pffs);
     }
     int stepCount = SimulationConfig::getStepCount();
-    if (OffDuringNight && activities.at(stepCount) == 0) {
+    if (OffDuringSleep && activities.at(stepCount) == 0) {
         lightState = 0;
     }
-    result = OffDuringNight;
+    if (OffDuringAudioVisual && activities.at(stepCount) == 2) {
+        lightState = 0;
+    }
+    result = OffDuringSleep;
 }

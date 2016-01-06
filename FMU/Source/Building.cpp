@@ -5,6 +5,7 @@
 #include <list>
 #include <utility>
 #include "SimulationConfig.h"
+#include "DataStore.h"
 #include "Agent.h"
 #include "State_Out.h"
 #include "State_Present.h"
@@ -117,8 +118,29 @@ void Building::step() {
         }
         setAgentHeatDecisionsForZone(&zone);
         setAgentGainsForZone(&zone);
-        zone.step();
     }
+
+    buildingInteractions();
+    for (Zone &zone : zones) {
+      if (!zone.isActive()) {
+        continue;
+      }
+      zone.step();
+    }
+}
+
+void Building::buildingInteractions() {
+  if (SimulationConfig::info.ShadeClosedDuringNight) {
+    int hourOfDay = DataStore::getValue("hourOfDay");
+    if (hourOfDay > 19 || hourOfDay < 6) {
+      for (Zone &zone : zones) {
+        if (!zone.isActive()) {
+          continue;
+        }
+        zone.setBlindState(0);
+      }
+    }
+  }
 }
 
 void Building::setAgentHeatDecisionsForZone(Zone *zone) {

@@ -27,7 +27,7 @@ private:
     void setAgentCountForZone(Zone *zone);
     void initialiseStates();
     void setZones(std::vector<Zone> zones);
-
+    void buildingInteractions();
     void matchStateToZone(State &s);
     std::vector<float> presenceProfile;
     std::vector<Agent> population;
