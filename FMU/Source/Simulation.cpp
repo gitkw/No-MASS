@@ -48,6 +48,7 @@ void Simulation::setupSimulationModel() {
     DataStore::addVariable("day");
     DataStore::addVariable("month");
     DataStore::addVariable("hour");
+    DataStore::addVariable("hourOfDay");
     DataStore::addVariable("TimeStep");
     for (buildingStruct b : SimulationConfig::buildings) {
       buildings.push_back(Building());
@@ -70,24 +71,34 @@ void Simulation::postprocess() {
  * @brief processes before timestep
  */
 void Simulation::preTimeStep() {
-        double day = time/86400;
-        double hour = time/3600;
+  double day = time/86400;
+  double hour = time/3600;
 #ifdef DEBUG
-        if (static_cast<int>(time) % (86400*10) == 0) {
-                std::cout << "day: " << day << std::endl;
-        }
+  if (static_cast<int>(time) % (86400*10) == 0) {
+    std::cout << "day: " << day << std::endl;
+  }
 #endif  // DEBUG
-        int month = 1;
-        for (int mc : monthCount) {
-                if (mc > day || month + 1 > 12) {
-                        break;
-                }
-                month = month + 1;
-        }
-        DataStore::addValue("TimeStep", time);
-        DataStore::addValue("day", day);
-        DataStore::addValue("hour", hour);
-        DataStore::addValue("month", month);
+  int month = 1;
+  for (int mc : monthCount) {
+    if (mc > day || month + 1 > 12) {
+      break;
+    }
+    month = month + 1;
+  }
+  int hourOfDay = 0;
+  for (int i = 0; i <= hour; i++) {
+    hourOfDay += 1;
+    if (hourOfDay > 23) {
+      hourOfDay = 0;
+      break;
+    }
+  }
+
+  DataStore::addValue("TimeStep", time);
+  DataStore::addValue("day", day);
+  DataStore::addValue("hour", hour);
+  DataStore::addValue("hourOfDay", hourOfDay);
+  DataStore::addValue("month", month);
 }
 
 /**

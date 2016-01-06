@@ -9,15 +9,14 @@ class Agent_Action_Lights : public Agent_Action
     Agent_Action_Lights();
     void step(const Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
 
-    void setOffDuringNight(bool OffDuringNight);
+    void setOffDuringSleep(bool OffDuringSleep);
     void setOffDuringAudioVisual(bool OffDuringAudioVisual);
-    void setOffShadeDuringOut(bool OffDuringOut);
 
   private:
-    
-    bool OffDuringNight;
+
+    bool OffDuringSleep;
     bool OffDuringAudioVisual;
-    bool OffDuringOut;
+    
 };
 
 #endif // AGENT_ACTION_LIGHTS_H

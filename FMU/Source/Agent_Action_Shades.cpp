@@ -11,12 +11,9 @@ Agent_Action_Shades::Agent_Action_Shades() {
     name = "Shades";
 }
 
-void Agent_Action_Shades::setClosedDuringWashing(bool ShadeClosedDuringWashing) {
-  this->ShadeClosedDuringSleep = ShadeClosedDuringSleep;
-}
-
-void Agent_Action_Shades::setClosedDuringNight(bool ShadeClosedDuringNight) {
-  this->ShadeClosedDuringSleep = ShadeClosedDuringSleep;
+void Agent_Action_Shades::setClosedDuringWashing(
+  bool ShadeClosedDuringWashing) {
+  this->ShadeClosedDuringWashing = ShadeClosedDuringWashing;
 }
 
 void Agent_Action_Shades::setClosedDuringSleep(bool ShadeClosedDuringSleep) {
@@ -52,6 +49,9 @@ void Agent_Action_Shades::step(const Zone& zone, bool inZone,
 
   int stepCount = SimulationConfig::getStepCount();
   if (ShadeClosedDuringSleep && activities.at(stepCount) == 0) {
+      shadingFraction = 0;
+  }
+  if (ShadeClosedDuringWashing && activities.at(stepCount) == 6) {
       shadingFraction = 0;
   }
   result = shadingFraction;

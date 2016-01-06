@@ -41,12 +41,13 @@ struct agentStruct {
     std::string sex;
 
     bool HeatOnPresence;
+
     bool ShadeClosedDuringSleep;
     bool ShadeClosedDuringWashing;
-    bool ShadeClosedDuringNight;
-    bool LightOffDuringNight;
+
     bool LightOffDuringAudioVisual;
-    bool LightOffDuringOut;
+    bool LightOffDuringSleep;
+
     bool WindowOpenDuringCooking;
     bool WindowOpenDuringWashing;
 
@@ -133,6 +134,8 @@ struct simulationStruct {
     int endDay;
     int endMonth;
     int caseOrder;
+    bool ShadeClosedDuringNight;
+    
 };
 
 class SimulationConfig {

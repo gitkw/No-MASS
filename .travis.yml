@@ -28,7 +28,7 @@ before_install:
   - export CC="gcc-4.9"
   - export LD="g++-4.9"
   # download submodules
-  - git submodule update --init --recursive
+  - git submodule update --init --recursive --depth=1
 
 before_script:
   - mkdir FMU/build
@@ -43,7 +43,7 @@ script:
   - cmake -DTests=on -DCMAKE_BUILD_TYPE=Debug ../
   - make
   - ./runUnitTests
-  - cd ./build
+  - cd ../build
   - cmake -DCMAKE_BUILD_TYPE=Release ../
   - make
   - cd ../build64

@@ -39,14 +39,11 @@ Agent::Agent(int newId) : id(newId) {
         aas.setup(agent.shadeId);
         aas.setClosedDuringSleep(agent.ShadeClosedDuringSleep);
         aas.setClosedDuringWashing(agent.ShadeClosedDuringWashing);
-        aas.setClosedDuringNight(agent.ShadeClosedDuringNight);
         availableActions.push_back(2);
     }
     if (SimulationConfig::info.lights) {
         availableActions.push_back(3);
-        aal.setOffDuringNight(agent.LightOffDuringNight);
         aal.setOffDuringAudioVisual(agent.LightOffDuringAudioVisual);
-        aal.setOffShadeDuringOut(agent.LightOffDuringOut);
     }
     if (agent.HeatOnPresence) {
         availableActions.push_back(4);
@@ -118,6 +115,7 @@ void Agent::actionStep(int action, ActionValues *interaction, const Zone &zone,
 
 void Agent::interactWithZone(const Zone &zone) {
     ActionValues interaction;
+
     bool inZone = currentlyInZone(zone);
     bool preZone = previouslyInZone(zone);
 
@@ -188,7 +186,7 @@ bool Agent::previouslyInZone(const Zone &zone) const {
 }
 
 bool Agent::InteractionOnZone(const Zone &zone) const {
-    return currentlyInZone(zone) || previouslyInZone(zone);
+  return currentlyInZone(zone) || previouslyInZone(zone);
 }
 
 std::string Agent::getLocationType(int step, StateMachine *sm) {
@@ -215,35 +213,6 @@ std::string Agent::updateLocation(const State& s) const {
     }
     return tempLocation;
 }
-/*
-bool Agent::calculateLightInteractionsOnZone(const Zone &zone) {
-    bool inZone = currentlyInZone(zone);
-    bool preZone = previouslyInZone(zone);
-    aal.step(zone, inZone, preZone, activities);
-    return aal.getResult();
-}
 
-bool Agent::calculateWindowInteractionsOnZone(const Zone &zone) {
-    bool inZone = currentlyInZone(zone);
-    bool preZone = previouslyInZone(zone);
-    aaw.step(zone, inZone, preZone, activities);
-    return aaw.getResult();
-}
-
-double Agent::calculateExternalShadeInteractionsOnZone(const Zone &zone) {
-    bool inZone = currentlyInZone(zone);
-    bool preZone = previouslyInZone(zone);
-    aas.step(zone, inZone, preZone, activities);
-    return aas.getResult();
-}
-
-double Agent::calculateMetabolicHeatGainsOnZone(const Zone &zone) {
-    bool inZone = currentlyInZone(zone);
-    bool preZone = previouslyInZone(zone);
-    aahg.step(zone, inZone, preZone, activities);
-    pmv = aahg.getPMV();
-    return aahg.getResult();
-}
-*/
 void Agent::postprocess() {
 }
