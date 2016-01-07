@@ -3,7 +3,6 @@
 #include <iostream>
 #include <vector>
 #include "DataStore.h"
-#include "Model_ExternalShading.h"
 #include "Agent_Action_Shades.h"
 #include "SimulationConfig.h"
 

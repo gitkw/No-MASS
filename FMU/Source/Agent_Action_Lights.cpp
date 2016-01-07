@@ -39,5 +39,5 @@ void Agent_Action_Lights::step(const Zone& zone, bool inZone,
     if (OffDuringAudioVisual && activities.at(stepCount) == 2) {
         lightState = 0;
     }
-    result = OffDuringSleep;
+    result = lightState;
 }

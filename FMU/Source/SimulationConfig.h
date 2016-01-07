@@ -18,8 +18,8 @@
 struct ZoneStruct {
     std::string name;
     std::vector<std::string> activities;
-    bool groundFloor;
-    int windowCount;
+    bool groundFloor = 0;
+    int windowCount = 0;
 };
 
 struct agentStruct {
@@ -135,7 +135,7 @@ struct simulationStruct {
     int endMonth;
     int caseOrder;
     bool ShadeClosedDuringNight;
-    
+
 };
 
 class SimulationConfig {
