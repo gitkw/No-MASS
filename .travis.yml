@@ -28,7 +28,7 @@ before_install:
   - export CC="gcc-4.9"
   - export LD="g++-4.9"
   # download submodules
-  - git submodule update --init --recursive --depth=1
+  - git submodule update --init --recursive
 
 before_script:
   - mkdir FMU/build
