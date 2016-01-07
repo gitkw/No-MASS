@@ -168,8 +168,11 @@ if (Tests)
     tests/source/unittest_StateMachine.cc
     tests/source/unittest_Log.cc
     tests/source/unittest_Agent.cc
+    tests/source/unittest_Zone.cc
     tests/source/unittest_Building.cc
     tests/source/unittest_Agent_Action_Window.cc
+    tests/source/unittest_Agent_Action_Shades.cc
+    tests/source/unittest_Agent_Action_Light.cc
   )
 
   add_executable(runUnitTests ${TESTSRC})
