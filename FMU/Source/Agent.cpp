@@ -44,6 +44,7 @@ Agent::Agent(int newId) : id(newId) {
     if (SimulationConfig::info.lights) {
         availableActions.push_back(3);
         aal.setOffDuringAudioVisual(agent.LightOffDuringAudioVisual);
+        aal.setOffDuringSleep(agent.LightOffDuringSleep);
     }
     if (agent.HeatOnPresence) {
         availableActions.push_back(4);
