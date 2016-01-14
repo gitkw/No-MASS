@@ -29,6 +29,37 @@ public:
     void setInterVars(double a01int, double b01inint, double b01outint, double b01presint, double b01rnint);
     void setDepartureVars(double a01dep, double b01outdep, double b01absdep, double b01gddep, double a10dep, double b10indep, double b10outdep, double b10absdep, double b10gddep);
 
+    double getAop() const;
+    double getBopout() const;
+    double getshapeop() const;
+
+    double getA01arr() const;
+    double getB01inarr() const;
+    double getB01outarr() const;
+    double getB01absprevarr() const;
+    double getB01rnarr() const;
+    // P01int
+    double getA01int() const;
+    double getB01inint() const;
+    double getB01outint() const;
+    double getB01presint() const;
+    double getB01rnint() const;
+    // P01dep
+    double getA01dep() const;
+    double getB01outdep() const;
+    double getB01absdep() const;
+    double getB01gddep() const;
+    // P10dep
+    double getA10dep() const;
+    double getB10indep() const;
+    double getB10outdep() const;
+    double getB10absdep() const;
+    double getB10gddep() const;
+
+
+
+
+
 private:
     bool state;
     double durationOpen;

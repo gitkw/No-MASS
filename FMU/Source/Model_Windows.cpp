@@ -194,3 +194,91 @@ void Model_Windows::departure(double indoorTemperature,
         }
     }
 }
+
+double Model_Windows::getAop() const{
+  return aop;
+};
+
+double Model_Windows::getBopout() const{
+  return bopout;
+};
+
+double Model_Windows::getshapeop() const{
+  return shapeop;
+};
+
+double Model_Windows::getA01arr() const{
+  return a01arr;
+};
+
+double Model_Windows::getB01inarr() const{
+  return b01inarr;
+};
+
+double Model_Windows::getB01outarr() const{
+  return b01outarr;
+};
+
+double Model_Windows::getB01absprevarr() const{
+  return b01absprevarr;
+};
+
+double Model_Windows::getB01rnarr() const{
+  return b01rnarr;
+};
+
+double Model_Windows::getA01int() const{
+  return a01int;
+};
+
+double Model_Windows::getB01inint() const{
+  return b01inint;
+};
+
+double Model_Windows::getB01outint() const{
+  return b01outint;
+};
+
+double Model_Windows::getB01presint() const{
+  return b01presint;
+};
+
+double Model_Windows::getB01rnint() const{
+  return b01rnint;
+};
+
+double Model_Windows::getA01dep() const{
+  return a01dep;
+};
+
+double Model_Windows::getB01outdep() const{
+  return b01outdep;
+};
+
+double Model_Windows::getB01absdep() const{
+  return b01absdep;
+};
+
+double Model_Windows::getB01gddep() const{
+  return b01gddep;
+};
+
+double Model_Windows::getA10dep() const{
+  return a10dep;
+};
+
+double Model_Windows::getB10indep() const{
+  return b10indep;
+};
+
+double Model_Windows::getB10outdep() const{
+  return b10outdep;
+};
+
+double Model_Windows::getB10absdep() const{
+  return b10absdep;
+};
+
+double Model_Windows::getB10gddep() const{
+  return b10gddep;
+};
