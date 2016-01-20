@@ -299,7 +299,7 @@ void Building::setAgentCountForZone(Zone *zone) {
             numberOfAgents++;
         }
     }
-    zone->setOccupantFraction(numberOfAgents);
+    zone->setOccupantFraction(numberOfAgents / population.size());
 }
 
 void Building::postprocess() {
