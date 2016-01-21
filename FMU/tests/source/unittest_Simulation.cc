@@ -86,7 +86,7 @@ TEST(Simulation, HeatGainsWindowsOnly) {
   DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature", 100);
   DataStore::addValue("Block1:Zone1ZoneAirRelativeHumidity", 100);
   DataStore::addValue("Block1:Zone1ZoneMeanRadiantTemperature", 100);
-  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 15);
+  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 18);
   DataStore::addValue("EnvironmentSiteRainStatus", 0);
 
   for (i =100;; i++) {
