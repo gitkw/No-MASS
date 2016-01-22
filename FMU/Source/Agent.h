@@ -16,11 +16,9 @@
 #include "StateMachine.h"
 #include "State.h"
 
-#include "Model_Lights.h"
-#include "Model_ExternalShading.h"
-
 #include "Agent_Action_Window.h"
 #include "Agent_Action_Lights.h"
+#include "Agent_Action_Learning.h"
 #include "Agent_Action_Heating.h"
 #include "Agent_Action_Shades.h"
 #include "Agent_Action_Heat_Gains.h"
@@ -36,6 +34,7 @@ struct ActionValues {
     double ppd;
     double pmv;
     double heatgains;
+    double heatingSetPoint;
 };
 
 class Agent {
@@ -88,6 +87,7 @@ private:
     Agent_Action_Heating aah;
     Agent_Action_Shades aas;
     Agent_Action_Heat_Gains aahg;
+    Agent_Action_Learning aalearn;
 
     Model_Presence presence;
 

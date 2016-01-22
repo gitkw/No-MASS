@@ -50,6 +50,11 @@ Agent::Agent(int newId) : id(newId) {
         availableActions.push_back(4);
     }
 
+    if (SimulationConfig::info.learn > 0) {
+        //availableActions.push_back(5);
+        aalearn.setup(id, SimulationConfig::info.learn);
+    }
+
     if (SimulationConfig::info.presencePage) {
       model_presenceFromPage();
     } else {
@@ -111,6 +116,9 @@ void Agent::actionStep(int action, ActionValues *interaction, const Zone &zone,
             // interaction->heatState = aah.getResult();
             heatState = aah.getResult();
         break;
+      case 5:
+
+        break;
       }
 }
 
@@ -123,6 +131,14 @@ void Agent::interactWithZone(const Zone &zone) {
     std::random_shuffle(availableActions.begin(), availableActions.end() );
     for (int a : availableActions) {
         actionStep(a, &interaction, zone, inZone, preZone);
+    }
+
+    // aah.step(zone, inZone, preZone, activities);
+    // heatState = aah.getResult();
+
+    if (SimulationConfig::info.learn > 0) {
+      aalearn.step(zone, inZone, preZone, activities);
+      heatState = aalearn.getResult();
     }
 
     zoneToInteraction[zone.getName()] = interaction;

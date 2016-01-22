@@ -378,10 +378,10 @@ void SimulationConfig::parseConfiguration(std::string filename) {
         SimulationConfig::info.endMonth = v.second.get_value<int>();
     } else if (v.first == "beginDay") {
         SimulationConfig::info.startDay = v.second.get_value<int>();
-    } else if (v.first == "qlearn") {
-        SimulationConfig::info.qlearn = v.second.get_value<int>();
-    } else if (v.first == "qlearnep") {
-        SimulationConfig::info.qlearnep = v.second.get_value<double>();
+    } else if (v.first == "learn") {
+        SimulationConfig::info.learn = v.second.get_value<int>();
+    } else if (v.first == "learnep") {
+        SimulationConfig::info.learnep = v.second.get_value<double>();
     } else if (v.first == "simulateAgents") {
         SimulationConfig::info.simulateAgents = v.second.get_value<bool>();
     } else if (v.first == "case") {
