@@ -15,7 +15,7 @@
 QLearning::QLearning() {}
 
 void QLearning::setup() {
-    epsilon = SimulationConfig::info.qlearnep;
+    epsilon = SimulationConfig::info.learnep;
     std::ifstream in_file;
     in_file.open("rlearning" + std::to_string(id) + ".dat");
     if (in_file.fail()) {

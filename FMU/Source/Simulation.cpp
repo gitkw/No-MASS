@@ -64,7 +64,7 @@ void Simulation::postprocess() {
     for (Building &b : buildings) {
         b.postprocess();
     }
-    DataStore::print();
+    // DataStore::print();
 }
 
 /**
@@ -83,6 +83,7 @@ void Simulation::preTimeStep() {
     if (mc > day || month + 1 > 12) {
       break;
     }
+
     month = month + 1;
   }
   int hourOfDay = 0;
@@ -90,7 +91,6 @@ void Simulation::preTimeStep() {
     hourOfDay += 1;
     if (hourOfDay > 23) {
       hourOfDay = 0;
-      break;
     }
   }
 

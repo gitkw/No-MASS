@@ -144,14 +144,73 @@ void Building::buildingInteractions() {
 }
 
 void Building::setAgentHeatDecisionsForZone(Zone *zone) {
-    bool enableHeating = false;
-    for (Agent &agent : population) {
-      if (agent.getDesiredHeatState(*zone)) {
-        enableHeating = true;
-        break;
+  double currentState = zone->getHeatingState();
+  double totalIncrease = 0;
+  double totalDecrease = 0;
+  double increase = 0;
+  double decrease = 0;
+  double same = 0;
+  double increasePower = 0;
+  double decreasePower = 0;
+  double samePower = 0;
+
+  for (Agent &agent : population) {
+      if (agent.InteractionOnZone(*zone)) {
+          double d = agent.getDesiredHeatState(*zone);
+          double power = agent.getPower();
+
+          if (d < currentState) {
+              decrease++;
+              totalDecrease = totalDecrease + d;
+              decreasePower = decreasePower + power;
+
+          } else if (d > currentState) {
+              increase++;
+              totalIncrease = totalIncrease + d;
+              increasePower = increasePower + power;
+          } else {
+              same++;
+              samePower = samePower + power;
+          }
       }
-    }
-    zone->setHeatingState(enableHeating);
+  }
+
+  double state = currentState;
+  if (samePower > increasePower && samePower > decreasePower) {
+      state = currentState;
+  } else if (samePower < increasePower && increasePower > decreasePower) {
+      state = totalIncrease / increase;
+  } else if (samePower < decreasePower && increasePower < decreasePower) {
+      state = totalDecrease / decrease;
+  } else if (samePower == increasePower && samePower > decreasePower) {
+      if (Utility::tossACoin()) {
+          state = totalIncrease / increase;
+      }
+  } else if (samePower > increasePower && samePower == decreasePower) {
+      if (Utility::tossACoin()) {
+          state = totalDecrease / decrease;
+      }
+  } else if (samePower < increasePower
+      && samePower < decreasePower
+      && increasePower == decreasePower) {
+      if (Utility::tossACoin()) {
+          state = totalIncrease / increase;
+      } else {
+          state = totalDecrease / decrease;
+      }
+  } else if ((samePower == increasePower) == decreasePower) {
+      double i = Utility::randomDouble(0, 1);
+      double d = Utility::randomDouble(0, 1);
+      double s = Utility::randomDouble(0, 1);
+      if (i > d && i > s) {
+          state = totalIncrease / increase;
+      } else if (d > s && d > i) {
+          state = totalDecrease / decrease;
+      } else if (s > i && s > d) {
+          state = currentState;
+      }
+  }
+  zone->setHeatingState(state);
 }
 
 void Building::setAgentGainsForZone(Zone *zone) {
@@ -233,33 +292,33 @@ void Building::setAgentBlindDecisionForZone(Zone *zone) {
     if (samePower > increasePower && samePower > decreasePower) {
         state = currentState;
     } else if (samePower < increasePower && increasePower > decreasePower) {
-        state = totalIncrease;
+        state = totalIncrease / increase;
     } else if (samePower < decreasePower && increasePower < decreasePower) {
-        state = totalDecrease;
+        state = totalDecrease / decrease;
     } else if (samePower == increasePower && samePower > decreasePower) {
         if (Utility::tossACoin()) {
-            state = totalIncrease;
+            state = totalIncrease / increase;
         }
     } else if (samePower > increasePower && samePower == decreasePower) {
         if (Utility::tossACoin()) {
-            state = totalDecrease;
+            state = totalDecrease / decrease;
         }
     } else if (samePower < increasePower
         && samePower < decreasePower
         && increasePower == decreasePower) {
         if (Utility::tossACoin()) {
-            state = totalIncrease;
+            state = totalIncrease / increase;
         } else {
-            state = totalDecrease;
+            state = totalDecrease / decrease;
         }
     } else if ((samePower == increasePower) == decreasePower) {
         double i = Utility::randomDouble(0, 1);
         double d = Utility::randomDouble(0, 1);
         double s = Utility::randomDouble(0, 1);
         if (i > d && i > s) {
-            state = totalIncrease;
+            state = totalIncrease / increase;
         } else if (d > s && d > i) {
-            state = totalDecrease;
+            state = totalDecrease / decrease;
         } else if (s > i && s > d) {
             state = currentState;
         }

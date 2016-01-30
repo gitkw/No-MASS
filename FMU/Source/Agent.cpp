@@ -51,7 +51,7 @@ Agent::Agent(int newId) : id(newId) {
     }
 
     if (SimulationConfig::info.learn > 0) {
-        //availableActions.push_back(5);
+        // availableActions.push_back(5);
         aalearn.setup(id, SimulationConfig::info.learn);
     }
 
@@ -137,8 +137,9 @@ void Agent::interactWithZone(const Zone &zone) {
     // heatState = aah.getResult();
 
     if (SimulationConfig::info.learn > 0) {
+      aalearn.setReward(pmv);
       aalearn.step(zone, inZone, preZone, activities);
-      heatState = aalearn.getResult();
+      interaction.heatingSetPoint = aalearn.getResult();
     }
 
     zoneToInteraction[zone.getName()] = interaction;
@@ -182,12 +183,12 @@ bool Agent::getDesiredWindowState(const Zone &zone) const {
     return zoneToInteraction.at(zone.getName()).windowState;
 }
 
-bool Agent::getDesiredShadeState(const Zone &zone) const {
+double Agent::getDesiredShadeState(const Zone &zone) const {
     return zoneToInteraction.at(zone.getName()).shadeState;
 }
 
-bool Agent::getDesiredHeatState(const Zone &zone) const {
-    return heatState;
+double Agent::getDesiredHeatState(const Zone &zone) const {
+    return zoneToInteraction.at(zone.getName()).heatingSetPoint;
 }
 
 bool Agent::currentlyInZone(const Zone &zone) const {
@@ -232,4 +233,7 @@ std::string Agent::updateLocation(const State& s) const {
 }
 
 void Agent::postprocess() {
+  if (SimulationConfig::info.learn > 0) {
+    aalearn.print();
+  }
 }

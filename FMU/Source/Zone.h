@@ -33,6 +33,7 @@ public:
     double getCurrentAgentGains() const;
     double getWindowState() const;
     double getBlindState() const;
+    double getHeatingState() const;
     double getGroundFloor() const;
     double getAirSystemSensibleHeatingRate() const;
     double getLightState() const;

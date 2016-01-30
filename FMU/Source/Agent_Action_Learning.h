@@ -11,6 +11,7 @@ class Agent_Action_Learning : public Agent_Action
     void step(const Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
     void setup(const int id, const int learn);
     void setReward(double reward);
+    void print();
   private:
     std::shared_ptr<QLearning> ql;
     double reward;
