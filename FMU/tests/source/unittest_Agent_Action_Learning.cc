@@ -22,10 +22,11 @@ void Test_Agent_Action_Learning::SetUp() {
   SimulationConfig::info.windows = false;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
+  SimulationConfig::info.learnep = 0.8;
   DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
 }
 
-TEST_F(Test_Agent_Action_Learning, OpenWindowDuringCooking) {
+TEST_F(Test_Agent_Action_Learning, Learn) {
   aal.setup(1, 1);
 
   ZoneStruct zs;

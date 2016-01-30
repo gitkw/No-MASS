@@ -365,6 +365,7 @@ void SimulationConfig::parseConfiguration(std::string filename) {
   info.windows = false;
   info.shading = false;
   info.lights = false;
+  SimulationConfig::info.learn = 0;
   for (bpt::ptree::value_type & v : pt.get_child("simulation")) {
     if (v.first == "seed") {
         Utility::setSeed(v.second.get_value<int>());

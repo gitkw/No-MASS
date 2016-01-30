@@ -16,9 +16,10 @@ class Test_QLearning_HeatingSetPoints : public ::testing::Test {
 };
 
 void Test_QLearning_HeatingSetPoints::SetUp() {
+  SimulationConfig::info.learnep = 0.8;
 }
 
-TEST_F(Test_QLearning_HeatingSetPoints, OpenWindowDuringCooking) {
+TEST_F(Test_QLearning_HeatingSetPoints, learn) {
     ql.setId(1);
     ql.setup();
 

@@ -54,8 +54,8 @@ public:
     bool InteractionOnZone(const Zone &zone) const;
     bool getDesiredLightState(const Zone &zone) const;
     bool getDesiredWindowState(const Zone &zone) const;
-    bool getDesiredShadeState(const Zone &zone) const;
-    bool getDesiredHeatState(const Zone &zone) const;
+    double getDesiredShadeState(const Zone &zone) const;
+    double getDesiredHeatState(const Zone &zone) const;
     double getCurrentRadientGains(const Zone &zone) const;
     double getPower() const;
 

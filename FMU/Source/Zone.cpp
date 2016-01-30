@@ -33,7 +33,7 @@ Zone::Zone(const std::string buldingName, const ZoneStruct zoneStruct)
         DataStore::addVariable(variableNameBlindFraction);
         variableNameLight = name + "LightState";
         DataStore::addVariable(variableNameLight);
-        variableNameHeating = name + "HeatingState";
+        variableNameHeating = name + "Heating";
         DataStore::addVariable(variableNameHeating);
         variableNameNumberOfOccupants = name + "NumberOfOccupants";
         DataStore::addVariable(variableNameNumberOfOccupants);
@@ -52,8 +52,8 @@ void Zone::step() {
         for (std::string & name : variableNameWindow) {
           DataStore::addValue(name, windowState);
         }
-        DataStore::addValue(variableNameBlindFraction, blindState);
         DataStore::addValue(variableNameLight, lightState);
+        DataStore::addValue(variableNameBlindFraction, blindState);
         DataStore::addValue(variableNameHeating, heatingState);
     }
 }
@@ -81,6 +81,10 @@ double Zone::getWindowState() const {
 
 double Zone::getBlindState() const {
     return blindState;
+}
+
+double Zone::getHeatingState() const {
+    return heatingState;
 }
 
 void Zone::setOccupantFraction(double occupantFraction) {
