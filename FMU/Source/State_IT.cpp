@@ -4,7 +4,7 @@
 
 State_IT::State_IT() {
   id = 3;  // IT
-  metabolicRate = 116;
+  metabolicRate = 70;
   clo = 1;
   activity = "IT";
 }

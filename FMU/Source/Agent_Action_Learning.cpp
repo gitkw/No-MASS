@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <iostream>
+#include <cmath>
 // #include "QLearning_PMV.h"
 // #include "QLearning_HeatingRate.h"
 #include "QLearning_HeatingSetPoints.h"
@@ -18,6 +19,9 @@ void Agent_Action_Learning::setReward(double reward) {
 void Agent_Action_Learning::print() {
   ql->printQ();
 }
+void Agent_Action_Learning::reset() {
+  ql->reset();
+}
 
 void Agent_Action_Learning::setup(const int id, const int learn) {
   learnId = learn;
@@ -25,7 +29,7 @@ void Agent_Action_Learning::setup(const int id, const int learn) {
     case 0:
 
       break;
-    case 1:
+    case 1:    
         ql = std::shared_ptr<QLearning_HeatingSetPoints>(
                   new QLearning_HeatingSetPoints);
       break;
@@ -44,17 +48,15 @@ void Agent_Action_Learning::step(const Zone& zone, bool inZone,
     bool previouslyInZone, const std::vector<double> &activities) {
   switch (learnId) {
     case 1:
-      double pmv = reward;
-      reward = -0.1;
-      if (pmv == 1) {
-        reward = 0.5;
-      }
-      if (pmv == -1) {
-        reward = 0.5;
-      }
-      if (pmv == 0) {
-        reward = 0.9;
-      }
+      /*double pmv = reward;
+      // std::cout << "pmv: " << pmv  << std::endl;
+      reward = -1;
+      if (pmv < 1 && pmv > -1) {
+        reward = 0;
+      } else if (pmv < 2 && pmv > -2) {
+        reward = -0.5;
+      }*/
+    //  reward = - std::abs(reward);
       break;
   }
   ql->setReward(reward);

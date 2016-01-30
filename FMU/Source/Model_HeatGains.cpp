@@ -1,9 +1,4 @@
-/*
- * File:   HeatGain.cpp
- * Author: jake
- *
- * Created on September 15, 2013, 5:03 PM
- */
+// Copyright 2015 Jacob Chapman
 
 #include <cmath>
 #include "Model_HeatGains.h"
@@ -17,7 +12,12 @@ Model_HeatGains::Model_HeatGains() {
  * @return Radiant heat gains (all the sensible radiant stuff)
  */
 double Model_HeatGains::getAllHeatGains() {
-    return radiantHeatGains + convectiveHeatGains + dryRespiration + sweatEvaporation + latentRespirationHeatGains + vapourDiffusion;
+    return radiantHeatGains
+      + convectiveHeatGains
+      + dryRespiration
+      + sweatEvaporation
+      + latentRespirationHeatGains
+      + vapourDiffusion;
 }
 
 double Model_HeatGains::getSweatEvaporation() const {

@@ -12,6 +12,7 @@ class Agent_Action_Learning : public Agent_Action
     void setup(const int id, const int learn);
     void setReward(double reward);
     void print();
+    void reset();
   private:
     std::shared_ptr<QLearning> ql;
     double reward;

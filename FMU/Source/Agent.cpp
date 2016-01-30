@@ -235,5 +235,6 @@ std::string Agent::updateLocation(const State& s) const {
 void Agent::postprocess() {
   if (SimulationConfig::info.learn > 0) {
     aalearn.print();
+    aalearn.reset();
   }
 }

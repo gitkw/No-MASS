@@ -15,7 +15,7 @@
 QLearning::QLearning() {}
 
 void QLearning::setup() {
-    epsilon = SimulationConfig::info.learnep;
+    //epsilon = SimulationConfig::info.learnep;
     std::ifstream in_file;
     in_file.open("rlearning" + std::to_string(id) + ".dat");
     if (in_file.fail()) {
@@ -93,6 +93,9 @@ void QLearning::setReward(double reward) {
 
 double QLearning::learn(const Zone &zone) {
   return 0;
+}
+
+void QLearning::reset() {
 }
 
 void QLearning::setEpsilon(double epsilon) {

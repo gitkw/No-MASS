@@ -29,9 +29,8 @@ public:
     void postTimeStep();
 
 private:
-    int time;
     std::vector<int> monthCount;
-    
+
     /**
      * Manages the Buildings
      */

@@ -210,6 +210,7 @@ void Building::setAgentHeatDecisionsForZone(Zone *zone) {
           state = currentState;
       }
   }
+  // std::cout << "state: " << state << std::endl;
   zone->setHeatingState(state);
 }
 

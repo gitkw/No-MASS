@@ -441,7 +441,7 @@ int SimulationConfig::numberOfAgents() {
 }
 
 double SimulationConfig::lengthOfTimestep() {
-    return 60.0 / SimulationConfig::info.timeStepsPerHour;
+    return 3600 / SimulationConfig::info.timeStepsPerHour;
 }
 
 void SimulationConfig::step() {

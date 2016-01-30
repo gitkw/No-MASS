@@ -11,28 +11,30 @@ class QLearning
         int greedySelection(int s);
         void updateQ(int s, int a, double r, int sp);
         void printQ();
-        void setId(int id);
+        virtual void setId(int id);
         void setState(int state);
         void setReward(double reward);
         void setEpsilon(double epsilon);
         void setup();
         virtual double learn(const Zone &zone);
+        virtual void reset();
     protected:
 
+        int id;
         int states = 0;
         int actions = 0;
-        bool learnNext = false;
-        double reward;
-        double previous_reward;
         int state;
         int previous_state;
         int action;
+        bool learnNext = false;
+        double reward;
+        double previous_reward;
     private:
         std::vector<std::vector<double>> qTable;
-        double epsilon = 0.8;   // probability of a random action selection
-        double alpha = 0.3;     // learning rate
-        double gamma = 0.1;     // discount factor (how soon do you care)
-        int id;
+        double epsilon = 1;   // probability of a random action selection
+        double alpha = 0.1;     // learning rate
+        double gamma = 0.99;     // discount factor (how soon do you care)
+
 
         int getBestAction(int s);
 

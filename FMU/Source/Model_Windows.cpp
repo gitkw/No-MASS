@@ -3,7 +3,7 @@
 #include <cmath>
 #include <deque>
 #include <iostream>
-#include "SimulationConfig.h"
+
 #include "Model_Windows.h"
 
 Model_Windows::Model_Windows() {
