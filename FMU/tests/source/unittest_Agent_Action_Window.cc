@@ -24,11 +24,15 @@ void Test_Agent_Action_Window::SetUp() {
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
 
+  DataStore::addVariable("Block1:Zone1ZoneMeanAirTemperature");
+  DataStore::addVariable("Block1:Zone1ZoneAirRelativeHumidity");
+  DataStore::addVariable("Block1:Zone1ZoneMeanRadiantTemperature");
+  DataStore::addVariable("EnvironmentSiteOutdoorAirDrybulbTemperature");
+
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 0);
   DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
   DataStore::addValue("Block1:KitchenZoneAirRelativeHumidity", 18);
   DataStore::addValue("Block1:KitchenZoneMeanRadiantTemperature", 18);
-
 }
 
 TEST_F(Test_Agent_Action_Window, Arrival) {
