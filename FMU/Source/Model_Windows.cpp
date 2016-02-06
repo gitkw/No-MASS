@@ -117,20 +117,6 @@ void Model_Windows::arrival(double indoorTemperature, double outdoorTemperature,
             state = 0;
             durationOpen = 0.f;
         }
-        std::cout << a01arr
-        << " " << b01inarr
-        << " " << indoorTemperature
-        << " " << b01outarr
-        << " " << outdoorTemperature
-        << " " << b01rnarr
-        << " " << Rain
-        << " " << b01absprevarr
-        << " " << ((previousDuration > 8.f * 60.f * 60.f) ? 1.f : 0.f)
-        << " " << prob01arr
-        << " " << drand
-        << " " << durationOpen
-        << " " << state
-        << " " << std::endl;
     } else {
         double durationOpen = calculateDurationOpen(outdoorTemperature);
         if (durationOpen < timeStepLengthInMinutes) {

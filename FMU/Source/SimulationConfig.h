@@ -40,16 +40,16 @@ struct agentStruct {
     std::string famstat;
     std::string sex;
 
-    bool HeatOnPresence;
+    bool HeatOnPresence = false;
 
-    bool ShadeClosedDuringSleep;
-    bool ShadeClosedDuringWashing;
+    bool ShadeClosedDuringSleep = false;
+    bool ShadeClosedDuringWashing = false;
 
-    bool LightOffDuringAudioVisual;
-    bool LightOffDuringSleep;
+    bool LightOffDuringAudioVisual = false;
+    bool LightOffDuringSleep = false;
 
-    bool WindowOpenDuringCooking;
-    bool WindowOpenDuringWashing;
+    bool WindowOpenDuringCooking = false;
+    bool WindowOpenDuringWashing = false;
 
 };
 
