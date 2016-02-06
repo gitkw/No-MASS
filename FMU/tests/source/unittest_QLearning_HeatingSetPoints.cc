@@ -17,6 +17,12 @@ class Test_QLearning_HeatingSetPoints : public ::testing::Test {
 
 void Test_QLearning_HeatingSetPoints::SetUp() {
   SimulationConfig::info.learnep = 0.8;
+  DataStore::addVariable("hour");
+  DataStore::addVariable("month");
+  DataStore::addVariable("hourOfDay");
+  DataStore::addValue("hour", 1);
+  DataStore::addValue("month", 1);
+  DataStore::addValue("hourOfDay", 1);
 }
 
 TEST_F(Test_QLearning_HeatingSetPoints, learn) {
