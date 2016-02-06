@@ -24,9 +24,9 @@ void Test_Agent_Action_Window::SetUp() {
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
 
-  DataStore::addVariable("Block1:Zone1ZoneMeanAirTemperature");
-  DataStore::addVariable("Block1:Zone1ZoneAirRelativeHumidity");
-  DataStore::addVariable("Block1:Zone1ZoneMeanRadiantTemperature");
+  DataStore::addVariable("Block1:KitchenZoneMeanAirTemperature");
+  DataStore::addVariable("Block1:KitchenZoneAirRelativeHumidity");
+  DataStore::addVariable("Block1:KitchenZoneMeanRadiantTemperature");
   DataStore::addVariable("EnvironmentSiteOutdoorAirDrybulbTemperature");
 
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 0);
@@ -45,6 +45,8 @@ TEST_F(Test_Agent_Action_Window, Arrival) {
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);
   DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 35);
 
+  aaw.setOpenDuringCooking(false);
+  aaw.setOpenDuringWashing(false);
   double previousDuration = 5*12*10*60;
   int timeStepLengthInMinutes = 5;
   for (int i =0; i < 7200; i++) {
