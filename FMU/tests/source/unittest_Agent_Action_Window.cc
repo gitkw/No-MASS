@@ -5,6 +5,7 @@
 
 #include "DataStore.h"
 #include "Agent_Action_Window.h"
+#include "Utility.h"
 #include "gtest/gtest.h"
 
 class Test_Agent_Action_Window : public ::testing::Test {
@@ -27,6 +28,31 @@ void Test_Agent_Action_Window::SetUp() {
   DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
   DataStore::addValue("Block1:KitchenZoneAirRelativeHumidity", 18);
   DataStore::addValue("Block1:KitchenZoneMeanRadiantTemperature", 18);
+
+}
+
+TEST_F(Test_Agent_Action_Window, Arrival) {
+  Utility::setSeed(1);
+
+  ZoneStruct zs;
+  zs.name = "Block1:Kitchen";
+  Zone z_Kitchen("", zs);
+  z_Kitchen.setWindowState(0);
+  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);
+  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 35);
+
+  double previousDuration = 5*12*10*60;
+  int timeStepLengthInMinutes = 5;
+  for (int i =0; i < 7200; i++) {
+    activities.push_back(4);
+  }
+  for (int i =0; i < 3; i++) {
+    aaw.step(z_Kitchen, true, false, activities);
+    EXPECT_EQ(false, aaw.getResult());
+  }
+
+  aaw.step(z_Kitchen, true, false, activities);
+  EXPECT_EQ(true,  aaw.getResult());
 
 }
 

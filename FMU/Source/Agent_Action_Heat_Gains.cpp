@@ -57,7 +57,8 @@ void Agent_Action_Heat_Gains::step(const Zone& zone, bool inZone,
     std::cout << "clo: " << clo << std::endl;
     */
 
-    h.calculate(metabolicRate, airHumid, meanRadient, 0, airTemp, clo, 0.137);
+    //  h.calculate(metabolicRate, airHumid, meanRadient, 0, airTemp, clo, 0.137);
+    h.calculate(metabolicRate, airHumid, meanRadient, 0, airTemp, clo, 0);
     result = h.getAllHeatGains();
     ppd = h.getPpd();
     pmv = h.getPmv();

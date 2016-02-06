@@ -59,7 +59,7 @@ TEST(StateMachine, statesPage) {
 
   s = stateMachine.transistionTo(3);
   EXPECT_EQ(s.getId(), 3);
-  EXPECT_EQ(s.getMetabolicRate(), 116);
+  EXPECT_EQ(s.getMetabolicRate(), 70);
   EXPECT_EQ(s.getClo(), 1);
   EXPECT_EQ(s.getActivity(), "IT");
   EXPECT_EQ(s.getLocation(), "Block1:Zone1");
@@ -173,7 +173,7 @@ TEST(StateMachine, statesActivity) {
   EXPECT_EQ(s.getActivity(), "Cooking");
   s = stateMachine.transistionTo(3);
   EXPECT_EQ(s.getId(), 3);
-  EXPECT_EQ(s.getMetabolicRate(), 116);
+  EXPECT_EQ(s.getMetabolicRate(), 70);
   EXPECT_EQ(s.getClo(), 1);
   EXPECT_EQ(s.getLocation(), "Block2:Office");
   EXPECT_EQ(s.getActivity(), "IT");

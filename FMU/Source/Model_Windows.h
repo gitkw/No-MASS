@@ -17,11 +17,11 @@ public:
     void setWindowState(bool windowState);
     bool getWindowState() const;
 
-    void setDurationOpen(double durationOpen);
-    double getDurationOpen() const;
+    void setDurationOpen(int durationOpen);
+    int getDurationOpen() const;
 
-    void arrival(double indoorTemperature, double outdoorTemperature, double previousDuration, bool rain, double timeStepLengthInMinutes );
-    void intermediate(double indoorTemperature, double outdoorTemperature, double currentDuration, bool rain, double timeStepLengthInMinutes);
+    void arrival(double indoorTemperature, double outdoorTemperature, double previousDuration, bool rain, int timeStepLengthInMinutes );
+    void intermediate(double indoorTemperature, double outdoorTemperature, double currentDuration, bool rain, int timeStepLengthInMinutes);
     void departure(double indoorTemperature, double dailyMeanTemperature, double futureDuration, double groundFloor);
 
     void setDurationVars(double aop, double bopout, double shapeop);
@@ -31,7 +31,7 @@ public:
 
 private:
     bool state;
-    double durationOpen;
+    int durationOpen;
 
     double aop;
     double bopout;

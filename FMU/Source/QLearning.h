@@ -33,7 +33,7 @@ class QLearning
         std::vector<std::vector<double>> qTable;
         double epsilon = 1;   // probability of a random action selection
         double alpha = 0.1;     // learning rate
-        double gamma = 0.99;     // discount factor (how soon do you care)
+        double gamma = 0.2;     // discount factor (how soon do you care)
 
 
         int getBestAction(int s);

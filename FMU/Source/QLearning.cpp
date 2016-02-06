@@ -17,7 +17,7 @@ QLearning::QLearning() {}
 void QLearning::setup() {
     //epsilon = SimulationConfig::info.learnep;
     std::ifstream in_file;
-    in_file.open("rlearning" + std::to_string(id) + ".dat");
+    in_file.open("rlearning" + std::to_string(id) + ".dats");
     if (in_file.fail()) {
         for (int i =0; i < states; i++) {
             qTable.push_back(std::vector<double>());

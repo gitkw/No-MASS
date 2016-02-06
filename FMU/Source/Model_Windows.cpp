@@ -85,11 +85,11 @@ bool Model_Windows::getWindowState() const {
     return state;
 }
 
-void Model_Windows::setDurationOpen(double durationOpen) {
+void Model_Windows::setDurationOpen(int durationOpen) {
     this->durationOpen = durationOpen;
 }
 
-double Model_Windows::getDurationOpen() const {
+int Model_Windows::getDurationOpen() const {
     return durationOpen;
 }
 
@@ -98,7 +98,7 @@ double Model_Windows::calculateDurationOpen(double outdoorTemperature) {
 }
 
 void Model_Windows::arrival(double indoorTemperature, double outdoorTemperature,
-    double previousDuration, bool rain, double timeStepLengthInMinutes) {
+    double previousDuration, bool rain, int timeStepLengthInMinutes) {
     double Rain = (rain ? 1.f : 0.f);
     //  log(1/a)= 0.871
     if (!state) {
@@ -130,7 +130,7 @@ void Model_Windows::arrival(double indoorTemperature, double outdoorTemperature,
 
 void Model_Windows::intermediate(double indoorTemperature,
     double outdoorTemperature, double currentDuration, bool rain,
-    double timeStepLengthInMinutes) {
+    int timeStepLengthInMinutes) {
 
     double Rain = (rain ? 1.f : 0.f);
     if (!state) {
