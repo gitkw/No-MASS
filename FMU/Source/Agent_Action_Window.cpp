@@ -83,7 +83,7 @@ bool previouslyInZone, const std::vector<double> &activities) {
     }
   }
 
-  std::cout << "2: " < << m_window.getWindowState() << std::endl;
+  std::cout << "2: " << m_window.getWindowState() << std::endl;
   if (OpenDuringWashing && activities.at(stepCount) == 6) {
     if (m_window.getWindowState() == 0) {
       m_window.setWindowState(1);
@@ -92,7 +92,7 @@ bool previouslyInZone, const std::vector<double> &activities) {
       m_window.setDurationOpen(lengthOfTimeStepSeconds);
     }
   }
-  std::cout << "3: " < << m_window.getWindowState() << std::endl;
+  std::cout << "3: " << m_window.getWindowState() << std::endl;
   result = m_window.getWindowState();
 }
 
