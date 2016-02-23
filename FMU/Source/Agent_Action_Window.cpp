@@ -32,7 +32,7 @@ void Agent_Action_Window::setup(int windowID) {
       ws.b10gddep);
 }
 
-void Agent_Action_Window::step(const Zone& zone, bool inZone,
+void Agent_Action_Window::step(const Building_Zone& zone, bool inZone,
 bool previouslyInZone, const std::vector<double> &activities) {
   double outdoorTemperature =
     DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
@@ -73,6 +73,7 @@ bool previouslyInZone, const std::vector<double> &activities) {
   }
   int stepCount = SimulationConfig::getStepCount();
 
+
   if (OpenDuringCooking && activities.at(stepCount) == 4) {
     if (m_window.getWindowState() == 0) {
       m_window.setWindowState(1);
@@ -90,7 +91,6 @@ bool previouslyInZone, const std::vector<double> &activities) {
       m_window.setDurationOpen(lengthOfTimeStepSeconds);
     }
   }
-
   result = m_window.getWindowState();
 }
 

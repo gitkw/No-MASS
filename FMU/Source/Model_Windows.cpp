@@ -3,7 +3,7 @@
 #include <cmath>
 #include <deque>
 #include <iostream>
-#include "SimulationConfig.h"
+
 #include "Model_Windows.h"
 
 Model_Windows::Model_Windows() {
@@ -85,11 +85,11 @@ bool Model_Windows::getWindowState() const {
     return state;
 }
 
-void Model_Windows::setDurationOpen(double durationOpen) {
+void Model_Windows::setDurationOpen(int durationOpen) {
     this->durationOpen = durationOpen;
 }
 
-double Model_Windows::getDurationOpen() const {
+int Model_Windows::getDurationOpen() const {
     return durationOpen;
 }
 
@@ -98,7 +98,7 @@ double Model_Windows::calculateDurationOpen(double outdoorTemperature) {
 }
 
 void Model_Windows::arrival(double indoorTemperature, double outdoorTemperature,
-    double previousDuration, bool rain, double timeStepLengthInMinutes) {
+    double previousDuration, bool rain, int timeStepLengthInMinutes) {
     double Rain = (rain ? 1.f : 0.f);
     //  log(1/a)= 0.871
     if (!state) {
@@ -109,6 +109,7 @@ void Model_Windows::arrival(double indoorTemperature, double outdoorTemperature,
                   ((previousDuration > 8.f * 60.f * 60.f) ? 1.f : 0.f);
         float prob01arr = exp(m) / (1.f + exp(m));
         double drand = randomDouble();
+
         if (drand < prob01arr) {
             durationOpen = calculateDurationOpen(outdoorTemperature);
             state = 1;
@@ -130,7 +131,7 @@ void Model_Windows::arrival(double indoorTemperature, double outdoorTemperature,
 
 void Model_Windows::intermediate(double indoorTemperature,
     double outdoorTemperature, double currentDuration, bool rain,
-    double timeStepLengthInMinutes) {
+    int timeStepLengthInMinutes) {
 
     double Rain = (rain ? 1.f : 0.f);
     if (!state) {

@@ -183,8 +183,6 @@ TEST_F(Test_Appliance_Usage, meanPower) {
 }
 
 TEST_F(Test_Appliance_Usage, meanFraction) {
-  std::string country = "France1";
-  mau.setCountry(country);
   mau.parseConfiguration("../tests/Files/ApplianceUsage.xml");
   int sims = 365;
   for (int app = 0; app < 6; app++) {

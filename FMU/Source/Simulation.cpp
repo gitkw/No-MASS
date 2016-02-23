@@ -21,8 +21,6 @@ Simulation::Simulation() {
         monthCount.push_back(304);
         monthCount.push_back(334);
         monthCount.push_back(365);
-        time = 0;
-        DataStore::clear();
 }
 
 
@@ -32,11 +30,11 @@ Simulation::Simulation() {
  * Sets up the EnergyPlus processor, the AgentModel and the ZoneManager.
  */
 void Simulation::preprocess() {
-        parseConfiguration(SimulationConfig::FmuLocation
-            + "/SimulationConfig.xml");
-        if (!LOG.getError()) {
-            setupSimulationModel();
-        }
+  parseConfiguration(SimulationConfig::FmuLocation
+    + "/SimulationConfig.xml");
+  if (!LOG.getError()) {
+    setupSimulationModel();
+  }
 }
 
 void Simulation::parseConfiguration(const std::string file) {
@@ -61,23 +59,21 @@ void Simulation::setupSimulationModel() {
  *
  */
 void Simulation::postprocess() {
-    for (Building &b : buildings) {
-        b.postprocess();
-    }
-    DataStore::print();
+  for (Building &b : buildings) {
+    b.postprocess();
+  }
+  DataStore::print();
+  DataStore::clear();
 }
 
 /**
  * @brief processes before timestep
  */
 void Simulation::preTimeStep() {
-  double day = time/86400;
-  double hour = time/3600;
-#ifdef DEBUG
-  if (static_cast<int>(time) % (86400*10) == 0) {
-    std::cout << "day: " << day << std::endl;
-  }
-#endif  // DEBUG
+  int stepCount = SimulationConfig::getStepCount();
+  int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
+  int day = hour / 24;
+
   int month = 1;
   for (int mc : monthCount) {
     if (mc > day || month + 1 > 12) {
@@ -90,11 +86,10 @@ void Simulation::preTimeStep() {
     hourOfDay += 1;
     if (hourOfDay > 23) {
       hourOfDay = 0;
-      break;
     }
   }
 
-  DataStore::addValue("TimeStep", time);
+  DataStore::addValue("TimeStep", stepCount);
   DataStore::addValue("day", day);
   DataStore::addValue("hour", hour);
   DataStore::addValue("hourOfDay", hourOfDay);
@@ -108,7 +103,7 @@ void Simulation::preTimeStep() {
  */
 void Simulation::timeStep() {
         SimulationConfig::step();
-        time = time + (3600 / SimulationConfig::info.timeStepsPerHour);
+
         for (Building &b : buildings) {
             b.step();
         }
