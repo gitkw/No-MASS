@@ -52,11 +52,12 @@ void SimulationConfig::parseBuilding(
   bpt::ptree::value_type & v) {
     buildingStruct b;
     b.name = buildings.size();
-
+    int zonecount = 0;
     std::pair<std::string, ZoneStruct> zsOut;
     zsOut.first = "Out";
     zsOut.second.name = "Out";
     zsOut.second.activities.push_back("Out");
+    zsOut.second.id = zonecount;
     b.zones.insert(zsOut);
     for (bpt::ptree::value_type & child : v.second) {
         if (child.first == "name") {
@@ -64,8 +65,9 @@ void SimulationConfig::parseBuilding(
         } else if (child.first == "agents") {
             parseAgents(child);
         } else if (child.first == "zone") {
+            zonecount++;
             std::pair<std::string, ZoneStruct> zone;
-
+            zone.second.id = zonecount;
             for (bpt::ptree::value_type & schild : child.second) {
                 if (schild.first == "name") {
                     zone.first = schild.second.data();

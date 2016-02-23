@@ -2,7 +2,7 @@
 #define QLEARNING_H
 
 #include <vector>
-#include "Zone.h"
+#include "Building_Zone.h"
 
 class QLearning
 {
@@ -16,7 +16,7 @@ class QLearning
         void setReward(double reward);
         void setEpsilon(double epsilon);
         void setup();
-        virtual double learn(const Zone &zone);
+        virtual double learn(const Building_Zone &zone);
         virtual void reset();
     protected:
 

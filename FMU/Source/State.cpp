@@ -59,9 +59,9 @@ State State::getState(const int stateID) const {
   return x;
 }
 
-Zone* State::getZonePtr() const {
+Building_Zone* State::getZonePtr() const {
     return zone;
 }
-void State::setZonePtr(Zone* zoneptr) {
+void State::setZonePtr(Building_Zone* zoneptr) {
     zone = zoneptr;
 }

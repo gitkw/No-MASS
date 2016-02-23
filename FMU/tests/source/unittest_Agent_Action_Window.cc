@@ -40,7 +40,8 @@ TEST_F(Test_Agent_Action_Window, Arrival) {
 
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
-  Zone z_Kitchen("", zs);
+  zs.id = 1;
+  Building_Zone z_Kitchen("", zs);
   z_Kitchen.setWindowState(0);
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);
   DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 35);
@@ -64,7 +65,8 @@ TEST_F(Test_Agent_Action_Window, Arrival) {
 TEST_F(Test_Agent_Action_Window, OpenWindowDuringCooking) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
-  Zone z_Kitchen("", zs);
+  zs.id = 1;
+  Building_Zone z_Kitchen("", zs);
   aaw.setOpenDuringCooking(true);
 
   activities.push_back(4);
@@ -80,7 +82,8 @@ TEST_F(Test_Agent_Action_Window, OpenWindowDuringCooking) {
 TEST_F(Test_Agent_Action_Window, OpenWindowAfterShower) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
-  Zone z_Kitchen("", zs);
+  zs.id = 1;
+  Building_Zone z_Kitchen("", zs);
   aaw.setOpenDuringWashing(true);
   aaw.getResult();
 

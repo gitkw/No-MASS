@@ -4,16 +4,16 @@
 #include <deque>
 #include "Agent_Action.h"
 #include "Model_Windows.h"
-#include "Zone.h"
+#include "Building_Zone.h"
 
 class Agent_Action_Window : public Agent_Action {
     public:
         Agent_Action_Window();
         void setup(int windowID);
-        void step(const Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
+        void step(const Building_Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
         void setOpenDuringCooking(bool OpenDuringCooking);
         void setOpenDuringWashing(bool OpenDuringWashing);
-        
+
     private:
         Model_Windows m_window;
         std::deque<double> outDoorTemperatures;

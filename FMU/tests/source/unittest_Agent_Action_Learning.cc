@@ -37,7 +37,8 @@ TEST_F(Test_Agent_Action_Learning, Learn) {
 
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
-  Zone z_Kitchen("", zs);
+  zs.id = 1;
+  Building_Zone z_Kitchen("", zs);
   activities.push_back(4);
 
   double heating;

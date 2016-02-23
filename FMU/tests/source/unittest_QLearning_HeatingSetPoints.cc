@@ -31,7 +31,8 @@ TEST_F(Test_QLearning_HeatingSetPoints, learn) {
 
     ZoneStruct zs;
     zs.name = "Block1:Zone1";
-    Zone z_Kitchen("", zs);
+    zs.id = 1;
+    Building_Zone z_Kitchen("", zs);
 
     DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature", 1);
 

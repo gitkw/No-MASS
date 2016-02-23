@@ -9,7 +9,7 @@ class QLearning_HeatingSetPoints : public QLearning
     public:
       QLearning_HeatingSetPoints();
 
-      double learn(const Zone &zone);
+      double learn(const Building_Zone &zone);
       void reset();
 
       void setId(int id);

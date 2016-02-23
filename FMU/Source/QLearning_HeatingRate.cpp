@@ -6,7 +6,7 @@ QLearning_HeatingRate::QLearning_HeatingRate() {
     actions = 2;
 }
 
-void QLearning_HeatingRate::learn(const Zone &zone, ActionValues *act ) {
+void QLearning_HeatingRate::learn(const Building_Zone &zone, ActionValues *act ) {
     bool doRLearn = false;
     if (zone.getWindowState() != act->windowState && zone.getLightState() != act->lightState) {
         // std::cout << "window light" << std::endl;

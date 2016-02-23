@@ -30,6 +30,7 @@ double DataStore::getValue(std::string name) {
     LOG << " - Check the Zone Name is correct in the NoMass simulation configuration file\n";
     LOG << " - Check that all variable are defined in the model description file\n";
     LOG.error();
+    exit(-1);
     return 0;
   }
   return variableMap[name].back();

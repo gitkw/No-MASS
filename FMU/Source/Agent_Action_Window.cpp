@@ -32,7 +32,7 @@ void Agent_Action_Window::setup(int windowID) {
       ws.b10gddep);
 }
 
-void Agent_Action_Window::step(const Zone& zone, bool inZone,
+void Agent_Action_Window::step(const Building_Zone& zone, bool inZone,
 bool previouslyInZone, const std::vector<double> &activities) {
   double outdoorTemperature =
     DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");

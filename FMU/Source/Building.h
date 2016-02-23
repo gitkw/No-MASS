@@ -7,7 +7,7 @@
 #include "SimulationConfig.h"
 #include "Agent.h"
 #include "StateMachine.h"
-#include "Zone.h"
+#include "Building_Zone.h"
 
 class Building{
 public:
@@ -19,20 +19,20 @@ public:
     bool hasZone(const std::string& zoneName) const;
 
 private:
-    void setAgentGainsForZone(Zone *zone);
-    void setAgentWindowDecisionForZone(Zone *zone);
-    void setAgentLightDecisionForZone(Zone *zone);
-    void setAgentBlindDecisionForZone(Zone *zone);
-    void setAgentHeatDecisionsForZone(Zone *zone);
-    void setAgentCountForZone(Zone *zone);
+    void setAgentGainsForZone(Building_Zone *zone);
+    void setAgentWindowDecisionForZone(Building_Zone *zone);
+    void setAgentLightDecisionForZone(Building_Zone *zone);
+    void setAgentBlindDecisionForZone(Building_Zone *zone);
+    void setAgentHeatDecisionsForZone(Building_Zone *zone);
+    void setAgentCountForZone(Building_Zone *zone);
     void initialiseStates();
-    void setZones(std::vector<Zone> zones);
+    void setZones(std::vector<Building_Zone> zones);
     void buildingInteractions();
     void matchStateToZone(State &s);
     std::vector<float> presenceProfile;
     std::vector<Agent> population;
     StateMachine stateMachine;
-    std::vector<Zone> zones;
+    std::vector<Building_Zone> zones;
     std::string name;
 };
 

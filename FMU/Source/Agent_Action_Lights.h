@@ -7,7 +7,7 @@ class Agent_Action_Lights : public Agent_Action
 {
   public:
     Agent_Action_Lights();
-    void step(const Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
+    void step(const Building_Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
 
     void setOffDuringSleep(bool OffDuringSleep);
     void setOffDuringAudioVisual(bool OffDuringAudioVisual);
@@ -16,7 +16,7 @@ class Agent_Action_Lights : public Agent_Action
 
     bool OffDuringSleep;
     bool OffDuringAudioVisual;
-    
+
 };
 
 #endif // AGENT_ACTION_LIGHTS_H

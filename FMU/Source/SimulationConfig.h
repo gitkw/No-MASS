@@ -20,6 +20,7 @@ struct ZoneStruct {
     std::vector<std::string> activities;
     bool groundFloor = 0;
     int windowCount = 0;
+    int id = 0;
 };
 
 struct agentStruct {

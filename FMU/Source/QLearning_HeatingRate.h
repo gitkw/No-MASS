@@ -9,7 +9,7 @@ class QLearning_HeatingRate : public QLearning
     public:
         QLearning_HeatingRate();
 
-        void learn(const Zone &zone, struct ActionValues *interaction);
+        void learn(const Building_Zone &zone, struct ActionValues *interaction);
     protected:
     private:
 };

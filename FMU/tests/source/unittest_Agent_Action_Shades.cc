@@ -33,7 +33,8 @@ void Test_Agent_Action_Shades::SetUp() {
 TEST_F(Test_Agent_Action_Shades, ClosedDuringSleep) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
-  Zone z_Kitchen("", zs);
+  zs.id = 1;
+  Building_Zone z_Kitchen("", zs);
   aas.setClosedDuringSleep(true);
 
   activities.push_back(0);
@@ -49,7 +50,8 @@ TEST_F(Test_Agent_Action_Shades, ClosedDuringSleep) {
 TEST_F(Test_Agent_Action_Shades, ClosedDuringWashing) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
-  Zone z_Kitchen("", zs);
+  zs.id = 1;
+  Building_Zone z_Kitchen("", zs);
   aas.setClosedDuringWashing(true);
   aas.getResult();
 

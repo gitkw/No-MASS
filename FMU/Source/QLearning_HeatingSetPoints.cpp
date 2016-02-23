@@ -35,7 +35,7 @@ void QLearning_HeatingSetPoints::reset() {
   previousReward = -1;
 }
 
-double QLearning_HeatingSetPoints::learn(const Zone &zone) {
+double QLearning_HeatingSetPoints::learn(const Building_Zone &zone) {
   int hour = DataStore::getValue("hour");
   // std::cout << "hour: " << hour << " prevHour: " << previousHour << std::endl;
   // std::cout << "reward: " << reward << " prevReward: " << previousReward << std::endl;
