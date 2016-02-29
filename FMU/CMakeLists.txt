@@ -163,8 +163,22 @@ if (Tests)
   ##############
   # Unit Tests
   ##############
+  include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+  set(testLocationFiles "${PROJECT_SOURCE_DIR}/tests/Files")
+  configure_file(tests/source/Gen.h.in
+                  ${CMAKE_CURRENT_BINARY_DIR}/Gen.h)
+
+  if(CMAKE_GENERATOR STREQUAL Xcode)
+    configure_file(tests/Files/SimulationConfig1.xml.in
+                    ${CMAKE_CURRENT_BINARY_DIR}/Debug/SimulationConfig1.xml)
+  endif()
+
+  configure_file(tests/Files/SimulationConfig1.xml.in
+                  ${CMAKE_CURRENT_BINARY_DIR}/SimulationConfig1.xml)
+  set(gen_file "${CMAKE_CURRENT_BINARY_DIR}/Gen.h")
 
   SET( TESTSRC
+    ${gen_file}
     tests/source/unittest_Simulation.cc
     tests/source/unittest_SimulationConfig.cc
     tests/source/unittest_Model_Activity.cc

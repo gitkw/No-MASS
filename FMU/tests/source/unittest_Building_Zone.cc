@@ -3,13 +3,14 @@
 #include <limits.h>
 
 
+#include "Gen.h"
 #include "Building_Zone.h"
 #include "DataStore.h"
 #include "gtest/gtest.h"
 
 TEST(Building_Zone, Name) {
   SimulationConfig::reset();
-  SimulationConfig::parseConfiguration("../tests/Files/SimulationConfig2.xml");
+  SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
   SimulationConfig::stepCount = 0;
   SimulationConfig::info.windows = false;

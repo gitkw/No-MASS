@@ -3,6 +3,7 @@
 #include <limits.h>
 #include <vector>
 
+#include "Gen.h"
 #include "DataStore.h"
 #include "Agent_Action_Shades.h"
 #include "gtest/gtest.h"
@@ -16,7 +17,7 @@ class Test_Agent_Action_Shades : public ::testing::Test {
 
 void Test_Agent_Action_Shades::SetUp() {
   SimulationConfig::reset();
-  SimulationConfig::parseConfiguration("../tests/Files/SimulationConfig2.xml");
+  SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
   SimulationConfig::stepCount = 0;
   SimulationConfig::info.windows = false;

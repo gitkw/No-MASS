@@ -2,6 +2,7 @@
 
 #include <limits.h>
 
+#include "Gen.h"
 #include "StateMachine.h"
 #include "State_Out.h"
 #include "State_Present.h"
@@ -20,7 +21,7 @@
 #include "gtest/gtest.h"
 
 TEST(Agent, Build) {
-  SimulationConfig::parseConfiguration("../tests/Files/SimulationConfig2.xml");
+  SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
   SimulationConfig::stepCount = 0;
   SimulationConfig::info.windows = false;

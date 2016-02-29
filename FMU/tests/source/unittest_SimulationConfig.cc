@@ -1,12 +1,13 @@
 // Copyright 2015 Jacob Chapman
 
 #include <limits.h>
+#include "Gen.h"
 #include "SimulationConfig.h"
 #include "gtest/gtest.h"
 
 TEST(SimulationConfig, SimulationConfig) {
   SimulationConfig::agents.clear();
-  SimulationConfig::parseConfiguration("../tests/Files/SimulationConfig2.xml");
+  SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
   EXPECT_EQ(SimulationConfig::agents.at(0).bedroom, "Block2:MasterBedroom");
   EXPECT_EQ(SimulationConfig::agents.at(1).bedroom, "Block2:MasterBedroom");
   EXPECT_EQ(SimulationConfig::agents.at(0).profile.size(), 24);
@@ -16,7 +17,7 @@ TEST(SimulationConfig, SimulationConfig) {
 
 TEST(SimulationConfig, SimulationConfig1) {
   SimulationConfig::agents.clear();
-  SimulationConfig::parseConfiguration("../tests/Files/SimulationConfig1.xml");
+  SimulationConfig::parseConfiguration("SimulationConfig1.xml");
   EXPECT_EQ(SimulationConfig::agents.at(0).age, "age2");
   EXPECT_EQ(SimulationConfig::agents.at(0).computer, "computer0");
   EXPECT_EQ(SimulationConfig::agents.at(0).civstat, "civstat1");
@@ -35,5 +36,4 @@ TEST(SimulationConfig, SimulationConfig1) {
   EXPECT_EQ(SimulationConfig::agents.at(1).sex, "sex2");
   EXPECT_EQ(SimulationConfig::agents.at(0).bedroom, "Block2:MasterBedroom");
   EXPECT_EQ(SimulationConfig::agents.at(1).bedroom, "Block2:MasterBedroom");
-  EXPECT_EQ(SimulationConfig::ActivityFile, "../tests/Files/Activity.xml");
 }

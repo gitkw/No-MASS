@@ -2,6 +2,7 @@
 
 #include <limits.h>
 
+#include "Gen.h"
 #include "Simulation.h"
 #include "SimulationConfig.h"
 #include "DataStore.h"
@@ -10,7 +11,7 @@
 
 TEST(Simulation, HeatGainsOnly) {
   SimulationConfig::reset();
-  SimulationConfig::FmuLocation = "../tests/Files";
+  SimulationConfig::FmuLocation = testFiles;
   Simulation s;
   s.parseConfiguration(SimulationConfig::FmuLocation + "/SimulationConfig.xml");
   SimulationConfig::info.windows = false;
@@ -55,7 +56,7 @@ TEST(Simulation, HeatGainsOnly) {
 
 TEST(Simulation, HeatGainsWindowsOnly) {
   SimulationConfig::reset();
-  SimulationConfig::FmuLocation = "../tests/Files";
+  SimulationConfig::FmuLocation = testFiles;
   Simulation s;
 
   s.parseConfiguration(SimulationConfig::FmuLocation + "/SimulationConfig.xml");

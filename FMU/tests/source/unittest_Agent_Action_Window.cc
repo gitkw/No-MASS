@@ -3,6 +3,7 @@
 #include <limits.h>
 #include <vector>
 
+#include "Gen.h"
 #include "DataStore.h"
 #include "Agent_Action_Window.h"
 #include "Utility.h"
@@ -17,7 +18,7 @@ class Test_Agent_Action_Window : public ::testing::Test {
 
 void Test_Agent_Action_Window::SetUp() {
   SimulationConfig::agents.clear();
-  SimulationConfig::parseConfiguration("../tests/Files/SimulationConfig2.xml");
+  SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
   SimulationConfig::stepCount = 0;
   SimulationConfig::info.windows = false;
