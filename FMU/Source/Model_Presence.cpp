@@ -1,15 +1,8 @@
-/*
- * File:   Model_Presence.cpp
- * Author: jake
- *
- * Created on September 17, 2013, 3:13 PM
- */
+// Copyright 2016 Jacob Chapman
 
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/algorithm/string.hpp>
 #include <ctime>
 #include <vector>
+#include <string>
 #include <cassert>
 #include <algorithm>
 #include "Utility.h"
@@ -19,21 +12,18 @@
 Model_Presence::Model_Presence() {
 }
 
-int Model_Presence::presentForFutureSteps() const
-{
+int Model_Presence::presentForFutureSteps() const {
     return presenceForFutureSteps.at(SimulationConfig::getStepCount());
 }
 
 void Model_Presence::calculatePresenceFromActivities(const std::vector<double> activities) {
-
-    for(double activity: activities) {
-        if (activity != 9) {
-            presenceState.push_back(1);
-        } else {
-            presenceState.push_back(0);
-        }
+  for (double activity : activities) {
+    if (activity != 9) {
+        presenceState.push_back(1);
+    } else {
+        presenceState.push_back(0);
     }
-
+  }
 }
 
 int Model_Presence::calculateNumberOfDays(const int startDay, const int startMonth, const int endDay, const int endMonth){
@@ -47,7 +37,6 @@ int Model_Presence::calculateNumberOfDays(const int startDay, const int startMon
 }
 
 void Model_Presence::calculatePresenceFromPage(const int agentID) {
-
     float pMon[24];
     float pTue[24];
     float pWed[24];
@@ -57,33 +46,32 @@ void Model_Presence::calculatePresenceFromPage(const int agentID) {
     float pSun[24];
 
     std::map<int, std::string> probMap = SimulationConfig::agents.at(agentID).profile;
-    for(int day = 0; day < 7; day++) {
-        std::vector<std::string> tokProbs;
-        boost::split(tokProbs, probMap.at(day), boost::is_any_of(","));
+    for (int day = 0; day < 7; day++) {
+        std::vector<std::string> tokProbs = Utility::splitCSV(probMap.at(day));
+
         int hour = 0;
-        for(std::string strProb: tokProbs) {
-            switch (day)
-            {
+        for (std::string strProb : tokProbs) {
+            switch (day) {
               case 0:
-                pMon[hour] = boost::lexical_cast<double>(strProb);
+                pMon[hour] = std::stod(strProb);
                 break;
               case 1:
-                pTue[hour] = boost::lexical_cast<double>(strProb);
+                pTue[hour] = std::stod(strProb);
                 break;
               case 2:
-                pWed[hour] = boost::lexical_cast<double>(strProb);
+                pWed[hour] = std::stod(strProb);
                 break;
               case 3:
-                pThu[hour] = boost::lexical_cast<double>(strProb);
+                pThu[hour] = std::stod(strProb);
                 break;
               case 4:
-                pFri[hour] = boost::lexical_cast<double>(strProb);
+                pFri[hour] = std::stod(strProb);
                 break;
               case 5:
-                pSat[hour] = boost::lexical_cast<double>(strProb);
+                pSat[hour] = std::stod(strProb);
                 break;
               case 6:
-                pSun[hour] = boost::lexical_cast<double>(strProb);
+                pSun[hour] = std::stod(strProb);
                 break;
             }
             hour++;
@@ -171,14 +159,13 @@ void Model_Presence::calculatePresenceFromPage(const int agentID) {
     // remove the first element of the vector (which was just for starting the process)
     occ.erase(occ.begin());
     presenceState = occ;
-
 }
 
-bool Model_Presence::at(const int i) const{
+bool Model_Presence::at(const int i) const {
     return presenceState.at(i);
 }
 
-unsigned int Model_Presence::size() const{
+unsigned int Model_Presence::size() const {
     return presenceState.size();
 }
 
@@ -188,8 +175,8 @@ double Model_Presence::getT01(const double pcurr, const double pnext, const doub
     // pnext: next step occupancy probability
     // shuff: shuffling parameter
     // beta:  adjusted value of shuff
-    double T01; // Probability to leave the space
-    double beta = shuff; // default: no adjustment needed
+    double T01;  // Probability to leave the space
+    double beta = shuff;  // default: no adjustment needed
     if (pnext == 0.) {
         T01 = 0.;
     } else if (pnext == 1.) {
@@ -229,7 +216,7 @@ double Model_Presence::getT01(const double pcurr, const double pnext, const doub
                 }
             }
             T01 = pnext + pcurr * (beta - 1.) / (beta + 1.);
-        } else { // Case of (pcurr>pnext)
+        } else {  // Case of (pcurr>pnext)
             if (shuff < (pcurr - pnext) / (pnext + pcurr)) {
                 beta = (pcurr - pnext) / (pnext + pcurr);
             } else {
@@ -253,7 +240,7 @@ double Model_Presence::getT11(const double pcurr, const double pnext, const doub
     // pnext: next step occupancy probability
     // shuff: shuffling parameter
     // beta:  adjusted value of shuff
-    double T11; // Probability to stay in the space
+    double T11;  // Probability to stay in the space
     if (pnext == 0.) {
         T11 = 0.;
     } else if (pnext == 1.) {
@@ -265,7 +252,7 @@ double Model_Presence::getT11(const double pcurr, const double pnext, const doub
             T11 = 0.;
         } else if (pcurr == pnext) {
             T11 = 1. - (1. - pcurr) * getT01(pcurr, pnext, shuff) / pcurr;
-        } else { // Case of (pcurr>pnext)
+        } else {  // Case of (pcurr>pnext)
             T11 = 1. / pcurr * (pnext - (1. - pcurr) * getT01(pcurr, pnext, shuff));
         }
     }

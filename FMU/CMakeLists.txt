@@ -127,6 +127,7 @@ Source/QLearning_HeatingSetPoints.h
 
 
 include_directories(${PROJECT_SOURCE_DIR}/../Boost/Boost-Source)
+include_directories(${PROJECT_SOURCE_DIR}/../rapidxml)
 include_directories(${PROJECT_SOURCE_DIR}/Source)
 
 ADD_LIBRARY(FMI SHARED ${SRC})
@@ -199,6 +200,7 @@ if (Tests)
     tests/source/unittest_Agent_Action_Learning.cc
     tests/source/unittest_Agent_Action_Heat_Gains.cc
     tests/source/unittest_QLearning_HeatingSetPoints.cc
+    
 
   )
 

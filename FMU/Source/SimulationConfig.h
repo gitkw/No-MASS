@@ -11,9 +11,7 @@
 #include <string>
 #include <vector>
 #include <map>
-
-#include <boost/property_tree/xml_parser.hpp>
-#include <boost/property_tree/ptree.hpp>
+#include <rapidxml.hpp>
 
 struct ZoneStruct {
     std::string name;
@@ -119,8 +117,6 @@ struct buildingStruct {
 };
 
 struct simulationStruct {
-
-    bool simulateAgents;
     bool windows;
     bool lights;
     bool shading;
@@ -142,7 +138,8 @@ struct simulationStruct {
 class SimulationConfig {
 public:
     static ZoneStruct getZone(std::string* zoneName);
-    static void parseConfiguration(std::string);
+    static void parseConfiguration(const std::string &filename);
+    static void parseConfigurationb(const std::string &filename);
     static void reset();
     static bool activeZone(std::string* zoneName);
     static bool isZoneGroundFloor(std::string* zoneName);
@@ -161,12 +158,12 @@ public:
 
 private:
     static void timeSteps();
-    static void parseBuilding(boost::property_tree::ptree::value_type & v);
-    static void parseBuildings(boost::property_tree::ptree::value_type & v);
-    static void parseAgents(boost::property_tree::ptree::value_type & v);
-    static void parseModels(boost::property_tree::ptree::value_type & v);
-    static void parseWindows(boost::property_tree::ptree::value_type & v);
-    static void parseShades(boost::property_tree::ptree::value_type & v);
+    static void parseBuilding(rapidxml::xml_node<> *node);
+    static void parseBuildings(rapidxml::xml_node<> *node);
+    static void parseAgents(rapidxml::xml_node<> *node);
+    static void parseModels(rapidxml::xml_node<> *node);
+    static void parseWindows(rapidxml::xml_node<> *node);
+    static void parseShades(rapidxml::xml_node<> *node);
     SimulationConfig();
 };
 

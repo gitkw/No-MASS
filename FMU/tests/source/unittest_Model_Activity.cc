@@ -2,6 +2,8 @@
 
 #include <limits.h>
 #include <string>
+#include <iostream>
+#include <fstream>
 #include "Gen.h"
 #include "Model_Activity.h"
 #include "SimulationConfig.h"
@@ -34,12 +36,12 @@ TEST_F(Test_Activity, Dissagregate) {
       (testFiles + "/SimulationConfig2.xml");
     AfterConfiguration();
     EXPECT_EQ(activities.at(0), 0);
-    EXPECT_EQ(activities.at(1000), 0);
-    EXPECT_EQ(activities.at(2000), 2);
+    EXPECT_EQ(activities.at(1000), 1);
+    EXPECT_EQ(activities.at(2000), 1);
     EXPECT_EQ(activities.at(3000), 1);
-    EXPECT_EQ(activities.at(4000), 1);
-    EXPECT_EQ(activities.at(5000), 9);
-    EXPECT_EQ(activities.at(6000), 9);
+    EXPECT_EQ(activities.at(4000), 2);
+    EXPECT_EQ(activities.at(5000), 1);
+    EXPECT_EQ(activities.at(6000), 1);
     bool found = false;
     for (int i = 0; i < 10; i++) {
       for (double a : activities) {
@@ -135,7 +137,7 @@ TEST_F(Test_Activity, multinominalActivity) {
   }
 
   for (int i = 0; i < 10; i++) {
-    ASSERT_NEAR(px[i] / top, 0.1, 0.005);
+    ASSERT_NEAR(px[i] / top, 0.1, 0.007);
     px[i] = 0;
   }
 
@@ -180,7 +182,7 @@ TEST_F(Test_Activity, multinominalP) {
           "day" + std::to_string(d) +
           "sex2famstat3edtry1age2computer0civstat1unemp0retired1.csv";
         std::ofstream myfile2;
-        myfile2.open(file2);
+        myfile2.open(file2.c_str());
 
         for (int h = 0; h < 24; h++) {
           sum = 0;
@@ -209,7 +211,7 @@ TEST_F(Test_Activity, multinominal) {
     ASSERT_EQ(activities.at(2000), 0);
     ASSERT_EQ(activities.at(3000), 0);
     ASSERT_EQ(activities.at(4000), 0);
-    ASSERT_EQ(activities.at(5000), 6);
+    ASSERT_EQ(activities.at(5000), 0);
     ASSERT_EQ(activities.at(6000), 0);
     bool found = false;
     for (int i = 0; i < 3; i++) {

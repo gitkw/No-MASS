@@ -1,8 +1,7 @@
 #ifndef MODEL_APPLIANCE_USAGE_H
 #define	MODEL_APPLIANCE_USAGE_H
 
-#include <boost/property_tree/ptree.hpp>
-
+#include <rapidxml.hpp>
 #include <vector>
 
 class Model_Appliance_Usage {
@@ -20,14 +19,15 @@ class Model_Appliance_Usage {
       std::string getCountry();
 
     private:
-      template <typename T>
-      std::vector<T> as_vector(
-        boost::property_tree::ptree::value_type const& child);
 
       template <typename T>
-      std::vector<std::vector<T>> as_vector_vector(
-        boost::property_tree::ptree::value_type & child);
-      void parseCountryUsage(boost::property_tree::ptree::value_type & v);
+      std::vector<T> as_vector(rapidxml::xml_node<> *node);
+
+      template <typename T>
+      std::vector<std::vector<T>> as_vector_vector(rapidxml::xml_node<> *node);
+
+      void parseCountryUsage(rapidxml::xml_node<> *node);
+
 
       std::string country;
 

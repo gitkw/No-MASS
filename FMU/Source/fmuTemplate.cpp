@@ -20,8 +20,8 @@
  * (c) 2011 QTronic GmbH
  * ---------------------------------------------------------------------------*/
 
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
+#include <rapidxml_utils.hpp>
+#include <rapidxml.hpp>
 #include <iterator>
 #include <vector>
 #include <iostream>
@@ -274,44 +274,35 @@ void loadVariables() {
   LOG << " Loading XML file: -" << filename << "-\n";
 
 
-  namespace bpt = boost::property_tree;
-  // Create an empty property tree object
-  bpt::ptree pt;
-  // Load the XML file into the property tree. If reading fails
-  // (cannot open file, parse error), an exception is thrown.
-  boost::property_tree::read_xml(filename, pt);
+  namespace rx = rapidxml;
+  rx::file<> xmlFile(filename.c_str());  // Default template is char
+  rx::xml_document<> doc;
+  doc.parse<0>(xmlFile.data());    // 0 means default parse flags
+  rx::xml_node<> *root_node = doc.first_node("fmiModelDescription");
+  rx::xml_node<> *mv_node = root_node->first_node("ModelVariables");
+  rx::xml_node<> *node = mv_node->first_node("ScalarVariable");
+  while (node) {
+    rx::xml_attribute<> *pAttr;
+    pAttr = node->first_attribute("name");
+    std::string name = pAttr->value();
+    pAttr = node->first_attribute("causality");
+    std::string causality = pAttr->value();
+    pAttr = node->first_attribute("valueReference");
+    int valueReference = std::stoi(pAttr->value());
 
-  // Iterate over the debug.modules section and store all found
-  // modules in the m_modules set. The get_child() function
-  // returns a reference to the child at the specified path; if
-  // there is no such child, it throws. Property tree iterators
-  // are models of BidirectionalIterator.
-
-  for (bpt::ptree::value_type & x : pt.get_child("fmiModelDescription")) {
-    if (x.first == "ModelVariables") {
-      for (bpt::ptree::value_type & v : x.second) {
-        std::string name = "";
-        std::string causality = "";
-        int valueReference;
-
-        name = v.second.get_child_optional("<xmlattr>.name")->data();
-        causality = v.second.get_child_optional("<xmlattr>.causality")->data();
-        valueReference = v.second.get<int>("<xmlattr>.valueReference");
-
-        if (causality == "input") {
-            DataStore::addVariable(name);
-        } else {
-            double starValue = 0;
-            for (bpt::ptree::value_type & y : v.second) {
-                if (y.first == "Real") {
-                    starValue = y.second.get<double>("<xmlattr>.start");
-                }
-            }
-            DataStore::addValue(name, starValue);
+    if (causality.compare("input") == 0) {
+        DataStore::addVariable(name);
+    } else {
+        rx::xml_node<> *cnode = node->first_node();
+        double starValue = 0;
+        if (std::strcmp(cnode->name(), "Real") == 0) {
+          pAttr = node->first_attribute("start");
+          starValue = std::stoi(pAttr->value());
         }
-        valToRefs[valueReference] = name;
-      }
+        DataStore::addValue(name, starValue);
     }
+    valToRefs[valueReference] = name;
+    node = node->next_sibling();
   }
   LOG << " Loaded XML file: -" << filename << "-\n";
 }
