@@ -14,9 +14,7 @@ TEST(Utility, ran) {
   ASSERT_TRUE(Utility::tossACoin());
   ASSERT_FALSE(Utility::tossACoin());
   ASSERT_NEAR(Utility::randomDouble(0, 1), 0.4707521, 0.001);
-  //ASSERT_EQ(Utility::randomInt(0, 1000), 777);
 }
-
 
 TEST(Utility, Distribution) {
   Utility::setSeed(1);
