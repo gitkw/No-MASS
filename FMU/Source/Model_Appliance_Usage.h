@@ -1,8 +1,11 @@
 #ifndef MODEL_APPLIANCE_USAGE_H
 #define	MODEL_APPLIANCE_USAGE_H
 
-#include <rapidxml.hpp>
+
 #include <vector>
+#include <cstddef>
+#include "rapidxml_utils.hpp"
+#include "rapidxml.hpp"
 
 class Model_Appliance_Usage {
 

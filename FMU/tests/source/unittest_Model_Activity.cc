@@ -35,13 +35,13 @@ TEST_F(Test_Activity, Dissagregate) {
     SimulationConfig::parseConfiguration
       (testFiles + "/SimulationConfig2.xml");
     AfterConfiguration();
-    EXPECT_EQ(activities.at(0), 0);
+    EXPECT_EQ(activities.at(0), 9);
     EXPECT_EQ(activities.at(1000), 1);
     EXPECT_EQ(activities.at(2000), 1);
-    EXPECT_EQ(activities.at(3000), 1);
+    EXPECT_EQ(activities.at(3000), 9);
     EXPECT_EQ(activities.at(4000), 2);
-    EXPECT_EQ(activities.at(5000), 1);
-    EXPECT_EQ(activities.at(6000), 1);
+    EXPECT_EQ(activities.at(5000), 9);
+    EXPECT_EQ(activities.at(6000), 9);
     bool found = false;
     for (int i = 0; i < 10; i++) {
       for (double a : activities) {
@@ -206,13 +206,13 @@ TEST_F(Test_Activity, multinominal) {
     SimulationConfig::parseConfiguration("SimulationConfig1.xml");
     AfterConfiguration();
 
-    ASSERT_EQ(activities.at(0), 0);
+    ASSERT_EQ(activities.at(0), 8);
     ASSERT_EQ(activities.at(1000), 0);
     ASSERT_EQ(activities.at(2000), 0);
-    ASSERT_EQ(activities.at(3000), 0);
+    ASSERT_EQ(activities.at(3000), 6);
     ASSERT_EQ(activities.at(4000), 0);
     ASSERT_EQ(activities.at(5000), 0);
-    ASSERT_EQ(activities.at(6000), 0);
+    ASSERT_EQ(activities.at(6000), 4);
     bool found = false;
     for (int i = 0; i < 3; i++) {
       for (double a : activities) {

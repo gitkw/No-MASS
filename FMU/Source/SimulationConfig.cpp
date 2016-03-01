@@ -1,12 +1,17 @@
 // Copyright 2015 Jacob Chapman
 
-#include <rapidxml_utils.hpp>
-#include <rapidxml.hpp>
+
+
 #include <iostream>
 #include <map>
 #include <utility>
 #include <string>
 #include <vector>
+#include <cstring>
+
+#include <cstddef>
+#include "rapidxml_utils.hpp"
+#include "rapidxml.hpp"
 #include "Log.h"
 #include "Utility.h"
 #include "SimulationConfig.h"

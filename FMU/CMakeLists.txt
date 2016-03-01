@@ -137,7 +137,7 @@ if(WIN32)
   SET( CMAKE_CXX_CREATE_SHARED_LIBRARY  "${CMAKE_CXX_CREATE_SHARED_LIBRARY} -static -fPIC" )
 endif()
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11")
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 ")
 SET(CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE} -O2")
 string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
@@ -200,7 +200,7 @@ if (Tests)
     tests/source/unittest_Agent_Action_Learning.cc
     tests/source/unittest_Agent_Action_Heat_Gains.cc
     tests/source/unittest_QLearning_HeatingSetPoints.cc
-    
+
 
   )
 

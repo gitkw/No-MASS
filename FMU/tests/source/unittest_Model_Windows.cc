@@ -31,27 +31,38 @@ TEST_F(Test_Windows, Arrival) {
   for (int i =0; i < 1; i++) {
     mw.arrival(indoorTemperature, outdoorTemperature,
         previousDuration, rain, timeStepLengthInMinutes);
-    EXPECT_EQ(false, mw.getWindowState());
+    EXPECT_EQ(true, mw.getWindowState());
   }
 
   mw.arrival(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
-  EXPECT_EQ(true, mw.getWindowState());
+  EXPECT_EQ(false, mw.getWindowState());
 
   mw.arrival(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
-  ASSERT_NEAR(9, mw.getDurationOpen(), 0.01);
-  EXPECT_EQ(true, mw.getWindowState());
+  ASSERT_NEAR(0, mw.getDurationOpen(), 0.01);
+  EXPECT_EQ(false, mw.getWindowState());
 
   mw.arrival(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
-  ASSERT_NEAR(9, mw.getDurationOpen(), 0.01);
-  EXPECT_EQ(true, mw.getWindowState());
+  ASSERT_NEAR(0, mw.getDurationOpen(), 0.01);
+  EXPECT_EQ(false, mw.getWindowState());
 
   mw.arrival(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
-  ASSERT_NEAR(9, mw.getDurationOpen(), 0.01);
+  ASSERT_NEAR(0, mw.getDurationOpen(), 0.01);
+  EXPECT_EQ(false, mw.getWindowState());
+
+  int dur = mw.getDurationOpen();
+  while (mw.getWindowState() == false || dur < 1000) {
+    mw.arrival(indoorTemperature, outdoorTemperature,
+        previousDuration, rain, timeStepLengthInMinutes);
+    dur = mw.getDurationOpen();
+  }
+
+  ASSERT_NEAR(1786, mw.getDurationOpen(), 0.01);
   EXPECT_EQ(true, mw.getWindowState());
+
 }
 
 
@@ -66,35 +77,33 @@ TEST_F(Test_Windows, Inter) {
 
   mw.arrival(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
+  EXPECT_EQ(true, mw.getWindowState());
+
+  mw.arrival(indoorTemperature, outdoorTemperature,
+      previousDuration, rain, timeStepLengthInMinutes);
+  EXPECT_EQ(false, mw.getWindowState());
+
+  EXPECT_EQ(0, dur);
+
+  mw.arrival(indoorTemperature, outdoorTemperature,
+      previousDuration, rain, timeStepLengthInMinutes);
   EXPECT_EQ(false, mw.getWindowState());
 
   mw.arrival(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
-  EXPECT_EQ(true, mw.getWindowState());
-
-  EXPECT_EQ(0, dur);
-
-
-
-  mw.arrival(indoorTemperature, outdoorTemperature,
-      previousDuration, rain, timeStepLengthInMinutes);
-  EXPECT_EQ(true, mw.getWindowState());
-
-  mw.arrival(indoorTemperature, outdoorTemperature,
-      previousDuration, rain, timeStepLengthInMinutes);
-  EXPECT_EQ(true, mw.getWindowState());
+  EXPECT_EQ(false, mw.getWindowState());
 
   mw.arrival(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
   dur = mw.getDurationOpen();
-  EXPECT_EQ(9, dur);
-  EXPECT_EQ(true, mw.getWindowState());
+  EXPECT_EQ(0, dur);
+  EXPECT_EQ(false, mw.getWindowState());
 
   mw.intermediate(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
   dur = mw.getDurationOpen();
-  EXPECT_EQ(4, dur);
-  EXPECT_EQ(true, mw.getWindowState());
+  EXPECT_EQ(0, dur);
+  EXPECT_EQ(false, mw.getWindowState());
 
   mw.intermediate(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
@@ -109,13 +118,13 @@ TEST_F(Test_Windows, Inter) {
 
   mw.arrival(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
-  EXPECT_EQ(false, mw.getWindowState());
+  EXPECT_EQ(true, mw.getWindowState());
 
   mw.arrival(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
-  EXPECT_EQ(false, mw.getWindowState());
+  EXPECT_EQ(true, mw.getWindowState());
 
-  while (mw.getWindowState() == false || dur < 300) {
+  while (mw.getWindowState() == false || dur < 1000) {
     mw.arrival(indoorTemperature, outdoorTemperature,
         previousDuration, rain, timeStepLengthInMinutes);
     dur = mw.getDurationOpen();
@@ -123,7 +132,7 @@ TEST_F(Test_Windows, Inter) {
 
   EXPECT_EQ(true, mw.getWindowState());
 
-  EXPECT_EQ(1934, dur);
+  EXPECT_EQ(1786, dur);
   int durCount = dur;
   while (dur > timeStepLengthInMinutes) {
     mw.intermediate(indoorTemperature, outdoorTemperature,
@@ -148,11 +157,11 @@ TEST_F(Test_Windows, depart) {
   int dur = 0;
 
   EXPECT_EQ(false, mw.getWindowState());
-  for (int i =0; i < 69; i++) {
+  for (int i =0; i < 53; i++) {
     mw.departure(indoorTemperature, dailyMeanTemperature, 300, 0);
     EXPECT_EQ(false, mw.getWindowState());
   }
-  for (int i =0; i < 56; i++) {
+  for (int i =0; i < 5; i++) {
     mw.departure(indoorTemperature, dailyMeanTemperature, 300, 0);
     EXPECT_EQ(true, mw.getWindowState());
   }

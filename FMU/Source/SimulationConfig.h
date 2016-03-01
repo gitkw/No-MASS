@@ -8,6 +8,7 @@
 #ifndef SIMULATIONSETUP_H
 #define	SIMULATIONSETUP_H
 
+#include <cstddef>
 #include <string>
 #include <vector>
 #include <map>

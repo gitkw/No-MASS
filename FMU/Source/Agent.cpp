@@ -7,6 +7,7 @@
 #include <limits>
 #include <memory>
 #include <cfloat>
+#include <cstddef>
 
 #include "Model_HeatGains.h"
 #include "Model_Lights.h"

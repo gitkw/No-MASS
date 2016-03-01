@@ -1,6 +1,7 @@
 #ifndef AGENT_ACTION_H
 #define AGENT_ACTION_H
 
+#include <cstddef>
 #include "Building_Zone.h"
 
 class Agent_Action {

@@ -18,7 +18,7 @@ public:
 private:
     Utility();
     static std::random_device r;
-    static std::default_random_engine engine;
+    static std::mt19937_64 engine;
 
 };
 

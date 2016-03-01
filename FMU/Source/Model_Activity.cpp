@@ -1,7 +1,5 @@
 // Copyright 2015 Jacob Chapman
 
-#include <rapidxml_utils.hpp>
-#include <rapidxml.hpp>
 
 #include <map>
 #include <limits>
@@ -14,6 +12,10 @@
 #include <algorithm>    // copy
 #include <iterator>     // ostream_operator
 #include <cassert>
+
+#include <cstddef>
+#include "rapidxml_utils.hpp"
+#include "rapidxml.hpp"
 
 #include "SimulationConfig.h"
 #include "Utility.h"

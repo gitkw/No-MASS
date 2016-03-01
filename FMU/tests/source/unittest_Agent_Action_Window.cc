@@ -54,7 +54,7 @@ TEST_F(Test_Agent_Action_Window, Arrival) {
   for (int i =0; i < 7200; i++) {
     activities.push_back(4);
   }
-  for (int i =0; i < 3; i++) {
+  for (int i =0; i < 2; i++) {
     aaw.step(z_Kitchen, true, false, activities);
     EXPECT_EQ(false, aaw.getResult());
   }

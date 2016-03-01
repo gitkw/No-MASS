@@ -20,12 +20,15 @@
  * (c) 2011 QTronic GmbH
  * ---------------------------------------------------------------------------*/
 
-#include <rapidxml_utils.hpp>
-#include <rapidxml.hpp>
+
 #include <iterator>
 #include <vector>
 #include <iostream>
 #include <string>
+#include <cstring>
+#include <cstddef>
+#include "rapidxml_utils.hpp"
+#include "rapidxml.hpp"
 #include "Log.h"
 #include "DataStore.h"
 #include "Simulation.h"

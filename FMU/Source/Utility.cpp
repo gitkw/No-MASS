@@ -9,7 +9,8 @@
 #include "Utility.h"
 
 std::random_device Utility::r;
-std::default_random_engine Utility::engine(r());
+std::mt19937_64 Utility::engine(r());
+//std::mt19937_64 Utility::engine;
 
 Utility::Utility() {
 }
