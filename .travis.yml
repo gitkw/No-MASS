@@ -35,8 +35,6 @@ before_script:
   - mkdir FMU/buildDebug
   - mkdir FMU/build32
   - mkdir FMU/build64
-  - cd Boost
-  - make
 
 script:
   - cd ../FMU/buildDebug
