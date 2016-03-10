@@ -352,7 +352,6 @@ void SimulationConfig::parseShades(rapidxml::xml_node<> *node) {
           }
           snode = snode->next_sibling();
         }
-        shades.insert(ws);
       }
       cnode = cnode->next_sibling();
   }
