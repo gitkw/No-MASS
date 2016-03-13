@@ -30,7 +30,7 @@ void Agent_Action_Shades::setup(int shadeID) {
                   ws.b10inint, ws.b10sint);
 }
 
-void Agent_Action_Shades::step(const Zone& zone, bool inZone,
+void Agent_Action_Shades::step(const Building_Zone& zone, bool inZone,
     bool previouslyInZone, const std::vector<double> & activities) {
   double shadingFraction = zone.getBlindState();
   // we take the previous timestep shading state to compute Lumint

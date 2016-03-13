@@ -14,7 +14,7 @@
 #include "State_Cooking.h"
 #include "State_Washing.h"
 #include "State_Metabolic.h"
-#include "Zone.h"
+#include "Building_Zone.h"
 #include "SimulationConfig.h"
 
 #include "gtest/gtest.h"
@@ -22,11 +22,13 @@
 TEST(StateMachine, statesPage) {
   ZoneStruct zs;
   zs.name = "Block1:Zone1";
-  Zone z("", zs);
+  zs.id = 1;
+  Building_Zone z("", zs);
 
   ZoneStruct zs_out;
   zs_out.name = "Out";
-  Zone z_out("", zs_out);
+  zs_out.id = 0;
+  Building_Zone z_out("", zs_out);
 
   StateMachine stateMachine;
   State_Out out;
@@ -59,7 +61,7 @@ TEST(StateMachine, statesPage) {
 
   s = stateMachine.transistionTo(3);
   EXPECT_EQ(s.getId(), 3);
-  EXPECT_EQ(s.getMetabolicRate(), 116);
+  EXPECT_EQ(s.getMetabolicRate(), 70);
   EXPECT_EQ(s.getClo(), 1);
   EXPECT_EQ(s.getActivity(), "IT");
   EXPECT_EQ(s.getLocation(), "Block1:Zone1");
@@ -69,7 +71,8 @@ TEST(StateMachine, statesPage) {
 TEST(StateMachine, statesActivity) {
   ZoneStruct zs_out;
   zs_out.name = "Out";
-  Zone z_out("", zs_out);
+  zs_out.id = 1;
+  Building_Zone z_out("", zs_out);
 
   StateMachine stateMachine;
   State_Out out;
@@ -80,15 +83,20 @@ TEST(StateMachine, statesActivity) {
   EXPECT_EQ(out.numberOfSubStates(), 0);
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
-  Zone z_Kitchen("", zs);
+  zs.id = 1;
+  Building_Zone z_Kitchen("", zs);
   zs.name = "Block1:LivingRoom";
-  Zone z_LivingRoom("", zs);
+  zs.id = 1;
+  Building_Zone z_LivingRoom("", zs);
   zs.name = "Block2:Bathroom";
-  Zone z_Bathroom("", zs);
+  zs.id = 1;
+  Building_Zone z_Bathroom("", zs);
   zs.name = "Block2:MasterBedroom";
-  Zone z_MasterBedroom("", zs);
+  zs.id = 1;
+  Building_Zone z_MasterBedroom("", zs);
   zs.name = "Block2:Office";
-  Zone z_Office("", zs);
+  zs.id = 1;
+  Building_Zone z_Office("", zs);
 
   State_Sleep sleep;
   sleep.setZonePtr(&(z_MasterBedroom));
@@ -173,7 +181,7 @@ TEST(StateMachine, statesActivity) {
   EXPECT_EQ(s.getActivity(), "Cooking");
   s = stateMachine.transistionTo(3);
   EXPECT_EQ(s.getId(), 3);
-  EXPECT_EQ(s.getMetabolicRate(), 116);
+  EXPECT_EQ(s.getMetabolicRate(), 70);
   EXPECT_EQ(s.getClo(), 1);
   EXPECT_EQ(s.getLocation(), "Block2:Office");
   EXPECT_EQ(s.getActivity(), "IT");

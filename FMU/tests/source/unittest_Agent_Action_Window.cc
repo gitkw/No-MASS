@@ -5,6 +5,7 @@
 
 #include "DataStore.h"
 #include "Agent_Action_Window.h"
+#include "Utility.h"
 #include "gtest/gtest.h"
 
 class Test_Agent_Action_Window : public ::testing::Test {
@@ -23,17 +24,49 @@ void Test_Agent_Action_Window::SetUp() {
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
 
+  DataStore::addVariable("Block1:KitchenZoneMeanAirTemperature");
+  DataStore::addVariable("Block1:KitchenZoneAirRelativeHumidity");
+  DataStore::addVariable("Block1:KitchenZoneMeanRadiantTemperature");
+  DataStore::addVariable("EnvironmentSiteOutdoorAirDrybulbTemperature");
+
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 0);
   DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
   DataStore::addValue("Block1:KitchenZoneAirRelativeHumidity", 18);
   DataStore::addValue("Block1:KitchenZoneMeanRadiantTemperature", 18);
+}
 
+TEST_F(Test_Agent_Action_Window, Arrival) {
+  Utility::setSeed(1);
+
+  ZoneStruct zs;
+  zs.name = "Block1:Kitchen";
+  zs.id = 1;
+  Building_Zone z_Kitchen("", zs);
+  z_Kitchen.setWindowState(0);
+  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);
+  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 35);
+
+  aaw.setOpenDuringCooking(false);
+  aaw.setOpenDuringWashing(false);
+  double previousDuration = 5*12*10*60;
+  int timeStepLengthInMinutes = 5;
+  for (int i =0; i < 7200; i++) {
+    activities.push_back(4);
+  }
+  for (int i =0; i < 3; i++) {
+    aaw.step(z_Kitchen, true, false, activities);
+    EXPECT_EQ(false, aaw.getResult());
+  }
+
+  // aaw.step(z_Kitchen, true, false, activities);
+  // EXPECT_EQ(true,  aaw.getResult());
 }
 
 TEST_F(Test_Agent_Action_Window, OpenWindowDuringCooking) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
-  Zone z_Kitchen("", zs);
+  zs.id = 1;
+  Building_Zone z_Kitchen("", zs);
   aaw.setOpenDuringCooking(true);
 
   activities.push_back(4);
@@ -49,7 +82,8 @@ TEST_F(Test_Agent_Action_Window, OpenWindowDuringCooking) {
 TEST_F(Test_Agent_Action_Window, OpenWindowAfterShower) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
-  Zone z_Kitchen("", zs);
+  zs.id = 1;
+  Building_Zone z_Kitchen("", zs);
   aaw.setOpenDuringWashing(true);
   aaw.getResult();
 

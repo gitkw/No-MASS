@@ -53,6 +53,9 @@ Source/Agent_Action_Window.cpp
 Source/Agent_Action_Window.h
 Source/Agent_Action_Heating.cpp
 Source/Agent_Action_Heating.h
+Source/Agent_Action_Learning.h
+Source/Agent_Action_Learning.cpp
+Source/Agent_Zone.cpp
 Source/DataStore.cpp
 Source/DataStore.h
 Source/Log.cpp
@@ -109,13 +112,17 @@ Source/Utility.cpp
 Source/Utility.h
 Source/Building.cpp
 Source/Building.h
-Source/Zone.cpp
-Source/Zone.h
+Source/Building_Zone.cpp
+Source/Building_Zone.h
 Source/fmiFunctions.cpp
 Source/fmiFunctions.h
 Source/fmiPlatformTypes.h
 Source/fmuTemplate.cpp
 Source/fmuTemplate.h
+Source/QLearning.cpp
+Source/QLearning.h
+Source/QLearning_HeatingSetPoints.cpp
+Source/QLearning_HeatingSetPoints.h
 )
 
 
@@ -168,11 +175,17 @@ if (Tests)
     tests/source/unittest_StateMachine.cc
     tests/source/unittest_Log.cc
     tests/source/unittest_Agent.cc
-    tests/source/unittest_Zone.cc
+    tests/source/unittest_Agent_Zone.cc
+    tests/source/unittest_Building_Zone.cc
+    tests/source/unittest_Utility.cc
     tests/source/unittest_Building.cc
     tests/source/unittest_Agent_Action_Window.cc
     tests/source/unittest_Agent_Action_Shades.cc
     tests/source/unittest_Agent_Action_Light.cc
+    tests/source/unittest_Agent_Action_Learning.cc
+    tests/source/unittest_Agent_Action_Heat_Gains.cc
+    tests/source/unittest_QLearning_HeatingSetPoints.cc
+
   )
 
   add_executable(runUnitTests ${TESTSRC})

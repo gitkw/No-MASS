@@ -8,7 +8,7 @@ Agent_Action_Heating::Agent_Action_Heating() {
     name = "Heating";
 }
 
-void Agent_Action_Heating::step(const Zone& zone, bool inZone,
+void Agent_Action_Heating::step(const Building_Zone& zone, bool inZone,
     bool previouslyInZone, const std::vector<double> &activities) {
 
 

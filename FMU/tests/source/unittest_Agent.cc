@@ -32,7 +32,8 @@ TEST(Agent, Build) {
 
   ZoneStruct zs;
   zs.name = "Out";
-  Zone z_Out("", zs);
+  zs.id = 0;
+  Building_Zone z_Out("", zs);
 
   out.setZonePtr(&(z_Out));
   stateMachine.addState(out);
@@ -60,15 +61,20 @@ TEST(Agent, Build) {
   DataStore::addValue("Block2:OfficeZoneMeanRadiantTemperature", 21);
 
   zs.name = "Block1:Kitchen";
-  Zone z_Kitchen("", zs);
+  zs.id = 1;
+  Building_Zone z_Kitchen("", zs);
   zs.name = "Block1:LivingRoom";
-  Zone z_LivingRoom("", zs);
+  zs.id = 1;
+  Building_Zone z_LivingRoom("", zs);
   zs.name = "Block2:Bathroom";
-  Zone z_Bathroom("", zs);
+  zs.id = 1;
+  Building_Zone z_Bathroom("", zs);
   zs.name = "Block2:MasterBedroom";
-  Zone z_MasterBedroom("", zs);
+  zs.id = 1;
+  Building_Zone z_MasterBedroom("", zs);
   zs.name = "Block2:Office";
-  Zone z_Office("", zs);
+  zs.id = 1;
+  Building_Zone z_Office("", zs);
 
   State_Sleep sleep;
   sleep.setZonePtr(&(z_MasterBedroom));
@@ -101,23 +107,24 @@ TEST(Agent, Build) {
   stateMachine.addState(present);
 
 
+  std::vector<Building_Zone> v;
+  v.push_back(z_MasterBedroom);
 
-
-  Agent a(0);
-
+  Agent a(0, v);
+  a.setState(out);
   a.step(&stateMachine);
 
   while (!a.currentlyInZone(z_MasterBedroom)) {
     SimulationConfig::step();
     a.step(&stateMachine);
   }
-  ASSERT_NEAR(a.getCurrentRadientGains(z_MasterBedroom), 46.9452, 0.001);
+  ASSERT_NEAR(a.getCurrentRadientGains(z_MasterBedroom), 48.20001502, 0.001);
 
   while (!a.currentlyInZone(z_Kitchen)) {
     SimulationConfig::step();
     a.step(&stateMachine);
   }
-  ASSERT_NEAR(a.getCurrentRadientGains(z_Kitchen), 99.4269, 0.001);
+  ASSERT_NEAR(a.getCurrentRadientGains(z_Kitchen), 101.622508, 0.001);
 /*
   while(!a.currentlyInZone(z_Bathroom)){
     SimulationConfig::step();

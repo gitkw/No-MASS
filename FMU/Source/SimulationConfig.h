@@ -20,6 +20,7 @@ struct ZoneStruct {
     std::vector<std::string> activities;
     bool groundFloor = 0;
     int windowCount = 0;
+    int id = 0;
 };
 
 struct agentStruct {
@@ -40,16 +41,16 @@ struct agentStruct {
     std::string famstat;
     std::string sex;
 
-    bool HeatOnPresence;
+    bool HeatOnPresence = false;
 
-    bool ShadeClosedDuringSleep;
-    bool ShadeClosedDuringWashing;
+    bool ShadeClosedDuringSleep = false;
+    bool ShadeClosedDuringWashing = false;
 
-    bool LightOffDuringAudioVisual;
-    bool LightOffDuringSleep;
+    bool LightOffDuringAudioVisual = false;
+    bool LightOffDuringSleep = false;
 
-    bool WindowOpenDuringCooking;
-    bool WindowOpenDuringWashing;
+    bool WindowOpenDuringCooking = false;
+    bool WindowOpenDuringWashing = false;
 
 };
 
@@ -125,8 +126,8 @@ struct simulationStruct {
     bool shading;
     bool presencePage;
     double timeStepsPerHour;
-    double qlearnep;
-    int qlearn;
+    double learnep;
+    int learn;
     int timeSteps;
     int startDay;
     int startMonth;

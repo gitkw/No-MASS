@@ -52,11 +52,12 @@ void SimulationConfig::parseBuilding(
   bpt::ptree::value_type & v) {
     buildingStruct b;
     b.name = buildings.size();
-
+    int zonecount = 0;
     std::pair<std::string, ZoneStruct> zsOut;
     zsOut.first = "Out";
     zsOut.second.name = "Out";
     zsOut.second.activities.push_back("Out");
+    zsOut.second.id = zonecount;
     b.zones.insert(zsOut);
     for (bpt::ptree::value_type & child : v.second) {
         if (child.first == "name") {
@@ -64,8 +65,9 @@ void SimulationConfig::parseBuilding(
         } else if (child.first == "agents") {
             parseAgents(child);
         } else if (child.first == "zone") {
+            zonecount++;
             std::pair<std::string, ZoneStruct> zone;
-
+            zone.second.id = zonecount;
             for (bpt::ptree::value_type & schild : child.second) {
                 if (schild.first == "name") {
                     zone.first = schild.second.data();
@@ -365,6 +367,7 @@ void SimulationConfig::parseConfiguration(std::string filename) {
   info.windows = false;
   info.shading = false;
   info.lights = false;
+  SimulationConfig::info.learn = 0;
   for (bpt::ptree::value_type & v : pt.get_child("simulation")) {
     if (v.first == "seed") {
         Utility::setSeed(v.second.get_value<int>());
@@ -378,10 +381,10 @@ void SimulationConfig::parseConfiguration(std::string filename) {
         SimulationConfig::info.endMonth = v.second.get_value<int>();
     } else if (v.first == "beginDay") {
         SimulationConfig::info.startDay = v.second.get_value<int>();
-    } else if (v.first == "qlearn") {
-        SimulationConfig::info.qlearn = v.second.get_value<int>();
-    } else if (v.first == "qlearnep") {
-        SimulationConfig::info.qlearnep = v.second.get_value<double>();
+    } else if (v.first == "learn") {
+        SimulationConfig::info.learn = v.second.get_value<int>();
+    } else if (v.first == "learnep") {
+        SimulationConfig::info.learnep = v.second.get_value<double>();
     } else if (v.first == "simulateAgents") {
         SimulationConfig::info.simulateAgents = v.second.get_value<bool>();
     } else if (v.first == "case") {
@@ -440,7 +443,7 @@ int SimulationConfig::numberOfAgents() {
 }
 
 double SimulationConfig::lengthOfTimestep() {
-    return 60.0 / SimulationConfig::info.timeStepsPerHour;
+    return 3600 / SimulationConfig::info.timeStepsPerHour;
 }
 
 void SimulationConfig::step() {

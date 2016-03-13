@@ -41,7 +41,11 @@ Build the No-MASS using make (or using CodeBlocks GUI)
 ```sh
 cd FMU
 
-cmake ./
+make build
+
+cd build
+
+cmake ../
 
 make
 ```
@@ -58,9 +62,9 @@ Place the file in the EnergyPlus folder, define the variables in the IDF and run
 To run the tests enable testing in CMake, build, and run the test program
 
 ```sh
-cd FMU
+cd FMU/build
 
-cmake -DCMAKE_BUILD_TYPE=Debug -Dtest=on ./
+cmake -DCMAKE_BUILD_TYPE=Debug -Dtest=on ../
 
 make
 
