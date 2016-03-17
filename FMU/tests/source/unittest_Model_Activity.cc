@@ -207,12 +207,12 @@ TEST_F(Test_Activity, multinominal) {
     AfterConfiguration();
 
     ASSERT_EQ(activities.at(0), 8);
-    ASSERT_EQ(activities.at(1000), 0);
-    ASSERT_EQ(activities.at(2000), 0);
-    ASSERT_EQ(activities.at(3000), 6);
-    ASSERT_EQ(activities.at(4000), 0);
-    ASSERT_EQ(activities.at(5000), 0);
-    ASSERT_EQ(activities.at(6000), 4);
+    ASSERT_EQ(activities.at(1000), 2);
+    ASSERT_EQ(activities.at(2000), 1);
+    ASSERT_EQ(activities.at(3000), 9);
+    ASSERT_EQ(activities.at(4000), 1);
+    ASSERT_EQ(activities.at(5000), 2);
+    ASSERT_EQ(activities.at(6000), 9);
     bool found = false;
     for (int i = 0; i < 3; i++) {
       for (double a : activities) {

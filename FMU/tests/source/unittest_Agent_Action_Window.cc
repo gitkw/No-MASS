@@ -56,11 +56,11 @@ TEST_F(Test_Agent_Action_Window, Arrival) {
   }
   for (int i =0; i < 2; i++) {
     aaw.step(z_Kitchen, true, false, activities);
-    EXPECT_EQ(false, aaw.getResult());
+    EXPECT_FALSE(aaw.getResult());
   }
 
   // aaw.step(z_Kitchen, true, false, activities);
-  // EXPECT_EQ(true,  aaw.getResult());
+  // EXPECT_TRUE( aaw.getResult());
 }
 
 TEST_F(Test_Agent_Action_Window, OpenWindowDuringCooking) {

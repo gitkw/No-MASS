@@ -81,14 +81,14 @@ void Simulation::preTimeStep() {
     }
     month = month + 1;
   }
-  int hourOfDay = 0;
+  /*int hourOfDay = 0;
   for (int i = 0; i <= hour; i++) {
     hourOfDay += 1;
     if (hourOfDay > 23) {
       hourOfDay = 0;
     }
-  }
-
+  }*/
+  int hourOfDay = hour % 24;
   DataStore::addValue("TimeStep", stepCount);
   DataStore::addValue("day", day);
   DataStore::addValue("hour", hour);

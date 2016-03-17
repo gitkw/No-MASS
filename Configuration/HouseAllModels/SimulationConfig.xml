@@ -1,7 +1,7 @@
 <simulation>
     <projectName>testGUI</projectName>
     <seed>0</seed>
-    <simulateBuilding>1</simulateBuilding>    
+    <simulateBuilding>1</simulateBuilding>
     <GUI>0</GUI>
     <simulateAgents>1</simulateAgents>
     <numberOfAgents>2</numberOfAgents>
