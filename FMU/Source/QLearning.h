@@ -8,14 +8,17 @@ class QLearning
 {
     public:
         QLearning();
-        int greedySelection(int s);
-        void updateQ(int s, int a, double r, int sp);
-        void printQ();
-        virtual void setId(int id);
-        void setState(int state);
-        void setReward(double reward);
-        void setEpsilon(double epsilon);
+        int greedySelection(const int s) const;
+        void updateQ(const int s, const int a, const double r, const int sp);
+        void printQ() const;
+        virtual void setId(const int id);
+        void setFilename(const std::string filename);
+        void setState(const int state);
+        void setStates(const int states);
+        void setReward(const double reward);
+        void setEpsilon(const double epsilon);
         void setup();
+        virtual void setHeatingSetPoint(const double heatingSetPoint);
         virtual double learn(const Building_Zone &zone);
         virtual void reset();
     protected:
@@ -29,14 +32,17 @@ class QLearning
         bool learnNext = false;
         double reward;
         double previous_reward;
+
+        std::string filename;
+
     private:
         std::vector<std::vector<double>> qTable;
         double epsilon = 1;   // probability of a random action selection
         double alpha = 0.1;     // learning rate
-        double gamma = 0.2;     // discount factor (how soon do you care)
+        double gamma = 0.1;     // discount factor (how soon do you care)
 
 
-        int getBestAction(int s);
+        int getBestAction(const int s) const;
 
 
 };

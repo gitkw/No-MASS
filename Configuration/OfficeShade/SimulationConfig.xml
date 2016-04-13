@@ -19,11 +19,9 @@
     <agents>
         <agent>
             <office>Block1:Zone1</office>
-
         </agent>
         <agent>
             <office>Block1:Zone1</office>
-
         </agent>
     </agents>
 </simulation>

@@ -299,8 +299,8 @@ void loadVariables() {
         rx::xml_node<> *cnode = node->first_node();
         double starValue = 0;
         if (std::strcmp(cnode->name(), "Real") == 0) {
-          pAttr = node->first_attribute("start");
-          starValue = std::stoi(pAttr->value());
+          pAttr = cnode->first_attribute("start");
+          starValue = std::stod(pAttr->value());
         }
         DataStore::addValue(name, starValue);
     }

@@ -19,6 +19,10 @@ void Agent_Action_Heat_Gains::setup(int agentid) {
   DataStore::addVariable("Agent_ppd_" + idAsString);
   DataStore::addVariable("Agent_pmv_" + idAsString);
   DataStore::addVariable("Agent_Fanger_Neutral_Temperature_" + idAsString);
+  DataStore::addVariable("Agent_PMV_airTemp" + idAsString);
+  DataStore::addVariable("Agent_PMV_airHumid" + idAsString);
+  DataStore::addVariable("Agent_PMV_meanRadient" + idAsString);
+  DataStore::addVariable("Agent_PMV_setpoint" + idAsString);
 }
 
 void Agent_Action_Heat_Gains::prestep(double clo, double metabolicRate) {
@@ -31,6 +35,10 @@ void Agent_Action_Heat_Gains::step(const Building_Zone& zone, bool inZone,
   ppd = 5;
   pmv = 0;
   result = 0;
+  double airTemp = zone.getMeanAirTemperature();
+  double airHumid = zone.getAirRelativeHumidity();
+  double meanRadient = zone.getMeanRadiantTemperature();
+
   if (inZone) {
     Model_HeatGains h;
     /**
@@ -43,10 +51,6 @@ void Agent_Action_Heat_Gains::step(const Building_Zone& zone, bool inZone,
      * @param clo Clothing value
      * @param airVelocity Air velocity
      */
-
-    double airTemp = zone.getMeanAirTemperature();
-    double airHumid = zone.getAirRelativeHumidity();
-    double meanRadient = zone.getMeanRadiantTemperature();
 
     /*
     std::cout << "metabolicRate: " << metabolicRate << std::endl;
@@ -70,8 +74,22 @@ void Agent_Action_Heat_Gains::step(const Building_Zone& zone, bool inZone,
   DataStore::addValue(name.c_str(), ppd);
   name = "Agent_pmv_" + idAsString;
   DataStore::addValue(name.c_str(), pmv);
+  name = "Agent_PMV_airTemp" + idAsString;
+  DataStore::addValue(name.c_str(), airTemp);
+  name = "Agent_PMV_airHumid" + idAsString;
+  DataStore::addValue(name.c_str(), airHumid);
+  name = "Agent_PMV_meanRadient" + idAsString;
+  DataStore::addValue(name.c_str(), meanRadient);
+  name = "Agent_PMV_setpoint" + idAsString;
+  DataStore::addValue(name.c_str(), zone.getHeatingState());
+
+
 }
 
-double Agent_Action_Heat_Gains::getPMV() {
+double Agent_Action_Heat_Gains::getPMV() const{
     return pmv;
+}
+
+double Agent_Action_Heat_Gains::getPPD() const{
+    return ppd;
 }

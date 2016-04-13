@@ -15,9 +15,9 @@
 QLearning::QLearning() {}
 
 void QLearning::setup() {
-    //  epsilon = SimulationConfig::info.learnep;
+    epsilon = SimulationConfig::info.learnep;
     std::ifstream in_file;
-    in_file.open("rlearning" + std::to_string(id) + ".dats");
+    in_file.open(filename + std::to_string(id) + ".dat");
     if (in_file.fail()) {
         for (int i =0; i < states; i++) {
             qTable.push_back(std::vector<double>());
@@ -39,7 +39,7 @@ void QLearning::setup() {
     }
 }
 
-int QLearning::greedySelection(int s) {
+int QLearning::greedySelection(const int s) const {
     int a;
     if (Utility::randomDouble(0, 1) < 1-epsilon) {
         a = getBestAction(s);
@@ -50,7 +50,7 @@ int QLearning::greedySelection(int s) {
     return a;
 }
 
-int QLearning::getBestAction(int s) {
+int QLearning::getBestAction(const int s) const {
     int m = 0;
     for (int i =1; i < actions; i++) {
         if (qTable[s][m] < qTable[s][i]) {
@@ -62,14 +62,15 @@ int QLearning::getBestAction(int s) {
     return m;
 }
 
-void QLearning::updateQ(int s, int a, double r, int sp) {
+void QLearning::updateQ(const int s, const int a, const double r, const int sp) {
   double maxQ = *std::max_element(qTable[sp].begin(), qTable[sp].end());
   qTable[s][a] = qTable[s][a] + alpha * (r + gamma * maxQ - qTable[s][a]);
+  //std::cout << "updateQ " << std::endl;
 }
 
-void QLearning::printQ() {
+void QLearning::printQ() const {
     std::ofstream myfile;
-    myfile.open("rlearning" + std::to_string(id) + ".dat");
+    myfile.open(filename + std::to_string(id) + ".dat");
     for (int i =0; i < states; i++) {
         for (int j =0; j < actions; j++) {
             myfile  << qTable[i][j]  << ",";
@@ -79,15 +80,19 @@ void QLearning::printQ() {
     myfile.close();
 }
 
-void QLearning::setId(int id) {
+void QLearning::setId(const int id) {
     this->id = id;
 }
 
-void QLearning::setState(int state) {
+void QLearning::setState(const int state) {
     this->state = state;
 }
 
-void QLearning::setReward(double reward) {
+void QLearning::setStates(const int states) {
+    this->states = states;
+}
+
+void QLearning::setReward(const double reward) {
     this->reward = reward;
 }
 
@@ -98,6 +103,13 @@ double QLearning::learn(const Building_Zone &zone) {
 void QLearning::reset() {
 }
 
-void QLearning::setEpsilon(double epsilon) {
+void QLearning::setHeatingSetPoint(const double heatingSetPoint){
+}
+
+void QLearning::setEpsilon(const double epsilon) {
   this->epsilon = epsilon;
+}
+
+void QLearning::setFilename(const std::string filename){
+  this->filename = filename;
 }

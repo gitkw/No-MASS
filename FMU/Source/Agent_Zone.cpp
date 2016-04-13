@@ -9,8 +9,9 @@
 Agent_Zone::Agent_Zone() {
 }
 
-Agent_Zone::Agent_Zone(int id, const agentStruct &agent):id(id) {
-  aahg.setup(id);
+Agent_Zone::Agent_Zone(int id, int agentid, const agentStruct &agent)
+    :id(id), agentid(agentid) {
+  aahg.setup(agentid);
   availableActions.push_back(0);
 
   if (SimulationConfig::info.windows) {
@@ -30,15 +31,21 @@ Agent_Zone::Agent_Zone(int id, const agentStruct &agent):id(id) {
       aas.setClosedDuringWashing(agent.ShadeClosedDuringWashing);
       availableActions.push_back(2);
   }
+  if (SimulationConfig::info.learn > 0) {
+      // availableActions.push_back(5);
+      aalearn.setZoneId(id);
+      aalearn.setup(agentid, SimulationConfig::info.learn);
+  }
 }
 
 void Agent_Zone::step(const Building_Zone& zone,
       const Building_Zone& zonePrevious,
       const std::vector<double> &activities) {
-    if (id > 0) {
-      bool inZone = zone.getId() == id;
-      bool previouslyInZone = zonePrevious.getId() == id;
 
+
+    bool inZone = zone.getId() == id;
+    bool previouslyInZone = zonePrevious.getId() == id;
+    if (isInBuilding()) {
       if (inZone || previouslyInZone) {
         std::random_shuffle(availableActions.begin(), availableActions.end() );
         for (int a : availableActions) {
@@ -49,7 +56,11 @@ void Agent_Zone::step(const Building_Zone& zone,
           }
         }
       }
+      if (SimulationConfig::info.learn > 0) {
+        actionStep(5, zone, inZone, previouslyInZone, activities);
+      }
     }
+
 }
 
 void Agent_Zone::actionStep(int action,
@@ -63,13 +74,13 @@ void Agent_Zone::actionStep(int action,
               heatgains = aahg.getResult();
               previous_pmv = pmv;
               pmv = aahg.getPMV();
+              ppd = aahg.getPPD();
             }
 
         break;
       case 1:
             aaw.step(zone, inZone, preZone, activities);
             desiredWindowState = aaw.getResult();
-
         break;
       case 2:
             aas.step(zone, inZone, preZone, activities);
@@ -84,7 +95,10 @@ void Agent_Zone::actionStep(int action,
           //  heatState = aah.getResult();
         break;
       case 5:
-
+              aalearn.setReward(pmv);
+              //aalearn.setReward(ppd);
+              aalearn.step(zone, inZone, preZone, activities);
+              desiredHeatingSetPoint = aalearn.getResult();
         break;
       }
 }
@@ -109,6 +123,10 @@ double Agent_Zone::getHeatgains() const {
   return heatgains;
 }
 
+double Agent_Zone::getDesiredHeatingSetPoint() const{
+  return desiredHeatingSetPoint;
+}
+
 double Agent_Zone::getDesiredShadeState() const {
   return desiredShadeState;
 }
@@ -119,4 +137,15 @@ void Agent_Zone::setClo(double clo) {
 
 void Agent_Zone::setMetabolicRate(double metabolicRate) {
   this->metabolicRate = metabolicRate;
+}
+
+void Agent_Zone::postprocess(){
+  if (isInBuilding() && SimulationConfig::info.learn > 0) {
+    aalearn.print();
+    aalearn.reset();
+  }
+}
+
+bool Agent_Zone::isInBuilding() const{
+    return id > 0; // 0 is the ID for the outside zone
 }

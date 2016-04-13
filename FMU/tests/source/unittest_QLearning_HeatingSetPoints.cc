@@ -2,6 +2,7 @@
 
 #include <limits.h>
 #include <vector>
+#include <fstream>
 
 #include "DataStore.h"
 #include "QLearning_HeatingSetPoints.h"
@@ -11,11 +12,13 @@
 
 class Test_QLearning_HeatingSetPoints : public ::testing::Test {
  protected:
+
     QLearning_HeatingSetPoints ql;
     virtual void SetUp();
 };
 
 void Test_QLearning_HeatingSetPoints::SetUp() {
+  ql.setStates(288);
   SimulationConfig::info.learnep = 0.8;
   DataStore::addVariable("hour");
   DataStore::addVariable("month");
@@ -63,10 +66,10 @@ TEST_F(Test_QLearning_HeatingSetPoints, learn) {
 
 
 TEST_F(Test_QLearning_HeatingSetPoints, Learn1) {
-/*  ql.setId(1);
+  ql.setId(1);
   ql.setup();
   std::ifstream in_file;
-  in_file.open("../tests/Files/Data.csv");
+  in_file.open("../tests/Files/Data3.csv");
 
   while (in_file.good()) {
       std::string a;
@@ -75,7 +78,6 @@ TEST_F(Test_QLearning_HeatingSetPoints, Learn1) {
       std::string item;
       std::getline(ss, item, ',');
       if (item == "") break;
-      std::getline(ss, item, ',');
       double previous_state = std::stod(item);
       std::getline(ss, item, ',');
       double state = std::stod(item);
@@ -94,18 +96,24 @@ TEST_F(Test_QLearning_HeatingSetPoints, Learn1) {
       } else {
         x = 0;
       }
+/*
+      if (reward > 0.0) {
+        reward = reward * 6;
+      }
+*/
       reward = - std::abs((reward * (1-x)) - (2 * x));
-      if (reward > -1) {
-        reward = 30;
+      if (reward > 0.5) {
+        reward = 1;
       }
 /*
       std::cout << previous_state << " "
                 << state << " "
                 << action << " "
                 << reward << " " << std::endl;
-      *//*
+*/
       ql.updateQ(previous_state, action, reward, state);
 
-      ql.printQ();
-    }*/
+    }
+
+    ql.printQ();
 }

@@ -659,7 +659,7 @@ Zone, Block1:Zone1,                               !- Zone Name
       Block1:Zone1,                               !- Zone Name
       Block1:Zone1NumberOfOccupants,                                       !- Number of People SCHEDULE Name
       People,                                     !- Number of People
-      2,                                 !- Number of People
+      3,                                 !- Number of People
       ,                                           !- People per Zone Area
       ,                                           !- Zone Area per Person
        .3,                                        !- radiant fraction

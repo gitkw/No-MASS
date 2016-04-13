@@ -10,13 +10,23 @@ class Agent_Action_Learning : public Agent_Action
     Agent_Action_Learning();
     void step(const Building_Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
     void setup(const int id, const int learn);
-    void setReward(double reward);
+    void setReward(const double reward);
+    void setZoneId(const double zoneId);
     void print();
     void reset();
   private:
-    std::shared_ptr<QLearning> ql;
+    std::shared_ptr<QLearning> qlWeekDay;
+    std::shared_ptr<QLearning> qlWeekEnd;
     double reward;
     int learnId;
+    int agentId;
+    int zoneId;
+
+    int previousHour;
+    double setPoint;
+    double steps;
+    bool hasBeenInZone;
+    double pmv;
   //  QLearning ql;
 };
 

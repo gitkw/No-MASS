@@ -35,16 +35,11 @@ Agent::Agent(int newId, const std::vector<Building_Zone> &zones) : id(newId) {
     }
 
     for (Building_Zone buldingZone : zones) {
-        agentZones.push_back(Agent_Zone(buldingZone.getId(), agent));
+        agentZones.push_back(Agent_Zone(buldingZone.getId(), id, agent));
     }
 
     if (agent.HeatOnPresence) {
         availableActions.push_back(4);
-    }
-
-    if (SimulationConfig::info.learn > 0) {
-        // availableActions.push_back(5);
-        aalearn.setup(id, SimulationConfig::info.learn);
     }
 
     if (SimulationConfig::info.presencePage) {
@@ -63,18 +58,16 @@ void Agent::step(StateMachine *stateMachine) {
     Building_Zone* zonePtr = state.getZonePtr();
     Building_Zone* zonePtrPrevious = previousState.getZonePtr();
 
-//    if (presence.at(stepCount) ||
-//          (stepCount > 0 && presence.at(stepCount - 1))) {
-        metabolicRate = state.getMetabolicRate();
-        clo = state.getClo();
+    metabolicRate = state.getMetabolicRate();
+    clo = state.getClo();
 
-        interactWithZone(*zonePtr);
-        for (Agent_Zone &agentZone : agentZones) {
-          agentZone.setClo(clo);
-          agentZone.setMetabolicRate(metabolicRate);
-          agentZone.step(*zonePtr, *zonePtrPrevious, activities);
-        }
-//    }
+    interactWithZone(*zonePtr);
+    for (Agent_Zone &agentZone : agentZones) {
+      agentZone.setClo(clo);
+      agentZone.setMetabolicRate(metabolicRate);
+      agentZone.step(*zonePtr, *zonePtrPrevious, activities);
+    }
+
 
     std::string name = "AgentGains" + std::to_string(id);
     DataStore::addValue(name.c_str(), getCurrentRadientGains(*zonePtr));
@@ -87,19 +80,14 @@ void Agent::interactWithZone(const Building_Zone &zone) {
 
     bool inZone = currentlyInZone(zone);
     bool preZone = previouslyInZone(zone);
-
+    /*
     aah.step(zone, inZone, preZone, activities);
     // interaction->heatState = aah.getResult();
     heatState = aah.getResult();
-
+    */
     // aah.step(zone, inZone, preZone, activities);
     // heatState = aah.getResult();
 
-    if (SimulationConfig::info.learn > 0) {
-      aalearn.setReward(getPMV(zone));
-      aalearn.step(zone, inZone, preZone, activities);
-      interaction.heatingSetPoint = aalearn.getResult();
-    }
 
     zoneToInteraction[zone.getName()] = interaction;
 }
@@ -189,7 +177,14 @@ double Agent::getPMV(const Building_Zone &zone) const {
 }
 
 double Agent::getDesiredHeatState(const Building_Zone &zone) const {
-    return zoneToInteraction.at(zone.getName()).heatingSetPoint;
+  double state = 0.0;
+  for (const Agent_Zone &agentZone : agentZones) {
+    if (agentZone.getId() == zone.getId()) {
+      state = agentZone.getDesiredHeatingSetPoint();
+      break;
+    }
+  }
+  return state;
 }
 
 bool Agent::currentlyInZone(const Building_Zone &zone) const {
@@ -234,9 +229,8 @@ std::string Agent::updateLocation(const State& s) const {
 }
 
 void Agent::postprocess() {
-  if (SimulationConfig::info.learn > 0) {
-    aalearn.print();
-    aalearn.reset();
+  for (Agent_Zone &agentZone : agentZones) {
+      agentZone.postprocess();
   }
 }
 

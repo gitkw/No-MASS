@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <iostream>
 #include <utility>
 #include "SimulationConfig.h"
 #include "DataStore.h"
@@ -162,7 +163,7 @@ void Building::setAgentHeatDecisionsForZone(Building_Zone *zone) {
   double samePower = 0;
 
   for (Agent &agent : population) {
-      if (agent.InteractionOnZone(*zone)) {
+    //  if (agent.InteractionOnZone(*zone)) {
           double d = agent.getDesiredHeatState(*zone);
           double power = agent.getPower();
 
@@ -179,7 +180,7 @@ void Building::setAgentHeatDecisionsForZone(Building_Zone *zone) {
               same++;
               samePower = samePower + power;
           }
-      }
+      //}
   }
 
   double state = currentState;
@@ -217,7 +218,7 @@ void Building::setAgentHeatDecisionsForZone(Building_Zone *zone) {
           state = currentState;
       }
   }
-  // std::cout << "state: " << state << std::endl;
+//  std::cout << "state: " << state << std::endl;
   zone->setHeatingState(state);
 }
 

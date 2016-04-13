@@ -7217,6 +7217,9 @@ Output:Variable,*,Zone Air System Sensible Cooling Energy,runperiod;
 Output:Variable,*,Zone Air System Sensible Cooling Rate,runperiod;
 Output:Variable,*,Zone Mean Air Temperature,runperiod;
 
+Output:Variable,*,Schedule Value,Timestep;
+Output:Variable,*,AFN Surface Venting Window or Door Opening Factor,timestep;
+Output:Variable,*,Zone Exterior Windows Total Transmitted Beam Solar Radiation Rate,timestep;
 
 
 EnergyManagementSystem:ProgramCallingManager,

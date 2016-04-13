@@ -118,4 +118,20 @@ if not os.path.isdir(readlocation):
 move(location+'eplusout.eso', readlocation + '/eplusout.eso')
 
 copyfile(xmlFile, currentResults + '/SimulationConfig'+ str(run) +'.xml')
+
+periods = ['runperiod','timestep','monthly']
+
+for j in periods:
+    for i in configLocations:
+        with open(readlocation + 'myfile.rvi', 'w+') as f:
+            f.write(readlocation + 'eplusout.eso\n')
+            f.write(currentResults +'/'+ j +  str(run) + '.csv\n')
+            for x in i:
+                f.write(x+'\n')
+            f.write('0\n')
+
+        p = subprocess.Popen([readlocation+'ReadVarsESO', readlocation+'myfile.rvi', j], cwd=readlocation)
+        p.communicate()
+
 rmtree(location)
+rmtree(readlocation)

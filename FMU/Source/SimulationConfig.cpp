@@ -233,7 +233,7 @@ void SimulationConfig::parseWindows(rapidxml::xml_node<> *node) {
   rapidxml::xml_node<> *cnode = node->first_node();
   while (cnode) {
       if (std::strcmp(cnode->name(), "enabled") == 0) {
-            SimulationConfig::info.shading = std::stoi(cnode->value());
+            SimulationConfig::info.windows = std::stoi(cnode->value());
       } else if (std::strcmp(cnode->name(), "window") == 0) {
         rapidxml::xml_node<> *snode = cnode->first_node();
         std::pair<int, windowStruct> ws;
@@ -352,6 +352,7 @@ void SimulationConfig::parseShades(rapidxml::xml_node<> *node) {
           }
           snode = snode->next_sibling();
         }
+        shades.insert(ws);
       }
       cnode = cnode->next_sibling();
   }

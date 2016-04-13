@@ -119,13 +119,13 @@ TEST(Agent, Build) {
     SimulationConfig::step();
     a.step(&stateMachine);
   }
-  ASSERT_NEAR(a.getCurrentRadientGains(z_MasterBedroom), 48.20001502, 0.001);
+  ASSERT_NEAR(a.getCurrentRadientGains(z_MasterBedroom), 48.1984733, 0.001);
 
   while (!a.currentlyInZone(z_Kitchen)) {
     SimulationConfig::step();
     a.step(&stateMachine);
   }
-  ASSERT_NEAR(a.getCurrentRadientGains(z_Kitchen), 101.622508, 0.001);
+  ASSERT_NEAR(a.getCurrentRadientGains(z_Kitchen), 95.349761869, 0.001);
 /*
   while(!a.currentlyInZone(z_Bathroom)){
     SimulationConfig::step();

@@ -79,7 +79,6 @@ private:
     std::string office; /** Which Office the occupant works in */
 
     Agent_Action_Heating aah;
-    Agent_Action_Learning aalearn;
 
     Model_Presence presence;
     State state; /** Occupants current state */

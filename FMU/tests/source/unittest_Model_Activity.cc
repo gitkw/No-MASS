@@ -26,7 +26,10 @@ void Test_Activity::SetUp() {
 void Test_Activity::AfterConfiguration() {
   SimulationConfig::info.timeSteps = 105182;
   SimulationConfig::info.timeStepsPerHour = 6;
-  SimulationConfig::info.startDayOfWeek = 1;
+  SimulationConfig::info.startDayOfWeek = 2;
+  SimulationConfig::info.startMonth  = 1;
+  SimulationConfig::info.startDay  = 31;
+
 
   activities = ma.preProcessActivities(0);
 }
@@ -35,6 +38,7 @@ TEST_F(Test_Activity, Dissagregate) {
     SimulationConfig::parseConfiguration
       (testFiles + "/SimulationConfig2.xml");
     AfterConfiguration();
+
     EXPECT_EQ(activities.at(0), 9);
     EXPECT_EQ(activities.at(1000), 1);
     EXPECT_EQ(activities.at(2000), 1);
@@ -157,11 +161,11 @@ TEST_F(Test_Activity, multinominalActivity) {
 
   ASSERT_NEAR(px[0] / top, 0.036, 0.005);
   ASSERT_NEAR(px[1] / top, 0.124, 0.005);
-  ASSERT_NEAR(px[2] / top, 0.082, 0.005);
+  ASSERT_NEAR(px[2] / top, 0.087, 0.005);
   ASSERT_NEAR(px[3] / top, 0.003, 0.005);
   ASSERT_NEAR(px[4] / top, 0.027, 0.005);
   ASSERT_NEAR(px[5] / top, 0.030, 0.005);
-  ASSERT_NEAR(px[6] / top, 0.114, 0.005);
+  ASSERT_NEAR(px[6] / top, 0.112, 0.005);
   ASSERT_NEAR(px[7] / top, 0.010, 0.005);
   ASSERT_NEAR(px[8] / top, 0.043, 0.005);
   ASSERT_NEAR(px[9] / top, 0.527, 0.05);
@@ -206,13 +210,13 @@ TEST_F(Test_Activity, multinominal) {
     SimulationConfig::parseConfiguration("SimulationConfig1.xml");
     AfterConfiguration();
 
-    ASSERT_EQ(activities.at(0), 8);
-    ASSERT_EQ(activities.at(1000), 2);
+    ASSERT_EQ(activities.at(0), 7);
+    ASSERT_EQ(activities.at(1000), 4);
     ASSERT_EQ(activities.at(2000), 1);
-    ASSERT_EQ(activities.at(3000), 9);
+    ASSERT_EQ(activities.at(3000), 4);
     ASSERT_EQ(activities.at(4000), 1);
-    ASSERT_EQ(activities.at(5000), 2);
-    ASSERT_EQ(activities.at(6000), 9);
+    ASSERT_EQ(activities.at(5000), 4);
+    ASSERT_EQ(activities.at(6000), 1);
     bool found = false;
     for (int i = 0; i < 3; i++) {
       for (double a : activities) {

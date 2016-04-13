@@ -63,4 +63,37 @@ void DataStore::print() {
       myfile << std::endl;
   }
   myfile.close();
+
+
+
+
+
+
+  myfile.open("Learn.csv");
+  myfile << "stepCount,";
+  maxSize = 0;
+  for (std::unordered_map<std::string, std::vector<double> >::iterator it=variableMap.begin(); it != variableMap.end(); ++it) {
+      if (it->first.find("Learn") != std::string::npos) {
+        myfile << it->first << ",";
+        if (maxSize < it->second.size()) {
+          maxSize = it->second.size();
+        }
+      }
+  }
+  myfile << std::endl;
+  for (unsigned int i =0; i < maxSize; i++) {
+      myfile << i << ",";
+      for (std::unordered_map<std::string, std::vector<double> >::iterator it=variableMap.begin(); it != variableMap.end(); ++it) {
+          if (it->first.find("Learn") != std::string::npos) {
+            if (it->second.size() > i) {
+                myfile << it->second.at(i);
+            }
+            myfile << ",";
+          }
+      }
+      myfile << std::endl;
+  }
+  myfile.close();
+
+
 }

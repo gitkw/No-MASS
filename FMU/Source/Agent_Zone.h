@@ -30,36 +30,43 @@
 class Agent_Zone {
 public:
     Agent_Zone();
-    Agent_Zone(int id, const agentStruct &agent);
+    Agent_Zone(int id, int agentid, const agentStruct &agent);
     void step(const Building_Zone& zone, const Building_Zone& zonePrevious, const std::vector<double> &activities);
 
     void actionStep(int action,
       const Building_Zone &zone, bool inZone, bool preZone, const std::vector<double> &activities);
-
+    void postprocess();
     void setClo(double clo);
     void setMetabolicRate(double metabolicRate);
     int getId() const;
     bool getDesiredWindowState() const;
     bool getDesiredLightState() const;
     double getDesiredShadeState() const;
+    double getDesiredHeatingSetPoint() const;
     double getPMV() const;
     double getHeatgains() const;
 
 private:
 
+    bool isInBuilding() const;
+
     int id;
+    int agentid;
     bool desiredLightState;
     bool desiredWindowState;
     double desiredShadeState;
+    double desiredHeatingSetPoint;
     double heatgains;
     double clo;
     double metabolicRate;
     double pmv;
+    double ppd;
     double previous_pmv;
     Agent_Action_Window aaw;
     Agent_Action_Lights aal;
     Agent_Action_Shades aas;
     Agent_Action_Heat_Gains aahg;
+    Agent_Action_Learning aalearn;
 
     std::vector<int> availableActions;
 

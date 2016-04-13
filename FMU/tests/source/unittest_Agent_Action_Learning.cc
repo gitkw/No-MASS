@@ -28,9 +28,11 @@ void Test_Agent_Action_Learning::SetUp() {
   DataStore::addVariable("hour");
   DataStore::addVariable("month");
   DataStore::addVariable("hourOfDay");
+  DataStore::addVariable("day");
   DataStore::addValue("hour", 1);
   DataStore::addValue("month", 1);
   DataStore::addValue("hourOfDay", 1);
+  DataStore::addValue("day", 1);
 }
 
 TEST_F(Test_Agent_Action_Learning, Learn) {

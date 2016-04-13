@@ -4,7 +4,7 @@
 #include "Model_HeatGains.h"
 
 Model_HeatGains::Model_HeatGains() {
-    maxI = 100;
+    maxI = 150;
 }
 
 /**
@@ -67,7 +67,7 @@ void Model_HeatGains::aHCTCLcalc(
         double externalWork,
         double actualMeanRadiantTemperature) {
     double ata = ta + 273.15;
-    double counter = 0.0;
+    int counter = 0;
     double stcl = ata + (35.5 - ta) / (3.5 * (6.45 * icl + 0.1));
     double converge = 0.00015;
     double fv = 12.1 * sqrt(airVelocityAndBodyMovement);
@@ -110,18 +110,20 @@ void Model_HeatGains::calculate(
         double clo,
         double airVelocity) {
     double actualMeanRadiantTemperature = meanRadiantTemperature + 273.15;
-    double partialWaterPressure = computePaCIBSEGuideC(actualMeanRadiantTemperature, reativeHumidity);
+    //double partialWaterPressure = computePaCIBSEGuideC(actualMeanRadiantTemperature, reativeHumidity);
+    double partialWaterPressure = reativeHumidity * 10 * exp(16.6536 - 4030.183 / (ta + 235));
+
     double met = metabolicRate / 58.15;
-    double airVelocityAndBodyMovement = airVelocity;
+    /*double airVelocityAndBodyMovement = airVelocity;
     if (met > 1) {
         airVelocityAndBodyMovement = airVelocity + 0.3 * (met - 1);
-    }
+    }*/
     double icl = clo * .155;
     double surfaceAreaOfClothing = 1.05 + .645 * icl;
     if (icl < .078) {
         surfaceAreaOfClothing = 1 + 1.29 * icl;
     }
-    aHCTCLcalc(ta, icl, airVelocityAndBodyMovement, surfaceAreaOfClothing, metabolicRate, externalWork, actualMeanRadiantTemperature);
+    aHCTCLcalc(ta, icl, airVelocity, surfaceAreaOfClothing, metabolicRate, externalWork, actualMeanRadiantTemperature);
     double TS = 0.303 * exp(-0.036 * metabolicRate) + 0.028;
     // vapourDiffusion + sweatEvaporation + latentRespirationHeatGains  = Vapour diffusion + sweat evaporation + latent respiration heat gains (all the latent stuff)
     vapourDiffusion = (3.05 * pow(10, -3)) * (5733 - 6.99 * (metabolicRate - externalWork) - partialWaterPressure);

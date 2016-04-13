@@ -673,7 +673,8 @@ Zone, Block1:Zone1,                               !- Zone Name
       ClothingInsulationSchedule,                 !- Clothing Insulation Calculation Method
       ,                                           !- Clothing Insulation Calculation Method Schedule Name
       Clothing Schedule 102,                      !- Clothing Insulation SCHEDULE Name (real)
-      AirVelocitySchedule;                        !- Air Velocity SCHEDULE Name (units m/s, real)
+      AirVelocitySchedule,                        !- Air Velocity SCHEDULE Name (units m/s, real)
+      Fanger; !- Thermal Comfort Model 1 Type
 
    Schedule:Compact, Activity Schedule 102,       !- activity schedule W/person
       Any Number,                                 !- Type
@@ -1180,7 +1181,7 @@ Temperature,
 Through: 31 Dec,
 For: Weekdays SummerDesignDay,
 Until: 05:00, 100,
-Until: 19:00,  26,
+Until: 19:00, 100,
 Until: 24:00, 100,
 For: Weekends,
 Until: 24:00, 100,
@@ -1214,7 +1215,8 @@ ZoneControl:Thermostat, Block1:Zone1 Thermostat, Block1:Zone1,  !- ZoneControl:T
    Zone Control Type Sched,
    ThermostatSetpoint:DualSetpoint, Dual Setpoint - Zone Block1:Zone1;
 
-ThermostatSetpoint:DualSetpoint, Dual Setpoint - Zone Block1:Zone1,Block1:Zone1 Heating SP Sch,Block1:Zone1 Cooling SP Sch;
+!ThermostatSetpoint:DualSetpoint, Dual Setpoint - Zone Block1:Zone1,Block1:Zone1 Heating SP Sch,Block1:Zone1 Cooling SP Sch;
+ThermostatSetpoint:DualSetpoint, Dual Setpoint - Zone Block1:Zone1,Block1:Zone1Heating,Block1:Zone1 Cooling SP Sch;
 
 ZoneHVAC:EquipmentConnections,
    Block1:Zone1, Block1:Zone1 Equipment, Block1:Zone1 Inlets, , Node Block1:Zone1 Zone, Node Block1:Zone1 Out;
@@ -1523,6 +1525,8 @@ Output:Variable,*,Zone Air System Sensible Heating Rate,Timestep;
 Output:Variable,*,Zone Air System Sensible Cooling Energy,Timestep;
 Output:Variable,*,Zone Air System Sensible Cooling Rate,Timestep;
 Output:Variable,*,Zone Mean Air Temperature,Timestep;
+Output:Variable, *, Zone Thermal Comfort Fanger Model PMV, Timestep;
+Output:Variable, *, Zone Thermal Comfort Fanger Model PPD, Timestep;
 
 
 Output:Variable,*,Zone People Radiant Heating Rate,monthly;
@@ -1655,6 +1659,15 @@ ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
   Block1:Zone1NumberOfOccupants,           !- FMU Model Variable Name,
   0.0;                                     !- Initial Value
 
+  ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
+    Block1:Zone1Heating,                     !- EnergyPlus Key Value,
+    Any Number,                              !- Schedule Type Limits Names,
+    agentFMU.fmu,                            !- FMU Filename,
+    FMI,                                     !- FMU Model Name,
+    Block1:Zone1Heating,                     !- FMU Model Variable Name,
+    0.0;                                     !- Initial Value
+
+
 ExternalInterface:FunctionalMockupUnitImport:To:Actuator,
   Block1:Zone1_Wall_5_0_0_0_0_0_Win_Shading_Fraction, !- EnergyPlus Variable Name
   Block1:Zone1_Wall_5_0_0_0_0_0_Win, !- Actuated Component Unique Name
@@ -1724,3 +1737,10 @@ ExternalInterface:FunctionalMockupUnitImport:From:Variable,
   agentFMU.fmu,                            !- FMU Filename,
   FMI,                                     !- FMU Instance Name,
   EMSepTimeStep;                           !- FMU Variable Name
+
+!ExternalInterface:FunctionalMockupUnitImport:From:Variable,
+!  Block1:Zone1,                            !- EnergyPlus Key Value,
+!  Zone Air System Sensible Heating Rate,   !- EnergyPlus Variable Name,
+!  agentFMU.fmu,                            !- FMU Filename,
+!  FMI,                                     !- FMU Instance Name,
+!  Block1:Zone1ZoneAirSystemSensibleHeatingRate; !- FMU Variable Name

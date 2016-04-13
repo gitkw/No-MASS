@@ -54,7 +54,8 @@ void Building_Zone::step() {
           DataStore::addValue(name, windowState);
         }
         DataStore::addValue(variableNameLight, lightState);
-        DataStore::addValue(variableNameBlindFraction, blindState);
+        DataStore::addValue(variableNameBlindFraction, 1.0 - blindState);
+
         DataStore::addValue(variableNameHeating, heatingState);
     }
 }

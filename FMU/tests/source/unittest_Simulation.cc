@@ -43,11 +43,11 @@ TEST(Simulation, HeatGainsOnly) {
     s.postTimeStep();
     if (activity < 9) {
       EXPECT_EQ(activity, 3);
-      ASSERT_NEAR(DataStore::getValue("AgentGains1"), 79.07022613, 0.001);
+      ASSERT_NEAR(DataStore::getValue("AgentGains1"), 77.046341167, 0.001);
       ASSERT_NEAR(DataStore::getValue("Agent_Metabolic_Rate_1"), 70, 0.001);
       ASSERT_NEAR(DataStore::getValue("Agent_clo_1"), 1, 0.001);
-      ASSERT_NEAR(DataStore::getValue("Agent_ppd_1"), 9.71367649, 0.001);
-      ASSERT_NEAR(DataStore::getValue("Agent_pmv_1"), -0.4750917406, 0.001);
+      ASSERT_NEAR(DataStore::getValue("Agent_ppd_1"), 7.8357782196855936, 0.001);
+      ASSERT_NEAR(DataStore::getValue("Agent_pmv_1"), -0.36908214203982143, 0.001);
     }
   }
   s.postprocess();
@@ -110,7 +110,6 @@ TEST(Simulation, HeatGainsWindowsOnly) {
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 15);
   DataStore::addValue("EnvironmentSiteRainStatus", 0);
 
-      std::cout << "hello " << std::endl;
   for (i =100;; i++) {
     s.preTimeStep();
     s.timeStep();
