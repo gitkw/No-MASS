@@ -77,7 +77,7 @@ void Agent_Action_Learning::step(const Building_Zone& zone, bool inZone,
     if(hour != previousHour){
       reward = 0;
       if(hasBeenInZone){
-        if(std::abs(pmv) <= 0.5){
+        if(pmv > -0.5 && pmv <= 0){
           reward = 1;
         }else{
           reward = -0.1;
