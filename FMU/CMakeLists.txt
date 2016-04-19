@@ -194,6 +194,7 @@ if (Tests)
     tests/source/unittest_Building_Zone.cc
     tests/source/unittest_Utility.cc
     tests/source/unittest_Building.cc
+    tests/source/unittest_Agent_Action.cc
     tests/source/unittest_Agent_Action_Window.cc
     tests/source/unittest_Agent_Action_Shades.cc
     tests/source/unittest_Agent_Action_Light.cc

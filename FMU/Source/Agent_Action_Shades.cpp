@@ -30,8 +30,8 @@ void Agent_Action_Shades::setup(int shadeID) {
                   ws.b10inint, ws.b10sint);
 }
 
-void Agent_Action_Shades::step(const Building_Zone& zone, bool inZone,
-    bool previouslyInZone, const std::vector<double> & activities) {
+void Agent_Action_Shades::step(const Building_Zone& zone, const bool inZone,
+    const bool previouslyInZone, const std::vector<double> & activities) {
   double shadingFraction = zone.getBlindState();
   // we take the previous timestep shading state to compute Lumint
   // Evg: Outdoor illuminance in the horizontal plane without obstructions (lux)

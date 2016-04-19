@@ -10,7 +10,9 @@ class Agent_Action_Shades : public Agent_Action
         Agent_Action_Shades();
 
         void setup(int windowID);
-        void step(const Building_Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
+        void step(const Building_Zone& zone, const bool inZone,
+                  const bool previouslyInZone,
+                  const std::vector<double> &activities);
 
         void setClosedDuringSleep(bool ShadeClosedDuringSleep);
         void setClosedDuringWashing(bool ShadeClosedDuringWashing);

@@ -11,12 +11,12 @@ Agent_Action_Window::Agent_Action_Window() {
 }
 
 void Agent_Action_Window::setOpenDuringWashing(
-    bool OpenDuringWashing) {
+    const bool OpenDuringWashing) {
     this->OpenDuringWashing = OpenDuringWashing;
 }
 
 void Agent_Action_Window::setOpenDuringCooking(
-    bool OpenDuringCooking) {
+    const bool OpenDuringCooking) {
     this->OpenDuringCooking = OpenDuringCooking;
 }
 
@@ -32,8 +32,8 @@ void Agent_Action_Window::setup(int windowID) {
       ws.b10gddep);
 }
 
-void Agent_Action_Window::step(const Building_Zone& zone, bool inZone,
-bool previouslyInZone, const std::vector<double> &activities) {
+void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
+    const bool previouslyInZone, const std::vector<double> &activities) {
   double outdoorTemperature =
     DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
 
@@ -92,39 +92,4 @@ bool previouslyInZone, const std::vector<double> &activities) {
     }
   }
   result = m_window.getWindowState();
-}
-
-double Agent_Action_Window::getPreviousDurationOfAbsenceState(
-    const std::vector<double> &activities) const {
-  double cdp = 0;
-  int stepCount = SimulationConfig::getStepCount();
-  int stepCounter = stepCount;
-  int lengthOfTimeStepSeconds =
-      (60 * (60 / SimulationConfig::info.timeStepsPerHour));
-  while (stepCounter > 0 && activities.at(stepCount)
-      != activities.at(stepCounter-1)) {
-    cdp = cdp + lengthOfTimeStepSeconds;
-    stepCounter--;
-    if (stepCounter < 1) {
-        break;
-    }
-  }
-  return cdp;
-}
-
-double Agent_Action_Window::getCurrentDurationOfPresenceState(
-    const std::vector<double> &activities) const {
-  double cdp = 0;
-  int stepCount = SimulationConfig::getStepCount();
-  int stepCounter = stepCount;
-  int lengthOfTimeStepSeconds =
-      (60 * (60 / SimulationConfig::info.timeStepsPerHour));
-  while (activities.at(stepCount) == activities.at(stepCounter-1)) {
-          cdp = cdp + lengthOfTimeStepSeconds;
-          stepCounter--;
-          if (stepCounter < 1) {
-              break;
-          }
-  }
-  return cdp;
 }

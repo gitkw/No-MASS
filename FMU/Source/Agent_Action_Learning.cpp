@@ -63,8 +63,8 @@ void Agent_Action_Learning::setup(const int id, const int learn) {
   }
 }
 
-void Agent_Action_Learning::step(const Building_Zone& zone, bool inZone,
-    bool previouslyInZone, const std::vector<double> &activities) {
+void Agent_Action_Learning::step(const Building_Zone& zone, const bool inZone,
+    const bool previouslyInZone, const std::vector<double> &activities) {
 
     int hour = DataStore::getValue("hour");
 
