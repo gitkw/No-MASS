@@ -8,8 +8,8 @@ Agent_Action_Heating::Agent_Action_Heating() {
     name = "Heating";
 }
 
-void Agent_Action_Heating::step(const Building_Zone& zone, bool inZone,
-    bool previouslyInZone, const std::vector<double> &activities) {
+void Agent_Action_Heating::step(const Building_Zone& zone, const bool inZone,
+    const bool previouslyInZone, const std::vector<double> &activities) {
 
 
     int stepCount = SimulationConfig::getStepCount();

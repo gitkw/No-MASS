@@ -7,7 +7,9 @@ class Agent_Action_Heating : public Agent_Action
 {
     public:
         Agent_Action_Heating();
-        void step(const Building_Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities);
+        void step(const Building_Zone& zone, const bool inZone,
+                  const bool previouslyInZone,
+                  const std::vector<double> &activities);
 
     private:
 

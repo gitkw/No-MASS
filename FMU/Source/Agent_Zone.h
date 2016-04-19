@@ -31,16 +31,18 @@ class Agent_Zone {
 public:
     Agent_Zone();
     Agent_Zone(int id, int agentid, const agentStruct &agent);
-    void step(const Building_Zone& zone, const Building_Zone& zonePrevious, const std::vector<double> &activities);
+    void step(const Building_Zone& zone, const Building_Zone& zonePrevious,
+              const std::vector<double> &activities);
 
-    void actionStep(int action,
-      const Building_Zone &zone, bool inZone, bool preZone, const std::vector<double> &activities);
+    void actionStep(int action, const Building_Zone &zone, bool inZone,
+                    bool preZone, const std::vector<double> &activities);
+
     void postprocess();
     void setClo(double clo);
     void setMetabolicRate(double metabolicRate);
-    int getId() const;
     bool getDesiredWindowState() const;
     bool getDesiredLightState() const;
+    int getId() const;
     double getDesiredShadeState() const;
     double getDesiredHeatingSetPoint() const;
     double getPMV() const;

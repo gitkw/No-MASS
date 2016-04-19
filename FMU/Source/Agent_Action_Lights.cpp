@@ -17,8 +17,8 @@ void Agent_Action_Lights::setOffDuringSleep(bool OffDuringSleep) {
   this->OffDuringSleep = OffDuringSleep;
 }
 
-void Agent_Action_Lights::step(const Building_Zone& zone, bool inZone,
-    bool previouslyInZone, const std::vector<double> &activities) {
+void Agent_Action_Lights::step(const Building_Zone& zone, const bool inZone,
+    const bool previouslyInZone, const std::vector<double> &activities) {
 
     float Lumint = zone.getDaylightingReferencePoint1Illuminance();
     bool lightState = zone.getLightState();

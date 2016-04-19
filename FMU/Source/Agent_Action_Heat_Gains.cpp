@@ -30,8 +30,8 @@ void Agent_Action_Heat_Gains::prestep(double clo, double metabolicRate) {
     this->metabolicRate = metabolicRate;
 }
 
-void Agent_Action_Heat_Gains::step(const Building_Zone& zone, bool inZone,
-    bool previouslyInZone, const std::vector<double> &activities) {
+void Agent_Action_Heat_Gains::step(const Building_Zone& zone, const bool inZone,
+    const bool previouslyInZone, const std::vector<double> &activities) {
   ppd = 5;
   pmv = 0;
   result = 0;
