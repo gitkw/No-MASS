@@ -9,8 +9,10 @@
 Agent_Zone::Agent_Zone() {
 }
 
-Agent_Zone::Agent_Zone(int id, int agentid, const agentStruct &agent)
+Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid, const agentStruct &agent)
     :id(id), agentid(agentid) {
+
+  id = buldingZone.getId();
   aahg.setup(agentid);
   availableActions.push_back(0);
 

@@ -24,7 +24,7 @@ void Test_Agent_Action::SetUp() {
   availableActivities.push_back(1);
   availableActivities.push_back(2);
   availableActivities.push_back(3);
-  aa.setavailableActivities(availableActivities);
+  aa.setAvailableActivities(availableActivities);
   activities.push_back(0);
   activities.push_back(0);
   activities.push_back(1);

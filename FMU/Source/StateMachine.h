@@ -8,13 +8,11 @@ class StateMachine
 {
     public:
       StateMachine();
-      void addState(State s);
+      void addState(const State & s);
       State transistionTo(const int stateID);
       unsigned int numberOfStates() const;
 
     private:
-      int initialStateLocation;
-      State pendingState;
       std::vector<State> states;
 
 };

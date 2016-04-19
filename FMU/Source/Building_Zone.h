@@ -27,7 +27,7 @@ public:
     void setOccupantFraction(double occupantFraction);
 
     bool isActive() const;
-    bool hasActivity(std::string activity) const;
+    bool hasActivity(int activity) const;
     int getCurrentOccupantCount() const;
     float getOccupantFraction() const;
     double getCurrentAgentGains() const;
@@ -42,6 +42,7 @@ public:
     double getMeanRadiantTemperature() const;
     double getDaylightingReferencePoint1Illuminance() const;
     double getWindowDurationOpen() const;
+    std::vector<int> getActivities() const;
     std::string getName() const;
     int getId() const;
 
@@ -64,7 +65,7 @@ private:
     std::string variableNameLight;
     std::string variableNameHeating;
     std::vector<std::string> variableNameWindow;
-    std::vector<std::string> activities;
+    std::vector<int> activities;
 
 };
 

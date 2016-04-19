@@ -11,8 +11,9 @@ Building_Zone::Building_Zone() {
 }
 
 Building_Zone::Building_Zone(const std::string buldingName,
-  const ZoneStruct zoneStruct) : name(zoneStruct.name),
-  activities(zoneStruct.activities), id(zoneStruct.id) {
+  const ZoneStruct zoneStruct) : name(zoneStruct.name), id(zoneStruct.id) {
+
+
     occupantFraction = 0;
     currentAgentGains = 0;
     blindState = 1;
@@ -44,6 +45,10 @@ Building_Zone::Building_Zone(const std::string buldingName,
 }
 
 void Building_Zone::setup() {
+  for(const std::string &act : zoneStruct.activities){
+
+  }
+  
 }
 
 void Building_Zone::step() {
@@ -128,15 +133,9 @@ bool Building_Zone::isActive() const {
     return active;
 }
 
-bool Building_Zone::hasActivity(std::string activity) const {
-  bool found = false;
-  for (std::string const& act : activities) {
-    if (act == activity) {
-      found = true;
-      break;
-    }
-  }
-  return found;
+bool Building_Zone::hasActivity(int activity) const {
+  return std::find(activities.begin(), activities.end(), activity)
+      != activities.end();
 }
 
 void Building_Zone::setGroundFloor(bool groundFloor) {

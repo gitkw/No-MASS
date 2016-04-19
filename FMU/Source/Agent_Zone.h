@@ -30,7 +30,7 @@
 class Agent_Zone {
 public:
     Agent_Zone();
-    Agent_Zone(int id, int agentid, const agentStruct &agent);
+    Agent_Zone(const Building_Zone & buldingZone, int agentid, const agentStruct &agent);
     void step(const Building_Zone& zone, const Building_Zone& zonePrevious,
               const std::vector<double> &activities);
 

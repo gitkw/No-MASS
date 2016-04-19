@@ -34,8 +34,8 @@ Agent::Agent(int newId, const std::vector<Building_Zone> &zones) : id(newId) {
       power = DBL_EPSILON;
     }
 
-    for (Building_Zone buldingZone : zones) {
-        agentZones.push_back(Agent_Zone(buldingZone.getId(), id, agent));
+    for (const Building_Zone & buldingZone : zones) {
+        agentZones.push_back(Agent_Zone(buldingZone, id, agent));
     }
 
     if (agent.HeatOnPresence) {

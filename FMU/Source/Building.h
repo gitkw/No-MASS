@@ -26,7 +26,7 @@ private:
     void setAgentHeatDecisionsForZone(Building_Zone *zone);
     void setAgentCountForZone(Building_Zone *zone);
     void initialiseStates();
-    void setZones(std::vector<Building_Zone> zones);
+    void setZones(const std::vector<Building_Zone> & zones);
     void buildingInteractions();
     void matchStateToZone(State &s);
     std::vector<float> presenceProfile;

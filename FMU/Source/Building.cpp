@@ -38,9 +38,12 @@ void Building::setup(const buildingStruct &b) {
           population.push_back(Agent(a, zones));
     }
     initialiseStates();
+
+    for (Building_Zone &zone : zones) {
+    }
 }
 
-void Building::setZones(std::vector<Building_Zone> zones) {
+void Building::setZones(const std::vector<Building_Zone> & zones) {
     this->zones = zones;
 }
 
@@ -94,7 +97,7 @@ void Building::initialiseStates() {
 
 void Building::matchStateToZone(State &s) {
     for (unsigned int i =0; i < zones.size(); i++) {
-      if (zones[i].hasActivity(s.getActivity())) {
+      if (zones[i].hasActivity(s.getId())) {
           s.setZonePtr(&(zones[i]));
           break;
       }

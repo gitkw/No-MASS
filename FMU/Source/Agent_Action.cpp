@@ -19,7 +19,7 @@ std::string Agent_Action::getName() const{
     return name;
 }
 
-void Agent_Action::setavailableActivities(
+void Agent_Action::setAvailableActivities(
     const std::vector<int> availableActivities){
     this->availableActivities = availableActivities;
 }
