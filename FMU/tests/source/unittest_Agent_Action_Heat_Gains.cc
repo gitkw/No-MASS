@@ -15,6 +15,7 @@ class Test_Agent_Action_Heat_Gains : public ::testing::Test {
 };
 
 void Test_Agent_Action_Heat_Gains::SetUp() {
+  DataStore::clear();
   SimulationConfig::reset();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
