@@ -10,6 +10,7 @@
 #include "gtest/gtest.h"
 
 TEST(Simulation, HeatGainsOnly) {
+  DataStore::clear();
   SimulationConfig::reset();
   SimulationConfig::FmuLocation = testFiles;
   Simulation s;
@@ -46,8 +47,8 @@ TEST(Simulation, HeatGainsOnly) {
       ASSERT_NEAR(DataStore::getValue("AgentGains1"), 77.046341167, 0.001);
       ASSERT_NEAR(DataStore::getValue("Agent_Metabolic_Rate_1"), 70, 0.001);
       ASSERT_NEAR(DataStore::getValue("Agent_clo_1"), 1, 0.001);
-      ASSERT_NEAR(DataStore::getValue("Agent_ppd_1"), 7.8357782196855936, 0.001);
-      ASSERT_NEAR(DataStore::getValue("Agent_pmv_1"), -0.36908214203982143, 0.001);
+      ASSERT_NEAR(DataStore::getValue("Agent_ppd_1"), 7.835778219685593, 0.001);
+      ASSERT_NEAR(DataStore::getValue("Agent_pmv_1"), -0.36908214203982, 0.001);
     }
   }
   s.postprocess();
@@ -55,6 +56,7 @@ TEST(Simulation, HeatGainsOnly) {
 
 
 TEST(Simulation, HeatGainsWindowsOnly) {
+  DataStore::clear();
   SimulationConfig::reset();
   SimulationConfig::FmuLocation = testFiles;
   Simulation s;
