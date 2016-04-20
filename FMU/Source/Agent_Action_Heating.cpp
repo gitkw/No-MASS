@@ -4,14 +4,9 @@
 
 #include "Agent_Action_Heating.h"
 
-Agent_Action_Heating::Agent_Action_Heating() {
-    name = "Heating";
-}
+Agent_Action_Heating::Agent_Action_Heating() {}
 
-void Agent_Action_Heating::step(const Building_Zone& zone, const bool inZone,
-    const bool previouslyInZone, const std::vector<double> &activities) {
-
-
+void Agent_Action_Heating::step(const std::vector<double> &activities) {
     int stepCount = SimulationConfig::getStepCount();
     result = 1;
     if (activities.at(stepCount) == 9) {

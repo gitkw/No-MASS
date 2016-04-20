@@ -8,9 +8,6 @@ class State_Metabolic:public State
 {
     public:
         State_Metabolic();
-        
-    protected:
-    private:
 };
 
 #endif // STATE_METABOLIC_H

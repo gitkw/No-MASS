@@ -8,9 +8,6 @@ class State_Washing:public State
 {
     public:
         State_Washing();
-        
-    protected:
-    private:
 };
 
 #endif // STATE_WASHING_H

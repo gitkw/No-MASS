@@ -1,7 +1,5 @@
 // Copyright 2015 Jacob Chapman
 
-
-
 #include <iostream>
 #include <map>
 #include <utility>
@@ -58,7 +56,7 @@ void SimulationConfig::parseBuilding(rapidxml::xml_node<> *node) {
     std::pair<std::string, ZoneStruct> zsOut;
     zsOut.first = "Out";
     zsOut.second.name = "Out";
-    zsOut.second.activities.push_back("Out");
+    zsOut.second.activities.push_back(9);
     zsOut.second.id = zonecount;
     b.zones.insert(zsOut);
     rapidxml::xml_node<> *cnode = node->first_node();
@@ -78,7 +76,8 @@ void SimulationConfig::parseBuilding(rapidxml::xml_node<> *node) {
                     zone.second.name = znode->value();
                 } else if (std::strcmp(znode->name(), "activities") == 0
                           || std::strcmp(znode->name(), "activity") == 0) {
-                    zone.second.activities = Utility::splitCSV(znode->value());
+                    zone.second.activities =
+                          activityNamesToIds(Utility::splitCSV(znode->value()));
                 } else if (std::strcmp(znode->name(), "groundFloor") == 0) {
                     zone.second.groundFloor = std::stoi(znode->value());
                 } else if (std::strcmp(znode->name(), "windowCount") == 0) {
@@ -102,116 +101,142 @@ void SimulationConfig::parseBuilding(rapidxml::xml_node<> *node) {
     buildings.push_back(b);
 }
 
+std::vector<int> SimulationConfig::activityNamesToIds(
+          const std::vector<std::string> & activities) {
+  std::vector<int> act;
+  for (const std::string & activity : activities) {
+    if (activity == "Sleep") {
+      act.push_back(0);
+    } else if (activity == "Passive") {
+      act.push_back(1);
+    } else if (activity == "AudioVisual") {
+      act.push_back(2);
+    } else if (activity == "IT") {
+      act.push_back(3);
+    } else if (activity == "Cooking") {
+      act.push_back(4);
+    } else if (activity == "Cleaning") {
+      act.push_back(5);
+    } else if (activity == "Washing") {
+      act.push_back(6);
+    } else if (activity == "Metabolic") {
+      act.push_back(7);
+    } else if (activity == "WashingAppliance") {
+      act.push_back(8);
+    }
+  }
+  return act;
+}
 
 void SimulationConfig::parseAgents(rapidxml::xml_node<> *node) {
-    agents.clear();
-    SimulationConfig::ActivityFile = "";
-    info.presencePage = false;
-    rapidxml::xml_node<> *cnode = node->first_node();
-    while (cnode) {
-        if (std::strcmp(cnode->name(), "agent") == 0) {
-            agentStruct agent;
-            rapidxml::xml_node<> *anode = cnode->first_node();
-            while (anode) {
-                if (std::strcmp(anode->name(), "profile") == 0) {
-                    rapidxml::xml_node<> *pnode = anode->first_node();
-                    while (pnode) {
-                        std::string text = pnode->name();
-                        if (text.compare("file") == 0) {
-                            SimulationConfig::ActivityFile = pnode->value();
-                        } else {
-                            std::pair<int, std::string> a;
-                            if (text == "monday") {
-                                info.presencePage = true;
-                                a.first = 0;
-                            } else if (text == "tuesday") {
-                                a.first = 1;
-                            } else  if (text == "wednesday") {
-                                a.first = 2;
-                            } else  if (text == "thursday") {
-                                a.first = 3;
-                            } else  if (text == "friday") {
-                                a.first = 4;
-                            } else  if (text == "saturday") {
-                                a.first = 5;
-                            } else  if (text == "sunday") {
-                                a.first = 6;
-                            } else {
-                                text.erase(0, 1);
-                                a.first = std::stoi(text);
-                            }
-                            a.second = pnode->value();
-                            agent.profile.insert(a);
-                        }
-                        pnode = pnode->next_sibling();
-                    }
-
-                } else if (std::strcmp(anode->name(), "bedroom") == 0) {
-                    agent.bedroom = anode->value();
-                } else if (std::strcmp(anode->name(), "office") == 0) {
-                    agent.office = anode->value();
-                } else if (std::strcmp(anode->name(), "power") == 0) {
-                    agent.power = std::stod(anode->value());
-                } else if (std::strcmp(anode->name(), "window") == 0) {
-                    agent.windowId = std::stoi(anode->value());
-                } else if (std::strcmp(anode->name(), "shade") == 0) {
-                    agent.shadeId = std::stoi(anode->value());
-                } else if (std::strcmp(anode->name(), "edtry") == 0) {
-                    agent.edtry = anode->value();
-                } else if (std::strcmp(anode->name(), "age") == 0) {
-                    agent.age = anode->value();
-                } else if (std::strcmp(anode->name(), "computer") == 0) {
-                    agent.computer = anode->value();
-                } else if (std::strcmp(anode->name(), "civstat") == 0) {
-                    agent.civstat = anode->value();
-                } else if (std::strcmp(anode->name(), "unemp") == 0) {
-                    agent.unemp = anode->value();
-                } else if (std::strcmp(anode->name(), "retired") == 0) {
-                    agent.retired = anode->value();
-                } else if (std::strcmp(anode->name(), "sex") == 0) {
-                    agent.sex = anode->value();
-                } else if (std::strcmp(anode->name(), "famstat") == 0) {
-                    agent.famstat = anode->value();
-                } else if (std::strcmp(anode->name(), "ShadeClosedDuringSleep") == 0) {
-                    agent.ShadeClosedDuringSleep = std::stoi(anode->value());
-                } else if (std::strcmp(anode->name(), "ShadeClosedDuringWashing") == 0) {
-                    agent.ShadeClosedDuringWashing = std::stoi(anode->value());
-                } else if (std::strcmp(anode->name(), "LightOffDuringAudioVisual") == 0) {
-                    agent.LightOffDuringAudioVisual = std::stoi(anode->value());
-                } else if (std::strcmp(anode->name(), "LightOffDuringSleep") == 0) {
-                    agent.LightOffDuringSleep = std::stoi(anode->value());
-                } else if (std::strcmp(anode->name(), "WindowOpenDuringCooking") == 0) {
-                    agent.WindowOpenDuringCooking = std::stoi(anode->value());
-                } else if (std::strcmp(anode->name(), "WindowOpenDuringWashing") == 0) {
-                    agent.WindowOpenDuringWashing = std::stoi(anode->value());
-                }
-                anode = anode->next_sibling();
+  agents.clear();
+  SimulationConfig::ActivityFile = "";
+  info.presencePage = false;
+  rapidxml::xml_node<> *cnode = node->first_node();
+  while (cnode) {
+    if (std::strcmp(cnode->name(), "agent") == 0) {
+      agentStruct agent;
+      rapidxml::xml_node<> *anode = cnode->first_node();
+      while (anode) {
+        if (std::strcmp(anode->name(), "profile") == 0) {
+          rapidxml::xml_node<> *pnode = anode->first_node();
+          while (pnode) {
+            std::string text = pnode->name();
+            if (text.compare("file") == 0) {
+              SimulationConfig::ActivityFile = pnode->value();
+            } else {
+              std::pair<int, std::string> a;
+              if (text == "monday") {
+                info.presencePage = true;
+                a.first = 0;
+              } else if (text == "tuesday") {
+                a.first = 1;
+              } else  if (text == "wednesday") {
+                a.first = 2;
+              } else  if (text == "thursday") {
+                a.first = 3;
+              } else  if (text == "friday") {
+                a.first = 4;
+              } else  if (text == "saturday") {
+                a.first = 5;
+              } else  if (text == "sunday") {
+                a.first = 6;
+              } else {
+                text.erase(0, 1);
+                a.first = std::stoi(text);
+              }
+              a.second = pnode->value();
+              agent.profile.insert(a);
             }
+            pnode = pnode->next_sibling();
+          }
 
-
-            if (SimulationConfig::info.presencePage
-                && agent.profile.size() != 7) {
-                LOG << "Occupant presence has not been defined using the Page ";
-                LOG << "method\nPlease add a presence profile for each day of ";
-                LOG << "the week in the No-MASS simulation configuration file";
-                LOG << "\nIn DesignBuilder please select the correct activity ";
-                LOG << "profile\n";
-                LOG.error();
-            } else if (!SimulationConfig::info.presencePage
-                && agent.profile.size() != 24
-                && SimulationConfig::ActivityFile == "") {
-                LOG << "The activity profile is not defined for each hour ";
-                LOG << "using the Said method\nPlease add a activity profile ";
-                LOG << "for hour in the No-MASS simulation configuration file";
-                LOG << "\nIn DesignBuilder please select the correct activity ";
-                LOG << "profile\n";
-                LOG.error();
-            }
-            agents.push_back(agent);
+        } else if (std::strcmp(anode->name(), "bedroom") == 0) {
+          agent.bedroom = anode->value();
+        } else if (std::strcmp(anode->name(), "office") == 0) {
+          agent.office = anode->value();
+        } else if (std::strcmp(anode->name(), "power") == 0) {
+          agent.power = std::stod(anode->value());
+        } else if (std::strcmp(anode->name(), "window") == 0) {
+          agent.windowId = std::stoi(anode->value());
+        } else if (std::strcmp(anode->name(), "shade") == 0) {
+          agent.shadeId = std::stoi(anode->value());
+        } else if (std::strcmp(anode->name(), "edtry") == 0) {
+          agent.edtry = anode->value();
+        } else if (std::strcmp(anode->name(), "age") == 0) {
+          agent.age = anode->value();
+        } else if (std::strcmp(anode->name(), "computer") == 0) {
+          agent.computer = anode->value();
+        } else if (std::strcmp(anode->name(), "civstat") == 0) {
+          agent.civstat = anode->value();
+        } else if (std::strcmp(anode->name(), "unemp") == 0) {
+          agent.unemp = anode->value();
+        } else if (std::strcmp(anode->name(), "retired") == 0) {
+          agent.retired = anode->value();
+        } else if (std::strcmp(anode->name(), "sex") == 0) {
+          agent.sex = anode->value();
+        } else if (std::strcmp(anode->name(), "famstat") == 0) {
+          agent.famstat = anode->value();
+        } else if (std::strcmp(anode->name(), "ShadeClosedDuringSleep") == 0) {
+          agent.ShadeClosedDuringSleep = std::stoi(anode->value());
+        } else if (std::strcmp(anode->name(),
+                                "ShadeClosedDuringWashing") == 0) {
+          agent.ShadeClosedDuringWashing = std::stoi(anode->value());
+        } else if (std::strcmp(anode->name(),
+                                "LightOffDuringAudioVisual") == 0) {
+          agent.LightOffDuringAudioVisual = std::stoi(anode->value());
+        } else if (std::strcmp(anode->name(), "LightOffDuringSleep") == 0) {
+          agent.LightOffDuringSleep = std::stoi(anode->value());
+        } else if (std::strcmp(anode->name(), "WindowOpenDuringCooking") == 0) {
+          agent.WindowOpenDuringCooking = std::stoi(anode->value());
+        } else if (std::strcmp(anode->name(), "WindowOpenDuringWashing") == 0) {
+          agent.WindowOpenDuringWashing = std::stoi(anode->value());
         }
+        anode = anode->next_sibling();
+      }
 
-        cnode = cnode->next_sibling();
+      if (SimulationConfig::info.presencePage
+        && agent.profile.size() != 7) {
+        LOG << "Occupant presence has not been defined using the Page ";
+        LOG << "method\nPlease add a presence profile for each day of ";
+        LOG << "the week in the No-MASS simulation configuration file";
+        LOG << "\nIn DesignBuilder please select the correct activity ";
+        LOG << "profile\n";
+        LOG.error();
+      } else if (!SimulationConfig::info.presencePage
+        && agent.profile.size() != 24
+        && SimulationConfig::ActivityFile == "") {
+        LOG << "The activity profile is not defined for each hour ";
+        LOG << "using the Said method\nPlease add a activity profile ";
+        LOG << "for hour in the No-MASS simulation configuration file";
+        LOG << "\nIn DesignBuilder please select the correct activity ";
+        LOG << "profile\n";
+        LOG.error();
+      }
+      agents.push_back(agent);
     }
+    cnode = cnode->next_sibling();
+  }
 }
 
 void SimulationConfig::parseModels(rapidxml::xml_node<> *node) {

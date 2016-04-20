@@ -6,9 +6,7 @@
 #include "DataStore.h"
 #include "Agent_Action_Window.h"
 
-Agent_Action_Window::Agent_Action_Window() {
-    name = "Windows";
-}
+Agent_Action_Window::Agent_Action_Window() {}
 
 void Agent_Action_Window::setOpenDuringWashing(
     const bool OpenDuringWashing) {

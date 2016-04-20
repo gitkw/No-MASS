@@ -1,26 +1,23 @@
-/*
- * File:   Log.cpp
- * Author: jake
- *
- * Created on September 13, 2013, 12:26 PM
- */
+// Copyright 2016 Jacob Chapman
 
 #include <fstream>
 #include <iostream>
+#include <string>
 #include "Log.h"
 // Define the static member, somewhere in an implementation file.
 std::stringstream Log::buf;
 bool Log::errorFlag = false;
 
-Log::Log(){}
+Log::Log() {}
 
-void Log::printLog(){
-
-  if(errorFlag){
+void Log::printLog() {
+  if (errorFlag) {
     std::ofstream outfile;
     outfile.open("No-MASS.err", std::ios_base::app);
     outfile << "   *************"  << std::endl;
-    outfile << "   ************* ===== Final No-MASS (Detailed Occupancy) Error Summary ====="  << std::endl;
+    outfile << "   ************* ===== ";
+    outfile << "Final No-MASS (Detailed Occupancy) Error Summary =====";
+    outfile << std::endl;
     std::string line;
 
     if (std::getline(Log::buf, line)) {
@@ -35,15 +32,15 @@ void Log::printLog(){
   }
 }
 
-void Log::error(){
+void Log::error() {
   errorFlag = true;
   Log::printLog();
 }
 
-void Log::reset(){
+void Log::reset() {
   errorFlag = false;
 }
 
-bool Log::getError(){
+bool Log::getError() {
   return errorFlag;
 }

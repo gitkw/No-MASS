@@ -43,8 +43,7 @@ public:
     void setState(State &state);
     void zoneInteractions();
     void postprocess();
-    void model_presenceFromActivities();
-    void model_presenceFromPage();
+
     void interactWithZone(const Building_Zone &zone);
 
     bool currentlyInZone(const Building_Zone &zone) const;
@@ -80,10 +79,10 @@ private:
 
     Agent_Action_Heating aah;
 
-    Model_Presence presence;
     State state; /** Occupants current state */
     State previousState; /** Occupants previous state */
 
+    void model_presenceFromPage();
     void model_pastAndFutureDurations();
     void model_activity();
     void rLearn(const Building_Zone &zone, desires *interaction);
@@ -92,11 +91,8 @@ private:
     bool calculateWindowInteractionsOnZone(const Building_Zone &zone);
     double calculateExternalShadeInteractionsOnZone(const Building_Zone &zone);
     double calculateMetabolicHeatGainsOnZone(const Building_Zone &zone);
-    double getPreviousDurationOfAbsenceState() const;
-    double getCurrentDurationOfPresenceState() const;
-    double getFutureDurationOfPresenceState() const;
-    std::string updateLocation(const State& state) const;
     double getPMV(const Building_Zone &zone) const;
+    std::string updateLocation(const State& state) const;
 
 };
 

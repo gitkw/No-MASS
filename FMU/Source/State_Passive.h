@@ -7,8 +7,6 @@ class State_Passive : public State
 {
     public:
         State_Passive();
-    protected:
-    private:
 };
 
 #endif // STATE_PASSIVE_H

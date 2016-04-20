@@ -53,7 +53,8 @@ static fmiValueReference vrStates[NUMBER_OF_STATES] = STATES;
 // fname is fmiInstantiateModel or fmiInstantiateSlave
 static fmiComponent instantiateModel(const char* fname, fmiString instanceName,
     fmiString GUID, fmiCallbackFunctions functions, fmiBoolean loggingOn) {
-
+    DataStore::clear();
+    SimulationConfig::stepCount = -1;
     if (valToRefs.empty()) {
         modelInstance->sim.preprocess();
         loadVariables();
@@ -104,16 +105,6 @@ fmiStatus fmiSetDebugLogging(fmiComponent c, fmiBoolean loggingOn) {
 
 fmiStatus fmiSetReal(fmiComponent c, const fmiValueReference vr[],
       size_t nvr, const fmiReal value[]) {
-    for (unsigned int i = 0; i < nvr; i++) {
-        if (valToRefs.at(vr[i]) == "EMSwarmUpComplete") {
-            if (value[i] != period) {
-                period = value[i];
-                SimulationConfig::stepCount = -1;
-            }
-            continue;
-        }
-    }
-
     for (unsigned int i = 0; i < nvr; i++) {
         DataStore::addValue(valToRefs.at(vr[i]), value[i]);
     }

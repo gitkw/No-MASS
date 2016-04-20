@@ -12,7 +12,6 @@
 
 class Test_QLearning_HeatingSetPoints : public ::testing::Test {
  protected:
-
     QLearning_HeatingSetPoints ql;
     virtual void SetUp();
 };
@@ -35,7 +34,7 @@ TEST_F(Test_QLearning_HeatingSetPoints, learn) {
     ZoneStruct zs;
     zs.name = "Block1:Zone1";
     zs.id = 1;
-    Building_Zone z_Kitchen("", zs);
+    Building_Zone z_Kitchen(zs);
 
     DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature", 1);
 
@@ -53,14 +52,14 @@ TEST_F(Test_QLearning_HeatingSetPoints, learn) {
         reward = 0.9;
       }
       ql.setReward(reward);
-      heating = ql.learn(z_Kitchen);
+      heating = ql.learn();
       DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature",
                           heating);
     }
     // ql.printQ();
 
     ql.setEpsilon(0.0);
-    heating = ql.learn(z_Kitchen);
+    heating = ql.learn();
   //  ASSERT_NEAR(heating, 21, 0.1);
 }
 
@@ -112,7 +111,6 @@ TEST_F(Test_QLearning_HeatingSetPoints, Learn1) {
                 << reward << " " << std::endl;
 */
       ql.updateQ(previous_state, action, reward, state);
-
     }
 
     ql.printQ();

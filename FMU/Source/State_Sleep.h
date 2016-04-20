@@ -6,9 +6,6 @@ class State_Sleep : public State
 {
     public:
         State_Sleep();
-        
-    protected:
-    private:
 };
 
 #endif // STATE_SLEEP_H

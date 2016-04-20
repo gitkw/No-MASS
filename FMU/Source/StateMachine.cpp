@@ -1,24 +1,26 @@
+// Copyright 2016 Jacob Chapman
+
 #include <iostream>
 #include "StateMachine.h"
 
 StateMachine::StateMachine() {}
 
-unsigned int StateMachine::numberOfStates() const{
-	return states.size();
+unsigned int StateMachine::numberOfStates() const {
+  return states.size();
 }
 
 void StateMachine::addState(const State & s) {
-	states.push_back(s);
+  states.push_back(s);
 }
 
 State StateMachine::transistionTo(const int stateID) {
-	State x;
-	for(const State & s : states){
-	  if(s.getId() == stateID){
+  State x;
+  for (const State & s : states) {
+    if (s.getId() == stateID) {
       x = s;
-	  }else if(s.hasState(stateID)) {
+    } else if (s.hasState(stateID)) {
       x = s.getState(stateID);
-	  }
-	}
-	return x;
+    }
+  }
+  return x;
 }

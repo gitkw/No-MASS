@@ -10,7 +10,6 @@
 #include "Agent_Action_Learning.h"
 
 Agent_Action_Learning::Agent_Action_Learning() {
-    name = "Learning";
     setPoint = 20;
     pmv = -1;
     result = 20;
@@ -63,30 +62,28 @@ void Agent_Action_Learning::setup(const int id, const int learn) {
   }
 }
 
-void Agent_Action_Learning::step(const Building_Zone& zone, const bool inZone,
-    const bool previouslyInZone, const std::vector<double> &activities) {
-
+void Agent_Action_Learning::step(const Building_Zone& zone, const bool inZone) {
     int hour = DataStore::getValue("hour");
 
-    if(inZone){
+    if (inZone) {
       hasBeenInZone = true;
       setPoint = zone.getHeatingState();
       pmv = reward;
     }
 
-    if(hour != previousHour){
+    if (hour != previousHour) {
       reward = 0;
-      if(hasBeenInZone){
-        if(pmv > -0.5 && pmv <= 0){
+      if (hasBeenInZone) {
+        if (pmv > -0.5 && pmv <= 0) {
           reward = 1;
-        }else{
+        } else {
           reward = -0.1;
         }
         steps = 0;
       } else {
-        if(setPoint == 10 && steps > 1){
+        if (setPoint == 10 && steps > 1) {
           reward = 1;
-        }else{
+        } else {
           reward = -0.1;
         }
         steps = steps + 1;
@@ -94,14 +91,14 @@ void Agent_Action_Learning::step(const Building_Zone& zone, const bool inZone,
 
       int day = DataStore::getValue("day")+1;
       int dayOfTheWeek = (day - 1) % 7;
-      if(dayOfTheWeek < 5){
+      if (dayOfTheWeek < 5) {
         qlWeekDay->setHeatingSetPoint(setPoint-10);
         qlWeekDay->setReward(reward);
-        result = qlWeekDay->learn(zone) + 10;
-      }else{
+        result = qlWeekDay->learn() + 10;
+      } else {
         qlWeekEnd->setHeatingSetPoint(setPoint-10);
         qlWeekEnd->setReward(reward);
-        result = qlWeekEnd->learn(zone) + 10;
+        result = qlWeekEnd->learn() + 10;
       }
       hasBeenInZone = false;
       previousHour = hour;

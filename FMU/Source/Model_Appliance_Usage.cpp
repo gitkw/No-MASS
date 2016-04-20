@@ -1,12 +1,8 @@
 // Copyright 2015 Jacob Chapman
 
-
 #include <cstring>
 #include <string>
 #include <vector>
-
-
-
 #include "Utility.h"
 #include "Model_Appliance_Usage.h"
 
@@ -37,7 +33,7 @@ double Model_Appliance_Usage::consumption(const int app, const int timeStep) {
 
 double Model_Appliance_Usage::getTransitionAt(const int app,
   const int state, const int i) {
-        double transition;
+        double transition = -0.1;
         switch (app) {
         case 0:
                 transition = transitionsCooker[state][i];
@@ -88,7 +84,7 @@ double Model_Appliance_Usage::getPower(const int app) {
 }
 
 double Model_Appliance_Usage::getMeanFraction(const int app) {
-        int state;
+        int state = -1;
         switch (app) {
         case 0:
                 state = stateCooker;

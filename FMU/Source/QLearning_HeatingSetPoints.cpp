@@ -26,8 +26,7 @@ QLearning_HeatingSetPoints::QLearning_HeatingSetPoints() {
 void QLearning_HeatingSetPoints::reset() {
 }
 
-double QLearning_HeatingSetPoints::learn(const Building_Zone &zone) {
-
+double QLearning_HeatingSetPoints::learn() {
     int month = DataStore::getValue("month") - 1;
     int hourOfDay = DataStore::getValue("hourOfDay");
     state = (month * 24) + hourOfDay;
@@ -40,9 +39,4 @@ double QLearning_HeatingSetPoints::learn(const Building_Zone &zone) {
     previous_state = state;
     action = greedySelection(state);
     return action;
-}
-
-void QLearning_HeatingSetPoints::setHeatingSetPoint(
-    const double heatingSetPoint){
-  this->heatingSetPoint = heatingSetPoint;
 }

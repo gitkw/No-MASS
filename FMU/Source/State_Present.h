@@ -6,8 +6,6 @@ class State_Present: public State
 {
     public:
         State_Present();
-    protected:
-    private:
 };
 
 #endif // STATE_PRESENT_H

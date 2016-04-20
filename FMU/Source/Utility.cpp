@@ -10,10 +10,8 @@
 
 std::random_device Utility::r;
 std::mt19937_64 Utility::engine(r());
-//std::mt19937_64 Utility::engine;
 
-Utility::Utility() {
-}
+Utility::Utility() {}
 
 void Utility::setSeed(int seed) {
     Utility::engine.seed(seed);
@@ -34,7 +32,7 @@ int Utility::randomInt(int min, int max) {
     return uniform_dist(engine);
 }
 
-std::list<int> Utility::randomIntList(int number, int min, int max) {
+std::list<int> Utility::randomIntList(int number) {
     std::vector<int> numbers;
     std::list<int> randNumbers;
     for (int i =0; i < number; i++) {
@@ -49,7 +47,7 @@ std::list<int> Utility::randomIntList(int number, int min, int max) {
     return randNumbers;
 }
 
-std::vector<std::string> Utility::splitCSV(std::string typeString) {
+std::vector<std::string> Utility::splitCSV(const std::string & typeString) {
     std::vector<std::string> types;
     const char *str = typeString.c_str();
     char c = ',';

@@ -16,7 +16,7 @@
 
 struct ZoneStruct {
     std::string name;
-    std::vector<std::string> activities;
+    std::vector<int> activities;
     bool groundFloor = 0;
     int windowCount = 0;
     int id = 0;
@@ -165,6 +165,7 @@ private:
     static void parseModels(rapidxml::xml_node<> *node);
     static void parseWindows(rapidxml::xml_node<> *node);
     static void parseShades(rapidxml::xml_node<> *node);
+    static std::vector<int> activityNamesToIds(const std::vector<std::string> & activities);
     SimulationConfig();
 };
 

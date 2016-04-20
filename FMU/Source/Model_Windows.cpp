@@ -1,4 +1,4 @@
-// Copyright 2015 Jacob Chapman
+// Copyright 2016 Jacob Chapman
 
 #include <cmath>
 #include <deque>

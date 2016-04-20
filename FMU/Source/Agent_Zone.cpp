@@ -9,9 +9,8 @@
 Agent_Zone::Agent_Zone() {
 }
 
-Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid, const agentStruct &agent)
-    :id(id), agentid(agentid) {
-
+Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid,
+                        const agentStruct &agent) : agentid(agentid) {
   id = buldingZone.getId();
   aahg.setup(agentid);
   availableActions.push_back(0);
@@ -20,12 +19,14 @@ Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid, const age
       aaw.setup(agent.windowId);
       aaw.setOpenDuringCooking(agent.WindowOpenDuringCooking);
       aaw.setOpenDuringWashing(agent.WindowOpenDuringWashing);
+      aaw.setAvailableActivities(buldingZone.getActivities());
       availableActions.push_back(1);
   }
   if (SimulationConfig::info.lights) {
       availableActions.push_back(3);
       aal.setOffDuringAudioVisual(agent.LightOffDuringAudioVisual);
       aal.setOffDuringSleep(agent.LightOffDuringSleep);
+      aal.setAvailableActivities(buldingZone.getActivities());
   }
   if (SimulationConfig::info.shading) {
       aas.setup(agent.shadeId);
@@ -41,10 +42,8 @@ Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid, const age
 }
 
 void Agent_Zone::step(const Building_Zone& zone,
-      const Building_Zone& zonePrevious,
-      const std::vector<double> &activities) {
-
-
+                      const Building_Zone& zonePrevious,
+                      const std::vector<double> &activities) {
     bool inZone = zone.getId() == id;
     bool previouslyInZone = zonePrevious.getId() == id;
     if (isInBuilding()) {
@@ -53,7 +52,7 @@ void Agent_Zone::step(const Building_Zone& zone,
         for (int a : availableActions) {
           if (inZone) {
             actionStep(a, zone, inZone, previouslyInZone, activities);
-          }else if (previouslyInZone) {
+          } else if (previouslyInZone) {
             actionStep(a, zonePrevious, inZone, previouslyInZone, activities);
           }
         }
@@ -62,7 +61,6 @@ void Agent_Zone::step(const Building_Zone& zone,
         actionStep(5, zone, inZone, previouslyInZone, activities);
       }
     }
-
 }
 
 void Agent_Zone::actionStep(int action,
@@ -72,7 +70,7 @@ void Agent_Zone::actionStep(int action,
       case 0:
             if (inZone) {
               aahg.prestep(clo, metabolicRate);
-              aahg.step(zone, inZone, preZone, activities);
+              aahg.step(zone, inZone);
               heatgains = aahg.getResult();
               previous_pmv = pmv;
               pmv = aahg.getPMV();
@@ -98,8 +96,7 @@ void Agent_Zone::actionStep(int action,
         break;
       case 5:
               aalearn.setReward(pmv);
-              //aalearn.setReward(ppd);
-              aalearn.step(zone, inZone, preZone, activities);
+              aalearn.step(zone, inZone);
               desiredHeatingSetPoint = aalearn.getResult();
         break;
       }
@@ -125,7 +122,7 @@ double Agent_Zone::getHeatgains() const {
   return heatgains;
 }
 
-double Agent_Zone::getDesiredHeatingSetPoint() const{
+double Agent_Zone::getDesiredHeatingSetPoint() const {
   return desiredHeatingSetPoint;
 }
 
@@ -141,13 +138,13 @@ void Agent_Zone::setMetabolicRate(double metabolicRate) {
   this->metabolicRate = metabolicRate;
 }
 
-void Agent_Zone::postprocess(){
+void Agent_Zone::postprocess() {
   if (isInBuilding() && SimulationConfig::info.learn > 0) {
     aalearn.print();
     aalearn.reset();
   }
 }
 
-bool Agent_Zone::isInBuilding() const{
-    return id > 0; // 0 is the ID for the outside zone
+bool Agent_Zone::isInBuilding() const {
+    return id > 0;  // 0 is the ID for the outside zone
 }

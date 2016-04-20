@@ -13,8 +13,8 @@ public:
     static int randomInt(int min, int max);
     static bool tossACoin();
     static void setSeed(int seed);
-    static std::list<int> randomIntList(int number, int min, int max);
-    static std::vector<std::string> splitCSV(std::string typeString);
+    static std::list<int> randomIntList(int number);
+    static std::vector<std::string> splitCSV(const std::string & typeString);
 private:
     Utility();
     static std::random_device r;

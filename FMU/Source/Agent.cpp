@@ -45,7 +45,7 @@ Agent::Agent(int newId, const std::vector<Building_Zone> &zones) : id(newId) {
     if (SimulationConfig::info.presencePage) {
       model_presenceFromPage();
     } else {
-      model_presenceFromActivities();
+      model_activity();
     }
 }
 
@@ -77,10 +77,10 @@ void Agent::step(StateMachine *stateMachine) {
 
 void Agent::interactWithZone(const Building_Zone &zone) {
     desires interaction;
-
+  /*
     bool inZone = currentlyInZone(zone);
     bool preZone = previouslyInZone(zone);
-    /*
+
     aah.step(zone, inZone, preZone, activities);
     // interaction->heatState = aah.getResult();
     heatState = aah.getResult();
@@ -97,12 +97,8 @@ void Agent::model_activity() {
     activities = ma.preProcessActivities(id);
 }
 
-void Agent::model_presenceFromActivities() {
-    model_activity();
-    presence.calculatePresenceFromActivities(activities);
-}
-
 void Agent::model_presenceFromPage() {
+    Model_Presence presence;
     presence.calculatePresenceFromPage(id);
     for (unsigned int i = 0; i < presence.size(); ++i) {
         if (presence.at(i)) {

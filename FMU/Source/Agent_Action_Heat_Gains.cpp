@@ -7,9 +7,7 @@
 #include "Model_HeatGains.h"
 #include "Agent_Action_Heat_Gains.h"
 
-Agent_Action_Heat_Gains::Agent_Action_Heat_Gains() {
-  name = "HeatGains";
-}
+Agent_Action_Heat_Gains::Agent_Action_Heat_Gains() {}
 
 void Agent_Action_Heat_Gains::setup(int agentid) {
   this->id = agentid;
@@ -30,8 +28,8 @@ void Agent_Action_Heat_Gains::prestep(double clo, double metabolicRate) {
     this->metabolicRate = metabolicRate;
 }
 
-void Agent_Action_Heat_Gains::step(const Building_Zone& zone, const bool inZone,
-    const bool previouslyInZone, const std::vector<double> &activities) {
+void Agent_Action_Heat_Gains::step(const Building_Zone& zone,
+                                    const bool inZone) {
   ppd = 5;
   pmv = 0;
   result = 0;
@@ -66,6 +64,7 @@ void Agent_Action_Heat_Gains::step(const Building_Zone& zone, const bool inZone,
     ppd = h.getPpd();
     pmv = h.getPmv();
   }
+  std::string name;
   name = "Agent_Metabolic_Rate_" + idAsString;
   DataStore::addValue(name.c_str(), metabolicRate);
   name = "Agent_clo_" + idAsString;
@@ -82,14 +81,12 @@ void Agent_Action_Heat_Gains::step(const Building_Zone& zone, const bool inZone,
   DataStore::addValue(name.c_str(), meanRadient);
   name = "Agent_PMV_setpoint" + idAsString;
   DataStore::addValue(name.c_str(), zone.getHeatingState());
-
-
 }
 
-double Agent_Action_Heat_Gains::getPMV() const{
+double Agent_Action_Heat_Gains::getPMV() const {
     return pmv;
 }
 
-double Agent_Action_Heat_Gains::getPPD() const{
+double Agent_Action_Heat_Gains::getPPD() const {
     return ppd;
 }

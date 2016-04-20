@@ -34,7 +34,7 @@ TEST(Agent, Build) {
   ZoneStruct zs;
   zs.name = "Out";
   zs.id = 0;
-  Building_Zone z_Out("", zs);
+  Building_Zone z_Out(zs);
 
   out.setZonePtr(&(z_Out));
   stateMachine.addState(out);
@@ -63,19 +63,19 @@ TEST(Agent, Build) {
 
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen("", zs);
+  Building_Zone z_Kitchen(zs);
   zs.name = "Block1:LivingRoom";
   zs.id = 1;
-  Building_Zone z_LivingRoom("", zs);
+  Building_Zone z_LivingRoom(zs);
   zs.name = "Block2:Bathroom";
   zs.id = 1;
-  Building_Zone z_Bathroom("", zs);
+  Building_Zone z_Bathroom(zs);
   zs.name = "Block2:MasterBedroom";
   zs.id = 1;
-  Building_Zone z_MasterBedroom("", zs);
+  Building_Zone z_MasterBedroom(zs);
   zs.name = "Block2:Office";
   zs.id = 1;
-  Building_Zone z_Office("", zs);
+  Building_Zone z_Office(zs);
 
   State_Sleep sleep;
   sleep.setZonePtr(&(z_MasterBedroom));

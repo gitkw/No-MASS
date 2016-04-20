@@ -6,9 +6,7 @@
 #include "Agent_Action_Shades.h"
 #include "SimulationConfig.h"
 
-Agent_Action_Shades::Agent_Action_Shades() {
-    name = "Shades";
-}
+Agent_Action_Shades::Agent_Action_Shades() {}
 
 void Agent_Action_Shades::setClosedDuringWashing(
   bool ShadeClosedDuringWashing) {

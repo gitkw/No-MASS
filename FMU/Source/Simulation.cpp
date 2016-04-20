@@ -90,6 +90,7 @@ void Simulation::preTimeStep() {
   DataStore::addValue("month", month);
 }
 
+
 /**
  * @brief Increments the timestep for the simulation
  * @details Increments the timestep for the EnergyPlus processor, the AgentModel and the ZoneManager.
@@ -105,5 +106,4 @@ void Simulation::timeStep() {
 /**
  * @brief processes After timestep
  */
-void Simulation::postTimeStep() {
-}
+void Simulation::postTimeStep() {}

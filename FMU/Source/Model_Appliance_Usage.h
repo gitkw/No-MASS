@@ -1,3 +1,5 @@
+// Copyright 2015 Jacob Chapman
+
 #ifndef MODEL_APPLIANCE_USAGE_H
 #define	MODEL_APPLIANCE_USAGE_H
 

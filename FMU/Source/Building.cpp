@@ -29,18 +29,15 @@ Building::Building() {
 void Building::setup(const buildingStruct &b) {
     name = b.name;
     for (std::pair<std::string, ZoneStruct> z : b.zones) {
-      zones.push_back(Building_Zone(name, z.second));
+      zones.push_back(Building_Zone(z.second));
     }
     int popSize = SimulationConfig::numberOfAgents();
-    std::list<int> pop = Utility::randomIntList(popSize, 0, popSize);
+    std::list<int> pop = Utility::randomIntList(popSize);
     // setup each agent randomly
     for (int a : pop) {
           population.push_back(Agent(a, zones));
     }
     initialiseStates();
-
-    for (Building_Zone &zone : zones) {
-    }
 }
 
 void Building::setZones(const std::vector<Building_Zone> & zones) {
@@ -88,7 +85,7 @@ void Building::initialiseStates() {
     stateMachine.addState(out);
 
     int popSize = population.size();
-    std::list<int> pop = Utility::randomIntList(popSize, 0, popSize);
+    std::list<int> pop = Utility::randomIntList(popSize);
     // step each agent randomly
     for (int a : pop) {
         population[a].setState(out);
@@ -106,7 +103,7 @@ void Building::matchStateToZone(State &s) {
 
 void Building::step() {
     int popSize = population.size();
-    std::list<int> pop = Utility::randomIntList(popSize, 0, popSize);
+    std::list<int> pop = Utility::randomIntList(popSize);
     // step each agent randomly
     for (int a : pop) {
         population[a].step(&stateMachine);

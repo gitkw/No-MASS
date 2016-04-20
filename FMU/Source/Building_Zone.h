@@ -11,7 +11,7 @@
 class Building_Zone {
 public:
     Building_Zone();
-    Building_Zone(std::string, const ZoneStruct zoneStruct);
+    Building_Zone(const ZoneStruct & zoneStruct);
 
     void step();
     void setup();

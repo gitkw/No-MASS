@@ -62,10 +62,10 @@ int QLearning::getBestAction(const int s) const {
     return m;
 }
 
-void QLearning::updateQ(const int s, const int a, const double r, const int sp) {
+void QLearning::updateQ(const int s, const int a,
+                        const double r, const int sp) {
   double maxQ = *std::max_element(qTable[sp].begin(), qTable[sp].end());
   qTable[s][a] = qTable[s][a] + alpha * (r + gamma * maxQ - qTable[s][a]);
-  //std::cout << "updateQ " << std::endl;
 }
 
 void QLearning::printQ() const {
@@ -96,20 +96,24 @@ void QLearning::setReward(const double reward) {
     this->reward = reward;
 }
 
-double QLearning::learn(const Building_Zone &zone) {
+double QLearning::learn() {
   return 0;
 }
 
 void QLearning::reset() {
 }
 
-void QLearning::setHeatingSetPoint(const double heatingSetPoint){
+
+
+void QLearning::setHeatingSetPoint(const double heatingSetPoint) {
+  this->heatingSetPoint = heatingSetPoint;
 }
+
 
 void QLearning::setEpsilon(const double epsilon) {
   this->epsilon = epsilon;
 }
 
-void QLearning::setFilename(const std::string filename){
+void QLearning::setFilename(const std::string filename) {
   this->filename = filename;
 }

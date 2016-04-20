@@ -7124,46 +7124,13 @@ ComponentSizingSummary,
 OutdoorAirSummary,
 ObjectCountSummary;
 
-
-OutputControl:Table:Style, CommaAndHTML, JtoKWH;
-Output:Meter,Electricity:Facility,timestep;
-Output:Meter,Gas:Facility,timestep;
-Output:Meter,InteriorEquipment:Electricity,timestep;
-Output:Meter,InteriorLights:Electricity,timestep;
-Output:Meter,Electricity:Facility,hourly;
-Output:Meter,Gas:Facility,hourly;
-Output:Meter,InteriorEquipment:Electricity,hourly;
-Output:Meter,InteriorLights:Electricity,hourly;
-Output:Meter,Electricity:Facility,daily;
-Output:Meter,Gas:Facility,daily;
-Output:Meter,InteriorEquipment:Electricity,daily;
-Output:Meter,InteriorLights:Electricity,daily;
-Output:Meter,Electricity:Facility,monthly;
-Output:Meter,Gas:Facility,monthly;
-Output:Meter,InteriorEquipment:Electricity,monthly;
-Output:Meter,InteriorLights:Electricity,monthly;
-Output:Meter,Electricity:Facility,runperiod;
-Output:Meter,Gas:Facility,runperiod;
-Output:Meter,InteriorEquipment:Electricity,runperiod;
-Output:Meter,InteriorLights:Electricity,runperiod;
-
 OutputControl:IlluminanceMap:Style,
    Comma;                                         !- Column separator
 
-Output:Surfaces:Drawing, DXF, Triangulate3DFace;
 Output:Surfaces:List, Details;
 Output:Constructions, Construction;
-Output:VariableDictionary, IDF;
 OutputControl:ReportingTolerances,.5,.5;
 Output:Diagnostics, DisplayAdvancedReportVariables;
-
-
-
-
-
-Output:Variable,*,Schedule Value,Timestep;
-
-
 
 Output:Variable,*,Zone People Radiant Heating Rate,timestep;
 Output:Variable,*,Zone Air Relative Humidity,timestep;
@@ -7181,7 +7148,6 @@ Output:Variable,*,Zone Air System Sensible Heating Rate,Timestep;
 Output:Variable,*,Zone Air System Sensible Cooling Energy,Timestep;
 Output:Variable,*,Zone Air System Sensible Cooling Rate,Timestep;
 Output:Variable,*,Zone Mean Air Temperature,Timestep;
-
 
 Output:Variable,*,Zone People Radiant Heating Rate,monthly;
 Output:Variable,*,Zone Air Relative Humidity,monthly;
@@ -7222,53 +7188,6 @@ Output:Variable,*,AFN Surface Venting Window or Door Opening Factor,timestep;
 Output:Variable,*,Zone Exterior Windows Total Transmitted Beam Solar Radiation Rate,timestep;
 
 
-EnergyManagementSystem:ProgramCallingManager,
-    Warm Up Completed,  !- Name
-    AfterNewEnvironmentWarmUpIsComplete,  !- EnergyPlus Model Calling Point
-    outputTime;        !- Program Name 1
-
-EnergyManagementSystem:ProgramCallingManager,
-    get time,  !- Name
-    BeginTimestepBeforePredictor,  !- EnergyPlus Model Calling Point
-    oTime;        !- Program Name 1
-
-EnergyManagementSystem:GlobalVariable,
-    exTime;     !- Erl Variable 1 Name
-
-EnergyManagementSystem:GlobalVariable,
-    epTime;     !- Erl Variable 1 Name
-
-EnergyManagementSystem:OutputVariable,
-    warmUpComplete,  !- Name
-    exTime,     !- EMS Variable Name
-    Averaged,                !- Type of Data in Variable
-    ZoneTimeStep,            !- Update Frequency
-    ,                        !- EMS Program or Subroutine Name
-    ;                       !- Units
-
-EnergyManagementSystem:OutputVariable,
-    epTimeStep,  !- Name
-    epTime,     !- EMS Variable Name
-    Averaged,                !- Type of Data in Variable
-    ZoneTimeStep,            !- Update Frequency
-    ,                        !- EMS Program or Subroutine Name
-    ;                       !- Units
-
-
-EnergyManagementSystem:Program,
-    outputTime,        !- Name
-    SET exTime = CurrentEnvironment;  !- Program Line 1
-
-
-EnergyManagementSystem:Program,
-    oTime,        !- Name
-    SET epTime = CurrentTime;
-
-Output:EnergyManagementSystem,
-    Verbose,                 !- Actuator Availability Dictionary Reporting
-    Verbose,                 !- Internal Variable Availability Dictionary Reporting
-    Verbose;                 !- EMS Runtime Language Debug Output Level
-
 ExternalInterface,
   FunctionalMockupUnitImport;                !- Name of External Interface
 
@@ -7299,20 +7218,6 @@ ExternalInterface:FunctionalMockupUnitImport:From:Variable,
   agentFMU.fmu,                            !- FMU Filename,
   FMI,                                     !- FMU Instance Name,
   EnvironmentSiteOutdoorAirDrybulbTemperature;!- FMU Variable Name
-
-ExternalInterface:FunctionalMockupUnitImport:From:Variable,
-  EMS,                                     !- EnergyPlus Key Value,
-  warmUpComplete,                          !- EnergyPlus Variable Name,
-  agentFMU.fmu,                            !- FMU Filename,
-  FMI,                                     !- FMU Instance Name,
-  EMSwarmUpComplete;                       !- FMU Variable Name
-
-ExternalInterface:FunctionalMockupUnitImport:From:Variable,
-  EMS,                                     !- EnergyPlus Key Value,
-  epTimeStep,                              !- EnergyPlus Variable Name,
-  agentFMU.fmu,                            !- FMU Filename,
-  FMI,                                     !- FMU Instance Name,
-  EMSepTimeStep;                           !- FMU Variable Name
 
 ExternalInterface:FunctionalMockupUnitImport:From:Variable,
   Block1:Kitchen,                          !- EnergyPlus Key Value,
@@ -7499,7 +7404,7 @@ ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
   Any Number,                              !- Schedule Type Limits Names,
   agentFMU.fmu,                            !- FMU Filename,
   FMI,                                     !- FMU Model Name,
-  Block1:KitchenWindowState,               !- FMU Model Variable Name,
+  Block1:KitchenWindowState0,               !- FMU Model Variable Name,
   0.0;                                     !- Initial Value
 
 ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
@@ -7507,7 +7412,7 @@ ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
   Any Number,                              !- Schedule Type Limits Names,
   agentFMU.fmu,                            !- FMU Filename,
   FMI,                                     !- FMU Model Name,
-  Block1:LivingRoomWindowState,            !- FMU Model Variable Name,
+  Block1:LivingRoomWindowState0,            !- FMU Model Variable Name,
   0.0;                                     !- Initial Value
 
 ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
@@ -7515,7 +7420,7 @@ ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
   Any Number,                              !- Schedule Type Limits Names,
   agentFMU.fmu,                            !- FMU Filename,
   FMI,                                     !- FMU Model Name,
-  Block2:BathroomWindowState,              !- FMU Model Variable Name,
+  Block2:BathroomWindowState0,              !- FMU Model Variable Name,
   0.0;                                     !- Initial Value
 
 ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
@@ -7523,7 +7428,7 @@ ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
   Any Number,                              !- Schedule Type Limits Names,
   agentFMU.fmu,                            !- FMU Filename,
   FMI,                                     !- FMU Model Name,
-  Block2:MasterBedroomWindowState,         !- FMU Model Variable Name,
+  Block2:MasterBedroomWindowState0,         !- FMU Model Variable Name,
   0.0;                                     !- Initial Value
 
 ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
@@ -7531,7 +7436,7 @@ ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
   Any Number,                              !- Schedule Type Limits Names,
   agentFMU.fmu,                            !- FMU Filename,
   FMI,                                     !- FMU Model Name,
-  Block2:OfficeWindowState,                !- FMU Model Variable Name,
+  Block2:OfficeWindowState0,                !- FMU Model Variable Name,
   0.0;                                     !- Initial Value
 
 ExternalInterface:FunctionalMockupUnitImport:To:Schedule,

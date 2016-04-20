@@ -71,6 +71,7 @@ private:
     Agent_Action_Learning aalearn;
 
     std::vector<int> availableActions;
+    
 
 };
 

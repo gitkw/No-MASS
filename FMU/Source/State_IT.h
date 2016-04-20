@@ -7,9 +7,6 @@ class State_IT:public State
 {
     public:
         State_IT();
-        
-    protected:
-    private:
 };
 
 #endif // STATE_IT_H

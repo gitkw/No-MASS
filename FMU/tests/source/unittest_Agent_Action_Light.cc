@@ -40,7 +40,7 @@ TEST_F(Test_Agent_Action_Lights, OffDuringSleep) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen("", zs);
+  Building_Zone z_Kitchen(zs);
   aal.setOffDuringSleep(true);
 
   activities.push_back(0);
@@ -57,7 +57,7 @@ TEST_F(Test_Agent_Action_Lights, OffDuringAudioVisual) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen("", zs);
+  Building_Zone z_Kitchen(zs);
   aal.setOffDuringAudioVisual(true);
   aal.getResult();
 

@@ -41,18 +41,18 @@ TEST_F(Test_Agent_Action_Learning, Learn) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen("", zs);
+  Building_Zone z_Kitchen(zs);
   activities.push_back(4);
 
   double heating;
   for (int i =0; i < 100000; i++) {
-     aal.step(z_Kitchen, true, false, activities);
+     aal.step(z_Kitchen, true);
      heating = aal.getResult();
      DataStore::addValue("Block1:KitchenZoneMeanAirTemperature",
                         heating);
   }
 
-  aal.step(z_Kitchen, true, false, activities);
+  aal.step(z_Kitchen, true);
   heating = aal.getResult();
 //  ASSERT_NEAR(heating, 21, 0.1);
 }

@@ -1,9 +1,4 @@
-/*
- * File:   HeatGain.h
- * Author: jake
- *
- * Created on September 15, 2013, 5:03 PM
- */
+// Copyright 2016 Jacob Chapman
 
 #ifndef HEATGAIN_H
 #define HEATGAIN_H

@@ -1,18 +1,16 @@
 // Copyright 2015 Jacob Chapman
 
-
 #include <map>
 #include <limits>
 #include <utility>
 #include <vector>
 #include <cctype>
-#include <iostream>     // cout, endl
-#include <fstream>      // fstream
+#include <iostream>
+#include <fstream>
 #include <string>
-#include <algorithm>    // copy
-#include <iterator>     // ostream_operator
+#include <algorithm>
+#include <iterator>
 #include <cassert>
-
 #include <cstddef>
 #include "rapidxml_utils.hpp"
 #include "rapidxml.hpp"
@@ -94,7 +92,7 @@ std::string Model_Activity::getDay(const int day) const {
 }
 
 int Model_Activity::multinominalActivity(const double *p) const {
-  int activity;
+  int activity = -1;
   double sum = 0;
   double drand = Utility::randomDouble(0.0, 1.0);
   for (int i =0; i < 10; i++) {
@@ -169,7 +167,7 @@ std::vector<double> Model_Activity::multinominal(const int agentID) const {
       {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     int tsph = SimulationConfig::info.timeStepsPerHour;
-    int hourCount =24;
+    int hourCount = 24;
     int month = SimulationConfig::info.startMonth;
     int day = SimulationConfig::info.startDay -1;
     int dayOfWeek = SimulationConfig::info.startDayOfWeek-1;
@@ -196,7 +194,8 @@ std::vector<double> Model_Activity::multinominal(const int agentID) const {
                 }
             }
         }
-        activities.push_back(multinominalActivity(p[season][dayOfWeek][hourCount]));
+        activities.push_back(
+                    multinominalActivity(p[season][dayOfWeek][hourCount]));
     }
     return activities;
 }

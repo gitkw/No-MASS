@@ -3,23 +3,22 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <algorithm>
 #include "DataStore.h"
 #include "SimulationConfig.h"
 #include "Building_Zone.h"
 
-Building_Zone::Building_Zone() {
-}
+Building_Zone::Building_Zone() {}
 
-Building_Zone::Building_Zone(const std::string buldingName,
-  const ZoneStruct zoneStruct) : name(zoneStruct.name), id(zoneStruct.id) {
-
-
+Building_Zone::Building_Zone(const ZoneStruct & zoneStruct) :
+                             id(zoneStruct.id),
+                             name(zoneStruct.name),
+                             activities(zoneStruct.activities) {
     occupantFraction = 0;
     currentAgentGains = 0;
     blindState = 1;
     lightState = 0;
     windowState = 0;
-
 
     setActive(SimulationConfig::activeZone(&name));
     if (active) {
@@ -45,10 +44,6 @@ Building_Zone::Building_Zone(const std::string buldingName,
 }
 
 void Building_Zone::setup() {
-  for(const std::string &act : zoneStruct.activities){
-
-  }
-  
 }
 
 void Building_Zone::step() {
@@ -95,6 +90,10 @@ double Building_Zone::getBlindState() const {
 
 double Building_Zone::getHeatingState() const {
     return heatingState;
+}
+
+std::vector<int> Building_Zone::getActivities() const{
+  return activities;
 }
 
 void Building_Zone::setOccupantFraction(double occupantFraction) {

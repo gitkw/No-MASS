@@ -11,15 +11,12 @@ void QLearning_PMV::learn(const Zone &zone, ActionValues *act) {
     bool doRLearn = false;
     if (zone.getWindowState() != act->windowState &&
             zone.getLightState() != act->lightState) {
-        // std::cout << "window light" << std::endl;
         doRLearn = true;
     } else if (zone.getLightState() != act->lightState &&
             zone.getBlindState() != act->shadeState) {
-        // std::cout << "light shade" << std::endl;
         doRLearn = true;
     } else if (zone.getBlindState() != act->shadeState &&
             zone.getWindowState() != act->windowState) {
-        // std::cout << "shade window" << std::endl;
         doRLearn = true;
     }
 

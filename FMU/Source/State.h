@@ -3,14 +3,11 @@
 #include <string>
 #include "Building_Zone.h"
 
-
-
 class State
 {
     public:
         State();
         virtual ~State();
-
         virtual bool hasState(const int stateID) const;
         virtual State getState(const int stateID) const;
 
@@ -29,12 +26,8 @@ class State
         double metabolicRate;
         double clo;
         std::string activity;
-        Building_Zone* zone;
-
         std::vector<State> states;
-
-    private:
-
+        Building_Zone* zone;
 };
 
 #endif // STATE_H

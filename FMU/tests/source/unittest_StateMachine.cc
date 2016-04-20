@@ -23,12 +23,12 @@ TEST(StateMachine, statesPage) {
   ZoneStruct zs;
   zs.name = "Block1:Zone1";
   zs.id = 1;
-  Building_Zone z("", zs);
+  Building_Zone z(zs);
 
   ZoneStruct zs_out;
   zs_out.name = "Out";
   zs_out.id = 0;
-  Building_Zone z_out("", zs_out);
+  Building_Zone z_out(zs_out);
 
   StateMachine stateMachine;
   State_Out out;
@@ -72,7 +72,7 @@ TEST(StateMachine, statesActivity) {
   ZoneStruct zs_out;
   zs_out.name = "Out";
   zs_out.id = 1;
-  Building_Zone z_out("", zs_out);
+  Building_Zone z_out(zs_out);
 
   StateMachine stateMachine;
   State_Out out;
@@ -84,19 +84,19 @@ TEST(StateMachine, statesActivity) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen("", zs);
+  Building_Zone z_Kitchen(zs);
   zs.name = "Block1:LivingRoom";
   zs.id = 1;
-  Building_Zone z_LivingRoom("", zs);
+  Building_Zone z_LivingRoom(zs);
   zs.name = "Block2:Bathroom";
   zs.id = 1;
-  Building_Zone z_Bathroom("", zs);
+  Building_Zone z_Bathroom(zs);
   zs.name = "Block2:MasterBedroom";
   zs.id = 1;
-  Building_Zone z_MasterBedroom("", zs);
+  Building_Zone z_MasterBedroom(zs);
   zs.name = "Block2:Office";
   zs.id = 1;
-  Building_Zone z_Office("", zs);
+  Building_Zone z_Office(zs);
 
   State_Sleep sleep;
   sleep.setZonePtr(&(z_MasterBedroom));

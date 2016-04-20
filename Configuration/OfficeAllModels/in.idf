@@ -1560,53 +1560,10 @@ Output:Variable,*,Zone Air System Sensible Cooling Rate,runperiod;
 Output:Variable,*,Zone Mean Air Temperature,runperiod;
 
 
-EnergyManagementSystem:ProgramCallingManager,
-    Warm Up Completed,  !- Name
-    AfterNewEnvironmentWarmUpIsComplete,  !- EnergyPlus Model Calling Point
-    outputTime;        !- Program Name 1
-
-EnergyManagementSystem:ProgramCallingManager,
-    get time,  !- Name
-    BeginTimestepBeforePredictor,  !- EnergyPlus Model Calling Point
-    oTime;        !- Program Name 1
-
-EnergyManagementSystem:GlobalVariable,
-    exTime;     !- Erl Variable 1 Name
-
-EnergyManagementSystem:GlobalVariable,
-    epTime;     !- Erl Variable 1 Name
-
-EnergyManagementSystem:OutputVariable,
-    warmUpComplete,  !- Name
-    exTime,     !- EMS Variable Name
-    Averaged,                !- Type of Data in Variable
-    ZoneTimeStep,            !- Update Frequency
-    ,                        !- EMS Program or Subroutine Name
-    ;                       !- Units
-
-EnergyManagementSystem:OutputVariable,
-    epTimeStep,  !- Name
-    epTime,     !- EMS Variable Name
-    Averaged,                !- Type of Data in Variable
-    ZoneTimeStep,            !- Update Frequency
-    ,                        !- EMS Program or Subroutine Name
-    ;                       !- Units
-
-
-EnergyManagementSystem:Program,
-    outputTime,        !- Name
-    SET exTime = CurrentEnvironment;  !- Program Line 1
-
-
-EnergyManagementSystem:Program,
-    oTime,        !- Name
-    SET epTime = CurrentTime;
-
 Output:EnergyManagementSystem,
     Verbose,                 !- Actuator Availability Dictionary Reporting
     Verbose,                 !- Internal Variable Availability Dictionary Reporting
     None;                 !- EMS Runtime Language Debug Output Level
-
 
 
 ExternalInterface,
@@ -1710,17 +1667,3 @@ ExternalInterface:FunctionalMockupUnitImport:From:Variable,
   agentFMU.fmu,                            !- FMU Filename,
   FMI,                                     !- FMU Instance Name,
   EnvironmentSiteOutdoorAirDrybulbTemperature;!- FMU Variable Name
-
-ExternalInterface:FunctionalMockupUnitImport:From:Variable,
-  EMS,                                     !- EnergyPlus Key Value,
-  warmUpComplete,                          !- EnergyPlus Variable Name,
-  agentFMU.fmu,                            !- FMU Filename,
-  FMI,                                     !- FMU Instance Name,
-  EMSwarmUpComplete;                       !- FMU Variable Name
-
-ExternalInterface:FunctionalMockupUnitImport:From:Variable,
-  EMS,                                     !- EnergyPlus Key Value,
-  epTimeStep,                              !- EnergyPlus Variable Name,
-  agentFMU.fmu,                            !- FMU Filename,
-  FMI,                                     !- FMU Instance Name,
-  EMSepTimeStep;                           !- FMU Variable Name

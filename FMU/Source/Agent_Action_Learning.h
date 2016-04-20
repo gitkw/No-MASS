@@ -8,9 +8,7 @@ class Agent_Action_Learning : public Agent_Action
 {
   public:
     Agent_Action_Learning();
-    void step(const Building_Zone& zone, const bool inZone,
-              const bool previouslyInZone,
-              const std::vector<double> &activities);
+    void step(const Building_Zone& zone, const bool inZone);
     void setup(const int id, const int learn);
     void setReward(const double reward);
     void setZoneId(const double zoneId);

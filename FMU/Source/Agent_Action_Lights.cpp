@@ -4,10 +4,7 @@
 #include "Model_Lights.h"
 #include "Agent_Action_Lights.h"
 
-Agent_Action_Lights::Agent_Action_Lights() {
-    name = "Lights";
-}
-
+Agent_Action_Lights::Agent_Action_Lights() {}
 
 void Agent_Action_Lights::setOffDuringAudioVisual(bool OffDuringAudioVisual) {
   this->OffDuringAudioVisual = OffDuringAudioVisual;
@@ -30,7 +27,7 @@ void Agent_Action_Lights::step(const Building_Zone& zone, const bool inZone,
             lightState = m_lightUsage.intermediate(lightState, Lumint);
     } else if (!inZone && previouslyInZone) {
             int pffs = getFutureDurationOfPresenceState(activities);
-            lightState = m_lightUsage.departure(lightState, Lumint, pffs);
+            lightState = m_lightUsage.departure(lightState, pffs);
     }
     int stepCount = SimulationConfig::getStepCount();
     if (OffDuringSleep && activities.at(stepCount) == 0) {

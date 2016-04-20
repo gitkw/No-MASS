@@ -35,7 +35,7 @@ TEST_F(Test_Agent_Action_Shades, ClosedDuringSleep) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen("", zs);
+  Building_Zone z_Kitchen(zs);
   aas.setClosedDuringSleep(true);
 
   activities.push_back(0);
@@ -52,7 +52,7 @@ TEST_F(Test_Agent_Action_Shades, ClosedDuringWashing) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen("", zs);
+  Building_Zone z_Kitchen(zs);
   aas.setClosedDuringWashing(true);
   aas.getResult();
 

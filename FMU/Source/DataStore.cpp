@@ -44,7 +44,7 @@ void DataStore::print() {
   std::ofstream myfile;
   myfile.open("agent.csv");
   myfile << "stepCount,";
-  int maxSize = 0;
+  unsigned int maxSize = 0;
   for (std::unordered_map<std::string, std::vector<double> >::iterator it=variableMap.begin(); it != variableMap.end(); ++it) {
       myfile << it->first << ",";
       if (maxSize < it->second.size()) {
@@ -63,12 +63,7 @@ void DataStore::print() {
       myfile << std::endl;
   }
   myfile.close();
-
-
-
-
-
-
+/*
   myfile.open("Learn.csv");
   myfile << "stepCount,";
   maxSize = 0;
@@ -94,6 +89,5 @@ void DataStore::print() {
       myfile << std::endl;
   }
   myfile.close();
-
-
+*/
 }
