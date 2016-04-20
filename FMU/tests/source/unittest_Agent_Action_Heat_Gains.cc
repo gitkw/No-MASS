@@ -11,7 +11,6 @@
 class Test_Agent_Action_Heat_Gains : public ::testing::Test {
  protected:
     Agent_Action_Heat_Gains aahg;
-    std::vector<double> activities;
     virtual void SetUp();
 };
 
@@ -36,20 +35,16 @@ void Test_Agent_Action_Heat_Gains::SetUp() {
   DataStore::addValue("Block1:KitchenDaylightingReferencePoint1Illuminance", 1);
 }
 
-TEST_F(Test_Agent_Action_Heat_Gains, OffDuringSleep) {
+TEST_F(Test_Agent_Action_Heat_Gains, HeatGains) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
   Building_Zone z_Kitchen(zs);
   // aahg.prestep(double clo, double metabolicRate)
   aahg.prestep(1.0, 0.1);
-
-  activities.push_back(0);
   aahg.step(z_Kitchen, true);
   ASSERT_NEAR(aahg.getResult(), 85.5, 0.01);
-
   SimulationConfig::step();
-  activities.push_back(1);
   aahg.step(z_Kitchen, true);
   ASSERT_NEAR(aahg.getResult(), 85.5, 0.01);
 }
