@@ -36,22 +36,16 @@
     <ScalarVariable causality="input" name="EnvironmentSiteOutdoorAirDrybulbTemperature" valueReference="9">
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" />
     </ScalarVariable>
-    <ScalarVariable causality="input" name="EMSwarmUpComplete" valueReference="10">
-      <Real declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" />
-    </ScalarVariable>
-    <ScalarVariable causality="input" name="EMSepTimeStep" valueReference="11">
-      <Real declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" />
-    </ScalarVariable>
-    <ScalarVariable causality="output" name="Block1:Zone1BlindFraction" valueReference="12">
+    <ScalarVariable causality="output" name="Block1:Zone1BlindFraction" valueReference="10">
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" start="1.0" />
     </ScalarVariable>
-    <ScalarVariable causality="output" name="Block1:Zone1WindowState0" valueReference="13">
+    <ScalarVariable causality="output" name="Block1:Zone1WindowState0" valueReference="11">
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" />
     </ScalarVariable>
-    <ScalarVariable causality="output" name="Block1:Zone1LightState" valueReference="14">
+    <ScalarVariable causality="output" name="Block1:Zone1LightState" valueReference="12">
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" />
     </ScalarVariable>
-    <ScalarVariable causality="output" name="Block1:Zone1Heating" valueReference="15">
+    <ScalarVariable causality="output" name="Block1:Zone1Heating" valueReference="13">
       <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" start="0.0" />
     </ScalarVariable>
   </ModelVariables>
