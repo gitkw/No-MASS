@@ -44,7 +44,7 @@ void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
   // double rain = DataStore::getValue("EnvironmentSiteRainStatus");
   double rain = 0;
   double indoorTemperature = zone.getMeanAirTemperature();
-  double timeStepLengthInMinutes = SimulationConfig::lengthOfTimestep();
+  double timeStepLengthInMinutes = SimulationConfig::lengthOfTimestep() / 60;
 
   m_window.setWindowState(zone.getWindowState());
   if (inZone && !previouslyInZone) {
@@ -65,7 +65,7 @@ void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
         static_cast<double>(outDoorTemperatures.size());
 
     double groundFloor = zone.getGroundFloor();
-    double futureDuration = getFutureDurationOfPresenceState(activities);
+    double futureDuration = getFutureDurationOfAbsenceState(activities);
     m_window.departure(
         indoorTemperature, dailyMeanTemperature, futureDuration, groundFloor);
   }
@@ -90,4 +90,7 @@ void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
     }
   }
   result = m_window.getWindowState();
+//  if(result)
+//  std::cout  << " " << result << " " << m_window.getDurationOpen() << std::endl;
+
 }

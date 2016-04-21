@@ -60,9 +60,8 @@ TEST_F(Test_Windows, Arrival) {
     dur = mw.getDurationOpen();
   }
 
-  ASSERT_NEAR(1786, mw.getDurationOpen(), 0.01);
+  ASSERT_NEAR(4754, mw.getDurationOpen(), 0.01);
   EXPECT_TRUE(mw.getWindowState());
-
 }
 
 
@@ -132,7 +131,7 @@ TEST_F(Test_Windows, Inter) {
 
   EXPECT_TRUE(mw.getWindowState());
 
-  EXPECT_EQ(1786, dur);
+  EXPECT_EQ(4754, dur);
   int durCount = dur;
   while (dur > timeStepLengthInMinutes) {
     mw.intermediate(indoorTemperature, outdoorTemperature,

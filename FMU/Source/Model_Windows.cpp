@@ -118,7 +118,7 @@ void Model_Windows::arrival(double indoorTemperature, double outdoorTemperature,
             durationOpen = 0.f;
         }
     } else {
-        double durationOpen = calculateDurationOpen(outdoorTemperature);
+        durationOpen = calculateDurationOpen(outdoorTemperature);
         if (durationOpen < timeStepLengthInMinutes) {
             state = 0;
             durationOpen = 0;

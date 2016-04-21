@@ -22,17 +22,17 @@ bool Agent_Action::activityAvailable(const int act) const {
       != availableActivities.end();
 }
 
-double Agent_Action::getFutureDurationOfPresenceState(
+double Agent_Action::getFutureDurationOfAbsenceState(
   const std::vector<double> &activities) const {
     int stepCount = SimulationConfig::getStepCount();
     unsigned int stepCounter = stepCount;
     double cdp = 0;
-    if (activityAvailable(activities.at(stepCount))) {
+    if (!activityAvailable(activities.at(stepCount))) {
       double lengthOfTimeStepSeconds =
         (60 * (60 / SimulationConfig::info.timeStepsPerHour));
       cdp = lengthOfTimeStepSeconds;
       while (stepCounter + 1 < activities.size()
-          && activityAvailable(activities.at(stepCounter+1))) {
+          && !activityAvailable(activities.at(stepCounter+1))) {
           cdp = cdp + lengthOfTimeStepSeconds;
           stepCounter++;
       }

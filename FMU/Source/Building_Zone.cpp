@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <vector>
 #include "DataStore.h"
 #include "SimulationConfig.h"
 #include "Building_Zone.h"
@@ -55,7 +56,6 @@ void Building_Zone::step() {
         }
         DataStore::addValue(variableNameLight, lightState);
         DataStore::addValue(variableNameBlindFraction, 1.0 - blindState);
-
         DataStore::addValue(variableNameHeating, heatingState);
     }
 }
@@ -92,7 +92,7 @@ double Building_Zone::getHeatingState() const {
     return heatingState;
 }
 
-std::vector<int> Building_Zone::getActivities() const{
+std::vector<int> Building_Zone::getActivities() const {
   return activities;
 }
 

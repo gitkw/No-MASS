@@ -23,8 +23,7 @@
 #include "Model_Presence.h"
 #include "Building.h"
 
-Building::Building() {
-}
+Building::Building() {}
 
 void Building::setup(const buildingStruct &b) {
     name = b.name;
@@ -263,6 +262,8 @@ void Building::setAgentWindowDecisionForZone(Building_Zone *zone) {
             zone->setWindowState(Utility::tossACoin());
         }
     }
+  //  if(zone->getWindowState())
+  //  std::cout << numberOfActiveAgents << " " << open << " " << close << " " << zone->getWindowState() << std::endl;
 }
 
 void Building::setAgentBlindDecisionForZone(Building_Zone *zone) {
@@ -358,6 +359,9 @@ void Building::setAgentLightDecisionForZone(Building_Zone *zone) {
             zone->setLightState(Utility::tossACoin());
         }
     }
+//     if(zone->getLightState())
+  //    std::cout << numberOfActiveAgents << " " << open << " " << close << " " << zone->getLightState() << std::endl;
+
 }
 
 void Building::setAgentCountForZone(Building_Zone *zone) {

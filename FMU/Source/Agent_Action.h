@@ -9,7 +9,7 @@ class Agent_Action {
 
     void setAvailableActivities(const std::vector<int> availableActivities);
     double getResult() const;
-    double getFutureDurationOfPresenceState(
+    double getFutureDurationOfAbsenceState(
                       const std::vector<double> &activities) const;
     double getPreviousDurationOfAbsenceState(
                       const std::vector<double> &activities) const;

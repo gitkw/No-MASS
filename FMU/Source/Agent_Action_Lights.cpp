@@ -26,7 +26,7 @@ void Agent_Action_Lights::step(const Building_Zone& zone, const bool inZone,
     } else if (inZone && previouslyInZone) {
             lightState = m_lightUsage.intermediate(lightState, Lumint);
     } else if (!inZone && previouslyInZone) {
-            int pffs = getFutureDurationOfPresenceState(activities);
+            int pffs = getFutureDurationOfAbsenceState(activities);
             lightState = m_lightUsage.departure(lightState, pffs);
     }
     int stepCount = SimulationConfig::getStepCount();
