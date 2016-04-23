@@ -27,6 +27,8 @@ class Agent_Action_Learning : public Agent_Action
     double steps;
     bool hasBeenInZone;
     double pmv;
+    std::string pmv_name;
+    std::string step_name;
   //  QLearning ql;
 };
 

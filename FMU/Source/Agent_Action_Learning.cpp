@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
+#include <string>
 // #include "QLearning_PMV.h"
 // #include "QLearning_HeatingRate.h"
 #include "DataStore.h"
@@ -44,21 +45,26 @@ void Agent_Action_Learning::setup(const int id, const int learn) {
                   new QLearning_HeatingSetPoints());
         qlWeekEnd = std::shared_ptr<QLearning_HeatingSetPoints>(
                   new QLearning_HeatingSetPoints());
-        qlWeekDay->setFilename("Weekday-" + std::to_string(zoneId) + "-");
-        qlWeekEnd->setFilename("Weekend-" + std::to_string(zoneId) + "-");
+        std::string zoneIdStr = std::to_string(zoneId);
+        qlWeekDay->setFilename("Weekday-" + zoneIdStr + "-");
+        qlWeekEnd->setFilename("Weekend-" + zoneIdStr + "-");
         qlWeekDay->setStates(24 * 12);
         qlWeekEnd->setStates(24 * 12);
         qlWeekDay->setId(id);
         qlWeekDay->setup();
         qlWeekEnd->setId(id);
         qlWeekEnd->setup();
+        pmv_name = "Weekday-" + zoneIdStr + "-_pmv" + std::to_string(id);
+        DataStore::addVariable(pmv_name);
+        step_name = "Weekday-" + zoneIdStr + "-_steps" + std::to_string(id);
+        DataStore::addVariable(step_name);
       break;
-    case 2:
+    /*case 2:
     //  ql = std::shared_ptr<QLearning_PMV>(new QLearning_PMV);
       break;
     case 3:
     //  ql = std::shared_ptr<QLearning_HeatingRate>(new QLearning_HeatingRate);
-      break;
+      break;*/
   }
 }
 
@@ -73,24 +79,21 @@ void Agent_Action_Learning::step(const Building_Zone& zone, const bool inZone) {
 
     if (hour != previousHour) {
       reward = 0;
+      steps = steps + 1;
       if (hasBeenInZone) {
-        if (pmv > -0.5 && pmv <= 0) {
-          reward = 1;
-        } else {
-          reward = -0.1;
-        }
         steps = 0;
-      } else {
-        if (setPoint == 10 && steps > 1) {
-          reward = 1;
-        } else {
-          reward = -0.1;
-        }
-        steps = steps + 1;
       }
+
+      bool x = (pmv > 0 && setPoint == 10);
+      bool y = (pmv < -0.5);
+      bool z = (pmv >= -0.5 && pmv <= 0);
+      bool a = setPoint == 10 && steps > 1;
+      reward = hasBeenInZone * (1 * z + 0.1 * x - 0.1 * y) +
+                (1-hasBeenInZone) * (a * 0.1 + (1-a) * -0.1);
 
       int day = DataStore::getValue("day")+1;
       int dayOfTheWeek = (day - 1) % 7;
+
       if (dayOfTheWeek < 5) {
         qlWeekDay->setHeatingSetPoint(setPoint-10);
         qlWeekDay->setReward(reward);
@@ -100,6 +103,8 @@ void Agent_Action_Learning::step(const Building_Zone& zone, const bool inZone) {
         qlWeekEnd->setReward(reward);
         result = qlWeekEnd->learn() + 10;
       }
+      DataStore::addValue(pmv_name, pmv);
+      DataStore::addValue(step_name, steps);
       hasBeenInZone = false;
       previousHour = hour;
       setPoint = result;
