@@ -16,7 +16,7 @@ Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid,
   availableActions.push_back(0);
 
   if (SimulationConfig::info.windows) {
-      aaw.setup(agent.windowId);
+      aaw.setup(agent.windowId, agentid);
       aaw.setOpenDuringCooking(agent.WindowOpenDuringCooking);
       aaw.setOpenDuringWashing(agent.WindowOpenDuringWashing);
       aaw.setAvailableActivities(buldingZone.getActivities());
@@ -46,6 +46,11 @@ void Agent_Zone::step(const Building_Zone& zone,
                       const std::vector<double> &activities) {
     bool inZone = zone.getId() == id;
     bool previouslyInZone = zonePrevious.getId() == id;
+
+      if (inZone) {
+        aaw.saveResult();
+      }
+
     if (isInBuilding()) {
       if (inZone || previouslyInZone) {
         std::random_shuffle(availableActions.begin(), availableActions.end() );

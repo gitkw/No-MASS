@@ -9,18 +9,20 @@
 class Agent_Action_Window : public Agent_Action {
     public:
         Agent_Action_Window();
-        void setup(int windowID);
+        void setup(int windowID, int id);
         void step(const Building_Zone& zone, const bool inZone,
                   const bool previouslyInZone,
                   const std::vector<double> &activities);
         void setOpenDuringCooking(bool OpenDuringCooking);
         void setOpenDuringWashing(bool OpenDuringWashing);
-
+        void saveResult();
     private:
+
         Model_Windows m_window;
         std::deque<double> outDoorTemperatures;
         bool OpenDuringWashing;
         bool OpenDuringCooking;
+        std::string variableNameWindowDesire;
 };
 
 #endif // AGENT_ACTION_WINDOW_H

@@ -61,7 +61,7 @@ void Agent::step(StateMachine *stateMachine) {
     metabolicRate = state.getMetabolicRate();
     clo = state.getClo();
 
-    interactWithZone(*zonePtr);
+    // interactWithZone(*zonePtr);
     for (Agent_Zone &agentZone : agentZones) {
       agentZone.setClo(clo);
       agentZone.setMetabolicRate(metabolicRate);
@@ -184,13 +184,13 @@ double Agent::getDesiredHeatState(const Building_Zone &zone) const {
 }
 
 bool Agent::currentlyInZone(const Building_Zone &zone) const {
-    return zone.getName() == state.getZonePtr()->getName();
+    return zone.getId() == state.getZonePtr()->getId();
 }
 
 bool Agent::previouslyInZone(const Building_Zone &zone) const {
     bool inZone = false;
     if (SimulationConfig::getStepCount() > 0) {
-        inZone = zone.getName() == previousState.getZonePtr()->getName();
+        inZone = zone.getId() == previousState.getZonePtr()->getId();
     }
     return inZone;
 }

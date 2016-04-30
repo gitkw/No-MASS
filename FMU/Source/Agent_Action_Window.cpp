@@ -18,7 +18,7 @@ void Agent_Action_Window::setOpenDuringCooking(
     this->OpenDuringCooking = OpenDuringCooking;
 }
 
-void Agent_Action_Window::setup(int windowID) {
+void Agent_Action_Window::setup(int windowID, int id) {
   windowStruct ws = SimulationConfig::windows.at(windowID);
   m_window.setDurationVars(ws.aop, ws.bopout, ws.shapeop);
   m_window.setArrivalVars(ws.a01arr, ws.b01inarr, ws.b01outarr,
@@ -28,6 +28,9 @@ void Agent_Action_Window::setup(int windowID) {
   m_window.setDepartureVars(ws.a01dep, ws.b01outdep, ws.b01absdep,
       ws.b01gddep, ws.a10dep, ws.b10indep, ws.b10outdep, ws.b10absdep,
       ws.b10gddep);
+
+  variableNameWindowDesire = "Agent_Window_Desire" + std::to_string(id);
+  DataStore::addVariable(variableNameWindowDesire);
 }
 
 void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
@@ -47,6 +50,7 @@ void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
   double timeStepLengthInMinutes = SimulationConfig::lengthOfTimestep() / 60;
 
   m_window.setWindowState(zone.getWindowState());
+
   if (inZone && !previouslyInZone) {
     double previousDuration = getPreviousDurationOfAbsenceState(activities);
     m_window.arrival(indoorTemperature,
@@ -90,7 +94,12 @@ void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
     }
   }
   result = m_window.getWindowState();
+
 //  if(result)
 //  std::cout  << " " << result << " " << m_window.getDurationOpen() << std::endl;
 
+}
+
+void Agent_Action_Window::saveResult() {
+  DataStore::addValue(variableNameWindowDesire, result);
 }

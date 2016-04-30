@@ -242,28 +242,45 @@ void Building::setAgentWindowDecisionForZone(Building_Zone *zone) {
     double open = 0;
     double close = 0;
     int numberOfActiveAgents = 0;
+  //  std::cout << "**********************************************************" << std::endl;
+/*
+    for (Agent &agent : population) {
+      std::cout << "interaction " << agent.InteractionOnZone(*zone) <<  std::endl;
+      std::cout << "inZone " << agent.currentlyInZone(*zone) <<  std::endl;
+      std::cout << "power " << agent.getPower() <<  std::endl;
+      std::cout << "window desire " << agent.getDesiredWindowState(*zone) <<  std::endl;
+
+    }//*/
     for (Agent &agent : population) {
         if (agent.InteractionOnZone(*zone)) {
-            numberOfActiveAgents++;
             double power = agent.getPower();
+          //  if ( power < 2 ) continue;
+            numberOfActiveAgents++;
+      //      std::cout << numberOfActiveAgents << " " << power << " ";
             if (agent.getDesiredWindowState(*zone)) {
+        //      std::cout << "1" << std::endl;
                 open = open + power;
             } else {
                 close = close + power;
+        //          std::cout << "0" << std::endl;
             }
         }
     }
     if (numberOfActiveAgents > 0) {
         if (open < close) {
             zone->setWindowState(false);
+    //        std::cout << "f ";
         } else if (open > close) {
             zone->setWindowState(true);
+      //      std::cout << "t ";
         } else {
             zone->setWindowState(Utility::tossACoin());
+    //        std::cout << "o ";
         }
     }
   //  if(zone->getWindowState())
-  //  std::cout << numberOfActiveAgents << " " << open << " " << close << " " << zone->getWindowState() << std::endl;
+//   std::cout << zone->getWindowState() << std::endl;
+//  std::cout << "**********************************************************" << std::endl;
 }
 
 void Building::setAgentBlindDecisionForZone(Building_Zone *zone) {
