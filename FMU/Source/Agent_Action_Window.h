@@ -15,13 +15,14 @@ class Agent_Action_Window : public Agent_Action {
                   const std::vector<double> &activities);
         void setOpenDuringCooking(bool OpenDuringCooking);
         void setOpenDuringWashing(bool OpenDuringWashing);
+        void setDailyMeanTemperature(double dailyMeanTemperature);
         void saveResult();
     private:
 
         Model_Windows m_window;
-        std::deque<double> outDoorTemperatures;
         bool OpenDuringWashing;
         bool OpenDuringCooking;
+        double dailyMeanTemperature;
         std::string variableNameWindowDesire;
 };
 

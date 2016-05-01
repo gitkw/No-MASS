@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 
+#include "DataStore.h"
 #include "Agent_Zone.h"
 
 Agent_Zone::Agent_Zone() {
@@ -44,12 +45,26 @@ Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid,
 void Agent_Zone::step(const Building_Zone& zone,
                       const Building_Zone& zonePrevious,
                       const std::vector<double> &activities) {
+    double outdoorTemperature =
+            DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
+    outDoorTemperatures.push_back(outdoorTemperature);
+    if (outDoorTemperatures.size() >
+          (SimulationConfig::info.timeStepsPerHour * 24)) {
+            outDoorTemperatures.pop_front();
+    }
+    dailyMeanTemperature = 0;
+    for (double temp : outDoorTemperatures) {
+            dailyMeanTemperature += temp;
+    }
+    dailyMeanTemperature =
+      dailyMeanTemperature /
+        static_cast<double>(outDoorTemperatures.size());
     bool inZone = zone.getId() == id;
     bool previouslyInZone = zonePrevious.getId() == id;
 
-      if (inZone) {
-        aaw.saveResult();
-      }
+    if (inZone || previouslyInZone ) {
+      aaw.saveResult();
+    }
 
     if (isInBuilding()) {
       if (inZone || previouslyInZone) {
@@ -84,6 +99,7 @@ void Agent_Zone::actionStep(int action,
 
         break;
       case 1:
+            aaw.setDailyMeanTemperature(dailyMeanTemperature);
             aaw.step(zone, inZone, preZone, activities);
             desiredWindowState = aaw.getResult();
         break;
@@ -95,10 +111,10 @@ void Agent_Zone::actionStep(int action,
             aal.step(zone, inZone, preZone, activities);
             desiredLightState = aal.getResult();
         break;
-      case 4:
+      //case 4:
           // aah.step(zone, inZone, preZone, activities);
           //  heatState = aah.getResult();
-        break;
+        //break;
       case 5:
               aalearn.setReward(pmv);
               aalearn.step(zone, inZone);

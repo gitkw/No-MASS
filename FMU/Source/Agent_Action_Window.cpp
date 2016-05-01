@@ -18,6 +18,10 @@ void Agent_Action_Window::setOpenDuringCooking(
     this->OpenDuringCooking = OpenDuringCooking;
 }
 
+void Agent_Action_Window::setDailyMeanTemperature(double dailyMeanTemperature){
+  this->dailyMeanTemperature = dailyMeanTemperature;
+}
+
 void Agent_Action_Window::setup(int windowID, int id) {
   windowStruct ws = SimulationConfig::windows.at(windowID);
   m_window.setDurationVars(ws.aop, ws.bopout, ws.shapeop);
@@ -38,11 +42,7 @@ void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
   double outdoorTemperature =
     DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
 
-  outDoorTemperatures.push_back(outdoorTemperature);
-  if (outDoorTemperatures.size() >
-        (SimulationConfig::info.timeStepsPerHour * 24)) {
-          outDoorTemperatures.pop_front();
-  }
+
 
   // double rain = DataStore::getValue("EnvironmentSiteRainStatus");
   double rain = 0;
@@ -60,14 +60,6 @@ void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
     m_window.intermediate(indoorTemperature,
         outdoorTemperature, currentDuration, rain, timeStepLengthInMinutes);
   } else if ((!inZone && previouslyInZone )) {
-    double dailyMeanTemperature = 0;
-    for (double temp : outDoorTemperatures) {
-            dailyMeanTemperature += temp;
-    }
-    dailyMeanTemperature =
-      dailyMeanTemperature /
-        static_cast<double>(outDoorTemperatures.size());
-
     double groundFloor = zone.getGroundFloor();
     double futureDuration = getFutureDurationOfAbsenceState(activities);
     m_window.departure(

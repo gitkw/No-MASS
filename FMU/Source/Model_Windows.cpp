@@ -1,7 +1,6 @@
 // Copyright 2016 Jacob Chapman
 
 #include <cmath>
-#include <iostream>
 
 #include "Model_Windows.h"
 
@@ -39,62 +38,40 @@ Model_Windows::Model_Windows() {
 
 void Model_Windows::setDurationVars(double aop, double bopout, double shapeop) {
     this->aop = aop;
-    std::cout << "aop " << aop << std::endl;
     this->bopout = bopout;
-    std::cout << "bopout " << bopout << std::endl;
     this->shapeop = shapeop;
-    std::cout << "shapeop " << shapeop << std::endl;
 }
 
 void Model_Windows::setArrivalVars(double a01arr, double b01inarr,
       double b01outarr, double b01absprevarr, double b01rnarr) {
     this->a01arr = a01arr;
-    std::cout << "a01arr " << a01arr << std::endl;
     this->b01inarr = b01inarr;
-    std::cout << "b01inarr " << b01inarr << std::endl;
     this->b01outarr = b01outarr;
-    std::cout << "b01outarr " << b01outarr << std::endl;
     this->b01absprevarr = b01absprevarr;
-    std::cout << "b01absprevarr " << b01absprevarr << std::endl;
     this->b01rnarr = b01rnarr;
-    std::cout << "b01rnarr " << b01rnarr << std::endl;
 }
 
 void Model_Windows::setInterVars(double a01int, double b01inint,
       double b01outint, double b01presint, double b01rnint) {
   this->a01int = a01int;
-  std::cout << "a01int " << a01int << std::endl;
   this->b01inint = b01inint;
-  std::cout << "b01inint " << b01inint << std::endl;
   this->b01outint = b01outint;
-  std::cout << "b01outint " << b01outint << std::endl;
   this->b01presint = b01presint;
-  std::cout << "b01presint " << b01presint << std::endl;
   this->b01rnint = b01rnint;
-  std::cout << "b01rnint " << b01rnint << std::endl;
 }
 
 void Model_Windows::setDepartureVars(double a01dep, double b01outdep,
     double b01absdep, double b01gddep, double a10dep, double b10indep,
     double b10outdep, double b10absdep, double b10gddep) {
   this->a01dep = a01dep;
-  std::cout << "a01dep " << a01dep << std::endl;
   this->b01outdep = b01outdep;
-  std::cout << "b01outdep " << b01outdep << std::endl;
   this->b01absdep = b01absdep;
-  std::cout << "b01absdep " << b01absdep << std::endl;
   this->b01gddep = b01gddep;
-  std::cout << "b01gddep " << b01gddep << std::endl;
   this->a10dep = a10dep;
-  std::cout << "a10dep " << a10dep << std::endl;
   this->b10indep = b10indep;
-  std::cout << "b10indep " << b10indep << std::endl;
   this->b10outdep = b10outdep;
-  std::cout << "b10outdep " << b10outdep << std::endl;
   this->b10absdep = b10absdep;
-  std::cout << "b10absdep " << b10absdep << std::endl;
   this->b10gddep = b10gddep;
-  std::cout << "b10gddep " << b10gddep << std::endl;
 }
 
 void Model_Windows::setWindowState(bool state) {

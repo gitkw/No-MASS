@@ -69,9 +69,10 @@ private:
     Agent_Action_Shades aas;
     Agent_Action_Heat_Gains aahg;
     Agent_Action_Learning aalearn;
-
+    double dailyMeanTemperature;
     std::vector<int> availableActions;
-    
+    std::deque<double> outDoorTemperatures;
+
 
 };
 
