@@ -412,6 +412,8 @@ void SimulationConfig::parseConfiguration(const std::string & filename) {
         SimulationConfig::info.startDay = std::stoi(node->value());
     } else if (std::strcmp(node->name(), "learn") == 0) {
         SimulationConfig::info.learn = std::stoi(node->value());
+    } else if (std::strcmp(node->name(), "learnupdate") == 0) {
+        SimulationConfig::info.learnupdate = std::stoi(node->value());
     } else if (std::strcmp(node->name(), "learnep") == 0) {
         SimulationConfig::info.learnep = std::stod(node->value());
     } else if (std::strcmp(node->name(), "case") == 0) {

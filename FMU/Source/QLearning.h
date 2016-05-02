@@ -40,7 +40,7 @@ class QLearning
         double epsilon = 1;   // probability of a random action selection
         double alpha = 0.1;     // learning rate
         double gamma = 0.1;     // discount factor (how soon do you care)
-
+        bool update;
 
         int getBestAction(const int s) const;
 

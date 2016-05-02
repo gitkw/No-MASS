@@ -16,6 +16,7 @@ QLearning::QLearning() {}
 
 void QLearning::setup() {
     epsilon = SimulationConfig::info.learnep;
+    update = SimulationConfig::info.learnupdate;
     std::ifstream in_file;
     in_file.open(filename + std::to_string(id) + ".dat");
     if (in_file.fail()) {
@@ -64,8 +65,10 @@ int QLearning::getBestAction(const int s) const {
 
 void QLearning::updateQ(const int s, const int a,
                         const double r, const int sp) {
-  double maxQ = *std::max_element(qTable[sp].begin(), qTable[sp].end());
-  qTable[s][a] = qTable[s][a] + alpha * (r + gamma * maxQ - qTable[s][a]);
+  if (update) {
+    double maxQ = *std::max_element(qTable[sp].begin(), qTable[sp].end());
+    qTable[s][a] = qTable[s][a] + alpha * (r + gamma * maxQ - qTable[s][a]);
+  }
 }
 
 void QLearning::printQ() const {

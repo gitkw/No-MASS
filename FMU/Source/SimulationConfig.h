@@ -125,6 +125,7 @@ struct simulationStruct {
     double timeStepsPerHour;
     double learnep;
     int learn;
+    int learnupdate;
     int timeSteps;
     int startDay;
     int startMonth;
