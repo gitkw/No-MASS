@@ -203,6 +203,12 @@ void SimulationConfig::parseAgents(rapidxml::xml_node<> *node) {
                                 "ShadeClosedDuringWashing") == 0) {
           agent.ShadeClosedDuringWashing = std::stoi(anode->value());
         } else if (std::strcmp(anode->name(),
+                                "ShadeDuringNight") == 0) {
+          agent.ShadeDuringNight = std::stoi(anode->value());
+        } else if (std::strcmp(anode->name(),
+                                "ShadeDuringAudioVisual") == 0) {
+          agent.ShadeDuringAudioVisual = std::stoi(anode->value());
+        } else if (std::strcmp(anode->name(),
                                 "LightOffDuringAudioVisual") == 0) {
           agent.LightOffDuringAudioVisual = std::stoi(anode->value());
         } else if (std::strcmp(anode->name(), "LightOffDuringSleep") == 0) {
@@ -211,6 +217,8 @@ void SimulationConfig::parseAgents(rapidxml::xml_node<> *node) {
           agent.WindowOpenDuringCooking = std::stoi(anode->value());
         } else if (std::strcmp(anode->name(), "WindowOpenDuringWashing") == 0) {
           agent.WindowOpenDuringWashing = std::stoi(anode->value());
+        }else if (std::strcmp(anode->name(), "WindowOpenDuringSleeping") == 0) {
+          agent.WindowOpenDuringSleeping = std::stoi(anode->value());
         }
         anode = anode->next_sibling();
       }
@@ -257,8 +265,10 @@ void SimulationConfig::parseWindows(rapidxml::xml_node<> *node) {
   windows.clear();
   rapidxml::xml_node<> *cnode = node->first_node();
   while (cnode) {
-      if (std::strcmp(cnode->name(), "enabled") == 0) {
-            SimulationConfig::info.windows = std::stoi(cnode->value());
+      if (std::strcmp(cnode->name(), "windowsLearn") == 0) {
+        SimulationConfig::info.windowsLearn = std::stoi(cnode->value());
+      }else if (std::strcmp(cnode->name(), "enabled") == 0) {
+        SimulationConfig::info.windows = std::stoi(cnode->value());
       } else if (std::strcmp(cnode->name(), "window") == 0) {
         rapidxml::xml_node<> *snode = cnode->first_node();
         std::pair<int, windowStruct> ws;

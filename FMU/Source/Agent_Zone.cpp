@@ -10,29 +10,76 @@
 Agent_Zone::Agent_Zone() {
 }
 
+bool Agent_Zone::isActionWindow() const{
+  return ActionWindow;
+}
+bool Agent_Zone::isActionLights() const{
+  return ActionLights;
+}
+bool Agent_Zone::isActionShades() const{
+  return ActionShades;
+}
+bool Agent_Zone::isActionHeatGains() const{
+  return ActionHeatGains;
+}
+bool Agent_Zone::isActionLearning() const{
+  return ActionLearning;
+}
+
 Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid,
-                        const agentStruct &agent) : agentid(agentid) {
+                        const agentStruct &agent) {
   id = buldingZone.getId();
   aahg.setup(agentid);
   availableActions.push_back(0);
 
+  ActionWindow = false;
+  ActionLights = false;
+  ActionShades = false;
+  ActionHeatGains = false;
+  ActionLearning = false;
+
   if (SimulationConfig::info.windows) {
       aaw.setup(agent.windowId, agentid);
-      aaw.setOpenDuringCooking(agent.WindowOpenDuringCooking);
-      aaw.setOpenDuringWashing(agent.WindowOpenDuringWashing);
+      if(buldingZone.hasActivity(4)){
+        aaw.setOpenDuringCooking(agent.WindowOpenDuringCooking);
+      }
+      if(buldingZone.hasActivity(6)){
+        aaw.setOpenDuringWashing(agent.WindowOpenDuringWashing);
+      }
+      if(buldingZone.hasActivity(0)){
+        aaw.setOpenDuringSleeping(agent.WindowOpenDuringSleeping);
+      }
       aaw.setAvailableActivities(buldingZone.getActivities());
       availableActions.push_back(1);
+  } else if (SimulationConfig::info.windowsLearn) {
+      aawLearn.setZoneId(id);
+      aawLearn.setup(agent.windowId, agentid);
+      availableActions.push_back(4);
   }
+
   if (SimulationConfig::info.lights) {
       availableActions.push_back(3);
-      aal.setOffDuringAudioVisual(agent.LightOffDuringAudioVisual);
-      aal.setOffDuringSleep(agent.LightOffDuringSleep);
+
+      if(buldingZone.hasActivity(2)){
+        aal.setOffDuringAudioVisual(agent.LightOffDuringAudioVisual);
+      }
+      if(buldingZone.hasActivity(0)){
+        aal.setOffDuringSleep(agent.LightOffDuringSleep);
+      }
       aal.setAvailableActivities(buldingZone.getActivities());
   }
   if (SimulationConfig::info.shading) {
       aas.setup(agent.shadeId);
-      aas.setClosedDuringSleep(agent.ShadeClosedDuringSleep);
-      aas.setClosedDuringWashing(agent.ShadeClosedDuringWashing);
+      if(buldingZone.hasActivity(0)){
+        aas.setClosedDuringSleep(agent.ShadeClosedDuringSleep);
+      }
+      if(buldingZone.hasActivity(6)){
+        aas.setClosedDuringWashing(agent.ShadeClosedDuringWashing);
+      }
+      aas.setClosedDuringNight(agent.ShadeDuringNight);
+      if(buldingZone.hasActivity(2)){
+        aas.setClosedDuringAudioVisual(agent.ShadeDuringAudioVisual);
+      }
       availableActions.push_back(2);
   }
   if (SimulationConfig::info.learn > 0) {
@@ -45,6 +92,7 @@ Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid,
 void Agent_Zone::step(const Building_Zone& zone,
                       const Building_Zone& zonePrevious,
                       const std::vector<double> &activities) {
+
     double outdoorTemperature =
             DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
     outDoorTemperatures.push_back(outdoorTemperature);
@@ -61,13 +109,14 @@ void Agent_Zone::step(const Building_Zone& zone,
         static_cast<double>(outDoorTemperatures.size());
     bool inZone = zone.getId() == id;
     bool previouslyInZone = zonePrevious.getId() == id;
-
     if (inZone || previouslyInZone ) {
       aaw.saveResult();
     }
 
     if (isInBuilding()) {
+
       if (inZone || previouslyInZone) {
+
         std::random_shuffle(availableActions.begin(), availableActions.end() );
         for (int a : availableActions) {
           if (inZone) {
@@ -81,6 +130,13 @@ void Agent_Zone::step(const Building_Zone& zone,
         actionStep(5, zone, inZone, previouslyInZone, activities);
       }
     }
+    bool win = aaw.BDI(activities);
+    if(win){
+      desiredWindowState = aaw.getResult();
+      ActionWindow = true;
+    }
+
+//std::cout << "window " << id << " " << ActionWindow << " " << desiredWindowState << std::endl;
 }
 
 void Agent_Zone::actionStep(int action,
@@ -89,6 +145,7 @@ void Agent_Zone::actionStep(int action,
     switch (action) {
       case 0:
             if (inZone) {
+              ActionHeatGains = true;
               aahg.prestep(clo, metabolicRate);
               aahg.step(zone, inZone);
               heatgains = aahg.getResult();
@@ -99,26 +156,32 @@ void Agent_Zone::actionStep(int action,
 
         break;
       case 1:
+            ActionWindow = true;
             aaw.setDailyMeanTemperature(dailyMeanTemperature);
             aaw.step(zone, inZone, preZone, activities);
             desiredWindowState = aaw.getResult();
         break;
       case 2:
+            ActionShades = true;
             aas.step(zone, inZone, preZone, activities);
             desiredShadeState = aas.getResult();
         break;
       case 3:
+            ActionLights = true;
             aal.step(zone, inZone, preZone, activities);
             desiredLightState = aal.getResult();
         break;
-      //case 4:
-          // aah.step(zone, inZone, preZone, activities);
-          //  heatState = aah.getResult();
-        //break;
+      case 4:
+            aawLearn.setReward(pmv);
+            aawLearn.step(zone, inZone);
+            desiredWindowState = aawLearn.getResult();
+            ActionWindow = true;
+        break;
       case 5:
-              aalearn.setReward(pmv);
-              aalearn.step(zone, inZone);
-              desiredHeatingSetPoint = aalearn.getResult();
+            ActionLearning = true;
+            aalearn.setReward(pmv);
+            aalearn.step(zone, inZone);
+            desiredHeatingSetPoint = aalearn.getResult();
         break;
       }
 }
@@ -164,6 +227,17 @@ void Agent_Zone::postprocess() {
     aalearn.print();
     aalearn.reset();
   }
+  if (isInBuilding() && SimulationConfig::info.windowsLearn > 0) {
+    aawLearn.print();
+    aawLearn.reset();
+  }
+
+
+  ActionWindow = false;
+  ActionLights = false;
+  ActionShades = false;
+  ActionHeatGains = false;
+  ActionLearning = false;
 }
 
 bool Agent_Zone::isInBuilding() const {

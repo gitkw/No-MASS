@@ -59,9 +59,9 @@ State State::getState(const int stateID) const {
   return x;
 }
 
-Building_Zone* State::getZonePtr() const {
+std::shared_ptr<Building_Zone> State::getZonePtr() const {
     return zone;
 }
-void State::setZonePtr(Building_Zone* zoneptr) {
+void State::setZonePtr(std::shared_ptr<Building_Zone> zoneptr) {
     zone = zoneptr;
 }

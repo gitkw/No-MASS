@@ -18,7 +18,7 @@ class QLearning
         void setReward(const double reward);
         void setEpsilon(const double epsilon);
         void setup();
-        void setHeatingSetPoint(const double heatingSetPoint);
+        void setAction(const double action);
         virtual double learn();
         virtual void reset();
     protected:
@@ -32,7 +32,6 @@ class QLearning
         bool learnNext = false;
         double reward;
         double previous_reward;
-        double heatingSetPoint;
         std::string filename;
 
     private:

@@ -17,10 +17,7 @@
 #include "State.h"
 
 #include "Agent_Zone.h"
-#include "Agent_Action_Learning.h"
-#include "Agent_Action_Heating.h"
-#include "Agent_Action_Shades.h"
-#include "Agent_Action_Heat_Gains.h"
+
 /**
  * @brief The Agent
  * @details Contains all information about the occupants and there associated interactions
@@ -43,13 +40,15 @@ public:
     void setState(State &state);
     void zoneInteractions();
     void postprocess();
-
-    void interactWithZone(const Building_Zone &zone);
-
     bool currentlyInZone(const Building_Zone &zone) const;
     bool InteractionOnZone(const Building_Zone &zone) const;
     bool getDesiredLightState(const Building_Zone &zone) const;
     bool getDesiredWindowState(const Building_Zone &zone) const;
+    bool isActionWindow(const Building_Zone &zone) const;
+    bool isActionLights(const Building_Zone &zone) const;
+    bool isActionShades(const Building_Zone &zone) const;
+    bool isActionHeatGains(const Building_Zone &zone) const;
+    bool isActionLearning(const Building_Zone &zone) const;
     double getDesiredShadeState(const Building_Zone &zone) const;
     double getDesiredHeatState(const Building_Zone &zone) const;
     double getCurrentRadientGains(const Building_Zone &zone) const;
@@ -58,6 +57,7 @@ public:
     std::string getLocationType(int step, StateMachine *sm);
     std::string getLocationName(int step, StateMachine *sm);
 
+    bool previouslyInZone(const Building_Zone &zone) const;
 private:
 
     int id;
@@ -76,17 +76,13 @@ private:
 
     std::string bedroom; /** Which bedroom the occupant sleeps in */
     std::string office; /** Which Office the occupant works in */
-
-    Agent_Action_Heating aah;
-
     State state; /** Occupants current state */
-    State previousState; /** Occupants previous state */
+    std::shared_ptr<Building_Zone> zonePtrPrevious;
 
     void model_presenceFromPage();
     void model_pastAndFutureDurations();
     void model_activity();
     void rLearn(const Building_Zone &zone, desires *interaction);
-    bool previouslyInZone(const Building_Zone &zone) const;
     bool calculateLightInteractionsOnZone(const Building_Zone &zone);
     bool calculateWindowInteractionsOnZone(const Building_Zone &zone);
     double calculateExternalShadeInteractionsOnZone(const Building_Zone &zone);

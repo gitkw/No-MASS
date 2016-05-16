@@ -18,7 +18,8 @@ void QLearning::setup() {
     epsilon = SimulationConfig::info.learnep;
     update = SimulationConfig::info.learnupdate;
     std::ifstream in_file;
-    in_file.open(filename + std::to_string(id) + ".dat");
+    std::string filenameWithID = filename + std::to_string(id) + ".dat";
+    in_file.open(filenameWithID, std::ios::binary);
     if (in_file.fail()) {
         for (int i =0; i < states; i++) {
             qTable.push_back(std::vector<double>());
@@ -106,12 +107,9 @@ double QLearning::learn() {
 void QLearning::reset() {
 }
 
-
-
-void QLearning::setHeatingSetPoint(const double heatingSetPoint) {
-  this->heatingSetPoint = heatingSetPoint;
+void QLearning::setAction(const double action) {
+  this->action = action;
 }
-
 
 void QLearning::setEpsilon(const double epsilon) {
   this->epsilon = epsilon;

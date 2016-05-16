@@ -45,8 +45,7 @@ Source/Agent_Action_Heat_Gains.cpp
 Source/Agent_Action_Lights.cpp
 Source/Agent_Action_Shades.cpp
 Source/Agent_Action_Window.cpp
-Source/Agent_Action_Heating.cpp
-Source/Agent_Action_Learning.cpp
+Source/Agent_Action_HeatingSetPoints_Learning.cpp
 Source/Agent_Zone.cpp
 Source/DataStore.cpp
 Source/Log.cpp
@@ -80,13 +79,14 @@ Source/Building_Zone.cpp
 Source/fmiFunctions.cpp
 Source/QLearning.cpp
 Source/QLearning_HeatingSetPoints.cpp
+Source/QLearning_Window.cpp
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/../Boost/Boost-Source)
 include_directories(${PROJECT_SOURCE_DIR}/../rapidxml)
 include_directories(${PROJECT_SOURCE_DIR}/Source)
 
-ADD_LIBRARY(FMI SHARED ${SRC} Source/fmuTemplate.cpp)
+ADD_LIBRARY(FMI SHARED ${SRC} Source/fmuTemplate.cpp  Source/Agent_Action_Window_Learning.cpp)
 
 set_source_files_properties(${SRC} PROPERTIES COMPILE_FLAGS "-Werror -Wall -Wextra")
 
@@ -139,7 +139,7 @@ if (Tests)
     tests/source/unittest_SimulationConfig.cc
     tests/source/unittest_Model_Activity.cc
     tests/source/unittest_Model_Windows.cc
-    tests/source/unittest_Model_HeatGains.cc
+    tests/source/unittest_Agent_Action_HeatingSetPoints_Learning.cc
     tests/source/unittest_Model_Appliance_Usage.cc
     tests/source/unittest_Model_Appliance_Ownership.cc
     tests/source/unittest_StateMachine.cc
@@ -153,9 +153,10 @@ if (Tests)
     tests/source/unittest_Agent_Action_Window.cc
     tests/source/unittest_Agent_Action_Shades.cc
     tests/source/unittest_Agent_Action_Light.cc
-    tests/source/unittest_Agent_Action_Learning.cc
+    tests/source/unittest_Agent_Action_Window_Learning.cc
     tests/source/unittest_Agent_Action_Heat_Gains.cc
     tests/source/unittest_QLearning_HeatingSetPoints.cc
+    tests/source/unittest_QLearning_Window.cc
   )
 
   add_executable(runUnitTests ${TESTSRC})

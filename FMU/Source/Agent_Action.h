@@ -16,9 +16,14 @@ class Agent_Action {
     double getCurrentDurationOfPresenceState(
                       const std::vector<double> &activities) const;
 
+    void setZoneId(const double zoneId);
+    void setReward(const double reward);
+    
   protected:
     bool activityAvailable(const int act) const;
     double result;
+    double reward;
     std::vector<int> availableActivities;
+    int zoneId;
 };
 #endif // AGENT_ACTION_H

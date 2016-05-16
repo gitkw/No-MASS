@@ -8,32 +8,24 @@
 // #include "QLearning_HeatingRate.h"
 #include "DataStore.h"
 #include "QLearning_HeatingSetPoints.h"
-#include "Agent_Action_Learning.h"
+#include "Agent_Action_HeatingSetPoints_Learning.h"
 
-Agent_Action_Learning::Agent_Action_Learning() {
+Agent_Action_HeatingSetPoints_Learning::Agent_Action_HeatingSetPoints_Learning() {
     setPoint = 20;
     pmv = -1;
     result = 20;
 }
 
-void Agent_Action_Learning::setReward(const double reward) {
-  this->reward = reward;
-}
-
-void Agent_Action_Learning::setZoneId(const double zoneId) {
-  this->zoneId = zoneId;
-}
-
-void Agent_Action_Learning::print() {
+void Agent_Action_HeatingSetPoints_Learning::print() {
   qlWeekDay->printQ();
   qlWeekEnd->printQ();
 }
-void Agent_Action_Learning::reset() {
+void Agent_Action_HeatingSetPoints_Learning::reset() {
   qlWeekDay->reset();
   qlWeekEnd->reset();
 }
 
-void Agent_Action_Learning::setup(const int id, const int learn) {
+void Agent_Action_HeatingSetPoints_Learning::setup(const int id, const int learn) {
   learnId = learn;
   agentId = id;
   switch (learnId) {
@@ -68,7 +60,7 @@ void Agent_Action_Learning::setup(const int id, const int learn) {
   }
 }
 
-void Agent_Action_Learning::step(const Building_Zone& zone, const bool inZone) {
+void Agent_Action_HeatingSetPoints_Learning::step(const Building_Zone& zone, const bool inZone) {
     int hour = DataStore::getValue("hour");
 
     if (inZone) {
@@ -95,11 +87,11 @@ void Agent_Action_Learning::step(const Building_Zone& zone, const bool inZone) {
       int dayOfTheWeek = (day - 1) % 7;
 
       if (dayOfTheWeek < 5) {
-        qlWeekDay->setHeatingSetPoint(setPoint-10);
+        qlWeekDay->setAction(setPoint-10);
         qlWeekDay->setReward(reward);
         result = qlWeekDay->learn() + 10;
       } else {
-        qlWeekEnd->setHeatingSetPoint(setPoint-10);
+        qlWeekEnd->setAction(setPoint-10);
         qlWeekEnd->setReward(reward);
         result = qlWeekEnd->learn() + 10;
       }

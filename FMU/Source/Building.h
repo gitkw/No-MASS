@@ -34,6 +34,7 @@ private:
     StateMachine stateMachine;
     std::vector<Building_Zone> zones;
     std::string name;
+    int x = 0;
 };
 
 #endif	/* BUILDING_H */

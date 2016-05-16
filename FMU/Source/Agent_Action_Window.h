@@ -1,7 +1,6 @@
 #ifndef AGENT_ACTION_WINDOW_H
 #define AGENT_ACTION_WINDOW_H
 
-#include <deque>
 #include "Agent_Action.h"
 #include "Model_Windows.h"
 #include "Building_Zone.h"
@@ -15,15 +14,21 @@ class Agent_Action_Window : public Agent_Action {
                   const std::vector<double> &activities);
         void setOpenDuringCooking(bool OpenDuringCooking);
         void setOpenDuringWashing(bool OpenDuringWashing);
+        void setOpenDuringSleeping(bool OpenDuringSleeping);
         void setDailyMeanTemperature(double dailyMeanTemperature);
         void saveResult();
-    private:
+
+        bool BDI(const std::vector<double> &activities);
+    protected:
 
         Model_Windows m_window;
+        std::string variableNameWindowDesire;
+
+    private:
         bool OpenDuringWashing;
         bool OpenDuringCooking;
+        bool OpenDuringSleeping;
         double dailyMeanTemperature;
-        std::string variableNameWindowDesire;
 };
 
 #endif // AGENT_ACTION_WINDOW_H

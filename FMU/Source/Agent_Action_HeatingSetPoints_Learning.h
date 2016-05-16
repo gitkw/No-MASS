@@ -1,26 +1,23 @@
-#ifndef AGENT_ACTION_LEARNING_H
-#define AGENT_ACTION_LEARNING_H
+#ifndef AGENT_ACTION_HEATINGSETPOINTS_LEARNING_H
+#define AGENT_ACTION_HEATINGSETPOINTS_LEARNING_H
 #include <memory>
 #include "QLearning.h"
 #include "Agent_Action.h"
 
-class Agent_Action_Learning : public Agent_Action
+class Agent_Action_HeatingSetPoints_Learning : public Agent_Action
 {
   public:
-    Agent_Action_Learning();
+    Agent_Action_HeatingSetPoints_Learning();
     void step(const Building_Zone& zone, const bool inZone);
     void setup(const int id, const int learn);
-    void setReward(const double reward);
-    void setZoneId(const double zoneId);
     void print();
     void reset();
   private:
     std::shared_ptr<QLearning> qlWeekDay;
     std::shared_ptr<QLearning> qlWeekEnd;
-    double reward;
+
     int learnId;
     int agentId;
-    int zoneId;
 
     int previousHour;
     double setPoint;
@@ -32,4 +29,4 @@ class Agent_Action_Learning : public Agent_Action
   //  QLearning ql;
 };
 
-#endif // AGENT_ACTION_LEARNING_H
+#endif // AGENT_ACTION_HEATINGSETPOINTS_LEARNING_H

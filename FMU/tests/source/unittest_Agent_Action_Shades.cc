@@ -38,14 +38,16 @@ TEST_F(Test_Agent_Action_Shades, ClosedDuringSleep) {
   Building_Zone z_Kitchen(zs);
   aas.setClosedDuringSleep(true);
 
+  activities.push_back(1);
+  aas.step(z_Kitchen, true, false, activities);
+  ASSERT_TRUE(aas.getResult() > 0);
+
+  SimulationConfig::step();
   activities.push_back(0);
   aas.step(z_Kitchen, true, false, activities);
   ASSERT_EQ(aas.getResult(), 0);
 
-  SimulationConfig::step();
-  activities.push_back(1);
-  aas.step(z_Kitchen, true, false, activities);
-  ASSERT_EQ(aas.getResult(), 1);
+
 }
 
 TEST_F(Test_Agent_Action_Shades, ClosedDuringWashing) {

@@ -69,3 +69,12 @@ double Agent_Action::getCurrentDurationOfPresenceState(
   }
   return cdp;
 }
+
+
+void Agent_Action::setReward(const double reward) {
+  this->reward = reward;
+}
+
+void Agent_Action::setZoneId(const double zoneId) {
+  this->zoneId = zoneId;
+}

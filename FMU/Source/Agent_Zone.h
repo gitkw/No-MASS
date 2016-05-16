@@ -9,6 +9,7 @@
 #define	AGENT_ZONE_H
 #include <unordered_map>
 #include <string>
+#include <deque>
 #include <memory>
 
 #include "Model_Activity.h"
@@ -17,9 +18,10 @@
 #include "State.h"
 
 #include "Agent_Action_Window.h"
+#include "Agent_Action_Window_Learning.h"
 #include "Agent_Action_Lights.h"
-#include "Agent_Action_Learning.h"
-#include "Agent_Action_Heating.h"
+#include "Agent_Action_HeatingSetPoints_Learning.h"
+
 #include "Agent_Action_Shades.h"
 #include "Agent_Action_Heat_Gains.h"
 /**
@@ -48,12 +50,17 @@ public:
     double getPMV() const;
     double getHeatgains() const;
 
+    bool isActionWindow() const;
+    bool isActionLights() const;
+    bool isActionShades() const;
+    bool isActionHeatGains() const;
+    bool isActionLearning() const;
+
 private:
 
     bool isInBuilding() const;
 
     int id;
-    int agentid;
     bool desiredLightState;
     bool desiredWindowState;
     double desiredShadeState;
@@ -65,15 +72,20 @@ private:
     double ppd;
     double previous_pmv;
     Agent_Action_Window aaw;
+    Agent_Action_Window_Learning aawLearn;
     Agent_Action_Lights aal;
     Agent_Action_Shades aas;
     Agent_Action_Heat_Gains aahg;
-    Agent_Action_Learning aalearn;
+    Agent_Action_HeatingSetPoints_Learning aalearn;
     double dailyMeanTemperature;
     std::vector<int> availableActions;
     std::deque<double> outDoorTemperatures;
 
-
+    bool ActionWindow;
+    bool ActionLights;
+    bool ActionShades;
+    bool ActionHeatGains;
+    bool ActionLearning;
 };
 
 #endif	/* AGENT_ZONE_H */

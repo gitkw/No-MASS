@@ -63,6 +63,7 @@ void DataStore::print() {
       myfile << std::endl;
   }
   myfile.close();
+
 /*
   myfile.open("Learn.csv");
   myfile << "stepCount,";

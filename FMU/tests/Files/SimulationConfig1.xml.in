@@ -42,6 +42,7 @@
         <agents>
             <agent>
 
+                <power>0.5</power>
                 <age>age2</age>
                 <computer>computer0</computer>
                 <civstat>civstat1</civstat>
@@ -56,6 +57,7 @@
                 </profile>
             </agent>
             <agent>
+                <power>0.5</power>
                 <age>age2</age>
                 <computer>computer0</computer>
                 <civstat>civstat1</civstat>

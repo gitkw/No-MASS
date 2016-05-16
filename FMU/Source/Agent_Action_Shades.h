@@ -16,13 +16,15 @@ class Agent_Action_Shades : public Agent_Action
 
         void setClosedDuringSleep(bool ShadeClosedDuringSleep);
         void setClosedDuringWashing(bool ShadeClosedDuringWashing);
+        void setClosedDuringNight(bool ShadeClosedDuringNight);
+        void setClosedDuringAudioVisual(bool ShadeClosedDuringAudioVisual);
 
     private:
         Model_ExternalShading m_blindUsage;
         bool ShadeClosedDuringSleep;
         bool ShadeClosedDuringWashing;
         bool ShadeClosedDuringNight;
-
+        bool ShadeClosedDuringAudioVisual;
 };
 
 #endif // AGENT_ACTION_SHADES_H

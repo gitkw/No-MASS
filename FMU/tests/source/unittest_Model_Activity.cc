@@ -40,11 +40,11 @@ TEST_F(Test_Activity, Dissagregate) {
     AfterConfiguration();
 
     EXPECT_EQ(activities.at(0), 9);
-    EXPECT_EQ(activities.at(1000), 1);
+    EXPECT_EQ(activities.at(1000), 2);
     EXPECT_EQ(activities.at(2000), 1);
     EXPECT_EQ(activities.at(3000), 9);
     EXPECT_EQ(activities.at(4000), 2);
-    EXPECT_EQ(activities.at(5000), 9);
+    EXPECT_EQ(activities.at(5000), 8);
     EXPECT_EQ(activities.at(6000), 9);
     bool found = false;
     for (int i = 0; i < 10; i++) {

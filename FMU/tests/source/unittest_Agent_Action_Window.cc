@@ -17,14 +17,14 @@ class Test_Agent_Action_Window : public ::testing::Test {
 };
 
 void Test_Agent_Action_Window::SetUp() {
-  SimulationConfig::agents.clear();
+  SimulationConfig::reset();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
   SimulationConfig::stepCount = 0;
   SimulationConfig::info.windows = false;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
-
+  SimulationConfig::info.timeStepsPerHour = 12;
   DataStore::addVariable("Block1:KitchenZoneMeanAirTemperature");
   DataStore::addVariable("Block1:KitchenZoneAirRelativeHumidity");
   DataStore::addVariable("Block1:KitchenZoneMeanRadiantTemperature");
@@ -34,6 +34,7 @@ void Test_Agent_Action_Window::SetUp() {
   DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
   DataStore::addValue("Block1:KitchenZoneAirRelativeHumidity", 18);
   DataStore::addValue("Block1:KitchenZoneMeanRadiantTemperature", 18);
+  activities.clear();
 }
 
 TEST_F(Test_Agent_Action_Window, Arrival) {
@@ -72,11 +73,13 @@ TEST_F(Test_Agent_Action_Window, OpenWindowDuringCooking) {
 
   activities.push_back(4);
   aaw.step(z_Kitchen, true, false, activities);
+  aaw.BDI(activities);
   ASSERT_EQ(aaw.getResult(), 1);
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, false, activities);
+  aaw.BDI(activities);
   ASSERT_EQ(aaw.getResult(), 0);
 }
 
@@ -90,10 +93,113 @@ TEST_F(Test_Agent_Action_Window, OpenWindowAfterShower) {
 
   activities.push_back(6);
   aaw.step(z_Kitchen, true, false, activities);
+  aaw.BDI(activities);
+  ASSERT_EQ(aaw.getResult(), 0);
+
+  SimulationConfig::step();
+  activities.push_back(6);
+  aaw.step(z_Kitchen, true, false, activities);
+  aaw.BDI(activities);
+  ASSERT_EQ(aaw.getResult(), 0);
+
+  SimulationConfig::step();
+  activities.push_back(1);
+  aaw.step(z_Kitchen, true, false, activities);
+  aaw.BDI(activities);
   ASSERT_EQ(aaw.getResult(), 1);
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, false, activities);
+  aaw.BDI(activities);
   ASSERT_EQ(aaw.getResult(), 0);
+}
+
+
+
+TEST_F(Test_Agent_Action_Window, OpenWindowAfterShower2) {
+  DataStore::addVariable("Block1:BathZoneMeanAirTemperature");
+  DataStore::addVariable("Block1:BathZoneAirRelativeHumidity");
+  DataStore::addVariable("Block1:BathZoneMeanRadiantTemperature");
+
+  DataStore::addValue("Block1:BathZoneMeanAirTemperature", 18);
+  DataStore::addValue("Block1:BathZoneAirRelativeHumidity", 18);
+  DataStore::addValue("Block1:BathZoneMeanRadiantTemperature", 18);
+
+
+  ZoneStruct zs;
+  zs.name = "Block1:Kitchen";
+  zs.id = 1;
+  zs.activities = {1,2,3};
+  Building_Zone z_Kitchen(zs);
+  zs.name = "Block1:Bath";
+  zs.id = 2;
+  zs.activities = {6};
+  Building_Zone z_Bath(zs);
+
+  Agent_Action_Window aab;
+  if(z_Kitchen.hasActivity(6)){
+    aaw.setOpenDuringWashing(true);
+  }
+  if(z_Bath.hasActivity(6)){
+    aab.setOpenDuringWashing(true);
+  }
+
+  aaw.getResult();
+  aab.getResult();
+
+  activities.push_back(6);
+  aaw.step(z_Kitchen, true, false, activities);
+  aaw.BDI(activities);
+  ASSERT_FALSE(aaw.BDI(activities));
+  ASSERT_EQ(aaw.getResult(), 0);
+  aab.step(z_Bath, true, false, activities);
+  ASSERT_FALSE(aab.BDI(activities));
+  ASSERT_EQ(aab.getResult(), 0);
+
+  SimulationConfig::step();
+  activities.push_back(6);
+  aaw.step(z_Kitchen, true, false, activities);
+  ASSERT_FALSE(aaw.BDI(activities));
+  ASSERT_EQ(aaw.getResult(), 0);
+  aab.step(z_Bath, true, false, activities);
+  ASSERT_FALSE(aab.BDI(activities));
+  ASSERT_EQ(aab.getResult(), 0);
+
+  SimulationConfig::step();
+  activities.push_back(1);
+  aaw.step(z_Kitchen, true, false, activities);
+  ASSERT_FALSE(aaw.BDI(activities));
+  ASSERT_EQ(aaw.getResult(), 0);
+  aab.step(z_Bath, true, false, activities);
+  ASSERT_TRUE(aab.BDI(activities));
+  ASSERT_EQ(aab.getResult(), 1);
+
+  SimulationConfig::step();
+  activities.push_back(1);
+  aaw.step(z_Kitchen, true, false, activities);
+  ASSERT_FALSE(aaw.BDI(activities));
+  ASSERT_EQ(aaw.getResult(), 0);
+  aab.step(z_Bath, true, false, activities);
+  ASSERT_TRUE(aab.BDI(activities));
+  ASSERT_EQ(aab.getResult(), 0);
+
+
+  SimulationConfig::step();
+  activities.push_back(1);
+  aaw.step(z_Kitchen, true, false, activities);
+  ASSERT_FALSE(aaw.BDI(activities));
+  ASSERT_EQ(aaw.getResult(), 0);
+  aab.step(z_Bath, true, false, activities);
+  ASSERT_FALSE(aab.BDI(activities));
+  ASSERT_EQ(aab.getResult(), 0);
+
+  SimulationConfig::step();
+  activities.push_back(1);
+  aaw.step(z_Kitchen, true, false, activities);
+  ASSERT_FALSE(aaw.BDI(activities));
+  ASSERT_EQ(aaw.getResult(), 0);
+  aab.step(z_Bath, true, false, activities);
+  ASSERT_FALSE(aab.BDI(activities));
+  ASSERT_EQ(aab.getResult(), 0);
 }

@@ -6,7 +6,11 @@
 #include "DataStore.h"
 #include "Agent_Action_Window.h"
 
-Agent_Action_Window::Agent_Action_Window() {}
+Agent_Action_Window::Agent_Action_Window() {
+  OpenDuringWashing = false;
+  OpenDuringCooking = false;
+  OpenDuringSleeping = false;
+}
 
 void Agent_Action_Window::setOpenDuringWashing(
     const bool OpenDuringWashing) {
@@ -16,6 +20,10 @@ void Agent_Action_Window::setOpenDuringWashing(
 void Agent_Action_Window::setOpenDuringCooking(
     const bool OpenDuringCooking) {
     this->OpenDuringCooking = OpenDuringCooking;
+}
+
+void Agent_Action_Window::setOpenDuringSleeping(bool OpenDuringSleeping){
+  this->OpenDuringSleeping = OpenDuringSleeping;
 }
 
 void Agent_Action_Window::setDailyMeanTemperature(double dailyMeanTemperature){
@@ -65,26 +73,7 @@ void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
     m_window.departure(
         indoorTemperature, dailyMeanTemperature, futureDuration, groundFloor);
   }
-  int stepCount = SimulationConfig::getStepCount();
 
-
-  if (OpenDuringCooking && activities.at(stepCount) == 4) {
-    if (m_window.getWindowState() == 0) {
-      m_window.setWindowState(1);
-      int lengthOfTimeStepSeconds =
-          (60 * (60 / SimulationConfig::info.timeStepsPerHour));
-      m_window.setDurationOpen(lengthOfTimeStepSeconds);
-    }
-  }
-
-  if (OpenDuringWashing && activities.at(stepCount) == 6) {
-    if (m_window.getWindowState() == 0) {
-      m_window.setWindowState(1);
-      int lengthOfTimeStepSeconds =
-          (60 * (60 / SimulationConfig::info.timeStepsPerHour));
-      m_window.setDurationOpen(lengthOfTimeStepSeconds);
-    }
-  }
   result = m_window.getWindowState();
 
 //  if(result)
@@ -94,4 +83,68 @@ void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
 
 void Agent_Action_Window::saveResult() {
   DataStore::addValue(variableNameWindowDesire, result);
+}
+
+
+
+bool Agent_Action_Window::BDI(const std::vector<double> &activities) {
+  bool bdi = false;
+
+  int stepCount = SimulationConfig::getStepCount();
+  if (OpenDuringWashing){
+    std::cout << "OpenDuringWashing" << std::endl;
+    if (stepCount > 0 ){
+      if (activities.at(stepCount - 1 ) == 6 && activities.at(stepCount) != 6) {
+        if (m_window.getWindowState() == 0) {
+          m_window.setWindowState(1);
+          int lengthOfTimeStepSeconds =
+              (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+          m_window.setDurationOpen(lengthOfTimeStepSeconds);
+          bdi = true;
+          result = m_window.getWindowState();
+        }
+      } else if (stepCount > 1) {
+        if (activities.at(stepCount - 2 ) == 6 && activities.at(stepCount -1) != 6) {
+          m_window.setWindowState(0);
+          bdi = true;
+          result = m_window.getWindowState();
+        }
+      }
+    }
+  }
+
+  if (OpenDuringCooking && activities.at(stepCount) == 4) {
+    if (m_window.getWindowState() == 0) {
+      m_window.setWindowState(1);
+      int lengthOfTimeStepSeconds =
+          (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+      m_window.setDurationOpen(lengthOfTimeStepSeconds);
+      result = m_window.getWindowState();
+      bdi = true;
+    }
+  }
+
+  if (OpenDuringSleeping){
+    if (stepCount > 0 ){
+      if (activities.at(stepCount - 1 ) == 0 && activities.at(stepCount) != 0) {
+        if (m_window.getWindowState() == 0) {
+          m_window.setWindowState(1);
+          int lengthOfTimeStepSeconds =
+              (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+          m_window.setDurationOpen(lengthOfTimeStepSeconds);
+          bdi = true;
+          result = m_window.getWindowState();
+        }
+      } else if (stepCount > 1) {
+        if (activities.at(stepCount - 2 ) == 0 && activities.at(stepCount -1) != 0) {
+          m_window.setWindowState(0);
+          bdi = true;
+          result = m_window.getWindowState();
+        }
+      }
+    }
+  }
+
+
+  return bdi;
 }

@@ -6,7 +6,12 @@
 #include "Agent_Action_Shades.h"
 #include "SimulationConfig.h"
 
-Agent_Action_Shades::Agent_Action_Shades() {}
+Agent_Action_Shades::Agent_Action_Shades() {
+  ShadeClosedDuringSleep = false;
+  ShadeClosedDuringWashing = false;
+  ShadeClosedDuringNight = false;
+  ShadeClosedDuringAudioVisual = false;
+}
 
 void Agent_Action_Shades::setClosedDuringWashing(
   bool ShadeClosedDuringWashing) {
@@ -15,6 +20,14 @@ void Agent_Action_Shades::setClosedDuringWashing(
 
 void Agent_Action_Shades::setClosedDuringSleep(bool ShadeClosedDuringSleep) {
   this->ShadeClosedDuringSleep = ShadeClosedDuringSleep;
+}
+
+void Agent_Action_Shades::setClosedDuringNight(bool ShadeClosedDuringNight){
+  this->ShadeClosedDuringNight = ShadeClosedDuringNight;
+}
+void Agent_Action_Shades::setClosedDuringAudioVisual(
+  bool ShadeClosedDuringAudioVisual){
+  this->ShadeClosedDuringAudioVisual = ShadeClosedDuringAudioVisual;
 }
 
 void Agent_Action_Shades::setup(int shadeID) {
@@ -50,6 +63,17 @@ void Agent_Action_Shades::step(const Building_Zone& zone, const bool inZone,
   }
   if (ShadeClosedDuringWashing && activities.at(stepCount) == 6) {
       shadingFraction = 0;
+  }
+  if (ShadeClosedDuringAudioVisual && activities.at(stepCount) == 2) {
+      shadingFraction = 0;
+  }
+  if (ShadeClosedDuringNight) {
+      int hour = DataStore::getValue("hourOfDay");
+      if (hour < 8) {
+        shadingFraction = 0;
+      } else if (hour > 20) {
+        shadingFraction = 0;
+      }
   }
   result = shadingFraction;
 }

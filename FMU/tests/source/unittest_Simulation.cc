@@ -22,13 +22,16 @@ TEST(Simulation, HeatGainsOnly) {
   s.setupSimulationModel();
 
   s.preTimeStep();
+  DataStore::addVariable("EnvironmentSiteOutdoorAirDrybulbTemperature");
+  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 21);
   s.timeStep();
   EXPECT_EQ(SimulationConfig::getStepCount(), 0);
   int activity = DataStore::getValue("Agent_Activity_1");
   EXPECT_EQ(activity, 9);
   s.postTimeStep();
   s.postprocess();
-
+  
+  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 21);
   DataStore::addVariable("Block1:Zone1ZoneMeanAirTemperature");
   DataStore::addVariable("Block1:Zone1ZoneAirRelativeHumidity");
   DataStore::addVariable("Block1:Zone1ZoneMeanRadiantTemperature");

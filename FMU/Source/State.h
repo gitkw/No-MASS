@@ -1,6 +1,7 @@
 #ifndef STATE_H
 #define STATE_H
 #include <string>
+#include <memory>
 #include "Building_Zone.h"
 
 class State
@@ -12,14 +13,14 @@ class State
         virtual State getState(const int stateID) const;
 
         void addState(State s);
-        void setZonePtr(Building_Zone* zoneptr);
+        void setZonePtr(std::shared_ptr<Building_Zone> zoneptr);
         int getId() const;
         unsigned int numberOfSubStates() const;
         double getMetabolicRate() const;
         double getClo() const;
         std::string getActivity() const;
         std::string getLocation() const;
-        Building_Zone* getZonePtr() const;
+        std::shared_ptr<Building_Zone> getZonePtr() const;
 
     protected:
         int id;
@@ -27,7 +28,7 @@ class State
         double clo;
         std::string activity;
         std::vector<State> states;
-        Building_Zone* zone;
+        std::shared_ptr<Building_Zone> zone;
 };
 
 #endif // STATE_H

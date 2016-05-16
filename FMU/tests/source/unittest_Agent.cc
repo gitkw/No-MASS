@@ -1,6 +1,7 @@
 // Copyright 2015 Jacob Chapman
 
 #include <limits.h>
+#include <memory>
 
 #include "Gen.h"
 #include "StateMachine.h"
@@ -20,26 +21,47 @@
 #include "Agent.h"
 #include "gtest/gtest.h"
 
-TEST(Agent, Build) {
+class Test_Agent : public ::testing::Test {
+
+ protected:
+   std::shared_ptr<Building_Zone> z_KitchenPtr;
+   std::shared_ptr<Building_Zone> z_LivingRoomPtr;
+   std::shared_ptr<Building_Zone> z_BathroomPtr;
+   std::shared_ptr<Building_Zone> z_MasterBedroomPtr;
+   std::shared_ptr<Building_Zone> z_OfficePtr;
+   std::shared_ptr<Building_Zone> z_OutPtr;
+
+
+    std::shared_ptr<Agent> a;
+    std::shared_ptr<Agent> b;
+    StateMachine stateMachine;
+    std::vector<Building_Zone> v;
+    virtual void SetUp();
+};
+
+void Test_Agent::SetUp() {
+  SimulationConfig::reset();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
   SimulationConfig::stepCount = 0;
-  SimulationConfig::info.windows = false;
+  SimulationConfig::info.windows = true;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
-  StateMachine stateMachine;
-  State_Out out;
 
+  State_Out out;
 
   ZoneStruct zs;
   zs.name = "Out";
   zs.id = 0;
   Building_Zone z_Out(zs);
 
-  out.setZonePtr(&(z_Out));
+  out.setZonePtr(std::make_shared<Building_Zone>(z_Out));
   stateMachine.addState(out);
   State_Present present;
+  z_OutPtr = std::make_shared<Building_Zone>(z_Out);
 
+
+  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 21);
 
   DataStore::addValue("Block2:MasterBedroomZoneMeanAirTemperature", 21);
   DataStore::addValue("Block2:MasterBedroomZoneAirRelativeHumidity", 21);
@@ -64,37 +86,42 @@ TEST(Agent, Build) {
   zs.name = "Block1:Kitchen";
   zs.id = 1;
   Building_Zone z_Kitchen(zs);
+  z_KitchenPtr = std::make_shared<Building_Zone>(z_Kitchen);
   zs.name = "Block1:LivingRoom";
-  zs.id = 1;
+  zs.id = 2;
   Building_Zone z_LivingRoom(zs);
+  z_LivingRoomPtr = std::make_shared<Building_Zone>(z_LivingRoom);
   zs.name = "Block2:Bathroom";
-  zs.id = 1;
+  zs.id = 3;
   Building_Zone z_Bathroom(zs);
+  z_BathroomPtr = std::make_shared<Building_Zone>(z_Bathroom);
   zs.name = "Block2:MasterBedroom";
-  zs.id = 1;
+  zs.id = 4;
   Building_Zone z_MasterBedroom(zs);
+  z_MasterBedroomPtr = std::make_shared<Building_Zone>(z_MasterBedroom);
   zs.name = "Block2:Office";
-  zs.id = 1;
+  zs.id = 5;
   Building_Zone z_Office(zs);
+  z_OfficePtr = std::make_shared<Building_Zone>(z_Office);
 
   State_Sleep sleep;
-  sleep.setZonePtr(&(z_MasterBedroom));
+  sleep.setZonePtr(std::make_shared<Building_Zone>(z_MasterBedroom));
   State_Passive passive;
-  passive.setZonePtr(&(z_LivingRoom));
+  passive.setZonePtr(std::make_shared<Building_Zone>(z_LivingRoom));
   State_Washing_Appliance washingAppliance;
-  washingAppliance.setZonePtr(&(z_Bathroom));
+  washingAppliance.setZonePtr(std::make_shared<Building_Zone>(z_Bathroom));
   State_Washing washing;
-  washing.setZonePtr(&(z_Bathroom));
+  washing.setZonePtr(std::make_shared<Building_Zone>(z_Bathroom));
   State_Audio_Visual audioVisual;
-  audioVisual.setZonePtr(&(z_LivingRoom));
+  audioVisual.setZonePtr(std::make_shared<Building_Zone>(z_LivingRoom));
   State_Cleaning cleaning;
-  cleaning.setZonePtr(&(z_Kitchen));
+  cleaning.setZonePtr(std::make_shared<Building_Zone>(z_Kitchen));
   State_Cooking cooking;
-  cooking.setZonePtr(&(z_Kitchen));
+  cooking.setZonePtr(std::make_shared<Building_Zone>(z_Kitchen));
   State_Metabolic metabolic;
-  metabolic.setZonePtr(&(z_LivingRoom));
+  metabolic.setZonePtr(std::make_shared<Building_Zone>(z_LivingRoom));
   State_IT it;
-  it.setZonePtr(&(z_Office));
+  it.setZonePtr(std::make_shared<Building_Zone>(z_Office));
   present.addState(sleep);
   present.addState(passive);
   present.addState(washingAppliance);
@@ -108,42 +135,77 @@ TEST(Agent, Build) {
   stateMachine.addState(present);
 
 
-  std::vector<Building_Zone> v;
   v.push_back(z_MasterBedroom);
+  v.push_back(z_Kitchen);
+  v.push_back(z_LivingRoom);
+  v.push_back(z_Bathroom);
+  v.push_back(z_Office);
 
-  Agent a(0, v);
-  a.setState(out);
-  a.step(&stateMachine);
 
-  while (!a.currentlyInZone(z_MasterBedroom)) {
+  Agent agent(0, v);
+  agent.setState(out);
+  agent.step(&stateMachine);
+  Agent agentb(1, v);
+  agentb.setState(out);
+  agentb.step(&stateMachine);
+
+  a = std::make_shared<Agent>(agent);
+  b = std::make_shared<Agent>(agentb);
+
+}
+
+TEST_F(Test_Agent, windows) {
+  int x = 0;
+  while (true) {
     SimulationConfig::step();
-    a.step(&stateMachine);
+    a->step(&stateMachine);
+    for (Building_Zone &zone : v) {
+      if(a->currentlyInZone(zone)){
+        ASSERT_TRUE(a->isActionWindow(zone));
+      }
+      if(a->previouslyInZone(zone)){
+        ASSERT_TRUE(a->isActionWindow(zone));
+      }
+      if(!a->currentlyInZone(zone) && !a->previouslyInZone(zone)){
+        ASSERT_FALSE(a->isActionWindow(zone));
+      }
+    }
+    a->postprocess();
+    x = x +1;
+    if (x > 10000) break;
   }
-  ASSERT_NEAR(a.getCurrentRadientGains(z_MasterBedroom), 48.1984733, 0.001);
+}
 
-  while (!a.currentlyInZone(z_Kitchen)) {
-    SimulationConfig::step();
-    a.step(&stateMachine);
-  }
-  ASSERT_NEAR(a.getCurrentRadientGains(z_Kitchen), 95.349761869, 0.001);
-/*
-  while(!a.currentlyInZone(z_Bathroom)){
-    SimulationConfig::step();
-    a.step(&stateMachine);
-  }
-  ASSERT_NEAR(a.getCurrentRadientGains(z_Bathroom), 99.426920,0.001);
+TEST_F(Test_Agent, windowsTwo) {
 
-  while(!a.currentlyInZone(z_Office)){
+  int x = 0;
+  while (true) {
     SimulationConfig::step();
-    a.step(&stateMachine);
+    a->step(&stateMachine);
+    b->step(&stateMachine);
+    for (Building_Zone &zone : v) {
+      if(a->currentlyInZone(zone)){
+        ASSERT_TRUE(a->isActionWindow(zone));
+      }
+      if(a->previouslyInZone(zone)){
+        ASSERT_TRUE(a->isActionWindow(zone));
+      }
+      if(!a->currentlyInZone(zone) && !a->previouslyInZone(zone)){
+        ASSERT_FALSE(a->isActionWindow(zone));
+      }
+      if(b->currentlyInZone(zone)){
+        ASSERT_TRUE(b->isActionWindow(zone));
+      }
+      if(b->previouslyInZone(zone)){
+        ASSERT_TRUE(b->isActionWindow(zone));
+      }
+      if(!b->currentlyInZone(zone) && !b->previouslyInZone(zone)){
+        ASSERT_FALSE(b->isActionWindow(zone));
+      }
+    }
+    a->postprocess();
+    b->postprocess();
+    x = x +1;
+    if (x > 10000) break;
   }
-  ASSERT_NEAR(a.getCurrentRadientGains(z_Office), 99.426920,0.001);
-
-  while(!a.currentlyInZone(z_LivingRoom)){
-    SimulationConfig::step();
-    a.step(&stateMachine);
-  }
-  ASSERT_NEAR(a.getCurrentRadientGains(z_LivingRoom), 70.069288,0.001);
-
-*/
 }
