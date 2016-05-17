@@ -118,11 +118,11 @@ struct buildingStruct {
 };
 
 struct simulationStruct {
-    bool windows;
-    bool windowsLearn;
-    bool lights;
-    bool shading;
-    bool presencePage;
+    bool windows = false;
+    bool windowsLearn = false;
+    bool lights = false;
+    bool shading = false;
+    bool presencePage = false;
     double timeStepsPerHour;
     double learnep;
     int learn;

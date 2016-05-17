@@ -20,7 +20,7 @@
 Agent::Agent() {
 }
 
-Agent::Agent(int newId, const std::vector<Building_Zone> &zones) : id(newId) {
+Agent::Agent(int newId, const std::vector<std::shared_ptr<Building_Zone>> &zones) : id(newId) {
     std::string idAsString = std::to_string(newId);
     DataStore::addVariable("Agent_Activity_" + idAsString);
     DataStore::addVariable("AgentGains" + idAsString);
@@ -34,8 +34,8 @@ Agent::Agent(int newId, const std::vector<Building_Zone> &zones) : id(newId) {
       power = DBL_EPSILON;
     }
 
-    for (const Building_Zone & buldingZone : zones) {
-        agentZones.push_back(Agent_Zone(buldingZone, id, agent));
+    for (const std::shared_ptr<Building_Zone> & buldingZone : zones) {
+        agentZones.push_back(Agent_Zone(*buldingZone, id, agent));
     }
     /*
     if (agent.HeatOnPresence) {
@@ -61,7 +61,6 @@ void Agent::step(StateMachine *stateMachine) {
 
     metabolicRate = state.getMetabolicRate();
     clo = state.getClo();
-
     for (Agent_Zone &agentZone : agentZones) {
       agentZone.setClo(clo);
       agentZone.setMetabolicRate(metabolicRate);
@@ -183,7 +182,6 @@ bool Agent::InteractionOnZone(const Building_Zone &zone) const {
 std::string Agent::getLocationType(int step, StateMachine *sm) {
     int newStateID = activities.at(step);
     State s = sm->transistionTo(newStateID);
-    // std::cout << "Location is: " << s.getType() <<std::endl;
     return s.getActivity();
 }
 
@@ -265,4 +263,10 @@ bool Agent::isActionLearning(const Building_Zone &zone) const{
     }
   }
   return act;
+}
+
+void Agent::postTimeStep(){
+  for (Agent_Zone &agentZone : agentZones) {
+    agentZone.postTimeStep();
+  }
 }

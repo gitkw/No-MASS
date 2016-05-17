@@ -35,7 +35,7 @@ class Test_Agent : public ::testing::Test {
     std::shared_ptr<Agent> a;
     std::shared_ptr<Agent> b;
     StateMachine stateMachine;
-    std::vector<Building_Zone> v;
+    std::vector<std::shared_ptr<Building_Zone>> v;
     virtual void SetUp();
 };
 
@@ -135,11 +135,11 @@ void Test_Agent::SetUp() {
   stateMachine.addState(present);
 
 
-  v.push_back(z_MasterBedroom);
-  v.push_back(z_Kitchen);
-  v.push_back(z_LivingRoom);
-  v.push_back(z_Bathroom);
-  v.push_back(z_Office);
+  v.push_back(z_MasterBedroomPtr);
+  v.push_back(z_KitchenPtr);
+  v.push_back(z_LivingRoomPtr);
+  v.push_back(z_BathroomPtr);
+  v.push_back(z_OfficePtr);
 
 
   Agent agent(0, v);
@@ -159,19 +159,20 @@ TEST_F(Test_Agent, windows) {
   while (true) {
     SimulationConfig::step();
     a->step(&stateMachine);
-    for (Building_Zone &zone : v) {
-      if(a->currentlyInZone(zone)){
-        ASSERT_TRUE(a->isActionWindow(zone));
+
+    for (std::shared_ptr<Building_Zone> &zone : v) {
+      if(a->currentlyInZone(*zone)){
+        ASSERT_TRUE(a->isActionWindow(*zone));
       }
-      if(a->previouslyInZone(zone)){
-        ASSERT_TRUE(a->isActionWindow(zone));
+      if(a->previouslyInZone(*zone)){
+        ASSERT_TRUE(a->isActionWindow(*zone));
       }
-      if(!a->currentlyInZone(zone) && !a->previouslyInZone(zone)){
-        ASSERT_FALSE(a->isActionWindow(zone));
+      if(!a->currentlyInZone(*zone) && !a->previouslyInZone(*zone)){
+        ASSERT_FALSE(a->isActionWindow(*zone));
       }
     }
-    a->postprocess();
-    x = x +1;
+    a->postTimeStep();
+    x = x + 1;
     if (x > 10000) break;
   }
 }
@@ -183,28 +184,28 @@ TEST_F(Test_Agent, windowsTwo) {
     SimulationConfig::step();
     a->step(&stateMachine);
     b->step(&stateMachine);
-    for (Building_Zone &zone : v) {
-      if(a->currentlyInZone(zone)){
-        ASSERT_TRUE(a->isActionWindow(zone));
+    for (std::shared_ptr<Building_Zone> &zone : v) {
+      if(a->currentlyInZone(*zone)){
+        ASSERT_TRUE(a->isActionWindow(*zone));
       }
-      if(a->previouslyInZone(zone)){
-        ASSERT_TRUE(a->isActionWindow(zone));
+      if(a->previouslyInZone(*zone)){
+        ASSERT_TRUE(a->isActionWindow(*zone));
       }
-      if(!a->currentlyInZone(zone) && !a->previouslyInZone(zone)){
-        ASSERT_FALSE(a->isActionWindow(zone));
+      if(!a->currentlyInZone(*zone) && !a->previouslyInZone(*zone)){
+        ASSERT_FALSE(a->isActionWindow(*zone));
       }
-      if(b->currentlyInZone(zone)){
-        ASSERT_TRUE(b->isActionWindow(zone));
+      if(b->currentlyInZone(*zone)){
+        ASSERT_TRUE(b->isActionWindow(*zone));
       }
-      if(b->previouslyInZone(zone)){
-        ASSERT_TRUE(b->isActionWindow(zone));
+      if(b->previouslyInZone(*zone)){
+        ASSERT_TRUE(b->isActionWindow(*zone));
       }
-      if(!b->currentlyInZone(zone) && !b->previouslyInZone(zone)){
-        ASSERT_FALSE(b->isActionWindow(zone));
+      if(!b->currentlyInZone(*zone) && !b->previouslyInZone(*zone)){
+        ASSERT_FALSE(b->isActionWindow(*zone));
       }
     }
-    a->postprocess();
-    b->postprocess();
+    a->postTimeStep();
+    b->postTimeStep();
     x = x +1;
     if (x > 10000) break;
   }

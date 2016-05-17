@@ -50,35 +50,30 @@ void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
   double outdoorTemperature =
     DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
 
-
-
   // double rain = DataStore::getValue("EnvironmentSiteRainStatus");
   double rain = 0;
   double indoorTemperature = zone.getMeanAirTemperature();
   double timeStepLengthInMinutes = SimulationConfig::lengthOfTimestep() / 60;
 
   m_window.setWindowState(zone.getWindowState());
-
-  if (inZone && !previouslyInZone) {
+  if(m_window.getWindowState() == 0){
+    m_window.setDurationOpen(0);
+  }
+  if (inZone && !previouslyInZone) {    
     double previousDuration = getPreviousDurationOfAbsenceState(activities);
     m_window.arrival(indoorTemperature,
         outdoorTemperature, previousDuration, rain, timeStepLengthInMinutes);
-  } else if ((inZone && previouslyInZone )) {
+  } else if (inZone && previouslyInZone) {
     double currentDuration = getCurrentDurationOfPresenceState(activities);
     m_window.intermediate(indoorTemperature,
         outdoorTemperature, currentDuration, rain, timeStepLengthInMinutes);
-  } else if ((!inZone && previouslyInZone )) {
+  } else if (!inZone && previouslyInZone) {
     double groundFloor = zone.getGroundFloor();
     double futureDuration = getFutureDurationOfAbsenceState(activities);
     m_window.departure(
         indoorTemperature, dailyMeanTemperature, futureDuration, groundFloor);
   }
-
-  result = m_window.getWindowState();
-
-//  if(result)
-//  std::cout  << " " << result << " " << m_window.getDurationOpen() << std::endl;
-
+   result = m_window.getWindowState();
 }
 
 void Agent_Action_Window::saveResult() {
@@ -92,7 +87,6 @@ bool Agent_Action_Window::BDI(const std::vector<double> &activities) {
 
   int stepCount = SimulationConfig::getStepCount();
   if (OpenDuringWashing){
-    std::cout << "OpenDuringWashing" << std::endl;
     if (stepCount > 0 ){
       if (activities.at(stepCount - 1 ) == 6 && activities.at(stepCount) != 6) {
         if (m_window.getWindowState() == 0) {
@@ -147,4 +141,9 @@ bool Agent_Action_Window::BDI(const std::vector<double> &activities) {
 
 
   return bdi;
+}
+
+
+int Agent_Action_Window::durationOpen() const{
+    return m_window.getDurationOpen();
 }

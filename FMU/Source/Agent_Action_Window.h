@@ -17,6 +17,7 @@ class Agent_Action_Window : public Agent_Action {
         void setOpenDuringSleeping(bool OpenDuringSleeping);
         void setDailyMeanTemperature(double dailyMeanTemperature);
         void saveResult();
+        int durationOpen() const;
 
         bool BDI(const std::vector<double> &activities);
     protected:

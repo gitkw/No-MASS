@@ -28,7 +28,7 @@ Building::Building() {}
 void Building::setup(const buildingStruct &b) {
     name = b.name;
     for (std::pair<std::string, ZoneStruct> z : b.zones) {
-      zones.push_back(Building_Zone(z.second));
+      zones.push_back(std::make_shared<Building_Zone>(Building_Zone(z.second)));
     }
     int popSize = SimulationConfig::numberOfAgents();
     std::list<int> pop = Utility::randomIntList(popSize);
@@ -39,7 +39,7 @@ void Building::setup(const buildingStruct &b) {
     initialiseStates();
 }
 
-void Building::setZones(const std::vector<Building_Zone> & zones) {
+void Building::setZones(const std::vector<std::shared_ptr<Building_Zone>> & zones) {
     this->zones = zones;
 }
 
@@ -93,8 +93,8 @@ void Building::initialiseStates() {
 
 void Building::matchStateToZone(State &s) {
     for (unsigned int i =0; i < zones.size(); i++) {
-      if (zones[i].hasActivity(s.getId())) {
-          s.setZonePtr(std::make_shared<Building_Zone>(zones[i]));
+      if (zones[i]->hasActivity(s.getId())) {
+          s.setZonePtr(zones[i]);
           break;
       }
     }
@@ -103,40 +103,34 @@ void Building::matchStateToZone(State &s) {
 void Building::step() {
     int popSize = population.size();
     std::list<int> pop = Utility::randomIntList(popSize);
-    // step each agent randomly
     for (int a : pop) {
         population[a].step(&stateMachine);
     }
-
-    //std::cout << "********************xxxxxxxxxxxxxxx********************" << std::endl;
-    x = 0;
-    for (Building_Zone &zone : zones) {
-        if (!zone.isActive()) {
+    for (std::shared_ptr<Building_Zone> &zone : zones) {
+        if (!zone->isActive()) {
             continue;
         }
-        setAgentCountForZone(&zone);
+        setAgentCountForZone(zone);
 
         if (SimulationConfig::info.windows
           || SimulationConfig::info.windowsLearn) {
-            setAgentWindowDecisionForZone(&zone);
+            setAgentWindowDecisionForZone(zone);
         }
         if (SimulationConfig::info.shading) {
-            setAgentBlindDecisionForZone(&zone);
+            setAgentBlindDecisionForZone(zone);
         }
         if (SimulationConfig::info.lights) {
-            setAgentLightDecisionForZone(&zone);
+            setAgentLightDecisionForZone(zone);
         }
-        setAgentHeatDecisionsForZone(&zone);
-        setAgentGainsForZone(&zone);
+        setAgentHeatDecisionsForZone(zone);
+        setAgentGainsForZone(zone);
     }
 
-    //std::cout << "**************xxxxxxxxxxxxxxx**************************" << std::endl;
     buildingInteractions();
-    for (Building_Zone &zone : zones) {
-      if (!zone.isActive()) {
-        continue;
+    for (std::shared_ptr<Building_Zone> &zone : zones) {
+      if (zone->isActive()) {
+        zone->step();
       }
-      zone.step();
     }
 }
 
@@ -144,17 +138,16 @@ void Building::buildingInteractions() {
   if (SimulationConfig::info.ShadeClosedDuringNight) {
     int hourOfDay = DataStore::getValue("hourOfDay");
     if (hourOfDay > 19 || hourOfDay < 6) {
-      for (Building_Zone &zone : zones) {
-        if (!zone.isActive()) {
-          continue;
+      for (std::shared_ptr<Building_Zone> &zone : zones) {
+        if (zone->isActive()) {
+          zone->setBlindState(0);
         }
-        zone.setBlindState(0);
       }
     }
   }
 }
 
-void Building::setAgentHeatDecisionsForZone(Building_Zone *zone) {
+void Building::setAgentHeatDecisionsForZone(std::shared_ptr<Building_Zone> zone) {
   double currentState = zone->getHeatingState();
   double totalIncrease = 0;
   double totalDecrease = 0;
@@ -221,11 +214,10 @@ void Building::setAgentHeatDecisionsForZone(Building_Zone *zone) {
           state = currentState;
       }
   }
-//  std::cout << "state: " << state << std::endl;
   zone->setHeatingState(state);
 }
 
-void Building::setAgentGainsForZone(Building_Zone *zone) {
+void Building::setAgentGainsForZone(std::shared_ptr<Building_Zone> zone) {
     double numberOfAgents = 0;
     double totalRadientGains = 0;
     double aveRadientGains = 0;
@@ -242,65 +234,36 @@ void Building::setAgentGainsForZone(Building_Zone *zone) {
     zone->setCurrentAgentGains(aveRadientGains);
 }
 
-void Building::setAgentWindowDecisionForZone(Building_Zone *zone) {
+void Building::setAgentWindowDecisionForZone(std::shared_ptr<Building_Zone> zone) {
     double open = 0;
     double close = 0;
     int numberOfActiveAgents = 0;
-//  std::cout << "**********************************************************" << std::endl;
 
-  //  for (Agent &agent : population) {
-/*      std::cout << "zone " << zone->getName() <<  std::endl;
-      std::cout << "interaction " << agent.isActionWindow(*zone) <<  std::endl;
-      std::cout << "inZone " << agent.currentlyInZone(*zone) <<  std::endl;
-      std::cout << "prZone " << agent.previouslyInZone(*zone) <<  std::endl;
-
-      std::cout << "power " << agent.getPower() <<  std::endl;
-      std::cout << "window desire " << agent.getDesiredWindowState(*zone) <<  std::endl;
-      std::cout << "window inter " << agent.isActionWindow(*zone) <<  std::endl;
-
-    }//*/
     for (Agent &agent : population) {
         if (agent.isActionWindow(*zone)) {
             double power = agent.getPower();
           //  if ( power < 2 ) continue;
             numberOfActiveAgents++;
-            //std::cout << numberOfActiveAgents << " " << power << " ";
             if (agent.getDesiredWindowState(*zone)) {
-            //  std::cout << "1" << std::endl;
                 open = open + power;
             } else {
                 close = close + power;
-            //      std::cout << "0" << std::endl;
             }
         }
     }
     if (numberOfActiveAgents > 0) {
-      //std::cout << "x " << numberOfActiveAgents;
         if (open < close) {
             zone->setWindowState(false);
-            //std::cout << " f ";
         } else if (open > close) {
             zone->setWindowState(true);
-            //std::cout << " t ";
         } else {
             zone->setWindowState(Utility::tossACoin());
                 zone->setWindowState(true);
-            //std::cout << " o ";
         }
     }
-  //  if(zone->getWindowState())
-  //std::cout << zone->getWindowState() << std::endl;
-  if (zone->getWindowState()) {
-
-    x = x + 1;
-    if(x > 2){
-      exit(-1);
-    }
-  }
-  //std::cout << "**********************************************************" << std::endl;
 }
 
-void Building::setAgentBlindDecisionForZone(Building_Zone *zone) {
+void Building::setAgentBlindDecisionForZone(std::shared_ptr<Building_Zone> zone) {
     double currentState = zone->getBlindState();
     double totalIncrease = 0;
     double totalDecrease = 0;
@@ -369,7 +332,7 @@ void Building::setAgentBlindDecisionForZone(Building_Zone *zone) {
     }
     zone->setBlindState(state);
 }
-void Building::setAgentLightDecisionForZone(Building_Zone *zone) {
+void Building::setAgentLightDecisionForZone(std::shared_ptr<Building_Zone> zone) {
     double open = 0;
     double close = 0;
     double numberOfActiveAgents = 0;
@@ -394,11 +357,10 @@ void Building::setAgentLightDecisionForZone(Building_Zone *zone) {
         }
     }
 //     if(zone->getLightState())
-  //    std::cout << numberOfActiveAgents << " " << open << " " << close << " " << zone->getLightState() << std::endl;
 
 }
 
-void Building::setAgentCountForZone(Building_Zone *zone) {
+void Building::setAgentCountForZone(std::shared_ptr<Building_Zone> zone) {
     double numberOfAgents = 0;
     for (Agent &agent : population) {
         if (agent.currentlyInZone(*zone)) {
@@ -406,6 +368,12 @@ void Building::setAgentCountForZone(Building_Zone *zone) {
         }
     }
     zone->setOccupantFraction(numberOfAgents / population.size());
+}
+
+void Building::postTimeStep() {
+  for (Agent &agent : population) {
+      agent.postTimeStep();
+  }
 }
 
 void Building::postprocess() {
@@ -416,8 +384,8 @@ void Building::postprocess() {
 
 bool Building::hasZone(const std::string& zoneName) const {
   bool has = false;
-  for (Building_Zone const & z : zones) {
-    if (zoneName == z.getName()) {
+  for (const std::shared_ptr<Building_Zone> & z : zones) {
+    if (zoneName == z->getName()) {
       has = true;
     }
   }

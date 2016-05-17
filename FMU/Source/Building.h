@@ -17,24 +17,23 @@ public:
     void step();
     void postprocess();
     bool hasZone(const std::string& zoneName) const;
-
+    void postTimeStep();
 private:
-    void setAgentGainsForZone(Building_Zone *zone);
-    void setAgentWindowDecisionForZone(Building_Zone *zone);
-    void setAgentLightDecisionForZone(Building_Zone *zone);
-    void setAgentBlindDecisionForZone(Building_Zone *zone);
-    void setAgentHeatDecisionsForZone(Building_Zone *zone);
-    void setAgentCountForZone(Building_Zone *zone);
+    void setAgentGainsForZone(std::shared_ptr<Building_Zone> zone);
+    void setAgentWindowDecisionForZone(std::shared_ptr<Building_Zone> zone);
+    void setAgentLightDecisionForZone(std::shared_ptr<Building_Zone> zone);
+    void setAgentBlindDecisionForZone(std::shared_ptr<Building_Zone> zone);
+    void setAgentHeatDecisionsForZone(std::shared_ptr<Building_Zone> zone);
+    void setAgentCountForZone(std::shared_ptr<Building_Zone> zone);
     void initialiseStates();
-    void setZones(const std::vector<Building_Zone> & zones);
+    void setZones(const std::vector<std::shared_ptr<Building_Zone>> & zones);
     void buildingInteractions();
     void matchStateToZone(State &s);
     std::vector<float> presenceProfile;
     std::vector<Agent> population;
     StateMachine stateMachine;
-    std::vector<Building_Zone> zones;
+    std::vector<std::shared_ptr<Building_Zone>> zones;
     std::string name;
-    int x = 0;
 };
 
 #endif	/* BUILDING_H */

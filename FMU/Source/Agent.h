@@ -34,10 +34,11 @@ struct desires {
 class Agent {
 public:
     Agent();
-    Agent(int newId, const std::vector<Building_Zone> &zone);
+    Agent(int newId, const std::vector<std::shared_ptr<Building_Zone>> &zones);
 
     void step(StateMachine *sm);
     void setState(State &state);
+    void postTimeStep();
     void zoneInteractions();
     void postprocess();
     bool currentlyInZone(const Building_Zone &zone) const;

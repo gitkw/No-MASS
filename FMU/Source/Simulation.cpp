@@ -101,9 +101,14 @@ void Simulation::timeStep() {
         for (Building &b : buildings) {
             b.step();
         }
+        postTimeStep();
 }
 
 /**
  * @brief processes After timestep
  */
-void Simulation::postTimeStep() {}
+void Simulation::postTimeStep() {
+  for (Building &b : buildings) {
+      b.postTimeStep();
+  }
+}

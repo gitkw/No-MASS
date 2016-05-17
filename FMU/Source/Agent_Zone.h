@@ -38,7 +38,7 @@ public:
 
     void actionStep(int action, const Building_Zone &zone, bool inZone,
                     bool preZone, const std::vector<double> &activities);
-
+    void postTimeStep();
     void postprocess();
     void setClo(double clo);
     void setMetabolicRate(double metabolicRate);
@@ -55,6 +55,7 @@ public:
     bool isActionShades() const;
     bool isActionHeatGains() const;
     bool isActionLearning() const;
+    int getDesiredWindowDuration() const;
 
 private:
 

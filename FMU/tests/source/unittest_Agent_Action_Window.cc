@@ -12,6 +12,7 @@
 class Test_Agent_Action_Window : public ::testing::Test {
  protected:
     Agent_Action_Window aaw;
+    
     std::vector<double> activities;
     virtual void SetUp();
 };
@@ -202,4 +203,88 @@ TEST_F(Test_Agent_Action_Window, OpenWindowAfterShower2) {
   aab.step(z_Bath, true, false, activities);
   ASSERT_FALSE(aab.BDI(activities));
   ASSERT_EQ(aab.getResult(), 0);
+}
+
+TEST_F(Test_Agent_Action_Window, multiZone) {
+
+  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 23);
+  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 26);
+  DataStore::addValue("Block1:KitchenZoneAirRelativeHumidity", 50);
+  DataStore::addValue("Block1:KitchenZoneMeanRadiantTemperature", 23);
+
+  ZoneStruct zs;
+  zs.name = "Block1:Kitchen";
+  zs.id = 1;
+  zs.activities = {1,2,3};
+  Building_Zone z_Kitchen(zs);
+
+  aaw.getResult();
+
+  for(int i = 0; i < 100; i++){
+    activities.push_back(0);
+    aaw.step(z_Kitchen, false, false, activities);
+    z_Kitchen.setWindowState(aaw.getResult());
+    ASSERT_FALSE(aaw.BDI(activities));
+    ASSERT_EQ(aaw.getResult(), 0);
+  }
+
+  while(aaw.getResult() == 0 || aaw.durationOpen() < 1000){
+    SimulationConfig::step();
+    activities.push_back(1);
+    aaw.step(z_Kitchen, true, false, activities);
+    z_Kitchen.setWindowState(aaw.getResult());
+    ASSERT_FALSE(aaw.BDI(activities));
+  }
+  ASSERT_EQ(aaw.getResult(), 1);
+  ASSERT_EQ(aaw.durationOpen(), 3416);
+
+  SimulationConfig::step();
+  activities.push_back(1);
+  aaw.step(z_Kitchen, true, true, activities);
+  z_Kitchen.setWindowState(aaw.getResult());
+  ASSERT_FALSE(aaw.BDI(activities));
+  ASSERT_EQ(aaw.durationOpen(), 3411);
+  ASSERT_EQ(aaw.getResult(), 1);
+
+  SimulationConfig::step();
+  activities.push_back(2);
+  aaw.step(z_Kitchen, true, true, activities);
+  z_Kitchen.setWindowState(aaw.getResult());
+  ASSERT_FALSE(aaw.BDI(activities));
+  ASSERT_EQ(aaw.durationOpen(), 3406);
+  ASSERT_EQ(aaw.getResult(), 1);
+  int prevDuration =  aaw.durationOpen();
+  while(aaw.durationOpen() > 0){
+    SimulationConfig::step();
+    activities.push_back(2);
+    aaw.step(z_Kitchen, true, true, activities);
+    z_Kitchen.setWindowState(aaw.getResult());
+    ASSERT_FALSE(aaw.BDI(activities));
+    prevDuration = prevDuration - 5;
+    if(prevDuration < 0 ) prevDuration = 0;
+    ASSERT_EQ(aaw.durationOpen(), prevDuration);
+    if(prevDuration > 0 ){
+      ASSERT_EQ(aaw.getResult(), 1);
+    }else{
+      ASSERT_EQ(aaw.getResult(), 0);
+    }
+  }
+
+  SimulationConfig::step();
+  activities.push_back(1);
+  aaw.step(z_Kitchen, true, false, activities);
+  ASSERT_FALSE(aaw.BDI(activities));
+  ASSERT_EQ(aaw.getResult(), 0);
+
+  SimulationConfig::step();
+  activities.push_back(1);
+  aaw.step(z_Kitchen, true, false, activities);
+  ASSERT_FALSE(aaw.BDI(activities));
+  ASSERT_EQ(aaw.getResult(), 0);
+
+  SimulationConfig::step();
+  activities.push_back(1);
+  aaw.step(z_Kitchen, true, false, activities);
+  ASSERT_FALSE(aaw.BDI(activities));
+  ASSERT_EQ(aaw.getResult(), 0);
 }

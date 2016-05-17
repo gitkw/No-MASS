@@ -114,9 +114,7 @@ void Agent_Zone::step(const Building_Zone& zone,
     }
 
     if (isInBuilding()) {
-
       if (inZone || previouslyInZone) {
-
         std::random_shuffle(availableActions.begin(), availableActions.end() );
         for (int a : availableActions) {
           if (inZone) {
@@ -130,13 +128,6 @@ void Agent_Zone::step(const Building_Zone& zone,
         actionStep(5, zone, inZone, previouslyInZone, activities);
       }
     }
-    bool win = aaw.BDI(activities);
-    if(win){
-      desiredWindowState = aaw.getResult();
-      ActionWindow = true;
-    }
-
-//std::cout << "window " << id << " " << ActionWindow << " " << desiredWindowState << std::endl;
 }
 
 void Agent_Zone::actionStep(int action,
@@ -231,8 +222,9 @@ void Agent_Zone::postprocess() {
     aawLearn.print();
     aawLearn.reset();
   }
+}
 
-
+void Agent_Zone::postTimeStep(){
   ActionWindow = false;
   ActionLights = false;
   ActionShades = false;
@@ -242,4 +234,8 @@ void Agent_Zone::postprocess() {
 
 bool Agent_Zone::isInBuilding() const {
     return id > 0;  // 0 is the ID for the outside zone
+}
+
+int Agent_Zone::getDesiredWindowDuration() const {
+  return aaw.durationOpen();
 }
