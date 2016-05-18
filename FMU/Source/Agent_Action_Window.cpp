@@ -22,11 +22,11 @@ void Agent_Action_Window::setOpenDuringCooking(
     this->OpenDuringCooking = OpenDuringCooking;
 }
 
-void Agent_Action_Window::setOpenDuringSleeping(bool OpenDuringSleeping){
+void Agent_Action_Window::setOpenDuringSleeping(bool OpenDuringSleeping) {
   this->OpenDuringSleeping = OpenDuringSleeping;
 }
 
-void Agent_Action_Window::setDailyMeanTemperature(double dailyMeanTemperature){
+void Agent_Action_Window::setDailyMeanTemperature(double dailyMeanTemperature) {
   this->dailyMeanTemperature = dailyMeanTemperature;
 }
 
@@ -56,10 +56,10 @@ void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
   double timeStepLengthInMinutes = SimulationConfig::lengthOfTimestep() / 60;
 
   m_window.setWindowState(zone.getWindowState());
-  if(m_window.getWindowState() == 0){
+  if (m_window.getWindowState() == 0) {
     m_window.setDurationOpen(0);
   }
-  if (inZone && !previouslyInZone) {    
+  if (inZone && !previouslyInZone) {
     double previousDuration = getPreviousDurationOfAbsenceState(activities);
     m_window.arrival(indoorTemperature,
         outdoorTemperature, previousDuration, rain, timeStepLengthInMinutes);
@@ -73,7 +73,7 @@ void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
     m_window.departure(
         indoorTemperature, dailyMeanTemperature, futureDuration, groundFloor);
   }
-   result = m_window.getWindowState();
+  result = m_window.getWindowState();
 }
 
 void Agent_Action_Window::saveResult() {
@@ -86,9 +86,9 @@ bool Agent_Action_Window::BDI(const std::vector<double> &activities) {
   bool bdi = false;
 
   int stepCount = SimulationConfig::getStepCount();
-  if (OpenDuringWashing){
-    if (stepCount > 0 ){
-      if (activities.at(stepCount - 1 ) == 6 && activities.at(stepCount) != 6) {
+  if (OpenDuringWashing) {
+    if (stepCount > 0) {
+      if (activities.at(stepCount - 1) == 6 && activities.at(stepCount) != 6) {
         if (m_window.getWindowState() == 0) {
           m_window.setWindowState(1);
           int lengthOfTimeStepSeconds =
@@ -98,7 +98,8 @@ bool Agent_Action_Window::BDI(const std::vector<double> &activities) {
           result = m_window.getWindowState();
         }
       } else if (stepCount > 1) {
-        if (activities.at(stepCount - 2 ) == 6 && activities.at(stepCount -1) != 6) {
+        if (activities.at(stepCount - 2) == 6 &&
+            activities.at(stepCount -1) != 6) {
           m_window.setWindowState(0);
           bdi = true;
           result = m_window.getWindowState();
@@ -118,9 +119,9 @@ bool Agent_Action_Window::BDI(const std::vector<double> &activities) {
     }
   }
 
-  if (OpenDuringSleeping){
-    if (stepCount > 0 ){
-      if (activities.at(stepCount - 1 ) == 0 && activities.at(stepCount) != 0) {
+  if (OpenDuringSleeping) {
+    if (stepCount > 0) {
+      if (activities.at(stepCount - 1) == 0 && activities.at(stepCount) != 0) {
         if (m_window.getWindowState() == 0) {
           m_window.setWindowState(1);
           int lengthOfTimeStepSeconds =
@@ -130,7 +131,8 @@ bool Agent_Action_Window::BDI(const std::vector<double> &activities) {
           result = m_window.getWindowState();
         }
       } else if (stepCount > 1) {
-        if (activities.at(stepCount - 2 ) == 0 && activities.at(stepCount -1) != 0) {
+        if (activities.at(stepCount - 2) == 0 &&
+            activities.at(stepCount -1) != 0) {
           m_window.setWindowState(0);
           bdi = true;
           result = m_window.getWindowState();
@@ -138,12 +140,9 @@ bool Agent_Action_Window::BDI(const std::vector<double> &activities) {
       }
     }
   }
-
-
   return bdi;
 }
 
-
-int Agent_Action_Window::durationOpen() const{
+int Agent_Action_Window::durationOpen() const {
     return m_window.getDurationOpen();
 }

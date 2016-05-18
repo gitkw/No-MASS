@@ -44,8 +44,7 @@ Building_Zone::Building_Zone(const ZoneStruct & zoneStruct) :
     }
 }
 
-void Building_Zone::setup() {
-}
+void Building_Zone::setup() {}
 
 void Building_Zone::step() {
     if (active) {
@@ -55,7 +54,13 @@ void Building_Zone::step() {
           DataStore::addValue(name, windowState);
         }
         DataStore::addValue(variableNameLight, lightState);
-        DataStore::addValue(variableNameBlindFraction, 1.0 - blindState);
+        // Shade in EP is
+        // 1 is close
+        // 0 is open
+        // Shade in No-mass unshaded fraction
+        // 1 is open
+        // 0 is closed
+        DataStore::addValue(variableNameBlindFraction, 1 - blindState);
         DataStore::addValue(variableNameHeating, heatingState);
     }
 }

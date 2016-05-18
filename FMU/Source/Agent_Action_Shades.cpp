@@ -22,11 +22,11 @@ void Agent_Action_Shades::setClosedDuringSleep(bool ShadeClosedDuringSleep) {
   this->ShadeClosedDuringSleep = ShadeClosedDuringSleep;
 }
 
-void Agent_Action_Shades::setClosedDuringNight(bool ShadeClosedDuringNight){
+void Agent_Action_Shades::setClosedDuringNight(bool ShadeClosedDuringNight) {
   this->ShadeClosedDuringNight = ShadeClosedDuringNight;
 }
 void Agent_Action_Shades::setClosedDuringAudioVisual(
-  bool ShadeClosedDuringAudioVisual){
+  bool ShadeClosedDuringAudioVisual) {
   this->ShadeClosedDuringAudioVisual = ShadeClosedDuringAudioVisual;
 }
 
@@ -42,7 +42,7 @@ void Agent_Action_Shades::setup(int shadeID) {
 }
 
 void Agent_Action_Shades::step(const Building_Zone& zone, const bool inZone,
-    const bool previouslyInZone, const std::vector<double> & activities) {
+    const bool previouslyInZone) {
   double shadingFraction = zone.getBlindState();
   // we take the previous timestep shading state to compute Lumint
   // Evg: Outdoor illuminance in the horizontal plane without obstructions (lux)
@@ -56,24 +56,33 @@ void Agent_Action_Shades::step(const Building_Zone& zone, const bool inZone,
   } else {
     shadingFraction = m_blindUsage.departure(shadingFraction, Lumint, Evg);
   }
+  result = shadingFraction;
+}
 
+bool Agent_Action_Shades::BDI(const std::vector<double> &activities) {
+  bool bdi = false;
   int stepCount = SimulationConfig::getStepCount();
   if (ShadeClosedDuringSleep && activities.at(stepCount) == 0) {
-      shadingFraction = 0;
+      result = 0;
+      bdi = true;
   }
   if (ShadeClosedDuringWashing && activities.at(stepCount) == 6) {
-      shadingFraction = 0;
+      result = 0;
+      bdi = true;
   }
   if (ShadeClosedDuringAudioVisual && activities.at(stepCount) == 2) {
-      shadingFraction = 0;
+      result = 0;
+      bdi = true;
   }
   if (ShadeClosedDuringNight) {
       int hour = DataStore::getValue("hourOfDay");
       if (hour < 8) {
-        shadingFraction = 0;
+        result = 0;
+        bdi = true;
       } else if (hour > 20) {
-        shadingFraction = 0;
+        result = 0;
+        bdi = true;
       }
   }
-  result = shadingFraction;
+  return bdi;
 }

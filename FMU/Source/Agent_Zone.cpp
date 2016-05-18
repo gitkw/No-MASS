@@ -7,22 +7,21 @@
 #include "DataStore.h"
 #include "Agent_Zone.h"
 
-Agent_Zone::Agent_Zone() {
-}
+Agent_Zone::Agent_Zone() {}
 
-bool Agent_Zone::isActionWindow() const{
+bool Agent_Zone::isActionWindow() const {
   return ActionWindow;
 }
-bool Agent_Zone::isActionLights() const{
+bool Agent_Zone::isActionLights() const {
   return ActionLights;
 }
-bool Agent_Zone::isActionShades() const{
+bool Agent_Zone::isActionShades() const {
   return ActionShades;
 }
-bool Agent_Zone::isActionHeatGains() const{
+bool Agent_Zone::isActionHeatGains() const {
   return ActionHeatGains;
 }
-bool Agent_Zone::isActionLearning() const{
+bool Agent_Zone::isActionLearning() const {
   return ActionLearning;
 }
 
@@ -40,13 +39,13 @@ Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid,
 
   if (SimulationConfig::info.windows) {
       aaw.setup(agent.windowId, agentid);
-      if(buldingZone.hasActivity(4)){
+      if (buldingZone.hasActivity(4)) {
         aaw.setOpenDuringCooking(agent.WindowOpenDuringCooking);
       }
-      if(buldingZone.hasActivity(6)){
+      if (buldingZone.hasActivity(6)) {
         aaw.setOpenDuringWashing(agent.WindowOpenDuringWashing);
       }
-      if(buldingZone.hasActivity(0)){
+      if (buldingZone.hasActivity(0)) {
         aaw.setOpenDuringSleeping(agent.WindowOpenDuringSleeping);
       }
       aaw.setAvailableActivities(buldingZone.getActivities());
@@ -59,31 +58,27 @@ Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid,
 
   if (SimulationConfig::info.lights) {
       availableActions.push_back(3);
-
-      if(buldingZone.hasActivity(2)){
+      if (buldingZone.hasActivity(2)) {
         aal.setOffDuringAudioVisual(agent.LightOffDuringAudioVisual);
       }
-      if(buldingZone.hasActivity(0)){
-        aal.setOffDuringSleep(agent.LightOffDuringSleep);
-      }
+      aal.setOffDuringSleep(agent.LightOffDuringSleep);
       aal.setAvailableActivities(buldingZone.getActivities());
   }
   if (SimulationConfig::info.shading) {
       aas.setup(agent.shadeId);
-      if(buldingZone.hasActivity(0)){
+      if (buldingZone.hasActivity(0)) {
         aas.setClosedDuringSleep(agent.ShadeClosedDuringSleep);
       }
-      if(buldingZone.hasActivity(6)){
+      if (buldingZone.hasActivity(6)) {
         aas.setClosedDuringWashing(agent.ShadeClosedDuringWashing);
       }
       aas.setClosedDuringNight(agent.ShadeDuringNight);
-      if(buldingZone.hasActivity(2)){
+      if (buldingZone.hasActivity(2)) {
         aas.setClosedDuringAudioVisual(agent.ShadeDuringAudioVisual);
       }
       availableActions.push_back(2);
   }
   if (SimulationConfig::info.learn > 0) {
-      // availableActions.push_back(5);
       aalearn.setZoneId(id);
       aalearn.setup(agentid, SimulationConfig::info.learn);
   }
@@ -92,7 +87,6 @@ Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid,
 void Agent_Zone::step(const Building_Zone& zone,
                       const Building_Zone& zonePrevious,
                       const std::vector<double> &activities) {
-
     double outdoorTemperature =
             DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
     outDoorTemperatures.push_back(outdoorTemperature);
@@ -109,7 +103,7 @@ void Agent_Zone::step(const Building_Zone& zone,
         static_cast<double>(outDoorTemperatures.size());
     bool inZone = zone.getId() == id;
     bool previouslyInZone = zonePrevious.getId() == id;
-    if (inZone || previouslyInZone ) {
+    if (inZone || previouslyInZone) {
       aaw.saveResult();
     }
 
@@ -129,11 +123,22 @@ void Agent_Zone::step(const Building_Zone& zone,
       }
     }
     bool win = aaw.BDI(activities);
-    if(win){
+    if (win) {
       desiredWindowState = aaw.getResult();
       ActionWindow = true;
     }
 
+    bool sha = aas.BDI(activities);
+    if (sha) {
+      desiredShadeState = aas.getResult();
+      ActionShades = true;
+    }
+
+    bool lig = aal.BDI(activities);
+    if (lig) {
+      desiredLightState = aal.getResult();
+      ActionLights = true;
+    }
 }
 
 void Agent_Zone::actionStep(int action,
@@ -160,7 +165,7 @@ void Agent_Zone::actionStep(int action,
         break;
       case 2:
             ActionShades = true;
-            aas.step(zone, inZone, preZone, activities);
+            aas.step(zone, inZone, preZone);
             desiredShadeState = aas.getResult();
         break;
       case 3:
@@ -230,7 +235,7 @@ void Agent_Zone::postprocess() {
   }
 }
 
-void Agent_Zone::postTimeStep(){
+void Agent_Zone::postTimeStep() {
   ActionWindow = false;
   ActionLights = false;
   ActionShades = false;

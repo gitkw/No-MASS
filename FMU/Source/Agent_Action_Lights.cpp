@@ -29,12 +29,19 @@ void Agent_Action_Lights::step(const Building_Zone& zone, const bool inZone,
             int pffs = getFutureDurationOfAbsenceState(activities);
             lightState = m_lightUsage.departure(lightState, pffs);
     }
-    int stepCount = SimulationConfig::getStepCount();
-    if (OffDuringSleep && activities.at(stepCount) == 0) {
-        lightState = 0;
-    }
-    if (OffDuringAudioVisual && activities.at(stepCount) == 2) {
-        lightState = 0;
-    }
     result = lightState;
+}
+
+bool Agent_Action_Lights::BDI(const std::vector<double> &activities) {
+  bool bdi = false;
+  int stepCount = SimulationConfig::getStepCount();
+  if (OffDuringSleep && activities.at(stepCount) == 0) {
+      result = 0;
+      bdi = true;
+  }
+  if (OffDuringAudioVisual && activities.at(stepCount) == 2) {
+      result = 0;
+      bdi = true;
+  }
+  return bdi;
 }

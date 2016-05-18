@@ -39,15 +39,15 @@ TEST_F(Test_Agent_Action_Shades, ClosedDuringSleep) {
   aas.setClosedDuringSleep(true);
 
   activities.push_back(1);
-  aas.step(z_Kitchen, true, false, activities);
-  ASSERT_TRUE(aas.getResult() > 0);
+  aas.step(z_Kitchen, true, false);
+  aas.BDI(activities);
+  ASSERT_GT(aas.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(0);
-  aas.step(z_Kitchen, true, false, activities);
+  aas.step(z_Kitchen, true, false);
+  aas.BDI(activities);
   ASSERT_EQ(aas.getResult(), 0);
-
-
 }
 
 TEST_F(Test_Agent_Action_Shades, ClosedDuringWashing) {
@@ -59,11 +59,13 @@ TEST_F(Test_Agent_Action_Shades, ClosedDuringWashing) {
   aas.getResult();
 
   activities.push_back(6);
-  aas.step(z_Kitchen, true, false, activities);
+  aas.step(z_Kitchen, true, false);
+  aas.BDI(activities);
   ASSERT_EQ(aas.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
-  aas.step(z_Kitchen, true, false, activities);
+  aas.step(z_Kitchen, true, false);
+  aas.BDI(activities);
   ASSERT_EQ(aas.getResult(), 1);
 }

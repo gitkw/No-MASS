@@ -45,11 +45,13 @@ TEST_F(Test_Agent_Action_Lights, OffDuringSleep) {
 
   activities.push_back(0);
   aal.step(z_Kitchen, true, false, activities);
+  aal.BDI(activities);
   ASSERT_EQ(aal.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
   aal.step(z_Kitchen, true, false, activities);
+  aal.BDI(activities);
   ASSERT_EQ(aal.getResult(), 1);
 }
 
@@ -63,10 +65,12 @@ TEST_F(Test_Agent_Action_Lights, OffDuringAudioVisual) {
 
   activities.push_back(2);
   aal.step(z_Kitchen, true, false, activities);
+  aal.BDI(activities);
   ASSERT_EQ(aal.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
   aal.step(z_Kitchen, true, false, activities);
+  aal.BDI(activities);
   ASSERT_EQ(aal.getResult(), 1);
 }
