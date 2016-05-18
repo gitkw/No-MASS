@@ -128,6 +128,12 @@ void Agent_Zone::step(const Building_Zone& zone,
         actionStep(5, zone, inZone, previouslyInZone, activities);
       }
     }
+    bool win = aaw.BDI(activities);
+    if(win){
+      desiredWindowState = aaw.getResult();
+      ActionWindow = true;
+    }
+
 }
 
 void Agent_Zone::actionStep(int action,
