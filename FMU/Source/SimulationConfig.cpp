@@ -23,8 +23,7 @@ int SimulationConfig::stepCount = -1;
 std::string SimulationConfig::ActivityFile;
 std::string SimulationConfig::FmuLocation;
 
-SimulationConfig::SimulationConfig() {
-}
+SimulationConfig::SimulationConfig() {}
 
 void SimulationConfig::reset() {
   buildings.clear();
@@ -42,7 +41,7 @@ void SimulationConfig::parseBuildings(rapidxml::xml_node<> *node) {
     buildings.clear();
     rapidxml::xml_node<> *cnode = node->first_node();
     while (cnode) {
-        if (std::strcmp(cnode->name(), "building") == 0) {
+        if (strComp(cnode->name(), "building")) {
               parseBuilding(cnode);
         }
         cnode = cnode->next_sibling();
@@ -61,26 +60,26 @@ void SimulationConfig::parseBuilding(rapidxml::xml_node<> *node) {
     b.zones.insert(zsOut);
     rapidxml::xml_node<> *cnode = node->first_node();
     while (cnode) {
-        if (std::strcmp(cnode->name(), "building") == 0) {
+        if (strComp(cnode->name(), "building")) {
             b.name = cnode->value();
-        } else if (std::strcmp(cnode->name(), "agents") == 0) {
+        } else if (strComp(cnode->name(), "agents")) {
             parseAgents(cnode);
-        } else if (std::strcmp(cnode->name(), "zone") == 0) {
+        } else if (strComp(cnode->name(), "zone")) {
             zonecount++;
             std::pair<std::string, ZoneStruct> zone;
             zone.second.id = zonecount;
             rapidxml::xml_node<> *znode = cnode->first_node();
             while (znode) {
-                if (std::strcmp(znode->name(), "name") == 0) {
+                if (strComp(znode->name(), "name")) {
                     zone.first = znode->value();
                     zone.second.name = znode->value();
-                } else if (std::strcmp(znode->name(), "activities") == 0
-                          || std::strcmp(znode->name(), "activity") == 0) {
+                } else if (strComp(znode->name(), "activities")
+                          || strComp(znode->name(), "activity")) {
                     zone.second.activities =
                           activityNamesToIds(Utility::splitCSV(znode->value()));
-                } else if (std::strcmp(znode->name(), "groundFloor") == 0) {
+                } else if (strComp(znode->name(), "groundFloor")) {
                     zone.second.groundFloor = std::stoi(znode->value());
-                } else if (std::strcmp(znode->name(), "windowCount") == 0) {
+                } else if (strComp(znode->name(), "windowCount")) {
                     zone.second.windowCount = std::stoi(znode->value());
                 }
                 znode = znode->next_sibling();
@@ -134,15 +133,15 @@ void SimulationConfig::parseAgents(rapidxml::xml_node<> *node) {
   info.presencePage = false;
   rapidxml::xml_node<> *cnode = node->first_node();
   while (cnode) {
-    if (std::strcmp(cnode->name(), "agent") == 0) {
+    if (strComp(cnode->name(), "agent")) {
       agentStruct agent;
       rapidxml::xml_node<> *anode = cnode->first_node();
       while (anode) {
-        if (std::strcmp(anode->name(), "profile") == 0) {
+        if (strComp(anode->name(), "profile")) {
           rapidxml::xml_node<> *pnode = anode->first_node();
           while (pnode) {
             std::string text = pnode->name();
-            if (text.compare("file") == 0) {
+            if (text == "file") {
               SimulationConfig::ActivityFile = pnode->value();
             } else {
               std::pair<int, std::string> a;
@@ -170,55 +169,52 @@ void SimulationConfig::parseAgents(rapidxml::xml_node<> *node) {
             }
             pnode = pnode->next_sibling();
           }
-
-        } else if (std::strcmp(anode->name(), "bedroom") == 0) {
+        } else if (strComp(anode->name(), "bedroom")) {
           agent.bedroom = anode->value();
-        } else if (std::strcmp(anode->name(), "office") == 0) {
+        } else if (strComp(anode->name(), "office")) {
           agent.office = anode->value();
-        } else if (std::strcmp(anode->name(), "power") == 0) {
+        } else if (strComp(anode->name(), "power")) {
           agent.power = std::stod(anode->value());
-        } else if (std::strcmp(anode->name(), "window") == 0) {
+        } else if (strComp(anode->name(), "window")) {
           agent.windowId = std::stoi(anode->value());
-        } else if (std::strcmp(anode->name(), "shade") == 0) {
+        } else if (strComp(anode->name(), "shade")) {
           agent.shadeId = std::stoi(anode->value());
-        } else if (std::strcmp(anode->name(), "edtry") == 0) {
+        } else if (strComp(anode->name(), "edtry")) {
           agent.edtry = anode->value();
-        } else if (std::strcmp(anode->name(), "age") == 0) {
+        } else if (strComp(anode->name(), "age")) {
           agent.age = anode->value();
-        } else if (std::strcmp(anode->name(), "computer") == 0) {
+        } else if (strComp(anode->name(), "computer")) {
           agent.computer = anode->value();
-        } else if (std::strcmp(anode->name(), "civstat") == 0) {
+        } else if (strComp(anode->name(), "civstat")) {
           agent.civstat = anode->value();
-        } else if (std::strcmp(anode->name(), "unemp") == 0) {
+        } else if (strComp(anode->name(), "unemp")) {
           agent.unemp = anode->value();
-        } else if (std::strcmp(anode->name(), "retired") == 0) {
+        } else if (strComp(anode->name(), "retired")) {
           agent.retired = anode->value();
-        } else if (std::strcmp(anode->name(), "sex") == 0) {
+        } else if (strComp(anode->name(), "sex")) {
           agent.sex = anode->value();
-        } else if (std::strcmp(anode->name(), "famstat") == 0) {
+        } else if (strComp(anode->name(), "famstat")) {
           agent.famstat = anode->value();
-        } else if (std::strcmp(anode->name(), "ShadeClosedDuringSleep") == 0) {
-          agent.ShadeClosedDuringSleep = std::stoi(anode->value());
-        } else if (std::strcmp(anode->name(),
-                                "ShadeClosedDuringWashing") == 0) {
-          agent.ShadeClosedDuringWashing = std::stoi(anode->value());
-        } else if (std::strcmp(anode->name(),
-                                "ShadeDuringNight") == 0) {
-          agent.ShadeDuringNight = std::stoi(anode->value());
-        } else if (std::strcmp(anode->name(),
-                                "ShadeDuringAudioVisual") == 0) {
-          agent.ShadeDuringAudioVisual = std::stoi(anode->value());
-        } else if (std::strcmp(anode->name(),
-                                "LightOffDuringAudioVisual") == 0) {
-          agent.LightOffDuringAudioVisual = std::stoi(anode->value());
-        } else if (std::strcmp(anode->name(), "LightOffDuringSleep") == 0) {
-          agent.LightOffDuringSleep = std::stoi(anode->value());
-        } else if (std::strcmp(anode->name(), "WindowOpenDuringCooking") == 0) {
-          agent.WindowOpenDuringCooking = std::stoi(anode->value());
-        } else if (std::strcmp(anode->name(), "WindowOpenDuringWashing") == 0) {
-          agent.WindowOpenDuringWashing = std::stoi(anode->value());
-        }else if (std::strcmp(anode->name(), "WindowOpenDuringSleeping") == 0) {
-          agent.WindowOpenDuringSleeping = std::stoi(anode->value());
+        } else if (strComp(anode->name(), "ShadeClosedDuringSleep")) {
+          agent.ShadeClosedDuringSleep = std::stod(anode->value());
+        } else if (strComp(anode->name(), "ShadeClosedDuringWashing")) {
+          agent.ShadeClosedDuringWashing = std::stod(anode->value());
+        } else if (strComp(anode->name(), "ShadeDuringNight")) {
+          agent.ShadeDuringNight = std::stod(anode->value());
+        } else if (strComp(anode->name(), "ShadeDuringAudioVisual")) {
+          agent.ShadeDuringAudioVisual = std::stod(anode->value());
+        } else if (strComp(anode->name(), "LightOffDuringAudioVisual")) {
+          agent.LightOffDuringAudioVisual = std::stod(anode->value());
+        } else if (strComp(anode->name(), "LightOffDuringSleep")) {
+          agent.LightOffDuringSleep = std::stod(anode->value());
+        } else if (strComp(anode->name(), "WindowOpenDuringCooking")) {
+          agent.WindowOpenDuringCooking = std::stod(anode->value());
+        } else if (strComp(anode->name(), "WindowOpenDuringWashing")) {
+          agent.WindowOpenDuringWashing = std::stod(anode->value());
+        } else if (strComp(anode->name(), "WindowOpenDuringSleeping")) {
+          agent.WindowOpenDuringSleeping = std::stod(anode->value());
+        } else if (strComp(anode->name(), "ApplianceDuringDay")) {
+          agent.ApplianceDuringDay = std::stod(anode->value());
         }
         anode = anode->next_sibling();
       }
@@ -250,11 +246,11 @@ void SimulationConfig::parseAgents(rapidxml::xml_node<> *node) {
 void SimulationConfig::parseModels(rapidxml::xml_node<> *node) {
     rapidxml::xml_node<> *cnode = node->first_node();
     while (cnode) {
-        if (std::strcmp(cnode->name(), "lights") == 0) {
+        if (strComp(cnode->name(), "lights")) {
               SimulationConfig::info.lights = std::stoi(cnode->value());
-        } else if (std::strcmp(cnode->name(), "windows") == 0) {
+        } else if (strComp(cnode->name(), "windows")) {
             parseWindows(cnode);
-        } else if (std::strcmp(cnode->name(), "shades") == 0) {
+        } else if (strComp(cnode->name(), "shades")) {
             parseShades(cnode);
         }
         cnode = cnode->next_sibling();
@@ -265,59 +261,59 @@ void SimulationConfig::parseWindows(rapidxml::xml_node<> *node) {
   windows.clear();
   rapidxml::xml_node<> *cnode = node->first_node();
   while (cnode) {
-      if (std::strcmp(cnode->name(), "windowsLearn") == 0) {
+      if (strComp(cnode->name(), "windowsLearn")) {
         SimulationConfig::info.windowsLearn = std::stoi(cnode->value());
-      }else if (std::strcmp(cnode->name(), "enabled") == 0) {
+      } else if (strComp(cnode->name(), "enabled")) {
         SimulationConfig::info.windows = std::stoi(cnode->value());
-      } else if (std::strcmp(cnode->name(), "window") == 0) {
+      } else if (strComp(cnode->name(), "window")) {
         rapidxml::xml_node<> *snode = cnode->first_node();
         std::pair<int, windowStruct> ws;
         while (snode) {
-          if (std::strcmp(snode->name(), "id") == 0) {
+          if (strComp(snode->name(), "id")) {
             ws.first = std::stoi(snode->value());
-          } else if (std::strcmp(snode->name(), "aop") == 0) {
+          } else if (strComp(snode->name(), "aop")) {
               ws.second.aop = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "bopout") == 0) {
+          } else if (strComp(snode->name(), "bopout")) {
               ws.second.bopout = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "shapeop") == 0) {
+          } else if (strComp(snode->name(), "shapeop")) {
               ws.second.shapeop = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "a01arr") == 0) {
+          } else if (strComp(snode->name(), "a01arr")) {
               ws.second.a01arr = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01inarr") == 0) {
+          } else if (strComp(snode->name(), "b01inarr")) {
               ws.second.b01inarr = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01outarr") == 0) {
+          } else if (strComp(snode->name(), "b01outarr")) {
               ws.second.b01outarr = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01absprevarr") == 0) {
+          } else if (strComp(snode->name(), "b01absprevarr")) {
               ws.second.b01absprevarr = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01rnarr") == 0) {
+          } else if (strComp(snode->name(), "b01rnarr")) {
               ws.second.b01rnarr = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "a01int") == 0) {
+          } else if (strComp(snode->name(), "a01int")) {
               ws.second.a01int = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01inint") == 0) {
+          } else if (strComp(snode->name(), "b01inint")) {
               ws.second.b01inint = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01outint") == 0) {
+          } else if (strComp(snode->name(), "b01outint")) {
               ws.second.b01outint = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01presint") == 0) {
+          } else if (strComp(snode->name(), "b01presint")) {
               ws.second.b01presint = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01rnint") == 0) {
+          } else if (strComp(snode->name(), "b01rnint")) {
               ws.second.b01rnint = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "a01dep") == 0) {
+          } else if (strComp(snode->name(), "a01dep")) {
               ws.second.a01dep = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01outdep") == 0) {
+          } else if (strComp(snode->name(), "b01outdep")) {
               ws.second.b01outdep = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01absdep") == 0) {
+          } else if (strComp(snode->name(), "b01absdep")) {
               ws.second.b01absdep = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01gddep") == 0) {
+          } else if (strComp(snode->name(), "b01gddep")) {
               ws.second.b01gddep = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "a10dep") == 0) {
+          } else if (strComp(snode->name(), "a10dep")) {
               ws.second.a10dep = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b10indep") == 0) {
+          } else if (strComp(snode->name(), "b10indep")) {
               ws.second.b10indep = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b10outdep") == 0) {
+          } else if (strComp(snode->name(), "b10outdep")) {
               ws.second.b10outdep = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b10absdep") == 0) {
+          } else if (strComp(snode->name(), "b10absdep")) {
               ws.second.b10absdep = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b10gddep") == 0) {
+          } else if (strComp(snode->name(), "b10gddep")) {
               ws.second.b10gddep = std::stod(snode->value());
           }
           snode = snode->next_sibling();
@@ -334,55 +330,55 @@ void SimulationConfig::parseShades(rapidxml::xml_node<> *node) {
   shades.clear();
   rapidxml::xml_node<> *cnode = node->first_node();
   while (cnode) {
-      if (std::strcmp(cnode->name(), "enabled") == 0) {
+      if (strComp(cnode->name(), "enabled")) {
             SimulationConfig::info.shading = std::stoi(cnode->value());
-      } else if (std::strcmp(cnode->name(), "shade") == 0) {
+      } else if (strComp(cnode->name(), "shade")) {
         rapidxml::xml_node<> *snode = cnode->first_node();
         std::pair<int, shadeStruct> ws;
         while (snode) {
-          if (std::strcmp(snode->name(), "id") == 0) {
+          if (strComp(snode->name(), "id")) {
             ws.first = std::stoi(snode->value());
-          } else if (std::strcmp(snode->name(), "a01arr") == 0) {
+          } else if (strComp(snode->name(), "a01arr")) {
               ws.second.a01arr = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01inarr") == 0) {
+          } else if (strComp(snode->name(), "b01inarr")) {
               ws.second.b01inarr = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01sarr") == 0) {
+          } else if (strComp(snode->name(), "b01sarr")) {
               ws.second.b01sarr = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "a10arr") == 0) {
+          } else if (strComp(snode->name(), "a10arr")) {
               ws.second.a10arr = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b10inarr") == 0) {
+          } else if (strComp(snode->name(), "b10inarr")) {
               ws.second.b10inarr = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b10sarr") == 0) {
+          } else if (strComp(snode->name(), "b10sarr")) {
               ws.second.b10sarr = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "a01int") == 0) {
+          } else if (strComp(snode->name(), "a01int")) {
               ws.second.a01int = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01inint") == 0) {
+          } else if (strComp(snode->name(), "b01inint")) {
               ws.second.b01inint = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b01sint") == 0) {
+          } else if (strComp(snode->name(), "b01sint")) {
               ws.second.b01sint = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "a10int") == 0) {
+          } else if (strComp(snode->name(), "a10int")) {
               ws.second.a10int = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b10inint") == 0) {
+          } else if (strComp(snode->name(), "b10inint")) {
               ws.second.b10inint = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "b10sint") == 0) {
+          } else if (strComp(snode->name(), "b10sint")) {
               ws.second.b10sint = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "afullraise") == 0) {
+          } else if (strComp(snode->name(), "afullraise")) {
               ws.second.afullraise = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "boutfullraise") == 0) {
+          } else if (strComp(snode->name(), "boutfullraise")) {
               ws.second.boutfullraise = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "bsfullraise") == 0) {
+          } else if (strComp(snode->name(), "bsfullraise")) {
               ws.second.bsfullraise = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "bsfulllower") == 0) {
+          } else if (strComp(snode->name(), "bsfulllower")) {
               ws.second.bsfulllower = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "boutfulllower") == 0) {
+          } else if (strComp(snode->name(), "boutfulllower")) {
               ws.second.boutfulllower = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "afulllower") == 0) {
+          } else if (strComp(snode->name(), "afulllower")) {
               ws.second.afulllower = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "aSFlower") == 0) {
+          } else if (strComp(snode->name(), "aSFlower")) {
               ws.second.aSFlower = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "bSFlower") == 0) {
+          } else if (strComp(snode->name(), "bSFlower")) {
               ws.second.bSFlower = std::stod(snode->value());
-          } else if (std::strcmp(snode->name(), "shapelower") == 0) {
+          } else if (strComp(snode->name(), "shapelower")) {
               ws.second.shapelower = std::stod(snode->value());
           }
           snode = snode->next_sibling();
@@ -408,32 +404,34 @@ void SimulationConfig::parseConfiguration(const std::string & filename) {
   rx::xml_node<> *root_node = doc.first_node("simulation");
   rx::xml_node<> *node = root_node->first_node();
   while (node) {
-    if (std::strcmp(node->name(), "seed") == 0) {
+    if (strComp(node->name(), "seed")) {
         Utility::setSeed(std::stoi(node->value()));
-    } else if (std::strcmp(node->name(), "endDay") == 0) {
+    } else if (strComp(node->name(), "save")) {
+        SimulationConfig::info.save = std::stoi(node->value());
+    } else if (strComp(node->name(), "endDay")) {
         SimulationConfig::info.endDay = std::stoi(node->value());
-    } else if (std::strcmp(node->name(), "timeStepsPerHour") == 0) {
+    } else if (strComp(node->name(), "timeStepsPerHour")) {
         SimulationConfig::info.timeStepsPerHour = std::stoi(node->value());
-    } else if (std::strcmp(node->name(), "beginMonth") == 0) {
+    } else if (strComp(node->name(), "beginMonth")) {
         SimulationConfig::info.startMonth = std::stoi(node->value());
-    } else if (std::strcmp(node->name(), "endMonth") == 0) {
+    } else if (strComp(node->name(), "endMonth")) {
         SimulationConfig::info.endMonth = std::stoi(node->value());
-    } else if (std::strcmp(node->name(), "beginDay") == 0) {
+    } else if (strComp(node->name(), "beginDay")) {
         SimulationConfig::info.startDay = std::stoi(node->value());
-    } else if (std::strcmp(node->name(), "learn") == 0) {
+    } else if (strComp(node->name(), "learn")) {
         SimulationConfig::info.learn = std::stoi(node->value());
-    } else if (std::strcmp(node->name(), "learnupdate") == 0) {
+    } else if (strComp(node->name(), "learnupdate")) {
         SimulationConfig::info.learnupdate = std::stoi(node->value());
-    } else if (std::strcmp(node->name(), "learnep") == 0) {
+    } else if (strComp(node->name(), "learnep")) {
         SimulationConfig::info.learnep = std::stod(node->value());
-    } else if (std::strcmp(node->name(), "case") == 0) {
+    } else if (strComp(node->name(), "case")) {
         SimulationConfig::info.caseOrder = std::stoi(node->value());
-    } else if (std::strcmp(node->name(), "ShadeClosedDuringNight") == 0) {
+    } else if (strComp(node->name(), "ShadeClosedDuringNight")) {
        SimulationConfig::info.ShadeClosedDuringNight
            = std::stoi(node->value());
-    } else if (std::strcmp(node->name(), "models") == 0) {
+    } else if (strComp(node->name(), "models")) {
        parseModels(node);
-    } else if (std::strcmp(node->name(), "buildings") == 0) {
+    } else if (strComp(node->name(), "buildings")) {
         parseBuildings(node);
     }
 
@@ -503,4 +501,9 @@ void SimulationConfig::timeSteps() {
     }
     int hours = days * 24;
     SimulationConfig::info.timeSteps = hours * info.timeStepsPerHour;
+}
+
+
+bool SimulationConfig::strComp(const char * str1, const char * str2) {
+  return std::strcmp(str1, str2) == 0;
 }

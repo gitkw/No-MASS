@@ -12,9 +12,9 @@ class Agent_Action_Window : public Agent_Action {
         void step(const Building_Zone& zone, const bool inZone,
                   const bool previouslyInZone,
                   const std::vector<double> &activities);
-        void setOpenDuringCooking(bool OpenDuringCooking);
-        void setOpenDuringWashing(bool OpenDuringWashing);
-        void setOpenDuringSleeping(bool OpenDuringSleeping);
+        void setOpenDuringCooking(double OpenDuringCooking);
+        void setOpenDuringWashing(double OpenDuringWashing);
+        void setOpenDuringSleeping(double OpenDuringSleeping);
         void setDailyMeanTemperature(double dailyMeanTemperature);
         void saveResult();
         int durationOpen() const;
@@ -26,10 +26,11 @@ class Agent_Action_Window : public Agent_Action {
         std::string variableNameWindowDesire;
 
     private:
-        bool OpenDuringWashing;
-        bool OpenDuringCooking;
-        bool OpenDuringSleeping;
+        double OpenDuringWashing;
+        double OpenDuringCooking;
+        double OpenDuringSleeping;
         double dailyMeanTemperature;
+
 };
 
 #endif // AGENT_ACTION_WINDOW_H

@@ -14,18 +14,18 @@ class Agent_Action_Shades : public Agent_Action {
   void step(const Building_Zone& zone, const bool inZone,
             const bool previouslyInZone);
 
-  void setClosedDuringSleep(bool ShadeClosedDuringSleep);
-  void setClosedDuringWashing(bool ShadeClosedDuringWashing);
-  void setClosedDuringNight(bool ShadeClosedDuringNight);
-  void setClosedDuringAudioVisual(bool ShadeClosedDuringAudioVisual);
+  void setClosedDuringSleep(double ShadeClosedDuringSleep);
+  void setClosedDuringWashing(double ShadeClosedDuringWashing);
+  void setClosedDuringNight(double ShadeClosedDuringNight);
+  void setClosedDuringAudioVisual(double ShadeClosedDuringAudioVisual);
 
   bool BDI(const std::vector<double> &activities);
  private:
   Model_ExternalShading m_blindUsage;
-  bool ShadeClosedDuringSleep;
-  bool ShadeClosedDuringWashing;
-  bool ShadeClosedDuringNight;
-  bool ShadeClosedDuringAudioVisual;
+  double ShadeClosedDuringSleep;
+  double ShadeClosedDuringWashing;
+  double ShadeClosedDuringNight;
+  double ShadeClosedDuringAudioVisual;
 };
 
 #endif  // FMU_SOURCE_AGENT_ACTION_SHADES_H_

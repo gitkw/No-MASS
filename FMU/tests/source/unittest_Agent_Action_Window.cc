@@ -12,7 +12,7 @@
 class Test_Agent_Action_Window : public ::testing::Test {
  protected:
     Agent_Action_Window aaw;
-    
+
     std::vector<double> activities;
     virtual void SetUp();
 };
@@ -236,14 +236,14 @@ TEST_F(Test_Agent_Action_Window, multiZone) {
     ASSERT_FALSE(aaw.BDI(activities));
   }
   ASSERT_EQ(aaw.getResult(), 1);
-  ASSERT_EQ(aaw.durationOpen(), 3416);
+  ASSERT_EQ(aaw.durationOpen(), 1007);
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, true, activities);
   z_Kitchen.setWindowState(aaw.getResult());
   ASSERT_FALSE(aaw.BDI(activities));
-  ASSERT_EQ(aaw.durationOpen(), 3411);
+  ASSERT_EQ(aaw.durationOpen(), 1002);
   ASSERT_EQ(aaw.getResult(), 1);
 
   SimulationConfig::step();
@@ -251,7 +251,7 @@ TEST_F(Test_Agent_Action_Window, multiZone) {
   aaw.step(z_Kitchen, true, true, activities);
   z_Kitchen.setWindowState(aaw.getResult());
   ASSERT_FALSE(aaw.BDI(activities));
-  ASSERT_EQ(aaw.durationOpen(), 3406);
+  ASSERT_EQ(aaw.durationOpen(), 997);
   ASSERT_EQ(aaw.getResult(), 1);
   int prevDuration =  aaw.durationOpen();
   while(aaw.durationOpen() > 0){

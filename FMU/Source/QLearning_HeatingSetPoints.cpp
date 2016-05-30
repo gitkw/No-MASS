@@ -30,7 +30,7 @@ double QLearning_HeatingSetPoints::learn() {
     int month = DataStore::getValue("month") - 1;
     int hourOfDay = DataStore::getValue("hourOfDay");
     state = (month * 24) + hourOfDay;
-    
+
     DataStore::addValue(reward_name, reward);
     DataStore::addValue(action_name, action);
     DataStore::addValue(state_name, state);

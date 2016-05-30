@@ -23,6 +23,8 @@
 #include "Model_Presence.h"
 #include "Building.h"
 
+double Building::dailyMeanTemperature = 0;
+
 Building::Building() {}
 
 void Building::setup(const buildingStruct &b) {
@@ -34,12 +36,14 @@ void Building::setup(const buildingStruct &b) {
     std::list<int> pop = Utility::randomIntList(popSize);
     // setup each agent randomly
     for (int a : pop) {
-          population.push_back(Agent(a, zones));
+          population.push_back(Agent());
+          population.back().setup(a, zones);
     }
     initialiseStates();
 }
 
-void Building::setZones(const std::vector<std::shared_ptr<Building_Zone>> & zones) {
+void Building::setZones(
+        const std::vector<std::shared_ptr<Building_Zone>> & zones) {
     this->zones = zones;
 }
 
@@ -101,6 +105,23 @@ void Building::matchStateToZone(State &s) {
 }
 
 void Building::step() {
+    double outdoorTemperature =
+            DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
+    outDoorTemperatures.push_back(outdoorTemperature);
+    if (outDoorTemperatures.size() >
+          (SimulationConfig::info.timeStepsPerHour * 24)) {
+            outDoorTemperatures.pop_front();
+    }
+    dailyMeanTemperature = 0;
+    for (const double temp : outDoorTemperatures) {
+            dailyMeanTemperature += temp;
+    }
+    dailyMeanTemperature =
+      dailyMeanTemperature /
+        static_cast<double>(outDoorTemperatures.size());
+
+
+
     int popSize = population.size();
     std::list<int> pop = Utility::randomIntList(popSize);
     for (int a : pop) {
@@ -124,6 +145,7 @@ void Building::step() {
         }
         setAgentHeatDecisionsForZone(zone);
         setAgentGainsForZone(zone);
+        setAppGainsForZone(zone);
     }
 
     buildingInteractions();
@@ -147,7 +169,8 @@ void Building::buildingInteractions() {
   }
 }
 
-void Building::setAgentHeatDecisionsForZone(std::shared_ptr<Building_Zone> zone) {
+void Building::setAgentHeatDecisionsForZone(
+      std::shared_ptr<Building_Zone> zone) {
   double currentState = zone->getHeatingState();
   double totalIncrease = 0;
   double totalDecrease = 0;
@@ -234,7 +257,25 @@ void Building::setAgentGainsForZone(std::shared_ptr<Building_Zone> zone) {
     zone->setCurrentAgentGains(aveRadientGains);
 }
 
-void Building::setAgentWindowDecisionForZone(std::shared_ptr<Building_Zone> zone) {
+void Building::setAppGainsForZone(std::shared_ptr<Building_Zone> zone) {
+    double totalRadientGainsAppliance = 0;
+    double aveRadientGains = 0;
+    double numberOfAgentsAppliance = 0;
+
+    for (Agent &agent : population) {
+        numberOfAgentsAppliance++;
+        if  (agent.isActionAppliance(*zone)) {
+            totalRadientGainsAppliance += agent.getDesiredAppliance(*zone);
+        }
+    }
+    if (totalRadientGainsAppliance > 0) {
+        aveRadientGains += totalRadientGainsAppliance / numberOfAgentsAppliance;
+    }
+    zone->setAppFraction(aveRadientGains);
+}
+
+void Building::setAgentWindowDecisionForZone(
+        std::shared_ptr<Building_Zone> zone) {
     double open = 0;
     double close = 0;
     int numberOfActiveAgents = 0;
@@ -263,7 +304,8 @@ void Building::setAgentWindowDecisionForZone(std::shared_ptr<Building_Zone> zone
     }
 }
 
-void Building::setAgentBlindDecisionForZone(std::shared_ptr<Building_Zone> zone) {
+void Building::setAgentBlindDecisionForZone(
+        std::shared_ptr<Building_Zone> zone) {
     double currentState = zone->getBlindState();
     double totalIncrease = 0;
     double totalDecrease = 0;
@@ -332,7 +374,8 @@ void Building::setAgentBlindDecisionForZone(std::shared_ptr<Building_Zone> zone)
     }
     zone->setBlindState(state);
 }
-void Building::setAgentLightDecisionForZone(std::shared_ptr<Building_Zone> zone) {
+void Building::setAgentLightDecisionForZone(
+        std::shared_ptr<Building_Zone> zone) {
     double open = 0;
     double close = 0;
     double numberOfActiveAgents = 0;
@@ -356,8 +399,6 @@ void Building::setAgentLightDecisionForZone(std::shared_ptr<Building_Zone> zone)
             zone->setLightState(Utility::tossACoin());
         }
     }
-//     if(zone->getLightState())
-
 }
 
 void Building::setAgentCountForZone(std::shared_ptr<Building_Zone> zone) {

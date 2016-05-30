@@ -18,6 +18,9 @@ public:
     void postprocess();
     bool hasZone(const std::string& zoneName) const;
     void postTimeStep();
+
+    static double dailyMeanTemperature;
+
 private:
     void setAgentGainsForZone(std::shared_ptr<Building_Zone> zone);
     void setAgentWindowDecisionForZone(std::shared_ptr<Building_Zone> zone);
@@ -25,6 +28,7 @@ private:
     void setAgentBlindDecisionForZone(std::shared_ptr<Building_Zone> zone);
     void setAgentHeatDecisionsForZone(std::shared_ptr<Building_Zone> zone);
     void setAgentCountForZone(std::shared_ptr<Building_Zone> zone);
+    void setAppGainsForZone(std::shared_ptr<Building_Zone> zone);
     void initialiseStates();
     void setZones(const std::vector<std::shared_ptr<Building_Zone>> & zones);
     void buildingInteractions();
@@ -34,6 +38,9 @@ private:
     StateMachine stateMachine;
     std::vector<std::shared_ptr<Building_Zone>> zones;
     std::string name;
+
+    std::deque<double> outDoorTemperatures;
+
 };
 
 #endif	/* BUILDING_H */

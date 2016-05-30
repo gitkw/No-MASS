@@ -46,33 +46,33 @@ TEST_F(Test_Agent_Action_Window_Learning, Learn) {
 
   double result = 1;
   for (int i =0; i < 10; i++) {
-     if(result >0){
+     if (result > 0) {
        aal.setReward(1);
-     }else{
+     } else {
        aal.setReward(-0.1);
      }
 
-     aal.step(z_Kitchen, true);
+     aal.step(z_Kitchen, true, true);
      result = aal.getResult();
      DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 21);
   }
 
-  aal.step(z_Kitchen, true);
+  aal.step(z_Kitchen, true, true);
   result = aal.getResult();
   ASSERT_NEAR(result, 1, 0.1);
 
   for (int i =0; i < 100; i++) {
-     if(result >0){
+     if (result > 0) {
        aal.setReward(-0.1);
-     }else{
+     } else {
        aal.setReward(1);
      }
-     aal.step(z_Kitchen, true);
+     aal.step(z_Kitchen, true, true);
      result = aal.getResult();
      DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 21);
   }
 
-  aal.step(z_Kitchen, true);
+  aal.step(z_Kitchen, true, true);
   result = aal.getResult();
   ASSERT_NEAR(result, 0, 0.1);
 }

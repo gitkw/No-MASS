@@ -1,16 +1,20 @@
 // Copyright 2015 Jacob Chapman
 
 #include <vector>
+#include "Utility.h"
 #include "Model_Lights.h"
 #include "Agent_Action_Lights.h"
 
-Agent_Action_Lights::Agent_Action_Lights() {}
+Agent_Action_Lights::Agent_Action_Lights() {
+  OffDuringAudioVisual = 0.0;
+  OffDuringSleep = 0.0;
+}
 
-void Agent_Action_Lights::setOffDuringAudioVisual(bool OffDuringAudioVisual) {
+void Agent_Action_Lights::setOffDuringAudioVisual(double OffDuringAudioVisual) {
   this->OffDuringAudioVisual = OffDuringAudioVisual;
 }
 
-void Agent_Action_Lights::setOffDuringSleep(bool OffDuringSleep) {
+void Agent_Action_Lights::setOffDuringSleep(double OffDuringSleep) {
   this->OffDuringSleep = OffDuringSleep;
 }
 
@@ -35,11 +39,13 @@ void Agent_Action_Lights::step(const Building_Zone& zone, const bool inZone,
 bool Agent_Action_Lights::BDI(const std::vector<double> &activities) {
   bool bdi = false;
   int stepCount = SimulationConfig::getStepCount();
-  if (OffDuringSleep && activities.at(stepCount) == 0) {
+  if (OffDuringSleep > Utility::randomDouble(0, 1) &&
+        activities.at(stepCount) == 0) {
       result = 0;
       bdi = true;
   }
-  if (OffDuringAudioVisual && activities.at(stepCount) == 2) {
+  if (OffDuringAudioVisual > Utility::randomDouble(0, 1) &&
+        activities.at(stepCount) == 2) {
       result = 0;
       bdi = true;
   }

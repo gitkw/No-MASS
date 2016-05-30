@@ -142,10 +142,12 @@ void Test_Agent::SetUp() {
   v.push_back(z_OfficePtr);
 
 
-  Agent agent(0, v);
+  Agent agent;
+  agent.setup(0, v);
   agent.setState(out);
   agent.step(&stateMachine);
-  Agent agentb(1, v);
+  Agent agentb;
+  agentb.setup(1, v);
   agentb.setState(out);
   agentb.step(&stateMachine);
 

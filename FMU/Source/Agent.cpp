@@ -20,7 +20,9 @@
 Agent::Agent() {
 }
 
-Agent::Agent(int newId, const std::vector<std::shared_ptr<Building_Zone>> &zones) : id(newId) {
+void Agent::setup(int newId,
+      const std::vector<std::shared_ptr<Building_Zone>> &zones) {
+    id = newId;
     std::string idAsString = std::to_string(newId);
     DataStore::addVariable("Agent_Activity_" + idAsString);
     DataStore::addVariable("AgentGains" + idAsString);
@@ -35,7 +37,8 @@ Agent::Agent(int newId, const std::vector<std::shared_ptr<Building_Zone>> &zones
     }
 
     for (const std::shared_ptr<Building_Zone> & buldingZone : zones) {
-        agentZones.push_back(Agent_Zone(*buldingZone, id, agent));
+        agentZones.push_back(Agent_Zone());
+        agentZones.back().setup(*buldingZone, id, agent);
     }
     /*
     if (agent.HeatOnPresence) {
@@ -52,8 +55,6 @@ Agent::Agent(int newId, const std::vector<std::shared_ptr<Building_Zone>> &zones
 void Agent::step(StateMachine *stateMachine) {
     int stepCount = SimulationConfig::getStepCount();
     int newStateID = activities.at(stepCount);
-    //previousState = state;
-
     zonePtrPrevious = state.getZonePtr();
     state = stateMachine->transistionTo(newStateID);
 
@@ -118,7 +119,6 @@ bool Agent::getDesiredLightState(const Building_Zone &zone) const {
 }
 
 bool Agent::getDesiredWindowState(const Building_Zone &zone) const {
-    //  return zoneToInteraction.at(zone.getName()).windowState;
     bool state = false;
     for (const Agent_Zone &agentZone : agentZones) {
       if (agentZone.getId() == zone.getId()) {
@@ -130,7 +130,6 @@ bool Agent::getDesiredWindowState(const Building_Zone &zone) const {
 }
 
 double Agent::getDesiredShadeState(const Building_Zone &zone) const {
-    // return zoneToInteraction.at(zone.getName()).shadeState;
     double state = 1.0;
     for (const Agent_Zone &agentZone : agentZones) {
       if (agentZone.getId() == zone.getId()) {
@@ -139,6 +138,17 @@ double Agent::getDesiredShadeState(const Building_Zone &zone) const {
       }
     }
     return state;
+}
+
+double Agent::getDesiredAppliance(const Building_Zone &zone) const {
+  double state = 1.0;
+  for (const Agent_Zone &agentZone : agentZones) {
+    if (agentZone.getId() == zone.getId()) {
+      state = agentZone.getDesiredAppliance();
+      break;
+    }
+  }
+  return state;
 }
 
 double Agent::getPMV(const Building_Zone &zone) const {
@@ -213,7 +223,7 @@ void Agent::setState(State &state) {
   this->state = state;
 }
 
-bool Agent::isActionWindow(const Building_Zone &zone) const{
+bool Agent::isActionWindow(const Building_Zone &zone) const {
   bool act = false;
   for (const Agent_Zone &agentZone : agentZones) {
     if (agentZone.getId() == zone.getId()) {
@@ -224,7 +234,7 @@ bool Agent::isActionWindow(const Building_Zone &zone) const{
   return act;
 }
 
-bool Agent::isActionLights(const Building_Zone &zone) const{
+bool Agent::isActionLights(const Building_Zone &zone) const {
   bool act = false;
   for (const Agent_Zone &agentZone : agentZones) {
     if (agentZone.getId() == zone.getId()) {
@@ -234,7 +244,7 @@ bool Agent::isActionLights(const Building_Zone &zone) const{
   }
   return act;
 }
-bool Agent::isActionShades(const Building_Zone &zone) const{
+bool Agent::isActionShades(const Building_Zone &zone) const {
   bool act = false;
   for (const Agent_Zone &agentZone : agentZones) {
     if (agentZone.getId() == zone.getId()) {
@@ -244,7 +254,7 @@ bool Agent::isActionShades(const Building_Zone &zone) const{
   }
   return act;
 }
-bool Agent::isActionHeatGains(const Building_Zone &zone) const{
+bool Agent::isActionHeatGains(const Building_Zone &zone) const {
   bool act = false;
   for (const Agent_Zone &agentZone : agentZones) {
     if (agentZone.getId() == zone.getId()) {
@@ -254,7 +264,7 @@ bool Agent::isActionHeatGains(const Building_Zone &zone) const{
   }
   return act;
 }
-bool Agent::isActionLearning(const Building_Zone &zone) const{
+bool Agent::isActionLearning(const Building_Zone &zone) const {
   bool act = false;
   for (const Agent_Zone &agentZone : agentZones) {
     if (agentZone.getId() == zone.getId()) {
@@ -265,7 +275,18 @@ bool Agent::isActionLearning(const Building_Zone &zone) const{
   return act;
 }
 
-void Agent::postTimeStep(){
+bool Agent::isActionAppliance(const Building_Zone &zone) const {
+  bool act = false;
+  for (const Agent_Zone &agentZone : agentZones) {
+    if (agentZone.getId() == zone.getId()) {
+      act = agentZone.isActionAppliance();
+      break;
+    }
+  }
+  return act;
+}
+
+void Agent::postTimeStep() {
   for (Agent_Zone &agentZone : agentZones) {
     agentZone.postTimeStep();
   }

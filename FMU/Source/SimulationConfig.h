@@ -40,17 +40,19 @@ struct agentStruct {
     std::string famstat;
     std::string sex;
 
-    bool ShadeClosedDuringSleep = false;
-    bool ShadeClosedDuringWashing = false;
-    bool ShadeDuringNight = false;
-    bool ShadeDuringAudioVisual = false;
+    double ShadeClosedDuringSleep = 0;
+    double ShadeClosedDuringWashing = 0;
+    double ShadeDuringNight = 0;
+    double ShadeDuringAudioVisual = 0;
 
-    bool LightOffDuringAudioVisual = false;
-    bool LightOffDuringSleep = false;
+    double LightOffDuringAudioVisual = 0;
+    double LightOffDuringSleep = 0;
 
-    bool WindowOpenDuringCooking = false;
-    bool WindowOpenDuringWashing = false;
-    bool WindowOpenDuringSleeping = false;
+    double WindowOpenDuringCooking = 0;
+    double WindowOpenDuringWashing = 0;
+    double WindowOpenDuringSleeping = 0;
+
+    double ApplianceDuringDay = 0;
 };
 
 struct shadeStruct {
@@ -118,6 +120,7 @@ struct buildingStruct {
 };
 
 struct simulationStruct {
+    bool save = false;
     bool windows = false;
     bool windowsLearn = false;
     bool lights = false;
@@ -167,6 +170,7 @@ private:
     static void parseModels(rapidxml::xml_node<> *node);
     static void parseWindows(rapidxml::xml_node<> *node);
     static void parseShades(rapidxml::xml_node<> *node);
+    static bool strComp(const char * str1, const char * str2);
     static std::vector<int> activityNamesToIds(const std::vector<std::string> & activities);
     SimulationConfig();
 };

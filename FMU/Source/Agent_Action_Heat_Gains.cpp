@@ -50,19 +50,23 @@ void Agent_Action_Heat_Gains::step(const Building_Zone& zone,
      * @param airVelocity Air velocity
      */
 
-    /*
-    std::cout << "metabolicRate: " << metabolicRate << std::endl;
-    std::cout << "airHumid: " << airHumid << std::endl;
-    std::cout << "meanRadient: " << meanRadient << std::endl;
-    std::cout << "airTemp: " << airTemp << std::endl;
-    std::cout << "clo: " << clo << std::endl;
-    */
-
     h.calculate(metabolicRate, airHumid, meanRadient, 0, airTemp, clo, 0.137);
-    //  h.calculate(metabolicRate, airHumid, meanRadient, 0, airTemp, clo, 0);
     result = h.getAllHeatGains();
     ppd = h.getPpd();
     pmv = h.getPmv();
+/*
+if(zone.getId() == 40){
+    std::cout << "#### metabolicRate: " << metabolicRate << std::endl;
+    std::cout << "#### metabolicRate: " << metabolicRate / 58.15 << std::endl;
+    std::cout << "#### airHumid: " << airHumid << std::endl;
+    std::cout << "#### meanRadient: " << meanRadient << std::endl;
+    std::cout << "#### airTemp: " << airTemp << std::endl;
+    std::cout << "#### clo: " << clo << std::endl;
+    std::cout << "#### ppd: " << ppd << std::endl;
+    std::cout << "#### pmv: " << pmv << std::endl;
+    std::cout << "#### HeatGains: " << result << std::endl;
+  }
+*/
   }
   std::string name;
   name = "Agent_Metabolic_Rate_" + idAsString;

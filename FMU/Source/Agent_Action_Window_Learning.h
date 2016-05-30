@@ -2,7 +2,7 @@
 #define AGENT_ACTION_WINDOW_LEARNING_H
 
 #include <memory>
-#include "QLearning.h"
+#include "QLearning_Window.h"
 #include "Agent_Action_Window.h"
 #include "Model_Windows.h"
 #include "Building_Zone.h"
@@ -11,13 +11,13 @@ class Agent_Action_Window_Learning : public Agent_Action_Window {
     public:
 
         void setup(const int id, const int learn);
-        void step(const Building_Zone& zone, const bool inZone);
+        void step(const Building_Zone& zone, const bool inZone,
+        const bool previouslyInZone);
         void print();
         void reset();
     private:
 
-        
-        std::shared_ptr<QLearning> learn;
+        QLearning_Window learn;
         std::string window_name;
 };
 

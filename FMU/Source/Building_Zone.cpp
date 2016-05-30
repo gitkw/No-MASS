@@ -31,6 +31,8 @@ Building_Zone::Building_Zone(const ZoneStruct & zoneStruct) :
           DataStore::addVariable(windowName);
         }
 
+        variableNameAppFraction = name + "AppFraction";
+        DataStore::addVariable(variableNameAppFraction);
         variableNameBlindFraction = name + "BlindFraction";
         DataStore::addVariable(variableNameBlindFraction);
         variableNameLight = name + "LightState";
@@ -62,6 +64,7 @@ void Building_Zone::step() {
         // 0 is closed
         DataStore::addValue(variableNameBlindFraction, 1 - blindState);
         DataStore::addValue(variableNameHeating, heatingState);
+        DataStore::addValue(variableNameAppFraction, appFraction);
     }
 }
 
@@ -168,4 +171,8 @@ void Building_Zone::setWindowState(bool windowState) {
 
 void Building_Zone::setBlindState(double state) {
     this->blindState = state;
+}
+
+void Building_Zone::setAppFraction(double appFraction) {
+    this->appFraction = appFraction;
 }

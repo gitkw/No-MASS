@@ -23,18 +23,10 @@
  * @details Contains all information about the occupants and there associated interactions
  */
 
-struct desires {
-    double shadeState;
-    double ppd;
-    double pmv;
-    double heatgains;
-    double heatingSetPoint;
-};
-
 class Agent {
 public:
     Agent();
-    Agent(int newId, const std::vector<std::shared_ptr<Building_Zone>> &zones);
+    void setup(int newId, const std::vector<std::shared_ptr<Building_Zone>> &zones);
 
     void step(StateMachine *sm);
     void setState(State &state);
@@ -50,7 +42,9 @@ public:
     bool isActionShades(const Building_Zone &zone) const;
     bool isActionHeatGains(const Building_Zone &zone) const;
     bool isActionLearning(const Building_Zone &zone) const;
+    bool isActionAppliance(const Building_Zone &zone) const;
     double getDesiredShadeState(const Building_Zone &zone) const;
+    double getDesiredAppliance(const Building_Zone &zone) const;
     double getDesiredHeatState(const Building_Zone &zone) const;
     double getCurrentRadientGains(const Building_Zone &zone) const;
     double getPower() const;
@@ -73,7 +67,6 @@ private:
     std::vector<Agent_Zone> agentZones;
     std::vector<double> activities;
     std::vector<int> availableActions;
-    std::unordered_map<std::string, desires> zoneToInteraction;
 
     std::string bedroom; /** Which bedroom the occupant sleeps in */
     std::string office; /** Which Office the occupant works in */
@@ -83,7 +76,6 @@ private:
     void model_presenceFromPage();
     void model_pastAndFutureDurations();
     void model_activity();
-    void rLearn(const Building_Zone &zone, desires *interaction);
     bool calculateLightInteractionsOnZone(const Building_Zone &zone);
     bool calculateWindowInteractionsOnZone(const Building_Zone &zone);
     double calculateExternalShadeInteractionsOnZone(const Building_Zone &zone);

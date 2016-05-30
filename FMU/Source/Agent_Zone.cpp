@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 
+#include "Building.h"
 #include "DataStore.h"
 #include "Agent_Zone.h"
 
@@ -25,7 +26,7 @@ bool Agent_Zone::isActionLearning() const {
   return ActionLearning;
 }
 
-Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid,
+void Agent_Zone::setup(const Building_Zone & buldingZone, int agentid,
                         const agentStruct &agent) {
   id = buldingZone.getId();
   aahg.setup(agentid);
@@ -82,25 +83,15 @@ Agent_Zone::Agent_Zone(const Building_Zone & buldingZone, int agentid,
       aalearn.setZoneId(id);
       aalearn.setup(agentid, SimulationConfig::info.learn);
   }
+  if (agent.ApplianceDuringDay > 0) {
+    aaa.setApplianceDuringDay(agent.ApplianceDuringDay);
+  }
 }
 
 void Agent_Zone::step(const Building_Zone& zone,
                       const Building_Zone& zonePrevious,
                       const std::vector<double> &activities) {
-    double outdoorTemperature =
-            DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
-    outDoorTemperatures.push_back(outdoorTemperature);
-    if (outDoorTemperatures.size() >
-          (SimulationConfig::info.timeStepsPerHour * 24)) {
-            outDoorTemperatures.pop_front();
-    }
-    dailyMeanTemperature = 0;
-    for (double temp : outDoorTemperatures) {
-            dailyMeanTemperature += temp;
-    }
-    dailyMeanTemperature =
-      dailyMeanTemperature /
-        static_cast<double>(outDoorTemperatures.size());
+
     bool inZone = zone.getId() == id;
     bool previouslyInZone = zonePrevious.getId() == id;
     if (inZone || previouslyInZone) {
@@ -139,6 +130,11 @@ void Agent_Zone::step(const Building_Zone& zone,
       desiredLightState = aal.getResult();
       ActionLights = true;
     }
+    bool app = aaa.BDI(activities);
+    if (app) {
+      desiredApplianceState = aaa.getResult();
+      ActionAppliance = true;
+    }
 }
 
 void Agent_Zone::actionStep(int action,
@@ -159,7 +155,8 @@ void Agent_Zone::actionStep(int action,
         break;
       case 1:
             ActionWindow = true;
-            aaw.setDailyMeanTemperature(dailyMeanTemperature);
+
+            aaw.setDailyMeanTemperature(Building::dailyMeanTemperature);
             aaw.step(zone, inZone, preZone, activities);
             desiredWindowState = aaw.getResult();
         break;
@@ -175,7 +172,7 @@ void Agent_Zone::actionStep(int action,
         break;
       case 4:
             aawLearn.setReward(pmv);
-            aawLearn.step(zone, inZone);
+            aawLearn.step(zone, inZone, preZone);
             desiredWindowState = aawLearn.getResult();
             ActionWindow = true;
         break;
@@ -244,9 +241,18 @@ void Agent_Zone::postTimeStep() {
 }
 
 bool Agent_Zone::isInBuilding() const {
+    //std::cout << id << std::endl;
     return id > 0;  // 0 is the ID for the outside zone
 }
 
 int Agent_Zone::getDesiredWindowDuration() const {
   return aaw.durationOpen();
+}
+
+double Agent_Zone::getDesiredAppliance() const {
+  return desiredApplianceState;
+}
+
+bool Agent_Zone::isActionAppliance() const {
+  return ActionAppliance;
 }

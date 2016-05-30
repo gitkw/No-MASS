@@ -12,17 +12,17 @@
 
 Agent_Action_HeatingSetPoints_Learning::Agent_Action_HeatingSetPoints_Learning() {
     setPoint = 20;
-    pmv = -1;
+    pmv = -1.0;
     result = 20;
 }
 
 void Agent_Action_HeatingSetPoints_Learning::print() {
-  qlWeekDay->printQ();
-  qlWeekEnd->printQ();
+  qlWeekDay.printQ();
+  qlWeekEnd.printQ();
 }
 void Agent_Action_HeatingSetPoints_Learning::reset() {
-  qlWeekDay->reset();
-  qlWeekEnd->reset();
+  qlWeekDay.reset();
+  qlWeekEnd.reset();
 }
 
 void Agent_Action_HeatingSetPoints_Learning::setup(const int id, const int learn) {
@@ -33,19 +33,16 @@ void Agent_Action_HeatingSetPoints_Learning::setup(const int id, const int learn
 
       break;
     case 1:
-        qlWeekDay = std::shared_ptr<QLearning_HeatingSetPoints>(
-                  new QLearning_HeatingSetPoints());
-        qlWeekEnd = std::shared_ptr<QLearning_HeatingSetPoints>(
-                  new QLearning_HeatingSetPoints());
+
         std::string zoneIdStr = std::to_string(zoneId);
-        qlWeekDay->setFilename("Weekday-" + zoneIdStr + "-");
-        qlWeekEnd->setFilename("Weekend-" + zoneIdStr + "-");
-        qlWeekDay->setStates(24 * 12);
-        qlWeekEnd->setStates(24 * 12);
-        qlWeekDay->setId(id);
-        qlWeekDay->setup();
-        qlWeekEnd->setId(id);
-        qlWeekEnd->setup();
+        qlWeekDay.setFilename("Weekday-" + zoneIdStr + "-");
+        qlWeekEnd.setFilename("Weekend-" + zoneIdStr + "-");
+        qlWeekDay.setStates(24 * 12);
+        qlWeekEnd.setStates(24 * 12);
+        qlWeekDay.setId(id);
+        qlWeekDay.setup();
+        qlWeekEnd.setId(id);
+        qlWeekEnd.setup();
         pmv_name = "Weekday-" + zoneIdStr + "-_pmv" + std::to_string(id);
         DataStore::addVariable(pmv_name);
         step_name = "Weekday-" + zoneIdStr + "-_steps" + std::to_string(id);
@@ -77,24 +74,27 @@ void Agent_Action_HeatingSetPoints_Learning::step(const Building_Zone& zone, con
       }
 
       bool x = (pmv > 0 && setPoint == 10);
+      bool w = (pmv > 0 && setPoint > 10);
       bool y = (pmv < -0.5);
       bool z = (pmv >= -0.5 && pmv <= 0);
       bool a = setPoint == 10 && steps > 1;
-      reward = hasBeenInZone * (1 * z + 0.1 * x - 0.1 * y) +
+
+      reward = hasBeenInZone * (1 * z + 0.1 * x - 0.1 * y - 0.1 * w) +
                 (1-hasBeenInZone) * (a * 0.1 + (1-a) * -0.1);
 
       int day = DataStore::getValue("day")+1;
       int dayOfTheWeek = (day - 1) % 7;
 
       if (dayOfTheWeek < 5) {
-        qlWeekDay->setAction(setPoint-10);
-        qlWeekDay->setReward(reward);
-        result = qlWeekDay->learn() + 10;
+        qlWeekDay.setAction(setPoint-10);
+        qlWeekDay.setReward(reward);
+        result = qlWeekDay.learn() + 10;
       } else {
-        qlWeekEnd->setAction(setPoint-10);
-        qlWeekEnd->setReward(reward);
-        result = qlWeekEnd->learn() + 10;
+        qlWeekEnd.setAction(setPoint-10);
+        qlWeekEnd.setReward(reward);
+        result = qlWeekEnd.learn() + 10;
       }
+
       DataStore::addValue(pmv_name, pmv);
       DataStore::addValue(step_name, steps);
       hasBeenInZone = false;

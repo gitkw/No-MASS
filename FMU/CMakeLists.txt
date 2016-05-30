@@ -46,6 +46,7 @@ Source/Agent_Action_Lights.cpp
 Source/Agent_Action_Shades.cpp
 Source/Agent_Action_Window.cpp
 Source/Agent_Action_HeatingSetPoints_Learning.cpp
+Source/Agent_Action_Appliance.cpp
 Source/Agent_Zone.cpp
 Source/DataStore.cpp
 Source/Log.cpp
@@ -77,7 +78,7 @@ Source/Utility.cpp
 Source/Building.cpp
 Source/Building_Zone.cpp
 Source/fmiFunctions.cpp
-Source/QLearning.cpp
+
 Source/QLearning_HeatingSetPoints.cpp
 Source/QLearning_Window.cpp
 )
@@ -86,7 +87,7 @@ include_directories(${PROJECT_SOURCE_DIR}/../Boost/Boost-Source)
 include_directories(${PROJECT_SOURCE_DIR}/../rapidxml)
 include_directories(${PROJECT_SOURCE_DIR}/Source)
 
-ADD_LIBRARY(FMI SHARED ${SRC} Source/fmuTemplate.cpp  Source/Agent_Action_Window_Learning.cpp)
+ADD_LIBRARY(FMI SHARED ${SRC} Source/fmuTemplate.cpp  Source/Agent_Action_Window_Learning.cpp Source/QLearning.cpp)
 
 set_source_files_properties(${SRC} PROPERTIES COMPILE_FLAGS "-Werror -Wall -Wextra")
 

@@ -11,13 +11,13 @@ class Agent_Action_Lights : public Agent_Action {
     void step(const Building_Zone& zone, const bool inZone,
               const bool previouslyInZone,
               const std::vector<double> &activities);
-    void setOffDuringSleep(bool OffDuringSleep);
-    void setOffDuringAudioVisual(bool OffDuringAudioVisual);
+    void setOffDuringSleep(double OffDuringSleep);
+    void setOffDuringAudioVisual(double OffDuringAudioVisual);
     bool BDI(const std::vector<double> &activities);
 
  private:
-    bool OffDuringSleep;
-    bool OffDuringAudioVisual;
+    double OffDuringSleep;
+    double OffDuringAudioVisual;
 };
 
 #endif  // FMU_SOURCE_AGENT_ACTION_LIGHTS_H_

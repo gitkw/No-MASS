@@ -3,26 +3,27 @@
 #include <vector>
 #include <iostream>
 #include "SimulationConfig.h"
+#include "Utility.h"
 #include "DataStore.h"
 #include "Agent_Action_Window.h"
 
 Agent_Action_Window::Agent_Action_Window() {
-  OpenDuringWashing = false;
-  OpenDuringCooking = false;
-  OpenDuringSleeping = false;
+  OpenDuringWashing = 0.0;
+  OpenDuringCooking = 0.0;
+  OpenDuringSleeping = 0.0;
 }
 
 void Agent_Action_Window::setOpenDuringWashing(
-    const bool OpenDuringWashing) {
+    const double OpenDuringWashing) {
     this->OpenDuringWashing = OpenDuringWashing;
 }
 
 void Agent_Action_Window::setOpenDuringCooking(
-    const bool OpenDuringCooking) {
+    const double OpenDuringCooking) {
     this->OpenDuringCooking = OpenDuringCooking;
 }
 
-void Agent_Action_Window::setOpenDuringSleeping(bool OpenDuringSleeping) {
+void Agent_Action_Window::setOpenDuringSleeping(double OpenDuringSleeping) {
   this->OpenDuringSleeping = OpenDuringSleeping;
 }
 
@@ -86,7 +87,7 @@ bool Agent_Action_Window::BDI(const std::vector<double> &activities) {
   bool bdi = false;
 
   int stepCount = SimulationConfig::getStepCount();
-  if (OpenDuringWashing) {
+  if (OpenDuringWashing > Utility::randomDouble(0, 1)) {
     if (stepCount > 0) {
       if (activities.at(stepCount - 1) == 6 && activities.at(stepCount) != 6) {
         if (m_window.getWindowState() == 0) {
@@ -108,7 +109,8 @@ bool Agent_Action_Window::BDI(const std::vector<double> &activities) {
     }
   }
 
-  if (OpenDuringCooking && activities.at(stepCount) == 4) {
+  if (OpenDuringCooking > Utility::randomDouble(0, 1) &&
+      activities.at(stepCount) == 4) {
     if (m_window.getWindowState() == 0) {
       m_window.setWindowState(1);
       int lengthOfTimeStepSeconds =
@@ -119,7 +121,7 @@ bool Agent_Action_Window::BDI(const std::vector<double> &activities) {
     }
   }
 
-  if (OpenDuringSleeping) {
+  if (OpenDuringSleeping > Utility::randomDouble(0, 1)) {
     if (stepCount > 0) {
       if (activities.at(stepCount - 1) == 0 && activities.at(stepCount) != 0) {
         if (m_window.getWindowState() == 0) {

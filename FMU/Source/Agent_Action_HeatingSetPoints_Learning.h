@@ -1,7 +1,7 @@
 #ifndef AGENT_ACTION_HEATINGSETPOINTS_LEARNING_H
 #define AGENT_ACTION_HEATINGSETPOINTS_LEARNING_H
 #include <memory>
-#include "QLearning.h"
+#include "QLearning_HeatingSetPoints.h"
 #include "Agent_Action.h"
 
 class Agent_Action_HeatingSetPoints_Learning : public Agent_Action
@@ -13,8 +13,8 @@ class Agent_Action_HeatingSetPoints_Learning : public Agent_Action
     void print();
     void reset();
   private:
-    std::shared_ptr<QLearning> qlWeekDay;
-    std::shared_ptr<QLearning> qlWeekEnd;
+    QLearning_HeatingSetPoints qlWeekDay;
+    QLearning_HeatingSetPoints qlWeekEnd;
 
     int learnId;
     int agentId;

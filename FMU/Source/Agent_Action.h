@@ -18,7 +18,7 @@ class Agent_Action {
 
     void setZoneId(const double zoneId);
     void setReward(const double reward);
-    
+
   protected:
     bool activityAvailable(const int act) const;
     double result;
