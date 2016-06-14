@@ -26,17 +26,7 @@ Alternativly use a GUI such as GitHub Desktop or SourceTree.
 
 ### Compiling
 
-Build the boost libraries using the make script
-
-```sh
-cd Boost
-
-make
-
-cd ..
-```
-
-Build the No-MASS using make (or using CodeBlocks GUI)
+Build the No-MASS using cmake and make 
 
 ```sh
 cd FMU
