@@ -1,13 +1,15 @@
 // Copyright 2015 Jacob Chapman
 
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
-#include <boost/lexical_cast.hpp>
 #include <iostream>
 #include <map>
 #include <utility>
 #include <string>
 #include <vector>
+#include <cstring>
+
+#include <cstddef>
+#include "rapidxml_utils.hpp"
+#include "rapidxml.hpp"
 #include "Log.h"
 #include "Utility.h"
 #include "SimulationConfig.h"
@@ -21,11 +23,7 @@ int SimulationConfig::stepCount = -1;
 std::string SimulationConfig::ActivityFile;
 std::string SimulationConfig::FmuLocation;
 
-namespace bpt = boost::property_tree;
-
-SimulationConfig::SimulationConfig() {
-}
-
+SimulationConfig::SimulationConfig() {}
 
 void SimulationConfig::reset() {
   buildings.clear();
@@ -38,51 +36,53 @@ void SimulationConfig::reset() {
   FmuLocation = "";
 }
 
-void SimulationConfig::parseBuildings(
-  bpt::ptree::value_type & v) {
+
+void SimulationConfig::parseBuildings(rapidxml::xml_node<> *node) {
     buildings.clear();
-    for (bpt::ptree::value_type & child : v.second) {
-      if (child.first == "building") {
-          parseBuilding(child);
-      }
+    rapidxml::xml_node<> *cnode = node->first_node();
+    while (cnode) {
+        if (strComp(cnode->name(), "building")) {
+              parseBuilding(cnode);
+        }
+        cnode = cnode->next_sibling();
     }
 }
 
-void SimulationConfig::parseBuilding(
-  bpt::ptree::value_type & v) {
+void SimulationConfig::parseBuilding(rapidxml::xml_node<> *node) {
     buildingStruct b;
     b.name = buildings.size();
     int zonecount = 0;
     std::pair<std::string, ZoneStruct> zsOut;
     zsOut.first = "Out";
     zsOut.second.name = "Out";
-    zsOut.second.activities.push_back("Out");
+    zsOut.second.activities.push_back(9);
     zsOut.second.id = zonecount;
     b.zones.insert(zsOut);
-    for (bpt::ptree::value_type & child : v.second) {
-        if (child.first == "name") {
-            b.name = child.second.data();
-        } else if (child.first == "agents") {
-            parseAgents(child);
-        } else if (child.first == "zone") {
+    rapidxml::xml_node<> *cnode = node->first_node();
+    while (cnode) {
+        if (strComp(cnode->name(), "building")) {
+            b.name = cnode->value();
+        } else if (strComp(cnode->name(), "agents")) {
+            parseAgents(cnode);
+        } else if (strComp(cnode->name(), "zone")) {
             zonecount++;
             std::pair<std::string, ZoneStruct> zone;
             zone.second.id = zonecount;
-            for (bpt::ptree::value_type & schild : child.second) {
-                if (schild.first == "name") {
-                    zone.first = schild.second.data();
-                    zone.second.name = schild.second.data();
-                } else if (schild.first == "activities"
-                          || schild.first == "activity") {
+            rapidxml::xml_node<> *znode = cnode->first_node();
+            while (znode) {
+                if (strComp(znode->name(), "name")) {
+                    zone.first = znode->value();
+                    zone.second.name = znode->value();
+                } else if (strComp(znode->name(), "activities")
+                          || strComp(znode->name(), "activity")) {
                     zone.second.activities =
-                      Utility::splitCSV(schild.second.data());
-                } else if (schild.first == "groundFloor") {
-                    zone.second.groundFloor =
-                      schild.second.get_value<bool>();
-                } else if (schild.first == "windowCount") {
-                    zone.second.windowCount =
-                      schild.second.get_value<int>();
+                          activityNamesToIds(Utility::splitCSV(znode->value()));
+                } else if (strComp(znode->name(), "groundFloor")) {
+                    zone.second.groundFloor = std::stoi(znode->value());
+                } else if (strComp(znode->name(), "windowCount")) {
+                    zone.second.windowCount = std::stoi(znode->value());
                 }
+                znode = znode->next_sibling();
             }
 
             if (zone.second.activities.empty()) {
@@ -95,254 +95,298 @@ void SimulationConfig::parseBuilding(
             }
             b.zones.insert(zone);
         }
+        cnode = cnode->next_sibling();
     }
     buildings.push_back(b);
 }
 
-void SimulationConfig::parseAgents(bpt::ptree::value_type & v) {
-    agents.clear();
-    SimulationConfig::ActivityFile = "";
-    info.presencePage = false;
-    for (bpt::ptree::value_type & child : v.second) {
-        if (child.first == "agent") {
-            agentStruct agent;
-            for (bpt::ptree::value_type & schild : child.second) {
-                if (schild.first == "profile") {
-                    for (bpt::ptree::value_type & sschild : schild.second) {
-                        std::string text = sschild.first;
-                        if (text == "file") {
-                            SimulationConfig::ActivityFile =
-                              sschild.second.get_value<std::string>();
-                        } else {
-                            std::pair<int, std::string> a;
-                            if (text == "monday") {
-                                info.presencePage = true;
-                                a.first = 0;
-                            } else if (text == "tuesday") {
-                                a.first = 1;
-                            } else  if (text == "wednesday") {
-                                a.first = 2;
-                            } else  if (text == "thursday") {
-                                a.first = 3;
-                            } else  if (text == "friday") {
-                                a.first = 4;
-                            } else  if (text == "saturday") {
-                                a.first = 5;
-                            } else  if (text == "sunday") {
-                                a.first = 6;
-                            } else {
-                                text.erase(0, 1);
-                                a.first = boost::lexical_cast<int>(text);
-                            }
-                            a.second = sschild.second.get_value<std::string>();
-                            agent.profile.insert(a);
-                        }
-                    }
-                } else if (schild.first == "bedroom") {
-                    agent.bedroom = schild.second.data();
-                } else if (schild.first == "office") {
-                    agent.office = schild.second.data();
-                } else if (schild.first == "power") {
-                    agent.power = schild.second.get_value<double>();
-                } else if (schild.first == "window") {
-                    agent.windowId = schild.second.get_value<int>();
-                } else if (schild.first == "shade") {
-                    agent.shadeId = schild.second.get_value<int>();
-                } else if (schild.first == "office") {
-                    agent.office = schild.second.data();
-                } else if (schild.first == "edtry") {
-                    agent.edtry = schild.second.data();
-                } else if (schild.first == "age") {
-                    agent.age = schild.second.data();
-                } else if (schild.first == "computer") {
-                    agent.computer = schild.second.data();
-                } else if (schild.first == "civstat") {
-                    agent.civstat = schild.second.data();
-                } else if (schild.first == "unemp") {
-                    agent.unemp = schild.second.data();
-                } else if (schild.first == "retired") {
-                    agent.retired = schild.second.data();
-                } else if (schild.first == "sex") {
-                    agent.sex = schild.second.data();
-                } else if (schild.first == "famstat") {
-                    agent.famstat = schild.second.data();
-                } else if (schild.first == "ShadeClosedDuringSleep") {
-                    agent.ShadeClosedDuringSleep
-                        = schild.second.get_value<bool>();
-                } else if (schild.first == "ShadeClosedDuringWashing") {
-                    agent.ShadeClosedDuringWashing
-                        = schild.second.get_value<bool>();
-                } else if (schild.first == "LightOffDuringAudioVisual") {
-                    agent.LightOffDuringAudioVisual
-                        = schild.second.get_value<bool>();
-                } else if (schild.first == "LightOffDuringSleep") {
-                    agent.LightOffDuringSleep
-                        = schild.second.get_value<bool>();
-                } else if (schild.first == "WindowOpenDuringCooking") {
-                    agent.WindowOpenDuringCooking
-                        = schild.second.get_value<bool>();
-                } else if (schild.first == "WindowOpenDuringWashing") {
-                    agent.WindowOpenDuringWashing
-                        = schild.second.get_value<bool>();
-                }
-            }
+std::vector<int> SimulationConfig::activityNamesToIds(
+          const std::vector<std::string> & activities) {
+  std::vector<int> act;
+  for (const std::string & activity : activities) {
+    if (activity == "Sleep") {
+      act.push_back(0);
+    } else if (activity == "Passive") {
+      act.push_back(1);
+    } else if (activity == "AudioVisual") {
+      act.push_back(2);
+    } else if (activity == "IT") {
+      act.push_back(3);
+    } else if (activity == "Cooking") {
+      act.push_back(4);
+    } else if (activity == "Cleaning") {
+      act.push_back(5);
+    } else if (activity == "Washing") {
+      act.push_back(6);
+    } else if (activity == "Metabolic") {
+      act.push_back(7);
+    } else if (activity == "WashingAppliance") {
+      act.push_back(8);
+    }
+  }
+  return act;
+}
 
-
-            if (SimulationConfig::info.presencePage
-                && agent.profile.size() != 7) {
-                LOG << "Occupant presence has not been defined using the Page ";
-                LOG << "method\nPlease add a presence profile for each day of ";
-                LOG << "the week in the No-MASS simulation configuration file";
-                LOG << "\nIn DesignBuilder please select the correct activity ";
-                LOG << "profile\n";
-                LOG.error();
-            } else if (!SimulationConfig::info.presencePage
-                && agent.profile.size() != 24
-                && SimulationConfig::ActivityFile == "") {
-                LOG << "The activity profile is not defined for each hour ";
-                LOG << "using the Said method\nPlease add a activity profile ";
-                LOG << "for hour in the No-MASS simulation configuration file";
-                LOG << "\nIn DesignBuilder please select the correct activity ";
-                LOG << "profile\n";
-                LOG.error();
+void SimulationConfig::parseAgents(rapidxml::xml_node<> *node) {
+  agents.clear();
+  SimulationConfig::ActivityFile = "";
+  info.presencePage = false;
+  rapidxml::xml_node<> *cnode = node->first_node();
+  while (cnode) {
+    if (strComp(cnode->name(), "agent")) {
+      agentStruct agent;
+      rapidxml::xml_node<> *anode = cnode->first_node();
+      while (anode) {
+        if (strComp(anode->name(), "profile")) {
+          rapidxml::xml_node<> *pnode = anode->first_node();
+          while (pnode) {
+            std::string text = pnode->name();
+            if (text == "file") {
+              SimulationConfig::ActivityFile = pnode->value();
+            } else {
+              std::pair<int, std::string> a;
+              if (text == "monday") {
+                info.presencePage = true;
+                a.first = 0;
+              } else if (text == "tuesday") {
+                a.first = 1;
+              } else  if (text == "wednesday") {
+                a.first = 2;
+              } else  if (text == "thursday") {
+                a.first = 3;
+              } else  if (text == "friday") {
+                a.first = 4;
+              } else  if (text == "saturday") {
+                a.first = 5;
+              } else  if (text == "sunday") {
+                a.first = 6;
+              } else {
+                text.erase(0, 1);
+                a.first = std::stoi(text);
+              }
+              a.second = pnode->value();
+              agent.profile.insert(a);
             }
-            agents.push_back(agent);
+            pnode = pnode->next_sibling();
+          }
+        } else if (strComp(anode->name(), "bedroom")) {
+          agent.bedroom = anode->value();
+        } else if (strComp(anode->name(), "office")) {
+          agent.office = anode->value();
+        } else if (strComp(anode->name(), "power")) {
+          agent.power = std::stod(anode->value());
+        } else if (strComp(anode->name(), "window")) {
+          agent.windowId = std::stoi(anode->value());
+        } else if (strComp(anode->name(), "shade")) {
+          agent.shadeId = std::stoi(anode->value());
+        } else if (strComp(anode->name(), "edtry")) {
+          agent.edtry = anode->value();
+        } else if (strComp(anode->name(), "age")) {
+          agent.age = anode->value();
+        } else if (strComp(anode->name(), "computer")) {
+          agent.computer = anode->value();
+        } else if (strComp(anode->name(), "civstat")) {
+          agent.civstat = anode->value();
+        } else if (strComp(anode->name(), "unemp")) {
+          agent.unemp = anode->value();
+        } else if (strComp(anode->name(), "retired")) {
+          agent.retired = anode->value();
+        } else if (strComp(anode->name(), "sex")) {
+          agent.sex = anode->value();
+        } else if (strComp(anode->name(), "famstat")) {
+          agent.famstat = anode->value();
+        } else if (strComp(anode->name(), "ShadeClosedDuringSleep")) {
+          agent.ShadeClosedDuringSleep = std::stod(anode->value());
+        } else if (strComp(anode->name(), "ShadeClosedDuringWashing")) {
+          agent.ShadeClosedDuringWashing = std::stod(anode->value());
+        } else if (strComp(anode->name(), "ShadeDuringNight")) {
+          agent.ShadeDuringNight = std::stod(anode->value());
+        } else if (strComp(anode->name(), "ShadeDuringAudioVisual")) {
+          agent.ShadeDuringAudioVisual = std::stod(anode->value());
+        } else if (strComp(anode->name(), "LightOffDuringAudioVisual")) {
+          agent.LightOffDuringAudioVisual = std::stod(anode->value());
+        } else if (strComp(anode->name(), "LightOffDuringSleep")) {
+          agent.LightOffDuringSleep = std::stod(anode->value());
+        } else if (strComp(anode->name(), "WindowOpenDuringCooking")) {
+          agent.WindowOpenDuringCooking = std::stod(anode->value());
+        } else if (strComp(anode->name(), "WindowOpenDuringWashing")) {
+          agent.WindowOpenDuringWashing = std::stod(anode->value());
+        } else if (strComp(anode->name(), "WindowOpenDuringSleeping")) {
+          agent.WindowOpenDuringSleeping = std::stod(anode->value());
+        } else if (strComp(anode->name(), "ApplianceDuringDay")) {
+          agent.ApplianceDuringDay = std::stod(anode->value());
         }
+        anode = anode->next_sibling();
+      }
+
+      if (SimulationConfig::info.presencePage
+        && agent.profile.size() != 7) {
+        LOG << "Occupant presence has not been defined using the Page ";
+        LOG << "method\nPlease add a presence profile for each day of ";
+        LOG << "the week in the No-MASS simulation configuration file";
+        LOG << "\nIn DesignBuilder please select the correct activity ";
+        LOG << "profile\n";
+        LOG.error();
+      } else if (!SimulationConfig::info.presencePage
+        && agent.profile.size() != 24
+        && SimulationConfig::ActivityFile == "") {
+        LOG << "The activity profile is not defined for each hour ";
+        LOG << "using the Said method\nPlease add a activity profile ";
+        LOG << "for hour in the No-MASS simulation configuration file";
+        LOG << "\nIn DesignBuilder please select the correct activity ";
+        LOG << "profile\n";
+        LOG.error();
+      }
+      agents.push_back(agent);
+    }
+    cnode = cnode->next_sibling();
+  }
+}
+
+void SimulationConfig::parseModels(rapidxml::xml_node<> *node) {
+    rapidxml::xml_node<> *cnode = node->first_node();
+    while (cnode) {
+        if (strComp(cnode->name(), "lights")) {
+              SimulationConfig::info.lights = std::stoi(cnode->value());
+        } else if (strComp(cnode->name(), "windows")) {
+            parseWindows(cnode);
+        } else if (strComp(cnode->name(), "shades")) {
+            parseShades(cnode);
+        }
+        cnode = cnode->next_sibling();
     }
 }
 
-void SimulationConfig::parseModels(bpt::ptree::value_type & v) {
-    for (bpt::ptree::value_type & child : v.second) {
-        if (child.first == "windows") {
-            parseWindows(child);
-        } else if (child.first == "shades") {
-            parseShades(child);
-        } else if (child.first == "lights") {
-            SimulationConfig::info.lights = child.second.get_value<bool>();
+void SimulationConfig::parseWindows(rapidxml::xml_node<> *node) {
+  windows.clear();
+  rapidxml::xml_node<> *cnode = node->first_node();
+  while (cnode) {
+      if (strComp(cnode->name(), "windowsLearn")) {
+        SimulationConfig::info.windowsLearn = std::stoi(cnode->value());
+      } else if (strComp(cnode->name(), "enabled")) {
+        SimulationConfig::info.windows = std::stoi(cnode->value());
+      } else if (strComp(cnode->name(), "window")) {
+        rapidxml::xml_node<> *snode = cnode->first_node();
+        std::pair<int, windowStruct> ws;
+        while (snode) {
+          if (strComp(snode->name(), "id")) {
+            ws.first = std::stoi(snode->value());
+          } else if (strComp(snode->name(), "aop")) {
+              ws.second.aop = std::stod(snode->value());
+          } else if (strComp(snode->name(), "bopout")) {
+              ws.second.bopout = std::stod(snode->value());
+          } else if (strComp(snode->name(), "shapeop")) {
+              ws.second.shapeop = std::stod(snode->value());
+          } else if (strComp(snode->name(), "a01arr")) {
+              ws.second.a01arr = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01inarr")) {
+              ws.second.b01inarr = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01outarr")) {
+              ws.second.b01outarr = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01absprevarr")) {
+              ws.second.b01absprevarr = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01rnarr")) {
+              ws.second.b01rnarr = std::stod(snode->value());
+          } else if (strComp(snode->name(), "a01int")) {
+              ws.second.a01int = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01inint")) {
+              ws.second.b01inint = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01outint")) {
+              ws.second.b01outint = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01presint")) {
+              ws.second.b01presint = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01rnint")) {
+              ws.second.b01rnint = std::stod(snode->value());
+          } else if (strComp(snode->name(), "a01dep")) {
+              ws.second.a01dep = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01outdep")) {
+              ws.second.b01outdep = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01absdep")) {
+              ws.second.b01absdep = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01gddep")) {
+              ws.second.b01gddep = std::stod(snode->value());
+          } else if (strComp(snode->name(), "a10dep")) {
+              ws.second.a10dep = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b10indep")) {
+              ws.second.b10indep = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b10outdep")) {
+              ws.second.b10outdep = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b10absdep")) {
+              ws.second.b10absdep = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b10gddep")) {
+              ws.second.b10gddep = std::stod(snode->value());
+          }
+          snode = snode->next_sibling();
         }
-    }
+
+        windows.insert(ws);
+      }
+      cnode = cnode->next_sibling();
+  }
 }
 
-void SimulationConfig::parseWindows(bpt::ptree::value_type & v) {
-    windows.clear();
-    for (bpt::ptree::value_type & child : v.second) {
-        if (child.first == "enabled") {
-            SimulationConfig::info.windows = child.second.get_value<bool>();
-        } else if (child.first == "window") {
-            std::pair<int, windowStruct> ws;
 
-            for (bpt::ptree::value_type & schild : child.second) {
-                if (schild.first == "id") {
-                    ws.first = schild.second.get_value<int>();
-                } else if (schild.first == "aop") {
-                    ws.second.aop = schild.second.get_value<double>();
-                } else if (schild.first == "bopout") {
-                    ws.second.bopout = schild.second.get_value<double>();
-                } else if (schild.first == "shapeop") {
-                    ws.second.shapeop = schild.second.get_value<double>();
-                } else if (schild.first == "a01arr") {
-                    ws.second.a01arr = schild.second.get_value<double>();
-                } else if (schild.first == "b01inarr") {
-                    ws.second.b01inarr = schild.second.get_value<double>();
-                } else if (schild.first == "b01outarr") {
-                    ws.second.b01outarr = schild.second.get_value<double>();
-                } else if (schild.first == "b01absprevarr") {
-                    ws.second.b01absprevarr = schild.second.get_value<double>();
-                } else if (schild.first == "b01rnarr") {
-                    ws.second.b01rnarr = schild.second.get_value<double>();
-                } else if (schild.first == "a01int") {
-                    ws.second.a01int = schild.second.get_value<double>();
-                } else if (schild.first == "b01inint") {
-                    ws.second.b01inint = schild.second.get_value<double>();
-                } else if (schild.first == "b01outint") {
-                    ws.second.b01outint = schild.second.get_value<double>();
-                } else if (schild.first == "b01presint") {
-                    ws.second.b01presint = schild.second.get_value<double>();
-                } else if (schild.first == "b01rnint") {
-                    ws.second.b01rnint = schild.second.get_value<double>();
-                } else if (schild.first == "a01dep") {
-                    ws.second.a01dep = schild.second.get_value<double>();
-                } else if (schild.first == "b01outdep") {
-                    ws.second.b01outdep = schild.second.get_value<double>();
-                } else if (schild.first == "b01absdep") {
-                    ws.second.b01absdep = schild.second.get_value<double>();
-                } else if (schild.first == "b01gddep") {
-                    ws.second.b01gddep = schild.second.get_value<double>();
-                } else if (schild.first == "a10dep") {
-                    ws.second.a10dep = schild.second.get_value<double>();
-                } else if (schild.first == "b10indep") {
-                    ws.second.b10indep = schild.second.get_value<double>();
-                } else if (schild.first == "b10outdep") {
-                    ws.second.b10outdep = schild.second.get_value<double>();
-                } else if (schild.first == "b10absdep") {
-                    ws.second.b10absdep = schild.second.get_value<double>();
-                } else if (schild.first == "b10gddep") {
-                    ws.second.b10gddep = schild.second.get_value<double>();
-                }
-            }
-            windows.insert(ws);
+void SimulationConfig::parseShades(rapidxml::xml_node<> *node) {
+  shades.clear();
+  rapidxml::xml_node<> *cnode = node->first_node();
+  while (cnode) {
+      if (strComp(cnode->name(), "enabled")) {
+            SimulationConfig::info.shading = std::stoi(cnode->value());
+      } else if (strComp(cnode->name(), "shade")) {
+        rapidxml::xml_node<> *snode = cnode->first_node();
+        std::pair<int, shadeStruct> ws;
+        while (snode) {
+          if (strComp(snode->name(), "id")) {
+            ws.first = std::stoi(snode->value());
+          } else if (strComp(snode->name(), "a01arr")) {
+              ws.second.a01arr = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01inarr")) {
+              ws.second.b01inarr = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01sarr")) {
+              ws.second.b01sarr = std::stod(snode->value());
+          } else if (strComp(snode->name(), "a10arr")) {
+              ws.second.a10arr = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b10inarr")) {
+              ws.second.b10inarr = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b10sarr")) {
+              ws.second.b10sarr = std::stod(snode->value());
+          } else if (strComp(snode->name(), "a01int")) {
+              ws.second.a01int = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01inint")) {
+              ws.second.b01inint = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b01sint")) {
+              ws.second.b01sint = std::stod(snode->value());
+          } else if (strComp(snode->name(), "a10int")) {
+              ws.second.a10int = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b10inint")) {
+              ws.second.b10inint = std::stod(snode->value());
+          } else if (strComp(snode->name(), "b10sint")) {
+              ws.second.b10sint = std::stod(snode->value());
+          } else if (strComp(snode->name(), "afullraise")) {
+              ws.second.afullraise = std::stod(snode->value());
+          } else if (strComp(snode->name(), "boutfullraise")) {
+              ws.second.boutfullraise = std::stod(snode->value());
+          } else if (strComp(snode->name(), "bsfullraise")) {
+              ws.second.bsfullraise = std::stod(snode->value());
+          } else if (strComp(snode->name(), "bsfulllower")) {
+              ws.second.bsfulllower = std::stod(snode->value());
+          } else if (strComp(snode->name(), "boutfulllower")) {
+              ws.second.boutfulllower = std::stod(snode->value());
+          } else if (strComp(snode->name(), "afulllower")) {
+              ws.second.afulllower = std::stod(snode->value());
+          } else if (strComp(snode->name(), "aSFlower")) {
+              ws.second.aSFlower = std::stod(snode->value());
+          } else if (strComp(snode->name(), "bSFlower")) {
+              ws.second.bSFlower = std::stod(snode->value());
+          } else if (strComp(snode->name(), "shapelower")) {
+              ws.second.shapelower = std::stod(snode->value());
+          }
+          snode = snode->next_sibling();
         }
-    }
-}
-
-void SimulationConfig::parseShades(bpt::ptree::value_type & v) {
-    shades.clear();
-    for (bpt::ptree::value_type & child : v.second) {
-        if (child.first == "enabled") {
-            SimulationConfig::info.shading = child.second.get_value<bool>();
-        } else if (child.first == "shade") {
-            std::pair<int, shadeStruct> ws;
-
-            for (bpt::ptree::value_type & schild : child.second) {
-                if (schild.first == "id") {
-                    ws.first = schild.second.get_value<int>();
-                } else if (schild.first == "a01arr") {
-                    ws.second.a01arr = schild.second.get_value<double>();
-                } else if (schild.first == "b01inarr") {
-                    ws.second.b01inarr = schild.second.get_value<double>();
-                } else if (schild.first == "b01sarr") {
-                    ws.second.b01sarr = schild.second.get_value<double>();
-                } else if (schild.first == "a10arr") {
-                    ws.second.a10arr = schild.second.get_value<double>();
-                } else if (schild.first == "b10inarr") {
-                    ws.second.b10inarr = schild.second.get_value<double>();
-                } else if (schild.first == "b10sarr") {
-                    ws.second.b10sarr = schild.second.get_value<double>();
-                } else if (schild.first == "a01int") {
-                    ws.second.a01int = schild.second.get_value<double>();
-                } else if (schild.first == "b01inint") {
-                    ws.second.b01inint = schild.second.get_value<double>();
-                } else if (schild.first == "b01sint") {
-                    ws.second.b01sint = schild.second.get_value<double>();
-                } else if (schild.first == "a10int") {
-                    ws.second.a10int = schild.second.get_value<double>();
-                } else if (schild.first == "b10inint") {
-                    ws.second.b10inint = schild.second.get_value<double>();
-                } else if (schild.first == "b10sint") {
-                    ws.second.b10sint = schild.second.get_value<double>();
-                } else if (schild.first == "afullraise") {
-                    ws.second.afullraise = schild.second.get_value<double>();
-                } else if (schild.first == "boutfullraise") {
-                    ws.second.boutfullraise = schild.second.get_value<double>();
-                } else if (schild.first == "bsfullraise") {
-                    ws.second.bsfullraise = schild.second.get_value<double>();
-                } else if (schild.first == "bsfulllower") {
-                    ws.second.bsfulllower = schild.second.get_value<double>();
-                } else if (schild.first == "boutfulllower") {
-                    ws.second.boutfulllower = schild.second.get_value<double>();
-                } else if (schild.first == "afulllower") {
-                    ws.second.afulllower = schild.second.get_value<double>();
-                } else if (schild.first == "aSFlower") {
-                    ws.second.aSFlower = schild.second.get_value<double>();
-                } else if (schild.first == "bSFlower") {
-                    ws.second.bSFlower = schild.second.get_value<double>();
-                } else if (schild.first == "shapelower") {
-                    ws.second.shapelower = schild.second.get_value<double>();
-                }
-            }
-            shades.insert(ws);
-        }
-    }
+        shades.insert(ws);
+      }
+      cnode = cnode->next_sibling();
+  }
 }
 
 /**
@@ -351,56 +395,49 @@ void SimulationConfig::parseShades(bpt::ptree::value_type & v) {
  *
  * @param filename location of the simulation file to parse.
  */
-void SimulationConfig::parseConfiguration(std::string filename) {
-  // Create an empty property tree object
-  bpt::ptree pt;
-  // Load the XML file into the property tree. If reading fails
-  // (cannot open file, parse error), an exception is thrown.
 
-  bpt::read_xml(filename, pt);
-  // Iterate over the debug.modules section and store all found
-  // modules in the m_modules set. The get_child() function
-  // returns a reference to the child at the specified path; if
-  // there is no such child, it throws. Property tree iterators
-  // are models of BidirectionalIterator.
-  stepCount = -1;
-  info.windows = false;
-  info.shading = false;
-  info.lights = false;
-  SimulationConfig::info.learn = 0;
-  for (bpt::ptree::value_type & v : pt.get_child("simulation")) {
-    if (v.first == "seed") {
-        Utility::setSeed(v.second.get_value<int>());
-    } else if (v.first == "endDay") {
-        SimulationConfig::info.endDay = v.second.get_value<int>();
-    } else if (v.first == "timeStepsPerHour") {
-        SimulationConfig::info.timeStepsPerHour = v.second.get_value<int>();
-    } else if (v.first == "beginMonth") {
-        SimulationConfig::info.startMonth = v.second.get_value<int>();
-    } else if (v.first == "endMonth") {
-        SimulationConfig::info.endMonth = v.second.get_value<int>();
-    } else if (v.first == "beginDay") {
-        SimulationConfig::info.startDay = v.second.get_value<int>();
-    } else if (v.first == "learn") {
-        SimulationConfig::info.learn = v.second.get_value<int>();
-    } else if (v.first == "learnep") {
-        SimulationConfig::info.learnep = v.second.get_value<double>();
-    } else if (v.first == "simulateAgents") {
-        SimulationConfig::info.simulateAgents = v.second.get_value<bool>();
-    } else if (v.first == "case") {
-        SimulationConfig::info.caseOrder = v.second.get_value<int>();
-    } else if (v.first == "ShadeClosedDuringNight") {
+void SimulationConfig::parseConfiguration(const std::string & filename) {
+  namespace rx = rapidxml;
+  rx::file<> xmlFile(filename.c_str());  // Default template is char
+  rx::xml_document<> doc;
+  doc.parse<0>(xmlFile.data());    // 0 means default parse flags
+  rx::xml_node<> *root_node = doc.first_node("simulation");
+  rx::xml_node<> *node = root_node->first_node();
+  while (node) {
+    if (strComp(node->name(), "seed")) {
+        Utility::setSeed(std::stoi(node->value()));
+    } else if (strComp(node->name(), "save")) {
+        SimulationConfig::info.save = std::stoi(node->value());
+    } else if (strComp(node->name(), "endDay")) {
+        SimulationConfig::info.endDay = std::stoi(node->value());
+    } else if (strComp(node->name(), "timeStepsPerHour")) {
+        SimulationConfig::info.timeStepsPerHour = std::stoi(node->value());
+    } else if (strComp(node->name(), "beginMonth")) {
+        SimulationConfig::info.startMonth = std::stoi(node->value());
+    } else if (strComp(node->name(), "endMonth")) {
+        SimulationConfig::info.endMonth = std::stoi(node->value());
+    } else if (strComp(node->name(), "beginDay")) {
+        SimulationConfig::info.startDay = std::stoi(node->value());
+    } else if (strComp(node->name(), "learn")) {
+        SimulationConfig::info.learn = std::stoi(node->value());
+    } else if (strComp(node->name(), "learnupdate")) {
+        SimulationConfig::info.learnupdate = std::stoi(node->value());
+    } else if (strComp(node->name(), "learnep")) {
+        SimulationConfig::info.learnep = std::stod(node->value());
+    } else if (strComp(node->name(), "case")) {
+        SimulationConfig::info.caseOrder = std::stoi(node->value());
+    } else if (strComp(node->name(), "ShadeClosedDuringNight")) {
        SimulationConfig::info.ShadeClosedDuringNight
-          = v.second.get_value<bool>();
-    } else if (v.first == "buildings") {
-        parseBuildings(v);
-    } else if (v.first == "models") {
-        parseModels(v);
+           = std::stoi(node->value());
+    } else if (strComp(node->name(), "models")) {
+       parseModels(node);
+    } else if (strComp(node->name(), "buildings")) {
+        parseBuildings(node);
     }
+
+    node = node->next_sibling();
   }
   timeSteps();
-  LOG << "Loaded No-MASS configuration without problems file: -";
-  LOG << filename << "-\n";
 }
 
 ZoneStruct SimulationConfig::getZone(std::string* zoneName) {
@@ -464,4 +501,9 @@ void SimulationConfig::timeSteps() {
     }
     int hours = days * 24;
     SimulationConfig::info.timeSteps = hours * info.timeStepsPerHour;
+}
+
+
+bool SimulationConfig::strComp(const char * str1, const char * str2) {
+  return std::strcmp(str1, str2) == 0;
 }

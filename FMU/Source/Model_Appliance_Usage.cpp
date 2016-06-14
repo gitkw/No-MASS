@@ -1,13 +1,8 @@
 // Copyright 2015 Jacob Chapman
 
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
+#include <cstring>
 #include <string>
 #include <vector>
-
 #include "Utility.h"
 #include "Model_Appliance_Usage.h"
 
@@ -38,7 +33,7 @@ double Model_Appliance_Usage::consumption(const int app, const int timeStep) {
 
 double Model_Appliance_Usage::getTransitionAt(const int app,
   const int state, const int i) {
-        double transition;
+        double transition = -0.1;
         switch (app) {
         case 0:
                 transition = transitionsCooker[state][i];
@@ -89,7 +84,7 @@ double Model_Appliance_Usage::getPower(const int app) {
 }
 
 double Model_Appliance_Usage::getMeanFraction(const int app) {
-        int state;
+        int state = -1;
         switch (app) {
         case 0:
                 state = stateCooker;
@@ -183,107 +178,103 @@ bool Model_Appliance_Usage::onAt(const int app, const int timeStep) const {
 }
 
 template <typename T>
-std::vector<T> Model_Appliance_Usage::as_vector(
-  boost::property_tree::ptree::value_type const& child) {
+std::vector<T> Model_Appliance_Usage::as_vector(rapidxml::xml_node<> *node) {
     std::vector<T> r;
-    std::vector<std::string> tokProbs;
-    std::string value = child.second.get_value<std::string>();
-    boost::split(tokProbs, value, boost::is_any_of(","));
-    for (auto& item : tokProbs) {
-        r.push_back(boost::lexical_cast<double>(item));
+    std::string value = node->value();
+
+    std::vector<std::string> tokens = Utility::splitCSV(node->value());
+    for (std::string& item : tokens) {
+        r.push_back(std::stod(item));
     }
     return r;
 }
 
 template <typename T>
 std::vector<std::vector<T>> Model_Appliance_Usage::as_vector_vector(
-  boost::property_tree::ptree::value_type & child) {
+  rapidxml::xml_node<> *node) {
     std::vector<std::vector<T>> r;
-    for (boost::property_tree::ptree::value_type & x : child.second) {
-      r.push_back(as_vector<T>(x));
+    rapidxml::xml_node<> *cnode = node->first_node();
+    while (cnode) {
+      r.push_back(as_vector<T>(cnode));
+      cnode = cnode->next_sibling();
     }
     return r;
 }
 
-void Model_Appliance_Usage::parseCountryUsage(
-  boost::property_tree::ptree::value_type & v) {
-        for (boost::property_tree::ptree::value_type & child : v.second) {
-            if (child.first == "maxPowerTv") {
-                    maxPowerTv = child.second.get_value<double>();
-            } else if (child.first == "maxPowerWashingMachine") {
-                    maxPowerWashingMachine = child.second.get_value<double>();
-            } else if (child.first == "maxPowerMicroWave") {
-                    maxPowerMicroWave = child.second.get_value<double>();
-            } else if (child.first == "maxPowerCooker") {
-                    maxPowerCooker = child.second.get_value<double>();
-            } else if (child.first == "maxPowerDishWasher") {
-                    maxPowerDishWasher = child.second.get_value<double>();
-            } else if (child.first == "maxPowerFridge") {
-                    maxPowerFridge = child.second.get_value<double>();
-            } else if (child.first == "meanFWashingMachine") {
-                    meanFWashingMachine = as_vector<double>(child);
-            } else if (child.first == "meanFTv") {
-                    meanFTv  = as_vector<double>(child);
-            } else if (child.first == "meanFCooker") {
-                    meanFCooker  = as_vector<double>(child);
-            } else if (child.first == "meanFMicrowave") {
-                    meanFMicrowave  = as_vector<double>(child);
-            } else if (child.first == "meanFFridge") {
-                    meanFFridge  = as_vector<double>(child);
-            } else if (child.first == "meanFDishWasher") {
-                    meanFDishWasher  = as_vector<double>(child);
-            } else if (child.first == "onTv") {
-                    onTv = as_vector<double>(child);
-            } else if (child.first == "onWashingMachine") {
-                    onWashingMachine = as_vector<double>(child);
-            } else if (child.first == "onMicroWave") {
-                    onMicroWave = as_vector<double>(child);
-            } else if (child.first == "onCooker") {
-                    onCooker = as_vector<double>(child);
-            } else if (child.first == "onDishWasher") {
-                    onDishWasher = as_vector<double>(child);
-            } else if (child.first == "onFridge") {
-                    onFridge = as_vector<double>(child);
-            } else if (child.first == "transitionsCooker") {
-                    transitionsCooker = as_vector_vector<double>(child);
-            } else if (child.first == "transitionsMicroWave") {
-                    transitionsMicroWave = as_vector_vector<double>(child);
-            } else if (child.first == "transitionsTv") {
-                    transitionsTv = as_vector_vector<double>(child);
-            } else if (child.first == "transitionsWashingMachine") {
-                    transitionsWashingMachine = as_vector_vector<double>(child);
-            } else if (child.first == "transitionsDishWasher") {
-                    transitionsDishWasher = as_vector_vector<double>(child);
-            } else if (child.first == "transitionsFridge") {
-                    transitionsFridge = as_vector_vector<double>(child);
-            }
-        }
+void Model_Appliance_Usage::parseCountryUsage(rapidxml::xml_node<> *node) {
+  rapidxml::xml_node<> *cnode = node->next_sibling();
+  while (cnode) {
+    if (std::strcmp(cnode->name(), "maxPowerTv") == 0) {
+      maxPowerTv = std::stod(cnode->value());
+    } else if (std::strcmp(cnode->name(), "maxPowerWashingMachine") == 0) {
+            maxPowerWashingMachine = std::stod(cnode->value());
+    } else if (std::strcmp(cnode->name(), "maxPowerMicroWave") == 0) {
+            maxPowerMicroWave = std::stod(cnode->value());
+    } else if (std::strcmp(cnode->name(), "maxPowerCooker") == 0) {
+            maxPowerCooker = std::stod(cnode->value());
+    } else if (std::strcmp(cnode->name(), "maxPowerDishWasher") == 0) {
+            maxPowerDishWasher = std::stod(cnode->value());
+    } else if (std::strcmp(cnode->name(), "maxPowerFridge") == 0) {
+            maxPowerFridge = std::stod(cnode->value());
+    } else if (std::strcmp(cnode->name(), "meanFWashingMachine") == 0) {
+            meanFWashingMachine = as_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "meanFTv") == 0) {
+            meanFTv  = as_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "meanFCooker") == 0) {
+            meanFCooker  = as_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "meanFMicrowave") == 0) {
+            meanFMicrowave  = as_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "meanFFridge") == 0) {
+            meanFFridge  = as_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "meanFDishWasher") == 0) {
+            meanFDishWasher  = as_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "onTv") == 0) {
+            onTv = as_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "onWashingMachine") == 0) {
+            onWashingMachine = as_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "onMicroWave") == 0) {
+            onMicroWave = as_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "onCooker") == 0) {
+            onCooker = as_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "onDishWasher") == 0) {
+            onDishWasher = as_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "onFridge") == 0) {
+            onFridge = as_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "transitionsCooker") == 0) {
+            transitionsCooker = as_vector_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "transitionsMicroWave") == 0) {
+            transitionsMicroWave = as_vector_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "transitionsTv") == 0) {
+            transitionsTv = as_vector_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "transitionsWashingMachine") == 0) {
+            transitionsWashingMachine = as_vector_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "transitionsDishWasher") == 0) {
+            transitionsDishWasher = as_vector_vector<double>(cnode);
+    } else if (std::strcmp(cnode->name(), "transitionsFridge") == 0) {
+            transitionsFridge = as_vector_vector<double>(cnode);
+    }
+    cnode = cnode->next_sibling();
+  }
 }
 
 void Model_Appliance_Usage::parseConfiguration(const std::string filename) {
-    namespace bpt = boost::property_tree;
-    // Create an empty property tree object
-    bpt::ptree pt;
-    // Load the XML file into the property tree. If reading fails
-    // (cannot open file, parse error), an exception is thrown.
-
-    bpt::read_xml(filename, pt);
-    // Iterate over the debug.modules section and store all found
-    // modules in the m_modules set. The get_child() function
-    // returns a reference to the child at the specified path; if
-    // there is no such child, it throws. Property tree iterators
-    // are models of BidirectionalIterator.
-    for (bpt::ptree::value_type& child : pt.get_child("Appliance")) {
-        if (child.first == "Usage") {
-        for (bpt::ptree::value_type & childchild : child.second) {
-                if (childchild.first == "country") {
-                    std::string currentCountry =
-                      childchild.second.get_value<std::string>();
-                    if (currentCountry == country) {
-                            parseCountryUsage(child);
-                    }
-                }
-            }
-        }
+  namespace rx = rapidxml;
+  rx::file<> xmlFile(filename.c_str());  // Default template is char
+  rx::xml_document<> doc;
+  doc.parse<0>(xmlFile.data());    // 0 means default parse flags
+  rx::xml_node<> *root_node = doc.first_node("Appliance");
+  rx::xml_node<> *node = root_node->first_node("Usage");
+  while (node) {
+    rx::xml_node<> *cnode = node->first_node();
+    while (cnode) {
+      if (std::strcmp(cnode->name(), "country") == 0) {
+          std::string currentCountry = cnode->value();
+          if (std::strcmp(cnode->value(), country.c_str()) == 0) {
+            parseCountryUsage(cnode);
+          }
+      }
+      cnode = cnode->next_sibling();
     }
+    node = node->next_sibling();
+  }
 }

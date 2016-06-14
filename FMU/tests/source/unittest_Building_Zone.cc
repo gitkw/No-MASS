@@ -3,13 +3,14 @@
 #include <limits.h>
 
 
+#include "Gen.h"
 #include "Building_Zone.h"
 #include "DataStore.h"
 #include "gtest/gtest.h"
 
 TEST(Building_Zone, Name) {
   SimulationConfig::reset();
-  SimulationConfig::parseConfiguration("../tests/Files/SimulationConfig2.xml");
+  SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
   SimulationConfig::stepCount = 0;
   SimulationConfig::info.windows = false;
@@ -24,14 +25,14 @@ TEST(Building_Zone, Name) {
   ZoneStruct zs;
   zs.name = "Out";
   zs.id = 0;
-  Building_Zone z_Out("", zs);
+  Building_Zone z_Out(zs);
 
   ASSERT_EQ(z_Out.getName(), zs.name);
   ASSERT_EQ(z_Out.isActive(), false);
 
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen("", zs);
+  Building_Zone z_Kitchen(zs);
 
   ASSERT_EQ(z_Kitchen.getName(), zs.name);
   ASSERT_EQ(z_Kitchen.isActive(), true);

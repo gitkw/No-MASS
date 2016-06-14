@@ -40,109 +40,66 @@ project (FMI)
 
 SET( SRC
 Source/Agent.cpp
-Source/Agent.h
 Source/Agent_Action.cpp
-Source/Agent_Action.h
 Source/Agent_Action_Heat_Gains.cpp
-Source/Agent_Action_Heat_Gains.h
 Source/Agent_Action_Lights.cpp
-Source/Agent_Action_Lights.h
 Source/Agent_Action_Shades.cpp
-Source/Agent_Action_Shades.h
 Source/Agent_Action_Window.cpp
-Source/Agent_Action_Window.h
-Source/Agent_Action_Heating.cpp
-Source/Agent_Action_Heating.h
-Source/Agent_Action_Learning.h
-Source/Agent_Action_Learning.cpp
+Source/Agent_Action_HeatingSetPoints_Learning.cpp
+Source/Agent_Action_Appliance.cpp
 Source/Agent_Zone.cpp
 Source/DataStore.cpp
-Source/DataStore.h
 Source/Log.cpp
-Source/Log.h
 Source/Model_Activity.cpp
-Source/Model_Activity.h
 Source/Model_ExternalShading.cpp
-Source/Model_ExternalShading.h
 Source/Model_HeatGains.cpp
-Source/Model_HeatGains.h
 Source/Model_Lights.cpp
-Source/Model_Lights.h
 Source/Model_Presence.cpp
-Source/Model_Presence.h
 Source/Model_RandomWeibull.cpp
-Source/Model_RandomWeibull.h
 Source/Model_Windows.cpp
-Source/Model_Windows.h
 Source/Model_Appliance_Ownership.cpp
-Source/Model_Appliance_Ownership.h
 Source/Model_Appliance_Usage.cpp
-Source/Model_Appliance_Usage.h
 Source/Simulation.cpp
-Source/Simulation.h
 Source/SimulationConfig.cpp
-Source/SimulationConfig.h
 Source/State.cpp
-Source/State.h
 Source/StateMachine.cpp
-Source/StateMachine.h
 Source/State_Audio_Visual.cpp
-Source/State_Audio_Visual.h
 Source/State_Cleaning.cpp
-Source/State_Cleaning.h
 Source/State_Cooking.cpp
-Source/State_Cooking.h
 Source/State_IT.cpp
-Source/State_IT.h
 Source/State_Metabolic.cpp
-Source/State_Metabolic.h
 Source/State_Out.cpp
-Source/State_Out.h
 Source/State_Passive.cpp
-Source/State_Passive.h
 Source/State_Present.cpp
-Source/State_Present.h
 Source/State_Sleep.cpp
-Source/State_Sleep.h
 Source/State_Washing.cpp
-Source/State_Washing.h
 Source/State_Washing_Appliance.cpp
-Source/State_Washing_Appliance.h
 Source/Utility.cpp
-Source/Utility.h
 Source/Building.cpp
-Source/Building.h
 Source/Building_Zone.cpp
-Source/Building_Zone.h
 Source/fmiFunctions.cpp
-Source/fmiFunctions.h
-Source/fmiPlatformTypes.h
-Source/fmuTemplate.cpp
-Source/fmuTemplate.h
-Source/QLearning.cpp
-Source/QLearning.h
+
 Source/QLearning_HeatingSetPoints.cpp
-Source/QLearning_HeatingSetPoints.h
+Source/QLearning_Window.cpp
 )
 
-
 include_directories(${PROJECT_SOURCE_DIR}/../Boost/Boost-Source)
+include_directories(${PROJECT_SOURCE_DIR}/../rapidxml)
 include_directories(${PROJECT_SOURCE_DIR}/Source)
 
-ADD_LIBRARY(FMI SHARED ${SRC})
+ADD_LIBRARY(FMI SHARED ${SRC} Source/fmuTemplate.cpp  Source/Agent_Action_Window_Learning.cpp Source/QLearning.cpp)
 
+set_source_files_properties(${SRC} PROPERTIES COMPILE_FLAGS "-Werror -Wall -Wextra")
 
 if(WIN32)
   SET( CMAKE_CXX_CREATE_SHARED_LIBRARY  "${CMAKE_CXX_CREATE_SHARED_LIBRARY} -static -fPIC" )
 endif()
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11")
+
+
 SET(CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE} -O2")
 string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-
-SET_TARGET_PROPERTIES(FMI PROPERTIES
- CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror"
-)
 
 ################################
 # Testing
@@ -163,13 +120,27 @@ if (Tests)
   ##############
   # Unit Tests
   ##############
+  include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+  set(testLocationFiles "${PROJECT_SOURCE_DIR}/tests/Files")
+  configure_file(tests/source/Gen.h.in
+                  ${CMAKE_CURRENT_BINARY_DIR}/Gen.h)
+
+  if(CMAKE_GENERATOR STREQUAL Xcode)
+    configure_file(tests/Files/SimulationConfig1.xml.in
+                    ${CMAKE_CURRENT_BINARY_DIR}/Debug/SimulationConfig1.xml)
+  endif()
+
+  configure_file(tests/Files/SimulationConfig1.xml.in
+                  ${CMAKE_CURRENT_BINARY_DIR}/SimulationConfig1.xml)
+  set(gen_file "${CMAKE_CURRENT_BINARY_DIR}/Gen.h")
 
   SET( TESTSRC
+    ${gen_file}
     tests/source/unittest_Simulation.cc
     tests/source/unittest_SimulationConfig.cc
     tests/source/unittest_Model_Activity.cc
     tests/source/unittest_Model_Windows.cc
-    tests/source/unittest_Model_HeatGains.cc
+    tests/source/unittest_Agent_Action_HeatingSetPoints_Learning.cc
     tests/source/unittest_Model_Appliance_Usage.cc
     tests/source/unittest_Model_Appliance_Ownership.cc
     tests/source/unittest_StateMachine.cc
@@ -179,13 +150,14 @@ if (Tests)
     tests/source/unittest_Building_Zone.cc
     tests/source/unittest_Utility.cc
     tests/source/unittest_Building.cc
+    tests/source/unittest_Agent_Action.cc
     tests/source/unittest_Agent_Action_Window.cc
     tests/source/unittest_Agent_Action_Shades.cc
     tests/source/unittest_Agent_Action_Light.cc
-    tests/source/unittest_Agent_Action_Learning.cc
+    tests/source/unittest_Agent_Action_Window_Learning.cc
     tests/source/unittest_Agent_Action_Heat_Gains.cc
     tests/source/unittest_QLearning_HeatingSetPoints.cc
-
+    tests/source/unittest_QLearning_Window.cc
   )
 
   add_executable(runUnitTests ${TESTSRC})

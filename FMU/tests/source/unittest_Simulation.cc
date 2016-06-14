@@ -2,6 +2,7 @@
 
 #include <limits.h>
 
+#include "Gen.h"
 #include "Simulation.h"
 #include "SimulationConfig.h"
 #include "DataStore.h"
@@ -9,8 +10,9 @@
 #include "gtest/gtest.h"
 
 TEST(Simulation, HeatGainsOnly) {
+  DataStore::clear();
   SimulationConfig::reset();
-  SimulationConfig::FmuLocation = "../tests/Files";
+  SimulationConfig::FmuLocation = testFiles;
   Simulation s;
   s.parseConfiguration(SimulationConfig::FmuLocation + "/SimulationConfig.xml");
   SimulationConfig::info.windows = false;
@@ -20,13 +22,16 @@ TEST(Simulation, HeatGainsOnly) {
   s.setupSimulationModel();
 
   s.preTimeStep();
+  DataStore::addVariable("EnvironmentSiteOutdoorAirDrybulbTemperature");
+  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 21);
   s.timeStep();
   EXPECT_EQ(SimulationConfig::getStepCount(), 0);
   int activity = DataStore::getValue("Agent_Activity_1");
   EXPECT_EQ(activity, 9);
   s.postTimeStep();
   s.postprocess();
-
+  
+  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 21);
   DataStore::addVariable("Block1:Zone1ZoneMeanAirTemperature");
   DataStore::addVariable("Block1:Zone1ZoneAirRelativeHumidity");
   DataStore::addVariable("Block1:Zone1ZoneMeanRadiantTemperature");
@@ -42,11 +47,11 @@ TEST(Simulation, HeatGainsOnly) {
     s.postTimeStep();
     if (activity < 9) {
       EXPECT_EQ(activity, 3);
-      ASSERT_NEAR(DataStore::getValue("AgentGains1"), 79.07022613, 0.001);
+      ASSERT_NEAR(DataStore::getValue("AgentGains1"), 77.046341167, 0.001);
       ASSERT_NEAR(DataStore::getValue("Agent_Metabolic_Rate_1"), 70, 0.001);
       ASSERT_NEAR(DataStore::getValue("Agent_clo_1"), 1, 0.001);
-      ASSERT_NEAR(DataStore::getValue("Agent_ppd_1"), 9.71367649, 0.001);
-      ASSERT_NEAR(DataStore::getValue("Agent_pmv_1"), -0.4750917406, 0.001);
+      ASSERT_NEAR(DataStore::getValue("Agent_ppd_1"), 7.835778219685593, 0.001);
+      ASSERT_NEAR(DataStore::getValue("Agent_pmv_1"), -0.36908214203982, 0.001);
     }
   }
   s.postprocess();
@@ -54,8 +59,9 @@ TEST(Simulation, HeatGainsOnly) {
 
 
 TEST(Simulation, HeatGainsWindowsOnly) {
+  DataStore::clear();
   SimulationConfig::reset();
-  SimulationConfig::FmuLocation = "../tests/Files";
+  SimulationConfig::FmuLocation = testFiles;
   Simulation s;
 
   s.parseConfiguration(SimulationConfig::FmuLocation + "/SimulationConfig.xml");
@@ -109,7 +115,6 @@ TEST(Simulation, HeatGainsWindowsOnly) {
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 15);
   DataStore::addValue("EnvironmentSiteRainStatus", 0);
 
-      std::cout << "hello " << std::endl;
   for (i =100;; i++) {
     s.preTimeStep();
     s.timeStep();

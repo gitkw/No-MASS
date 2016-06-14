@@ -2,21 +2,33 @@
 
 #include <iostream>
 #include <vector>
+#include "Utility.h"
 #include "DataStore.h"
 #include "Agent_Action_Shades.h"
 #include "SimulationConfig.h"
 
 Agent_Action_Shades::Agent_Action_Shades() {
-    name = "Shades";
+  ShadeClosedDuringSleep = 0.0;
+  ShadeClosedDuringWashing = 0.0;
+  ShadeClosedDuringNight = 0.0;
+  ShadeClosedDuringAudioVisual = 0.0;
 }
 
 void Agent_Action_Shades::setClosedDuringWashing(
-  bool ShadeClosedDuringWashing) {
+  double ShadeClosedDuringWashing) {
   this->ShadeClosedDuringWashing = ShadeClosedDuringWashing;
 }
 
-void Agent_Action_Shades::setClosedDuringSleep(bool ShadeClosedDuringSleep) {
+void Agent_Action_Shades::setClosedDuringSleep(double ShadeClosedDuringSleep) {
   this->ShadeClosedDuringSleep = ShadeClosedDuringSleep;
+}
+
+void Agent_Action_Shades::setClosedDuringNight(double ShadeClosedDuringNight) {
+  this->ShadeClosedDuringNight = ShadeClosedDuringNight;
+}
+void Agent_Action_Shades::setClosedDuringAudioVisual(
+  double ShadeClosedDuringAudioVisual) {
+  this->ShadeClosedDuringAudioVisual = ShadeClosedDuringAudioVisual;
 }
 
 void Agent_Action_Shades::setup(int shadeID) {
@@ -30,8 +42,8 @@ void Agent_Action_Shades::setup(int shadeID) {
                   ws.b10inint, ws.b10sint);
 }
 
-void Agent_Action_Shades::step(const Building_Zone& zone, bool inZone,
-    bool previouslyInZone, const std::vector<double> & activities) {
+void Agent_Action_Shades::step(const Building_Zone& zone, const bool inZone,
+    const bool previouslyInZone) {
   double shadingFraction = zone.getBlindState();
   // we take the previous timestep shading state to compute Lumint
   // Evg: Outdoor illuminance in the horizontal plane without obstructions (lux)
@@ -45,13 +57,36 @@ void Agent_Action_Shades::step(const Building_Zone& zone, bool inZone,
   } else {
     shadingFraction = m_blindUsage.departure(shadingFraction, Lumint, Evg);
   }
-
-  int stepCount = SimulationConfig::getStepCount();
-  if (ShadeClosedDuringSleep && activities.at(stepCount) == 0) {
-      shadingFraction = 0;
-  }
-  if (ShadeClosedDuringWashing && activities.at(stepCount) == 6) {
-      shadingFraction = 0;
-  }
   result = shadingFraction;
+}
+
+bool Agent_Action_Shades::BDI(const std::vector<double> &activities) {
+  bool bdi = false;
+  int stepCount = SimulationConfig::getStepCount();
+  if (ShadeClosedDuringSleep > Utility::randomDouble(0, 1) &&
+      activities.at(stepCount) == 0) {
+      result = 0;
+      bdi = true;
+  }
+  if (ShadeClosedDuringWashing > Utility::randomDouble(0, 1) &&
+      activities.at(stepCount) == 6) {
+      result = 0;
+      bdi = true;
+  }
+  if (ShadeClosedDuringAudioVisual > Utility::randomDouble(0, 1) &&
+      activities.at(stepCount) == 2) {
+      result = 0;
+      bdi = true;
+  }
+  if (ShadeClosedDuringNight > Utility::randomDouble(0, 1)) {
+      int hour = DataStore::getValue("hourOfDay");
+      if (hour < 8) {
+        result = 0;
+        bdi = true;
+      } else if (hour > 20) {
+        result = 0;
+        bdi = true;
+      }
+  }
+  return bdi;
 }

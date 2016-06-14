@@ -23,16 +23,16 @@ TEST(StateMachine, statesPage) {
   ZoneStruct zs;
   zs.name = "Block1:Zone1";
   zs.id = 1;
-  Building_Zone z("", zs);
+  Building_Zone z(zs);
 
   ZoneStruct zs_out;
   zs_out.name = "Out";
   zs_out.id = 0;
-  Building_Zone z_out("", zs_out);
+  Building_Zone z_out(zs_out);
 
   StateMachine stateMachine;
   State_Out out;
-  out.setZonePtr(&(z_out));
+  out.setZonePtr(std::make_shared<Building_Zone>(z_out));
   stateMachine.addState(out);
 
   EXPECT_EQ(stateMachine.numberOfStates(),  1);
@@ -41,7 +41,7 @@ TEST(StateMachine, statesPage) {
   State_Present present;
   State_IT it;
 
-  it.setZonePtr(&(z));
+  it.setZonePtr(std::make_shared<Building_Zone>(z));
   present.addState(it);
 
   stateMachine.addState(present);
@@ -72,11 +72,11 @@ TEST(StateMachine, statesActivity) {
   ZoneStruct zs_out;
   zs_out.name = "Out";
   zs_out.id = 1;
-  Building_Zone z_out("", zs_out);
+  Building_Zone z_out(zs_out);
 
   StateMachine stateMachine;
   State_Out out;
-  out.setZonePtr(&(z_out));
+  out.setZonePtr(std::make_shared<Building_Zone>(z_out));
   stateMachine.addState(out);
   State_Present present;
   EXPECT_EQ(stateMachine.numberOfStates(), 1);
@@ -84,38 +84,38 @@ TEST(StateMachine, statesActivity) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen("", zs);
+  Building_Zone z_Kitchen(zs);
   zs.name = "Block1:LivingRoom";
   zs.id = 1;
-  Building_Zone z_LivingRoom("", zs);
+  Building_Zone z_LivingRoom(zs);
   zs.name = "Block2:Bathroom";
   zs.id = 1;
-  Building_Zone z_Bathroom("", zs);
+  Building_Zone z_Bathroom(zs);
   zs.name = "Block2:MasterBedroom";
   zs.id = 1;
-  Building_Zone z_MasterBedroom("", zs);
+  Building_Zone z_MasterBedroom(zs);
   zs.name = "Block2:Office";
   zs.id = 1;
-  Building_Zone z_Office("", zs);
+  Building_Zone z_Office(zs);
 
   State_Sleep sleep;
-  sleep.setZonePtr(&(z_MasterBedroom));
+  sleep.setZonePtr(std::make_shared<Building_Zone>(z_MasterBedroom));
   State_Passive passive;
-  passive.setZonePtr(&(z_LivingRoom));
+  passive.setZonePtr(std::make_shared<Building_Zone>(z_LivingRoom));
   State_Washing_Appliance washingAppliance;
-  washingAppliance.setZonePtr(&(z_Bathroom));
+  washingAppliance.setZonePtr(std::make_shared<Building_Zone>(z_Bathroom));
   State_Washing washing;
-  washing.setZonePtr(&(z_Bathroom));
+  washing.setZonePtr(std::make_shared<Building_Zone>(z_Bathroom));
   State_Audio_Visual audioVisual;
-  audioVisual.setZonePtr(&(z_LivingRoom));
+  audioVisual.setZonePtr(std::make_shared<Building_Zone>(z_LivingRoom));
   State_Cleaning cleaning;
-  cleaning.setZonePtr(&(z_Kitchen));
+  cleaning.setZonePtr(std::make_shared<Building_Zone>(z_Kitchen));
   State_Cooking cooking;
-  cooking.setZonePtr(&(z_Kitchen));
+  cooking.setZonePtr(std::make_shared<Building_Zone>(z_Kitchen));
   State_Metabolic metabolic;
-  metabolic.setZonePtr(&(z_LivingRoom));
+  metabolic.setZonePtr(std::make_shared<Building_Zone>(z_LivingRoom));
   State_IT it;
-  it.setZonePtr(&(z_Office));
+  it.setZonePtr(std::make_shared<Building_Zone>(z_Office));
   present.addState(sleep);
   present.addState(passive);
   present.addState(washingAppliance);

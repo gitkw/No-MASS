@@ -11,7 +11,7 @@
 class Building_Zone {
 public:
     Building_Zone();
-    Building_Zone(std::string, const ZoneStruct zoneStruct);
+    Building_Zone(const ZoneStruct & zoneStruct);
 
     void step();
     void setup();
@@ -25,9 +25,10 @@ public:
     void setBlindState(double state);
     void setHeatingState(double state);
     void setOccupantFraction(double occupantFraction);
+    void setAppFraction(double appFraction);
 
     bool isActive() const;
-    bool hasActivity(std::string activity) const;
+    bool hasActivity(int activity) const;
     int getCurrentOccupantCount() const;
     float getOccupantFraction() const;
     double getCurrentAgentGains() const;
@@ -42,6 +43,7 @@ public:
     double getMeanRadiantTemperature() const;
     double getDaylightingReferencePoint1Illuminance() const;
     double getWindowDurationOpen() const;
+    std::vector<int> getActivities() const;
     std::string getName() const;
     int getId() const;
 
@@ -55,6 +57,7 @@ private:
     double blindState;
     double occupantFraction;
     double heatingState;
+    double appFraction;
 
     int id;
     std::string name;
@@ -63,8 +66,9 @@ private:
     std::string variableNameAverageGains;
     std::string variableNameLight;
     std::string variableNameHeating;
+    std::string variableNameAppFraction;
     std::vector<std::string> variableNameWindow;
-    std::vector<std::string> activities;
+    std::vector<int> activities;
 
 };
 

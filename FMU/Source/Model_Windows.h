@@ -1,9 +1,4 @@
-/*
- * File:   Comp_WindowsOpening.h
- * Author: jake
- *
- * Created on September 18, 2013, 10:19 AM
- */
+// Copyright 2016 Jacob Chapman
 
 #ifndef COMP_WINDOWSOPENING_H
 #define COMP_WINDOWSOPENING_H

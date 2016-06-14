@@ -1,9 +1,4 @@
-/*
- * File:   Model_BlindUsage.h
- * Author: jake
- *
- * Created on September 28, 2013, 1:27 PM
- */
+// Copyright 2016 Jacob Chapman
 
 #ifndef MODEL_BLINDUSAGE_H
 #define	MODEL_BLINDUSAGE_H
@@ -25,10 +20,10 @@ public:
 
 
 private:
-    double arrivalRaising(double state, double Lumint, double Evg);
-    double arrivalLowering(double state,double Lumint, double Evg);
-    double departureLowering(double state,double Lumint, double Evg);
-    double departureRaising(double state,double Lumint, double Evg);
+    double arrivalRaising(double state, double Evg);
+    double arrivalLowering(double state, double Evg);
+    double departureLowering(double state, double Evg);
+    double departureRaising(double state, double Evg);
     // Probability of lowering on arrival
     float a01arr;
     float b01inarr;

@@ -6,9 +6,6 @@ class State_Audio_Visual :public State
 {
     public:
         State_Audio_Visual();
-        
-    protected:
-    private:
 };
 
 #endif // STATE_AUDIO_VISUAL_H

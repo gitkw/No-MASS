@@ -3,6 +3,7 @@
 #include <limits.h>
 #include <vector>
 
+#include "Gen.h"
 #include "DataStore.h"
 #include "Agent_Action_Lights.h"
 #include "gtest/gtest.h"
@@ -16,7 +17,7 @@ class Test_Agent_Action_Lights : public ::testing::Test {
 
 void Test_Agent_Action_Lights::SetUp() {
   SimulationConfig::reset();
-  SimulationConfig::parseConfiguration("../tests/Files/SimulationConfig2.xml");
+  SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
   SimulationConfig::stepCount = 0;
   SimulationConfig::info.windows = false;
@@ -39,16 +40,18 @@ TEST_F(Test_Agent_Action_Lights, OffDuringSleep) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen("", zs);
+  Building_Zone z_Kitchen(zs);
   aal.setOffDuringSleep(true);
 
   activities.push_back(0);
   aal.step(z_Kitchen, true, false, activities);
+  aal.BDI(activities);
   ASSERT_EQ(aal.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
   aal.step(z_Kitchen, true, false, activities);
+  aal.BDI(activities);
   ASSERT_EQ(aal.getResult(), 1);
 }
 
@@ -56,16 +59,18 @@ TEST_F(Test_Agent_Action_Lights, OffDuringAudioVisual) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen("", zs);
+  Building_Zone z_Kitchen(zs);
   aal.setOffDuringAudioVisual(true);
   aal.getResult();
 
   activities.push_back(2);
   aal.step(z_Kitchen, true, false, activities);
+  aal.BDI(activities);
   ASSERT_EQ(aal.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
   aal.step(z_Kitchen, true, false, activities);
+  aal.BDI(activities);
   ASSERT_EQ(aal.getResult(), 1);
 }

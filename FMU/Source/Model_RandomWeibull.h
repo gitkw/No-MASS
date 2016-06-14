@@ -1,14 +1,7 @@
-/*
- * File:   Model_RandomWeibull.h
- * Author: jake
- *
- * Created on September 28, 2013, 6:34 PM
- */
+// Copyright 2016 Jacob Chapman
 
 #ifndef MODEL_RANDOMWEIBULL_H
 #define	MODEL_RANDOMWEIBULL_H
-
-#include <cfloat>
 
 class Model_RandomWeibull {
 public:
@@ -18,9 +11,6 @@ public:
     static double randomDouble();
     static double randomDouble(double min, double max);
     static double probability(double m);
-
-private:
 };
 
 #endif	/* MODEL_RANDOMWEIBULL_H */
-

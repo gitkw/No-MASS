@@ -6,13 +6,24 @@
 class Agent_Action {
   public:
     Agent_Action();
-    virtual void step(const Building_Zone& zone, bool inZone, bool previouslyInZone, const std::vector<double> &activities) = 0;
-    double getResult();
-    virtual std::string getName();
+
+    void setAvailableActivities(const std::vector<int> availableActivities);
+    double getResult() const;
+    double getFutureDurationOfAbsenceState(
+                      const std::vector<double> &activities) const;
+    double getPreviousDurationOfAbsenceState(
+                      const std::vector<double> &activities) const;
+    double getCurrentDurationOfPresenceState(
+                      const std::vector<double> &activities) const;
+
+    void setZoneId(const double zoneId);
+    void setReward(const double reward);
 
   protected:
-    double getFutureDurationOfPresenceState(const std::vector<double> &activities) const;
+    bool activityAvailable(const int act) const;
     double result;
-    std::string name;
+    double reward;
+    std::vector<int> availableActivities;
+    int zoneId;
 };
 #endif // AGENT_ACTION_H

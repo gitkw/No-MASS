@@ -14,10 +14,10 @@
 class DataStore {
 
 public:
-    static void addVariable(std::string name);
-    static void addValue(std::string name, double val);
-    static double getValue(std::string name);
-    static double getValueForZone(std::string name, std::string zoneName);
+    static void addVariable(const std::string &name);
+    static void addValue(const std::string &name, const double val);
+    static double getValue(const std::string &name);
+    static double getValueForZone(const std::string &name, const std::string &zoneName);
     static void print();
     static void clear();
 private:
@@ -26,4 +26,3 @@ private:
 };
 
 #endif  /* VARIABLESTORE_H */
-

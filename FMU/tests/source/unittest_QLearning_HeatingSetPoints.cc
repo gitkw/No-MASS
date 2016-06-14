@@ -2,10 +2,11 @@
 
 #include <limits.h>
 #include <vector>
+#include <fstream>
 
 #include "DataStore.h"
 #include "QLearning_HeatingSetPoints.h"
-#include "QLearning_HeatingRate.h"
+
 #include "QLearning.h"
 #include "gtest/gtest.h"
 
@@ -16,6 +17,7 @@ class Test_QLearning_HeatingSetPoints : public ::testing::Test {
 };
 
 void Test_QLearning_HeatingSetPoints::SetUp() {
+  ql.setStates(288);
   SimulationConfig::info.learnep = 0.8;
   DataStore::addVariable("hour");
   DataStore::addVariable("month");
@@ -32,7 +34,7 @@ TEST_F(Test_QLearning_HeatingSetPoints, learn) {
     ZoneStruct zs;
     zs.name = "Block1:Zone1";
     zs.id = 1;
-    Building_Zone z_Kitchen("", zs);
+    Building_Zone z_Kitchen(zs);
 
     DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature", 1);
 
@@ -50,23 +52,23 @@ TEST_F(Test_QLearning_HeatingSetPoints, learn) {
         reward = 0.9;
       }
       ql.setReward(reward);
-      heating = ql.learn(z_Kitchen);
+      heating = ql.learn();
       DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature",
                           heating);
     }
     // ql.printQ();
 
     ql.setEpsilon(0.0);
-    heating = ql.learn(z_Kitchen);
+    heating = ql.learn();
   //  ASSERT_NEAR(heating, 21, 0.1);
 }
 
 
 TEST_F(Test_QLearning_HeatingSetPoints, Learn1) {
-/*  ql.setId(1);
+  ql.setId(1);
   ql.setup();
   std::ifstream in_file;
-  in_file.open("../tests/Files/Data.csv");
+  in_file.open("../tests/Files/Data3.csv");
 
   while (in_file.good()) {
       std::string a;
@@ -75,7 +77,6 @@ TEST_F(Test_QLearning_HeatingSetPoints, Learn1) {
       std::string item;
       std::getline(ss, item, ',');
       if (item == "") break;
-      std::getline(ss, item, ',');
       double previous_state = std::stod(item);
       std::getline(ss, item, ',');
       double state = std::stod(item);
@@ -94,18 +95,23 @@ TEST_F(Test_QLearning_HeatingSetPoints, Learn1) {
       } else {
         x = 0;
       }
+/*
+      if (reward > 0.0) {
+        reward = reward * 6;
+      }
+*/
       reward = - std::abs((reward * (1-x)) - (2 * x));
-      if (reward > -1) {
-        reward = 30;
+      if (reward > 0.5) {
+        reward = 1;
       }
 /*
       std::cout << previous_state << " "
                 << state << " "
                 << action << " "
                 << reward << " " << std::endl;
-      *//*
+*/
       ql.updateQ(previous_state, action, reward, state);
+    }
 
-      ql.printQ();
-    }*/
+    ql.printQ();
 }

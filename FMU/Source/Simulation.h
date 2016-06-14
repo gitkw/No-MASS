@@ -17,8 +17,7 @@ class Simulation {
 
 public:
     Simulation();
-    ~Simulation(){
-    }
+    ~Simulation(){}
 
     void preprocess();
     void parseConfiguration(const std::string file);

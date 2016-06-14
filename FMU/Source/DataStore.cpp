@@ -3,27 +3,29 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <utility>
 #include <string>
 #include "Log.h"
+#include "SimulationConfig.h"
 #include "DataStore.h"
 
 std::unordered_map<std::string, std::vector<double> > DataStore::variableMap;
 
 DataStore::DataStore() {}
 
-void DataStore::addVariable(std::string name) {
+void DataStore::addVariable(const std::string &name) {
     variableMap.insert(std::make_pair(name, std::vector<double>()));
 }
 
-void DataStore::addValue(std::string name, double value) {
+void DataStore::addValue(const std::string &name, const double value) {
     variableMap[name].push_back(value);
 }
 
-double DataStore::getValueForZone(std::string name, std::string zoneName) {
+double DataStore::getValueForZone(const std::string &name, const std::string &zoneName) {
     return getValue(zoneName + name);
 }
 
-double DataStore::getValue(std::string name) {
+double DataStore::getValue(const std::string &name) {
   if (variableMap.find(name) == variableMap.end()) {
     LOG << "Cannot find the variable: " << name;
     LOG << "\nThis could happen for a number of reasons:\n";
@@ -41,26 +43,55 @@ void DataStore::clear() {
 }
 
 void DataStore::print() {
-  std::ofstream myfile;
-  myfile.open("agent.csv");
+  if (SimulationConfig::info.save) {
+    std::ofstream myfile;
+    myfile.open("agent.csv");
+    myfile << "stepCount,";
+    unsigned int maxSize = 0;
+    for (std::unordered_map<std::string, std::vector<double> >::iterator it=variableMap.begin(); it != variableMap.end(); ++it) {
+        myfile << it->first << ",";
+        if (maxSize < it->second.size()) {
+          maxSize = it->second.size();
+        }
+    }
+    myfile << std::endl;
+    for (unsigned int i =0; i < maxSize; i++) {
+        myfile << i << ",";
+        for (std::unordered_map<std::string, std::vector<double> >::iterator it=variableMap.begin(); it != variableMap.end(); ++it) {
+            if (it->second.size() > i) {
+                myfile << it->second.at(i);
+            }
+            myfile << ",";
+        }
+        myfile << std::endl;
+    }
+    myfile.close();
+  }
+/*
+  myfile.open("Learn.csv");
   myfile << "stepCount,";
-  int maxSize = 0;
+  maxSize = 0;
   for (std::unordered_map<std::string, std::vector<double> >::iterator it=variableMap.begin(); it != variableMap.end(); ++it) {
-      myfile << it->first << ",";
-      if (maxSize < it->second.size()) {
-        maxSize = it->second.size();
+      if (it->first.find("Learn") != std::string::npos) {
+        myfile << it->first << ",";
+        if (maxSize < it->second.size()) {
+          maxSize = it->second.size();
+        }
       }
   }
   myfile << std::endl;
   for (unsigned int i =0; i < maxSize; i++) {
       myfile << i << ",";
       for (std::unordered_map<std::string, std::vector<double> >::iterator it=variableMap.begin(); it != variableMap.end(); ++it) {
-          if (it->second.size() > i) {
-              myfile << it->second.at(i);
+          if (it->first.find("Learn") != std::string::npos) {
+            if (it->second.size() > i) {
+                myfile << it->second.at(i);
+            }
+            myfile << ",";
           }
-          myfile << ",";
       }
       myfile << std::endl;
   }
   myfile.close();
+*/
 }

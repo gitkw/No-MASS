@@ -81,20 +81,15 @@ void Simulation::preTimeStep() {
     }
     month = month + 1;
   }
-  int hourOfDay = 0;
-  for (int i = 0; i <= hour; i++) {
-    hourOfDay += 1;
-    if (hourOfDay > 23) {
-      hourOfDay = 0;
-    }
-  }
 
+  int hourOfDay = hour % 24;
   DataStore::addValue("TimeStep", stepCount);
   DataStore::addValue("day", day);
   DataStore::addValue("hour", hour);
   DataStore::addValue("hourOfDay", hourOfDay);
   DataStore::addValue("month", month);
 }
+
 
 /**
  * @brief Increments the timestep for the simulation
@@ -103,14 +98,17 @@ void Simulation::preTimeStep() {
  */
 void Simulation::timeStep() {
         SimulationConfig::step();
-
         for (Building &b : buildings) {
             b.step();
         }
+        postTimeStep();
 }
 
 /**
  * @brief processes After timestep
  */
 void Simulation::postTimeStep() {
+  for (Building &b : buildings) {
+      b.postTimeStep();
+  }
 }

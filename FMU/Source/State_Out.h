@@ -8,8 +8,6 @@ class State_Out: public State
     public:
         State_Out();
         bool hasZone() const;
-    protected:
-    private:
 };
 
 #endif // STATE_OUT_H

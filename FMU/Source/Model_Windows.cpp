@@ -1,8 +1,6 @@
-// Copyright 2015 Jacob Chapman
+// Copyright 2016 Jacob Chapman
 
 #include <cmath>
-#include <deque>
-#include <iostream>
 
 #include "Model_Windows.h"
 
@@ -46,7 +44,6 @@ void Model_Windows::setDurationVars(double aop, double bopout, double shapeop) {
 
 void Model_Windows::setArrivalVars(double a01arr, double b01inarr,
       double b01outarr, double b01absprevarr, double b01rnarr) {
-    this->a01arr = a01arr;
     this->a01arr = a01arr;
     this->b01inarr = b01inarr;
     this->b01outarr = b01outarr;
@@ -118,7 +115,7 @@ void Model_Windows::arrival(double indoorTemperature, double outdoorTemperature,
             durationOpen = 0.f;
         }
     } else {
-        double durationOpen = calculateDurationOpen(outdoorTemperature);
+        durationOpen = calculateDurationOpen(outdoorTemperature);
         if (durationOpen < timeStepLengthInMinutes) {
             state = 0;
             durationOpen = 0;

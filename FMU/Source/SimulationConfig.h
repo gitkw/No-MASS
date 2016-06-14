@@ -8,16 +8,15 @@
 #ifndef SIMULATIONSETUP_H
 #define	SIMULATIONSETUP_H
 
+#include <cstddef>
 #include <string>
 #include <vector>
 #include <map>
-
-#include <boost/property_tree/xml_parser.hpp>
-#include <boost/property_tree/ptree.hpp>
+#include <rapidxml.hpp>
 
 struct ZoneStruct {
     std::string name;
-    std::vector<std::string> activities;
+    std::vector<int> activities;
     bool groundFloor = 0;
     int windowCount = 0;
     int id = 0;
@@ -41,17 +40,19 @@ struct agentStruct {
     std::string famstat;
     std::string sex;
 
-    bool HeatOnPresence = false;
+    double ShadeClosedDuringSleep = 0;
+    double ShadeClosedDuringWashing = 0;
+    double ShadeDuringNight = 0;
+    double ShadeDuringAudioVisual = 0;
 
-    bool ShadeClosedDuringSleep = false;
-    bool ShadeClosedDuringWashing = false;
+    double LightOffDuringAudioVisual = 0;
+    double LightOffDuringSleep = 0;
 
-    bool LightOffDuringAudioVisual = false;
-    bool LightOffDuringSleep = false;
+    double WindowOpenDuringCooking = 0;
+    double WindowOpenDuringWashing = 0;
+    double WindowOpenDuringSleeping = 0;
 
-    bool WindowOpenDuringCooking = false;
-    bool WindowOpenDuringWashing = false;
-
+    double ApplianceDuringDay = 0;
 };
 
 struct shadeStruct {
@@ -119,15 +120,16 @@ struct buildingStruct {
 };
 
 struct simulationStruct {
-
-    bool simulateAgents;
-    bool windows;
-    bool lights;
-    bool shading;
-    bool presencePage;
+    bool save = false;
+    bool windows = false;
+    bool windowsLearn = false;
+    bool lights = false;
+    bool shading = false;
+    bool presencePage = false;
     double timeStepsPerHour;
     double learnep;
     int learn;
+    int learnupdate;
     int timeSteps;
     int startDay;
     int startMonth;
@@ -142,7 +144,8 @@ struct simulationStruct {
 class SimulationConfig {
 public:
     static ZoneStruct getZone(std::string* zoneName);
-    static void parseConfiguration(std::string);
+    static void parseConfiguration(const std::string &filename);
+    static void parseConfigurationb(const std::string &filename);
     static void reset();
     static bool activeZone(std::string* zoneName);
     static bool isZoneGroundFloor(std::string* zoneName);
@@ -161,12 +164,14 @@ public:
 
 private:
     static void timeSteps();
-    static void parseBuilding(boost::property_tree::ptree::value_type & v);
-    static void parseBuildings(boost::property_tree::ptree::value_type & v);
-    static void parseAgents(boost::property_tree::ptree::value_type & v);
-    static void parseModels(boost::property_tree::ptree::value_type & v);
-    static void parseWindows(boost::property_tree::ptree::value_type & v);
-    static void parseShades(boost::property_tree::ptree::value_type & v);
+    static void parseBuilding(rapidxml::xml_node<> *node);
+    static void parseBuildings(rapidxml::xml_node<> *node);
+    static void parseAgents(rapidxml::xml_node<> *node);
+    static void parseModels(rapidxml::xml_node<> *node);
+    static void parseWindows(rapidxml::xml_node<> *node);
+    static void parseShades(rapidxml::xml_node<> *node);
+    static bool strComp(const char * str1, const char * str2);
+    static std::vector<int> activityNamesToIds(const std::vector<std::string> & activities);
     SimulationConfig();
 };
 

@@ -1,6 +1,7 @@
 // Copyright 2015 Jacob Chapman
 
 #include <limits.h>
+#include "Gen.h"
 #include "SimulationConfig.h"
 #include "DataStore.h"
 #include "Building.h"
@@ -13,7 +14,7 @@ class Test_Building : public ::testing::Test {
 
 void Test_Building::SetUp() {
     SimulationConfig::reset();
-    SimulationConfig::FmuLocation = "../tests/Files";
+    SimulationConfig::FmuLocation = testFiles;
     SimulationConfig::parseConfiguration(SimulationConfig::FmuLocation
       + "/SimulationConfig3.xml");
     SimulationConfig::info.windows = false;

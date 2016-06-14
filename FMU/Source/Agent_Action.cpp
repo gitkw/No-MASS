@@ -2,31 +2,79 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 #include "SimulationConfig.h"
 #include "Agent_Action.h"
 
-Agent_Action::Agent_Action() {
-}
+Agent_Action::Agent_Action() {}
 
-double Agent_Action::getResult() {
+double Agent_Action::getResult() const {
     return result;
 }
 
-std::string Agent_Action::getName() {
-    return name;
+void Agent_Action::setAvailableActivities(
+    const std::vector<int> availableActivities) {
+    this->availableActivities = availableActivities;
 }
 
-double Agent_Action::getFutureDurationOfPresenceState(
+bool Agent_Action::activityAvailable(const int act) const {
+  return std::find(availableActivities.begin(), availableActivities.end(), act)
+      != availableActivities.end();
+}
+
+double Agent_Action::getFutureDurationOfAbsenceState(
   const std::vector<double> &activities) const {
-    double cdp = 0;
     int stepCount = SimulationConfig::getStepCount();
     unsigned int stepCounter = stepCount;
-    int lengthOfTimeStepSeconds =
-      (60 * (60 / SimulationConfig::info.timeStepsPerHour));
-    while (stepCounter + 1 < activities.size()
-          && activities.at(stepCount) == activities.at(stepCounter+1)) {
-        cdp = cdp + lengthOfTimeStepSeconds;
-        stepCounter++;
+    double cdp = 0;
+    if (!activityAvailable(activities.at(stepCount))) {
+      double lengthOfTimeStepSeconds =
+        (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+      cdp = lengthOfTimeStepSeconds;
+      while (stepCounter + 1 < activities.size()
+          && !activityAvailable(activities.at(stepCounter+1))) {
+          cdp = cdp + lengthOfTimeStepSeconds;
+          stepCounter++;
+      }
     }
     return cdp;
+}
+
+double Agent_Action::getPreviousDurationOfAbsenceState(
+    const std::vector<double> &activities) const {
+  double cdp = 0;
+  int stepCount = SimulationConfig::getStepCount();
+  int stepCounter = stepCount - 1;
+  double lengthOfTimeStepSeconds =
+    (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+  while (stepCounter >= 0 && !activityAvailable(activities.at(stepCounter))) {
+    cdp = cdp + lengthOfTimeStepSeconds;
+    stepCounter--;
+  }
+  return cdp;
+}
+
+double Agent_Action::getCurrentDurationOfPresenceState(
+    const std::vector<double> &activities) const {
+  double cdp = 0;
+  int stepCount = SimulationConfig::getStepCount();
+  int stepCounter = stepCount;
+  if (activityAvailable(activities.at(stepCount))) {
+    double lengthOfTimeStepSeconds =
+      (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+    while (stepCounter > 0 && activityAvailable(activities.at(stepCounter-1))) {
+      cdp = cdp + lengthOfTimeStepSeconds;
+      stepCounter--;
+    }
+  }
+  return cdp;
+}
+
+
+void Agent_Action::setReward(const double reward) {
+  this->reward = reward;
+}
+
+void Agent_Action::setZoneId(const double zoneId) {
+  this->zoneId = zoneId;
 }

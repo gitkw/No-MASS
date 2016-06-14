@@ -1,31 +1,26 @@
 // Copyright 2015 Jacob Chapman
-#include <boost/random/linear_congruential.hpp>
-#include <boost/random/uniform_real_distribution.hpp>
-#include <boost/random/variate_generator.hpp>
-#include <boost/generator_iterator.hpp>
 
 #include <ctime>
 #include <list>
 #include <vector>
+#include <random>
 #include <string>
 
 #include "Utility.h"
 
-base_generator_type Utility::generator(std::time(0));
+std::random_device Utility::r;
+std::mt19937_64 Utility::engine(r());
 
-Utility::Utility() {
-}
+Utility::Utility() {}
 
 void Utility::setSeed(int seed) {
-    Utility::generator = base_generator_type(seed);
+    Utility::engine.seed(seed);
     Utility::randomDouble(0, 1);
 }
 
 double Utility::randomDouble(double min, double max) {
-    gen_type_real die_gen(Utility::generator, distribution_real(min, max));
-    boost::generator_iterator<gen_type_real> die(&die_gen);
-    double d = *die++;
-    return d;
+    std::uniform_real_distribution<double> uniform_dist(min, max);
+    return uniform_dist(engine);
 }
 
 bool Utility::tossACoin() {
@@ -33,11 +28,11 @@ bool Utility::tossACoin() {
 }
 
 int Utility::randomInt(int min, int max) {
-    boost::random::uniform_int_distribution<> dist(min, max);
-    return dist(Utility::generator);
+    std::uniform_int_distribution<int> uniform_dist(min, max);
+    return uniform_dist(engine);
 }
 
-std::list<int> Utility::randomIntList(int number, int min, int max) {
+std::list<int> Utility::randomIntList(int number) {
     std::vector<int> numbers;
     std::list<int> randNumbers;
     for (int i =0; i < number; i++) {
@@ -52,7 +47,7 @@ std::list<int> Utility::randomIntList(int number, int min, int max) {
     return randNumbers;
 }
 
-std::vector<std::string> Utility::splitCSV(std::string typeString) {
+std::vector<std::string> Utility::splitCSV(const std::string & typeString) {
     std::vector<std::string> types;
     const char *str = typeString.c_str();
     char c = ',';

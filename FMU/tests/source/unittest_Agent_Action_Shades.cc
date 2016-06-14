@@ -3,6 +3,7 @@
 #include <limits.h>
 #include <vector>
 
+#include "Gen.h"
 #include "DataStore.h"
 #include "Agent_Action_Shades.h"
 #include "gtest/gtest.h"
@@ -16,7 +17,7 @@ class Test_Agent_Action_Shades : public ::testing::Test {
 
 void Test_Agent_Action_Shades::SetUp() {
   SimulationConfig::reset();
-  SimulationConfig::parseConfiguration("../tests/Files/SimulationConfig2.xml");
+  SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
   SimulationConfig::stepCount = 0;
   SimulationConfig::info.windows = false;
@@ -34,33 +35,37 @@ TEST_F(Test_Agent_Action_Shades, ClosedDuringSleep) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen("", zs);
+  Building_Zone z_Kitchen(zs);
   aas.setClosedDuringSleep(true);
 
-  activities.push_back(0);
-  aas.step(z_Kitchen, true, false, activities);
-  ASSERT_EQ(aas.getResult(), 0);
+  activities.push_back(1);
+  aas.step(z_Kitchen, true, false);
+  aas.BDI(activities);
+  ASSERT_GT(aas.getResult(), 0);
 
   SimulationConfig::step();
-  activities.push_back(1);
-  aas.step(z_Kitchen, true, false, activities);
-  ASSERT_EQ(aas.getResult(), 1);
+  activities.push_back(0);
+  aas.step(z_Kitchen, true, false);
+  aas.BDI(activities);
+  ASSERT_EQ(aas.getResult(), 0);
 }
 
 TEST_F(Test_Agent_Action_Shades, ClosedDuringWashing) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen("", zs);
+  Building_Zone z_Kitchen(zs);
   aas.setClosedDuringWashing(true);
   aas.getResult();
 
   activities.push_back(6);
-  aas.step(z_Kitchen, true, false, activities);
+  aas.step(z_Kitchen, true, false);
+  aas.BDI(activities);
   ASSERT_EQ(aas.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
-  aas.step(z_Kitchen, true, false, activities);
+  aas.step(z_Kitchen, true, false);
+  aas.BDI(activities);
   ASSERT_EQ(aas.getResult(), 1);
 }

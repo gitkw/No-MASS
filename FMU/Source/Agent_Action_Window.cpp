@@ -3,24 +3,35 @@
 #include <vector>
 #include <iostream>
 #include "SimulationConfig.h"
+#include "Utility.h"
 #include "DataStore.h"
 #include "Agent_Action_Window.h"
 
 Agent_Action_Window::Agent_Action_Window() {
-    name = "Windows";
+  OpenDuringWashing = 0.0;
+  OpenDuringCooking = 0.0;
+  OpenDuringSleeping = 0.0;
 }
 
 void Agent_Action_Window::setOpenDuringWashing(
-    bool OpenDuringWashing) {
+    const double OpenDuringWashing) {
     this->OpenDuringWashing = OpenDuringWashing;
 }
 
 void Agent_Action_Window::setOpenDuringCooking(
-    bool OpenDuringCooking) {
+    const double OpenDuringCooking) {
     this->OpenDuringCooking = OpenDuringCooking;
 }
 
-void Agent_Action_Window::setup(int windowID) {
+void Agent_Action_Window::setOpenDuringSleeping(double OpenDuringSleeping) {
+  this->OpenDuringSleeping = OpenDuringSleeping;
+}
+
+void Agent_Action_Window::setDailyMeanTemperature(double dailyMeanTemperature) {
+  this->dailyMeanTemperature = dailyMeanTemperature;
+}
+
+void Agent_Action_Window::setup(int windowID, int id) {
   windowStruct ws = SimulationConfig::windows.at(windowID);
   m_window.setDurationVars(ws.aop, ws.bopout, ws.shapeop);
   m_window.setArrivalVars(ws.a01arr, ws.b01inarr, ws.b01outarr,
@@ -30,101 +41,110 @@ void Agent_Action_Window::setup(int windowID) {
   m_window.setDepartureVars(ws.a01dep, ws.b01outdep, ws.b01absdep,
       ws.b01gddep, ws.a10dep, ws.b10indep, ws.b10outdep, ws.b10absdep,
       ws.b10gddep);
+
+  variableNameWindowDesire = "Agent_Window_Desire" + std::to_string(id);
+  DataStore::addVariable(variableNameWindowDesire);
 }
 
-void Agent_Action_Window::step(const Building_Zone& zone, bool inZone,
-bool previouslyInZone, const std::vector<double> &activities) {
+void Agent_Action_Window::step(const Building_Zone& zone, const bool inZone,
+    const bool previouslyInZone, const std::vector<double> &activities) {
   double outdoorTemperature =
     DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
-
-  outDoorTemperatures.push_back(outdoorTemperature);
-  if (outDoorTemperatures.size() >
-        (SimulationConfig::info.timeStepsPerHour * 24)) {
-          outDoorTemperatures.pop_front();
-  }
 
   // double rain = DataStore::getValue("EnvironmentSiteRainStatus");
   double rain = 0;
   double indoorTemperature = zone.getMeanAirTemperature();
-  double timeStepLengthInMinutes = SimulationConfig::lengthOfTimestep();
+  double timeStepLengthInMinutes = SimulationConfig::lengthOfTimestep() / 60;
 
   m_window.setWindowState(zone.getWindowState());
+  if (m_window.getWindowState() == 0) {
+    m_window.setDurationOpen(0);
+  }
   if (inZone && !previouslyInZone) {
     double previousDuration = getPreviousDurationOfAbsenceState(activities);
     m_window.arrival(indoorTemperature,
         outdoorTemperature, previousDuration, rain, timeStepLengthInMinutes);
-  } else if ((inZone && previouslyInZone )) {
+  } else if (inZone && previouslyInZone) {
     double currentDuration = getCurrentDurationOfPresenceState(activities);
     m_window.intermediate(indoorTemperature,
         outdoorTemperature, currentDuration, rain, timeStepLengthInMinutes);
-  } else if ((!inZone && previouslyInZone )) {
-    double dailyMeanTemperature = 0;
-    for (double temp : outDoorTemperatures) {
-            dailyMeanTemperature += temp;
-    }
-    dailyMeanTemperature =
-      dailyMeanTemperature /
-        static_cast<double>(outDoorTemperatures.size());
-
+  } else if (!inZone && previouslyInZone) {
     double groundFloor = zone.getGroundFloor();
-    double futureDuration = getFutureDurationOfPresenceState(activities);
+    double futureDuration = getFutureDurationOfAbsenceState(activities);
     m_window.departure(
         indoorTemperature, dailyMeanTemperature, futureDuration, groundFloor);
-  }
-  int stepCount = SimulationConfig::getStepCount();
-
-
-  if (OpenDuringCooking && activities.at(stepCount) == 4) {
-    if (m_window.getWindowState() == 0) {
-      m_window.setWindowState(1);
-      int lengthOfTimeStepSeconds =
-          (60 * (60 / SimulationConfig::info.timeStepsPerHour));
-      m_window.setDurationOpen(lengthOfTimeStepSeconds);
-    }
-  }
-
-  if (OpenDuringWashing && activities.at(stepCount) == 6) {
-    if (m_window.getWindowState() == 0) {
-      m_window.setWindowState(1);
-      int lengthOfTimeStepSeconds =
-          (60 * (60 / SimulationConfig::info.timeStepsPerHour));
-      m_window.setDurationOpen(lengthOfTimeStepSeconds);
-    }
   }
   result = m_window.getWindowState();
 }
 
-double Agent_Action_Window::getPreviousDurationOfAbsenceState(
-    const std::vector<double> &activities) const {
-  double cdp = 0;
-  int stepCount = SimulationConfig::getStepCount();
-  int stepCounter = stepCount;
-  int lengthOfTimeStepSeconds =
-      (60 * (60 / SimulationConfig::info.timeStepsPerHour));
-  while (stepCounter > 0 && activities.at(stepCount)
-      != activities.at(stepCounter-1)) {
-    cdp = cdp + lengthOfTimeStepSeconds;
-    stepCounter--;
-    if (stepCounter < 1) {
-        break;
-    }
-  }
-  return cdp;
+void Agent_Action_Window::saveResult() {
+  DataStore::addValue(variableNameWindowDesire, result);
 }
 
-double Agent_Action_Window::getCurrentDurationOfPresenceState(
-    const std::vector<double> &activities) const {
-  double cdp = 0;
+
+
+bool Agent_Action_Window::BDI(const std::vector<double> &activities) {
+  bool bdi = false;
+
   int stepCount = SimulationConfig::getStepCount();
-  int stepCounter = stepCount;
-  int lengthOfTimeStepSeconds =
-      (60 * (60 / SimulationConfig::info.timeStepsPerHour));
-  while (activities.at(stepCount) == activities.at(stepCounter-1)) {
-          cdp = cdp + lengthOfTimeStepSeconds;
-          stepCounter--;
-          if (stepCounter < 1) {
-              break;
-          }
+  if (OpenDuringWashing > Utility::randomDouble(0, 1)) {
+    if (stepCount > 0) {
+      if (activities.at(stepCount - 1) == 6 && activities.at(stepCount) != 6) {
+        if (m_window.getWindowState() == 0) {
+          m_window.setWindowState(1);
+          int lengthOfTimeStepSeconds =
+              (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+          m_window.setDurationOpen(lengthOfTimeStepSeconds);
+          bdi = true;
+          result = m_window.getWindowState();
+        }
+      } else if (stepCount > 1) {
+        if (activities.at(stepCount - 2) == 6 &&
+            activities.at(stepCount -1) != 6) {
+          m_window.setWindowState(0);
+          bdi = true;
+          result = m_window.getWindowState();
+        }
+      }
+    }
   }
-  return cdp;
+
+  if (OpenDuringCooking > Utility::randomDouble(0, 1) &&
+      activities.at(stepCount) == 4) {
+    if (m_window.getWindowState() == 0) {
+      m_window.setWindowState(1);
+      int lengthOfTimeStepSeconds =
+          (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+      m_window.setDurationOpen(lengthOfTimeStepSeconds);
+      result = m_window.getWindowState();
+      bdi = true;
+    }
+  }
+
+  if (OpenDuringSleeping > Utility::randomDouble(0, 1)) {
+    if (stepCount > 0) {
+      if (activities.at(stepCount - 1) == 0 && activities.at(stepCount) != 0) {
+        if (m_window.getWindowState() == 0) {
+          m_window.setWindowState(1);
+          int lengthOfTimeStepSeconds =
+              (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+          m_window.setDurationOpen(lengthOfTimeStepSeconds);
+          bdi = true;
+          result = m_window.getWindowState();
+        }
+      } else if (stepCount > 1) {
+        if (activities.at(stepCount - 2) == 0 &&
+            activities.at(stepCount -1) != 0) {
+          m_window.setWindowState(0);
+          bdi = true;
+          result = m_window.getWindowState();
+        }
+      }
+    }
+  }
+  return bdi;
+}
+
+int Agent_Action_Window::durationOpen() const {
+    return m_window.getDurationOpen();
 }

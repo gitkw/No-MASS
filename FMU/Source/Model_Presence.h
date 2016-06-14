@@ -1,9 +1,4 @@
-/*
- * File:   Model_Presence.h
- * Author: jake
- *
- * Created on September 17, 2013, 3:13 PM
- */
+// Copyright 2016 Jacob Chapman
 
 #ifndef MODEL_PRESENCE_H
 #define	MODEL_PRESENCE_H
@@ -15,7 +10,6 @@ class Model_Presence {
 public:
 
     Model_Presence();
-    void calculatePresenceFromActivities(const std::vector<double> activities) ;
     void calculatePresenceFromPage(const int agentID);
     unsigned int size() const;
     bool at(const int i) const;

@@ -1,7 +1,7 @@
 #ifndef QLEARNING_HEATINGSETPOINTS_H
 #define QLEARNING_HEATINGSETPOINTS_H
 
-#include "Agent.h"
+#include <vector>
 #include "QLearning.h"
 
 class QLearning_HeatingSetPoints : public QLearning
@@ -9,18 +9,18 @@ class QLearning_HeatingSetPoints : public QLearning
     public:
       QLearning_HeatingSetPoints();
 
-      double learn(const Building_Zone &zone);
+      double learn();
       void reset();
+      void setId(const int id);
 
-      void setId(int id);
-    protected:
     private:
-      int previousHour;
-      double previousReward;
+
       std::string reward_name;
       std::string action_name;
       std::string state_name;
       std::string previous_state_name;
+      std::string temp_name;
+      std::string pmv_name;
 
 };
 

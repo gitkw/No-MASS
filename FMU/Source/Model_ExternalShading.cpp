@@ -34,29 +34,6 @@ Model_ExternalShading::Model_ExternalShading() {
   boutfulllower = -2.23;
   afulllower = -0.27;
 }
-/*
-void Model_ExternalShading::calculate(double state, double Lumint, double Evg, bool currentlyOccupied, bool previouslyOccupied) {
-    // This function simulates the occurence of actions on lower shading devices (covering the
-    // vision window). If an action is simulated, the chosen unshaded fraction is then predicted.
-    // Input parameters are: indoor workplane illuminance (Lumint) and outdoor global horizontal
-    // illuminance (Evg).
-    // 1 is open
-    // 0 is closed
-    previousShadingState = state;
-    //std::cout << "previous blind state: " << state << std::endl;
-
-    // --- Simulation of lower blinds -------------------------------------------------------------
-
-    if (!currentlyOccupied && !previouslyOccupied) {
-        currentShadingState = previousShadingState;
-    } else if (currentlyOccupied && !previouslyOccupied) {
-        arrival(Lumint, Evg);
-    } else {
-        departure(Lumint, Evg);
-    }
-    return;
-}
-*/
 
 void Model_ExternalShading::setFullVars(float afullraise, float boutfullraise,
     float bsfullraise, float bsfulllower, float boutfulllower,
@@ -116,24 +93,23 @@ double Model_ExternalShading::arrival(double state, double Lumint, double Evg) {
     }
     if (problower >= probraise) {
         if (randomDouble() < problower) {
-            currentShadingState = arrivalLowering(state, Lumint, Evg);
+            currentShadingState = arrivalLowering(state, Evg);
         } else if (randomDouble() < probraise) {
-            currentShadingState = arrivalRaising(state, Lumint, Evg);
+            currentShadingState = arrivalRaising(state, Evg);
         } else {
             currentShadingState = state;
         }
     } else {
         if (randomDouble() < probraise) {
-            currentShadingState = arrivalRaising(state, Lumint, Evg);
+            currentShadingState = arrivalRaising(state, Evg);
         } else if (randomDouble() < problower) {
-            currentShadingState = arrivalLowering(state, Lumint, Evg);
+            currentShadingState = arrivalLowering(state, Evg);
         } else {
             currentShadingState = state;
         }
     }
     return currentShadingState;
 }
-
 
 double Model_ExternalShading::intermediate(bool state, double Lumint,
       double Evg) {
@@ -157,17 +133,17 @@ double Model_ExternalShading::departure(double state, double Lumint,
 
     if (problower >= probraise) {
         if (randomDouble() < problower) {
-            currentShadingState = departureLowering(state, Lumint, Evg);
+            currentShadingState = departureLowering(state, Evg);
         } else if (randomDouble() < probraise) {
-            currentShadingState = departureRaising(state, Lumint, Evg);
+            currentShadingState = departureRaising(state, Evg);
         } else {
             currentShadingState = state;
         }
     } else {
         if (randomDouble() < probraise) {
-            currentShadingState = departureRaising(state, Lumint, Evg);
+            currentShadingState = departureRaising(state, Evg);
         } else if (randomDouble() < problower) {
-            currentShadingState = departureLowering(state, Lumint, Evg);
+            currentShadingState = departureLowering(state, Evg);
         } else {
             currentShadingState = state;
         }
@@ -175,8 +151,7 @@ double Model_ExternalShading::departure(double state, double Lumint,
     return currentShadingState;
 }
 
-double Model_ExternalShading::arrivalRaising(double state, double Lumint,
-      double Evg) {
+double Model_ExternalShading::arrivalRaising(double state, double Evg) {
   double currentShadingState;
   double m_totraise = afullraise + boutfullraise * Evg + bsfullraise * (state);
   float ptotraise = probability(m_totraise);
@@ -189,7 +164,7 @@ double Model_ExternalShading::arrivalRaising(double state, double Lumint,
   return currentShadingState;
 }
 
-double Model_ExternalShading::arrivalLowering(double state, double Lumint,
+double Model_ExternalShading::arrivalLowering(double state,
     double Evg) {
   double currentShadingState;
   double m_totlow = afulllower + boutfulllower * Evg + bsfulllower * (state);
@@ -205,8 +180,7 @@ double Model_ExternalShading::arrivalLowering(double state, double Lumint,
   return currentShadingState;
 }
 
-double Model_ExternalShading::departureLowering(double state, double Lumint,
-    double Evg) {
+double Model_ExternalShading::departureLowering(double state, double Evg) {
   double currentShadingState;
   double m_ptotlow = afulllower + boutfulllower * Evg + bsfulllower * (state);
   float ptotlow = probability(m_ptotlow);
@@ -221,8 +195,7 @@ double Model_ExternalShading::departureLowering(double state, double Lumint,
   return currentShadingState;
 }
 
-double Model_ExternalShading::departureRaising(double state, double Lumint,
-    double Evg) {
+double Model_ExternalShading::departureRaising(double state, double Evg) {
   double currentShadingState;
   double m_totraise = afullraise + boutfullraise * Evg + bsfullraise * (state);
   float ptotraise = probability(m_totraise);

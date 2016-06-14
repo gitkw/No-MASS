@@ -3,22 +3,23 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <algorithm>
+#include <vector>
 #include "DataStore.h"
 #include "SimulationConfig.h"
 #include "Building_Zone.h"
 
-Building_Zone::Building_Zone() {
-}
+Building_Zone::Building_Zone() {}
 
-Building_Zone::Building_Zone(const std::string buldingName,
-  const ZoneStruct zoneStruct) : name(zoneStruct.name),
-  activities(zoneStruct.activities), id(zoneStruct.id) {
+Building_Zone::Building_Zone(const ZoneStruct & zoneStruct) :
+                             id(zoneStruct.id),
+                             name(zoneStruct.name),
+                             activities(zoneStruct.activities) {
     occupantFraction = 0;
     currentAgentGains = 0;
     blindState = 1;
     lightState = 0;
     windowState = 0;
-
 
     setActive(SimulationConfig::activeZone(&name));
     if (active) {
@@ -30,6 +31,8 @@ Building_Zone::Building_Zone(const std::string buldingName,
           DataStore::addVariable(windowName);
         }
 
+        variableNameAppFraction = name + "AppFraction";
+        DataStore::addVariable(variableNameAppFraction);
         variableNameBlindFraction = name + "BlindFraction";
         DataStore::addVariable(variableNameBlindFraction);
         variableNameLight = name + "LightState";
@@ -43,8 +46,7 @@ Building_Zone::Building_Zone(const std::string buldingName,
     }
 }
 
-void Building_Zone::setup() {
-}
+void Building_Zone::setup() {}
 
 void Building_Zone::step() {
     if (active) {
@@ -54,8 +56,15 @@ void Building_Zone::step() {
           DataStore::addValue(name, windowState);
         }
         DataStore::addValue(variableNameLight, lightState);
-        DataStore::addValue(variableNameBlindFraction, blindState);
+        // Shade in EP is
+        // 1 is close
+        // 0 is open
+        // Shade in No-mass unshaded fraction
+        // 1 is open
+        // 0 is closed
+        DataStore::addValue(variableNameBlindFraction, 1 - blindState);
         DataStore::addValue(variableNameHeating, heatingState);
+        DataStore::addValue(variableNameAppFraction, appFraction);
     }
 }
 
@@ -89,6 +98,10 @@ double Building_Zone::getBlindState() const {
 
 double Building_Zone::getHeatingState() const {
     return heatingState;
+}
+
+std::vector<int> Building_Zone::getActivities() const {
+  return activities;
 }
 
 void Building_Zone::setOccupantFraction(double occupantFraction) {
@@ -127,15 +140,9 @@ bool Building_Zone::isActive() const {
     return active;
 }
 
-bool Building_Zone::hasActivity(std::string activity) const {
-  bool found = false;
-  for (std::string const& act : activities) {
-    if (act == activity) {
-      found = true;
-      break;
-    }
-  }
-  return found;
+bool Building_Zone::hasActivity(int activity) const {
+  return std::find(activities.begin(), activities.end(), activity)
+      != activities.end();
 }
 
 void Building_Zone::setGroundFloor(bool groundFloor) {
@@ -164,4 +171,8 @@ void Building_Zone::setWindowState(bool windowState) {
 
 void Building_Zone::setBlindState(double state) {
     this->blindState = state;
+}
+
+void Building_Zone::setAppFraction(double appFraction) {
+    this->appFraction = appFraction;
 }

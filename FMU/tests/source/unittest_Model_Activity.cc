@@ -2,6 +2,9 @@
 
 #include <limits.h>
 #include <string>
+#include <iostream>
+#include <fstream>
+#include "Gen.h"
 #include "Model_Activity.h"
 #include "SimulationConfig.h"
 #include "Utility.h"
@@ -23,21 +26,25 @@ void Test_Activity::SetUp() {
 void Test_Activity::AfterConfiguration() {
   SimulationConfig::info.timeSteps = 105182;
   SimulationConfig::info.timeStepsPerHour = 6;
-  SimulationConfig::info.startDayOfWeek = 1;
+  SimulationConfig::info.startDayOfWeek = 2;
+  SimulationConfig::info.startMonth  = 1;
+  SimulationConfig::info.startDay  = 31;
+
 
   activities = ma.preProcessActivities(0);
 }
 
 TEST_F(Test_Activity, Dissagregate) {
     SimulationConfig::parseConfiguration
-      ("../tests/Files/SimulationConfig2.xml");
+      (testFiles + "/SimulationConfig2.xml");
     AfterConfiguration();
-    EXPECT_EQ(activities.at(0), 0);
-    EXPECT_EQ(activities.at(1000), 0);
-    EXPECT_EQ(activities.at(2000), 2);
-    EXPECT_EQ(activities.at(3000), 1);
-    EXPECT_EQ(activities.at(4000), 1);
-    EXPECT_EQ(activities.at(5000), 9);
+
+    EXPECT_EQ(activities.at(0), 9);
+    EXPECT_EQ(activities.at(1000), 2);
+    EXPECT_EQ(activities.at(2000), 1);
+    EXPECT_EQ(activities.at(3000), 9);
+    EXPECT_EQ(activities.at(4000), 2);
+    EXPECT_EQ(activities.at(5000), 8);
     EXPECT_EQ(activities.at(6000), 9);
     bool found = false;
     for (int i = 0; i < 10; i++) {
@@ -134,7 +141,7 @@ TEST_F(Test_Activity, multinominalActivity) {
   }
 
   for (int i = 0; i < 10; i++) {
-    ASSERT_NEAR(px[i] / top, 0.1, 0.005);
+    ASSERT_NEAR(px[i] / top, 0.1, 0.007);
     px[i] = 0;
   }
 
@@ -154,18 +161,18 @@ TEST_F(Test_Activity, multinominalActivity) {
 
   ASSERT_NEAR(px[0] / top, 0.036, 0.005);
   ASSERT_NEAR(px[1] / top, 0.124, 0.005);
-  ASSERT_NEAR(px[2] / top, 0.082, 0.005);
+  ASSERT_NEAR(px[2] / top, 0.087, 0.005);
   ASSERT_NEAR(px[3] / top, 0.003, 0.005);
   ASSERT_NEAR(px[4] / top, 0.027, 0.005);
   ASSERT_NEAR(px[5] / top, 0.030, 0.005);
-  ASSERT_NEAR(px[6] / top, 0.114, 0.005);
+  ASSERT_NEAR(px[6] / top, 0.112, 0.005);
   ASSERT_NEAR(px[7] / top, 0.010, 0.005);
   ASSERT_NEAR(px[8] / top, 0.043, 0.005);
   ASSERT_NEAR(px[9] / top, 0.527, 0.05);
 }
 
 TEST_F(Test_Activity, multinominalP) {
-    SimulationConfig::parseConfiguration("../tests/Files/SimulationConfig1.xml");
+    SimulationConfig::parseConfiguration("SimulationConfig1.xml");
 
     AfterConfiguration();
 
@@ -179,7 +186,7 @@ TEST_F(Test_Activity, multinominalP) {
           "day" + std::to_string(d) +
           "sex2famstat3edtry1age2computer0civstat1unemp0retired1.csv";
         std::ofstream myfile2;
-        myfile2.open(file2);
+        myfile2.open(file2.c_str());
 
         for (int h = 0; h < 24; h++) {
           sum = 0;
@@ -200,17 +207,16 @@ TEST_F(Test_Activity, multinominalP) {
 }
 
 TEST_F(Test_Activity, multinominal) {
-    SimulationConfig::parseConfiguration
-      ("../tests/Files/SimulationConfig1.xml");
+    SimulationConfig::parseConfiguration("SimulationConfig1.xml");
     AfterConfiguration();
 
-    ASSERT_EQ(activities.at(0), 0);
-    ASSERT_EQ(activities.at(1000), 0);
-    ASSERT_EQ(activities.at(2000), 0);
-    ASSERT_EQ(activities.at(3000), 0);
-    ASSERT_EQ(activities.at(4000), 0);
-    ASSERT_EQ(activities.at(5000), 6);
-    ASSERT_EQ(activities.at(6000), 0);
+    ASSERT_EQ(activities.at(0), 7);
+    ASSERT_EQ(activities.at(1000), 4);
+    ASSERT_EQ(activities.at(2000), 1);
+    ASSERT_EQ(activities.at(3000), 4);
+    ASSERT_EQ(activities.at(4000), 1);
+    ASSERT_EQ(activities.at(5000), 4);
+    ASSERT_EQ(activities.at(6000), 1);
     bool found = false;
     for (int i = 0; i < 3; i++) {
       for (double a : activities) {

@@ -35,11 +35,9 @@ before_script:
   - mkdir FMU/buildDebug
   - mkdir FMU/build32
   - mkdir FMU/build64
-  - cd Boost
-  - make
 
 script:
-  - cd ../FMU/buildDebug
+  - cd FMU/buildDebug
   - cmake -DTests=on -DCMAKE_BUILD_TYPE=Debug ../
   - make
   - ./runUnitTests

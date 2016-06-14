@@ -1,22 +1,19 @@
 // Copyright 2015 Jacob Chapman
 
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
-
 #include <map>
 #include <limits>
 #include <utility>
 #include <vector>
 #include <cctype>
-#include <iostream>     // cout, endl
-#include <fstream>      // fstream
+#include <iostream>
+#include <fstream>
 #include <string>
-#include <algorithm>    // copy
-#include <iterator>     // ostream_operator
+#include <algorithm>
+#include <iterator>
 #include <cassert>
+#include <cstddef>
+#include "rapidxml_utils.hpp"
+#include "rapidxml.hpp"
 
 #include "SimulationConfig.h"
 #include "Utility.h"
@@ -95,7 +92,7 @@ std::string Model_Activity::getDay(const int day) const {
 }
 
 int Model_Activity::multinominalActivity(const double *p) const {
-  int activity;
+  int activity = -1;
   double sum = 0;
   double drand = Utility::randomDouble(0.0, 1.0);
   for (int i =0; i < 10; i++) {
@@ -170,19 +167,18 @@ std::vector<double> Model_Activity::multinominal(const int agentID) const {
       {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     int tsph = SimulationConfig::info.timeStepsPerHour;
-    int hourCount = 0;
-    int hour = hourCount;
-    int month = SimulationConfig::info.startMonth -1;
+    int hourCount = 24;
+    int month = SimulationConfig::info.startMonth;
     int day = SimulationConfig::info.startDay -1;
     int dayOfWeek = SimulationConfig::info.startDayOfWeek-1;
 
     int season = getSeasonInt(month);
 
     for (int i = 0; i <= SimulationConfig::info.timeSteps; i++) {
-        if (i % tsph == 0 || hourCount < 1) {
+        if (i % tsph == 0) {
             hourCount++;
             if (hourCount > 24) {
-                hourCount = 1;
+                hourCount = 0;
                 day++;
                 dayOfWeek++;
                 if (dayOfWeek > 6) {
@@ -197,52 +193,43 @@ std::vector<double> Model_Activity::multinominal(const int agentID) const {
                   season = getSeasonInt(month);
                 }
             }
-            if (hourCount < 6) {
-              hour = 0;
-            }
         }
-        activities.push_back(multinominalActivity(p[season][dayOfWeek][hour]));
+        activities.push_back(
+                    multinominalActivity(p[season][dayOfWeek][hourCount]));
     }
     return activities;
 }
 
 void Model_Activity::parseConfiguration(const std::string filename) {
-    namespace bpt = boost::property_tree;
-    // Create an empty property tree object
-    bpt::ptree pt;
-    // Load the XML file into the property tree. If reading fails
-    // (cannot open file, parse error), an exception is thrown.
-
-    bpt::read_xml(filename, pt);
-    // Iterate over the debug.modules section and store all found
-    // modules in the m_modules set. The get_child() function
-    // returns a reference to the child at the specified path; if
-    // there is no such child, it throws. Property tree iterators
-    // are models of BidirectionalIterator.
-
-    for (bpt::ptree::value_type & child : pt.get_child("Activity")) {
-        std::string inter = child.first;
-        inter.erase(0, 8);
-        int hour = boost::lexical_cast<int>(inter);
-        std::map<std::string, std::vector<double>> items;
-        for (bpt::ptree::value_type & childchild : child.second) {
-            std::string name = childchild.first;
-            std::string cofList = childchild.second.get_value<std::string>();
-            std::vector<std::string> tokProbs;
-            std::vector<double> tokProbsD;
-            boost::split(tokProbs, cofList, boost::is_any_of(","));
-            for (std::string strProb : tokProbs) {
-                tokProbsD.push_back(boost::lexical_cast<double>(strProb));
-            }
-            std::pair<std::string, std::vector<double>> x(name, tokProbsD);
-            items.insert(x);
-        }
-        std::pair<int, std::map<std::string, std::vector<double>>>
-          y(hour, items);
-        dictionary.insert(y);
+  namespace rx = rapidxml;
+  rx::file<> xmlFile(filename.c_str());  // Default template is char
+  rx::xml_document<> doc;
+  doc.parse<0>(xmlFile.data());    // 0 means default parse flags
+  rx::xml_node<> *root_node = doc.first_node("Activity");
+  rx::xml_node<> *node = root_node->first_node();
+  while (node) {
+    std::string inter = node->name();
+    inter.erase(0, 8);
+    int hour = std::stoi(inter);
+    std::map<std::string, std::vector<double>> items;
+    rx::xml_node<> *cnode = node->first_node();
+    while (cnode) {
+      std::string name = cnode->name();
+      std::vector<std::string> tokProbs = Utility::splitCSV(cnode->value());
+      std::vector<double> tokProbsD;
+      for (std::string strProb : tokProbs) {
+          tokProbsD.push_back(std::stod(strProb));
+      }
+      std::pair<std::string, std::vector<double>> x(name, tokProbsD);
+      items.insert(x);
+      cnode = cnode->next_sibling();
     }
+    std::pair<int, std::map<std::string, std::vector<double>>>
+      y(hour, items);
+    dictionary.insert(y);
+    node = node->next_sibling();
+  }
 }
-
 
 std::vector<double> Model_Activity::disaggregate(const int agentID) const {
     double probabilities[24][10];
@@ -250,16 +237,13 @@ std::vector<double> Model_Activity::disaggregate(const int agentID) const {
     probMap = SimulationConfig::agents.at(agentID).profile;
 
     for (int hour = 0; hour < 24; hour++) {
-        std::vector<std::string> tokProbs;
-        boost::split(tokProbs, probMap.at(hour), boost::is_any_of(","));
+        std::vector<std::string> tokProbs = Utility::splitCSV(probMap.at(hour));
         int activity = 0;
         for (std::string strProb : tokProbs) {
-            probabilities[hour][activity] =
-              boost::lexical_cast<double>(strProb);
+            probabilities[hour][activity] = std::stod(strProb);
             activity++;
         }
     }
-
 
     std::vector<double> activities;
     int tsph = SimulationConfig::info.timeStepsPerHour;

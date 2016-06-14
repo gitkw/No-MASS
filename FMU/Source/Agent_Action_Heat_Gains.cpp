@@ -7,9 +7,7 @@
 #include "Model_HeatGains.h"
 #include "Agent_Action_Heat_Gains.h"
 
-Agent_Action_Heat_Gains::Agent_Action_Heat_Gains() {
-  name = "HeatGains";
-}
+Agent_Action_Heat_Gains::Agent_Action_Heat_Gains() {}
 
 void Agent_Action_Heat_Gains::setup(int agentid) {
   this->id = agentid;
@@ -19,6 +17,10 @@ void Agent_Action_Heat_Gains::setup(int agentid) {
   DataStore::addVariable("Agent_ppd_" + idAsString);
   DataStore::addVariable("Agent_pmv_" + idAsString);
   DataStore::addVariable("Agent_Fanger_Neutral_Temperature_" + idAsString);
+  DataStore::addVariable("Agent_PMV_airTemp" + idAsString);
+  DataStore::addVariable("Agent_PMV_airHumid" + idAsString);
+  DataStore::addVariable("Agent_PMV_meanRadient" + idAsString);
+  DataStore::addVariable("Agent_PMV_setpoint" + idAsString);
 }
 
 void Agent_Action_Heat_Gains::prestep(double clo, double metabolicRate) {
@@ -26,11 +28,15 @@ void Agent_Action_Heat_Gains::prestep(double clo, double metabolicRate) {
     this->metabolicRate = metabolicRate;
 }
 
-void Agent_Action_Heat_Gains::step(const Building_Zone& zone, bool inZone,
-    bool previouslyInZone, const std::vector<double> &activities) {
+void Agent_Action_Heat_Gains::step(const Building_Zone& zone,
+                                    const bool inZone) {
   ppd = 5;
   pmv = 0;
   result = 0;
+  double airTemp = zone.getMeanAirTemperature();
+  double airHumid = zone.getAirRelativeHumidity();
+  double meanRadient = zone.getMeanRadiantTemperature();
+
   if (inZone) {
     Model_HeatGains h;
     /**
@@ -44,24 +50,25 @@ void Agent_Action_Heat_Gains::step(const Building_Zone& zone, bool inZone,
      * @param airVelocity Air velocity
      */
 
-    double airTemp = zone.getMeanAirTemperature();
-    double airHumid = zone.getAirRelativeHumidity();
-    double meanRadient = zone.getMeanRadiantTemperature();
-
-    /*
-    std::cout << "metabolicRate: " << metabolicRate << std::endl;
-    std::cout << "airHumid: " << airHumid << std::endl;
-    std::cout << "meanRadient: " << meanRadient << std::endl;
-    std::cout << "airTemp: " << airTemp << std::endl;
-    std::cout << "clo: " << clo << std::endl;
-    */
-
     h.calculate(metabolicRate, airHumid, meanRadient, 0, airTemp, clo, 0.137);
-    //  h.calculate(metabolicRate, airHumid, meanRadient, 0, airTemp, clo, 0);
     result = h.getAllHeatGains();
     ppd = h.getPpd();
     pmv = h.getPmv();
+/*
+if(zone.getId() == 40){
+    std::cout << "#### metabolicRate: " << metabolicRate << std::endl;
+    std::cout << "#### metabolicRate: " << metabolicRate / 58.15 << std::endl;
+    std::cout << "#### airHumid: " << airHumid << std::endl;
+    std::cout << "#### meanRadient: " << meanRadient << std::endl;
+    std::cout << "#### airTemp: " << airTemp << std::endl;
+    std::cout << "#### clo: " << clo << std::endl;
+    std::cout << "#### ppd: " << ppd << std::endl;
+    std::cout << "#### pmv: " << pmv << std::endl;
+    std::cout << "#### HeatGains: " << result << std::endl;
   }
+*/
+  }
+  std::string name;
   name = "Agent_Metabolic_Rate_" + idAsString;
   DataStore::addValue(name.c_str(), metabolicRate);
   name = "Agent_clo_" + idAsString;
@@ -70,8 +77,20 @@ void Agent_Action_Heat_Gains::step(const Building_Zone& zone, bool inZone,
   DataStore::addValue(name.c_str(), ppd);
   name = "Agent_pmv_" + idAsString;
   DataStore::addValue(name.c_str(), pmv);
+  name = "Agent_PMV_airTemp" + idAsString;
+  DataStore::addValue(name.c_str(), airTemp);
+  name = "Agent_PMV_airHumid" + idAsString;
+  DataStore::addValue(name.c_str(), airHumid);
+  name = "Agent_PMV_meanRadient" + idAsString;
+  DataStore::addValue(name.c_str(), meanRadient);
+  name = "Agent_PMV_setpoint" + idAsString;
+  DataStore::addValue(name.c_str(), zone.getHeatingState());
 }
 
-double Agent_Action_Heat_Gains::getPMV() {
+double Agent_Action_Heat_Gains::getPMV() const {
     return pmv;
+}
+
+double Agent_Action_Heat_Gains::getPPD() const {
+    return ppd;
 }
