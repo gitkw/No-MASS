@@ -228,7 +228,7 @@ TEST_F(Test_Agent_Zone, twoZone) {
     int second = az->getDesiredWindowDuration();
     az->postTimeStep();
     if (first > 0 && second > 0) {
-      //ASSERT_FALSE(first == second);
+      //  ASSERT_FALSE(first == second);
     }
   }
 }
