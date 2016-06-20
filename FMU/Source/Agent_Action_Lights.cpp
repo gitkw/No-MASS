@@ -5,18 +5,7 @@
 #include "Model_Lights.h"
 #include "Agent_Action_Lights.h"
 
-Agent_Action_Lights::Agent_Action_Lights() {
-  OffDuringAudioVisual = 0.0;
-  OffDuringSleep = 0.0;
-}
-
-void Agent_Action_Lights::setOffDuringAudioVisual(double OffDuringAudioVisual) {
-  this->OffDuringAudioVisual = OffDuringAudioVisual;
-}
-
-void Agent_Action_Lights::setOffDuringSleep(double OffDuringSleep) {
-  this->OffDuringSleep = OffDuringSleep;
-}
+Agent_Action_Lights::Agent_Action_Lights() {}
 
 void Agent_Action_Lights::step(const Building_Zone& zone, const bool inZone,
     const bool previouslyInZone, const std::vector<double> &activities) {
@@ -34,20 +23,4 @@ void Agent_Action_Lights::step(const Building_Zone& zone, const bool inZone,
             lightState = m_lightUsage.departure(lightState, pffs);
     }
     result = lightState;
-}
-
-bool Agent_Action_Lights::BDI(const std::vector<double> &activities) {
-  bool bdi = false;
-  int stepCount = SimulationConfig::getStepCount();
-  if (OffDuringSleep > Utility::randomDouble(0, 1) &&
-        activities.at(stepCount) == 0) {
-      result = 0;
-      bdi = true;
-  }
-  if (OffDuringAudioVisual > Utility::randomDouble(0, 1) &&
-        activities.at(stepCount) == 2) {
-      result = 0;
-      bdi = true;
-  }
-  return bdi;
 }

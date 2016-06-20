@@ -8,17 +8,6 @@
 #include "SimulationConfig.h"
 #include "DataStore.h"
 #include "Agent.h"
-#include "State_Out.h"
-#include "State_Present.h"
-#include "State_Sleep.h"
-#include "State_Passive.h"
-#include "State_IT.h"
-#include "State_Washing_Appliance.h"
-#include "State_Audio_Visual.h"
-#include "State_Cleaning.h"
-#include "State_Cooking.h"
-#include "State_Washing.h"
-#include "State_Metabolic.h"
 #include "Utility.h"
 #include "Model_Presence.h"
 #include "Building.h"
@@ -39,7 +28,6 @@ void Building::setup(const buildingStruct &b) {
           population.push_back(Agent());
           population.back().setup(a, zones);
     }
-    initialiseStates();
 }
 
 void Building::setZones(
@@ -47,62 +35,6 @@ void Building::setZones(
     this->zones = zones;
 }
 
-void Building::initialiseStates() {
-    State_Present present;
-    if (SimulationConfig::info.presencePage) {
-        State_IT it;
-        matchStateToZone(it);
-        present.addState(it);
-    } else {
-        State_Sleep sleep;
-        matchStateToZone(sleep);
-        State_Passive passive;
-        matchStateToZone(passive);
-        State_Washing_Appliance washingAppliance;
-        matchStateToZone(washingAppliance);
-        State_Washing washing;
-        matchStateToZone(washing);
-        State_Audio_Visual audioVisual;
-        matchStateToZone(audioVisual);
-        State_Cleaning cleaning;
-        matchStateToZone(cleaning);
-        State_Cooking cooking;
-        matchStateToZone(cooking);
-        State_Metabolic metabolic;
-        matchStateToZone(metabolic);
-        State_IT it;
-        matchStateToZone(it);
-        present.addState(sleep);
-        present.addState(passive);
-        present.addState(washingAppliance);
-        present.addState(washing);
-        present.addState(audioVisual);
-        present.addState(cleaning);
-        present.addState(cooking);
-        present.addState(metabolic);
-        present.addState(it);
-    }
-    stateMachine.addState(present);
-    State_Out out;
-    matchStateToZone(out);
-    stateMachine.addState(out);
-
-    int popSize = population.size();
-    std::list<int> pop = Utility::randomIntList(popSize);
-    // step each agent randomly
-    for (int a : pop) {
-        population[a].setState(out);
-    }
-}
-
-void Building::matchStateToZone(State &s) {
-    for (unsigned int i =0; i < zones.size(); i++) {
-      if (zones[i]->hasActivity(s.getId())) {
-          s.setZonePtr(zones[i]);
-          break;
-      }
-    }
-}
 
 void Building::step() {
     double outdoorTemperature =
@@ -125,7 +57,7 @@ void Building::step() {
     int popSize = population.size();
     std::list<int> pop = Utility::randomIntList(popSize);
     for (int a : pop) {
-        population[a].step(&stateMachine);
+        population[a].step();
     }
     for (std::shared_ptr<Building_Zone> &zone : zones) {
         if (!zone->isActive()) {

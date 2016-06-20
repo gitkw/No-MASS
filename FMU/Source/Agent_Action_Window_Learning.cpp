@@ -16,17 +16,15 @@ void Agent_Action_Window_Learning::reset() {
   learn.reset();
 }
 
-void Agent_Action_Window_Learning::setup(const int id, const int learnid) {
-  variableNameWindowDesire = "Agent_Window_Desire" + std::to_string(learnid);
+void Agent_Action_Window_Learning::setup(const int id) {
+  variableNameWindowDesire = "Agent_Window_Desire" + std::to_string(id);
   DataStore::addVariable(variableNameWindowDesire);
   std::string zoneIdStr = std::to_string(zoneId);
   learn.setFilename("window-" + zoneIdStr + "-");
-  //  learn.setStates(630);
-  //  learn.setStates(1260);  // double for depatures
   learn.setStates(400);
-  learn.setId(learnid);
+  learn.setId(id);
   learn.setup();
-  window_name = "Weekday-" + zoneIdStr + "-_pmv" + std::to_string(learnid);
+  window_name = "Weekday-" + zoneIdStr + "-_pmv" + std::to_string(id);
   DataStore::addVariable(window_name);
   result = 0;
 }

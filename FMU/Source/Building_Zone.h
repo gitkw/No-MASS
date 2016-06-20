@@ -30,6 +30,7 @@ public:
     bool isActive() const;
     bool hasActivity(int activity) const;
     int getCurrentOccupantCount() const;
+    int getId() const;
     float getOccupantFraction() const;
     double getCurrentAgentGains() const;
     double getWindowState() const;
@@ -44,8 +45,8 @@ public:
     double getDaylightingReferencePoint1Illuminance() const;
     double getWindowDurationOpen() const;
     std::vector<int> getActivities() const;
+    int getNumberOfActivities() const;
     std::string getName() const;
-    int getId() const;
 
 private:
 

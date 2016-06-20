@@ -9,6 +9,17 @@
 #include <cfloat>
 #include <cstddef>
 
+#include "State_Out.h"
+#include "State_Present.h"
+#include "State_Sleep.h"
+#include "State_Passive.h"
+#include "State_IT.h"
+#include "State_Washing_Appliance.h"
+#include "State_Audio_Visual.h"
+#include "State_Cleaning.h"
+#include "State_Cooking.h"
+#include "State_Washing.h"
+#include "State_Metabolic.h"
 #include "Model_HeatGains.h"
 #include "Model_Lights.h"
 #include "DataStore.h"
@@ -37,26 +48,97 @@ void Agent::setup(int newId,
     }
 
     for (const std::shared_ptr<Building_Zone> & buldingZone : zones) {
+        if (SimulationConfig::info.presencePage &&
+            buldingZone->hasActivity(3) &&
+            buldingZone->getName() != office) {
+          continue;
+        }
+        if (!SimulationConfig::info.presencePage &&
+            buldingZone->hasActivity(0) &&
+            buldingZone->getName() != bedroom &&
+            buldingZone->getNumberOfActivities() == 1) {
+          continue;
+        }
         agentZones.push_back(Agent_Zone());
         agentZones.back().setup(*buldingZone, id, agent);
     }
-    /*
-    if (agent.HeatOnPresence) {
-        availableActions.push_back(4);
-    }
-    */
     if (SimulationConfig::info.presencePage) {
       model_presenceFromPage();
     } else {
       model_activity();
     }
+    initialiseStates(zones);
 }
 
-void Agent::step(StateMachine *stateMachine) {
+void Agent::initialiseStates(
+                  const std::vector<std::shared_ptr<Building_Zone>> &zones) {
+    State_Present present;
+    if (SimulationConfig::info.presencePage) {
+        State_IT it;
+        matchStateToZone(it, zones);
+        present.addState(it);
+    } else {
+        State_Sleep sleep;
+        matchStateToZone(sleep, zones);
+        State_Passive passive;
+        matchStateToZone(passive, zones);
+        State_Washing_Appliance washingAppliance;
+        matchStateToZone(washingAppliance, zones);
+        State_Washing washing;
+        matchStateToZone(washing, zones);
+        State_Audio_Visual audioVisual;
+        matchStateToZone(audioVisual, zones);
+        State_Cleaning cleaning;
+        matchStateToZone(cleaning, zones);
+        State_Cooking cooking;
+        matchStateToZone(cooking, zones);
+        State_Metabolic metabolic;
+        matchStateToZone(metabolic, zones);
+        State_IT it;
+        matchStateToZone(it, zones);
+        present.addState(sleep);
+        present.addState(passive);
+        present.addState(washingAppliance);
+        present.addState(washing);
+        present.addState(audioVisual);
+        present.addState(cleaning);
+        present.addState(cooking);
+        present.addState(metabolic);
+        present.addState(it);
+    }
+    stateMachine.addState(present);
+    State_Out out;
+    matchStateToZone(out, zones);
+    stateMachine.addState(out);
+    setState(out);
+}
+
+void Agent::matchStateToZone(State &s,
+                  const std::vector<std::shared_ptr<Building_Zone>> &zones) {
+    for (unsigned int i =0; i < zones.size(); i++) {
+      if (SimulationConfig::info.presencePage &&
+          zones[i]->hasActivity(3) &&
+          zones[i]->getName() != office) {
+        continue;
+      }
+      if (!SimulationConfig::info.presencePage &&
+          zones[i]->hasActivity(0) &&
+          zones[i]->getName() != bedroom &&
+          zones[i]->getNumberOfActivities() == 1) {
+        continue;
+      }
+      if (zones[i]->hasActivity(s.getId())) {
+          s.setZonePtr(zones[i]);
+          break;
+      }
+    }
+}
+
+void Agent::step() {
     int stepCount = SimulationConfig::getStepCount();
     int newStateID = activities.at(stepCount);
     zonePtrPrevious = state.getZonePtr();
-    state = stateMachine->transistionTo(newStateID);
+    state = stateMachine.transistionTo(newStateID);
 
     std::shared_ptr<Building_Zone> zonePtr = state.getZonePtr();
 

@@ -6,7 +6,6 @@
 #include <memory>
 #include "SimulationConfig.h"
 #include "Agent.h"
-#include "StateMachine.h"
 #include "Building_Zone.h"
 
 class Building{
@@ -29,13 +28,11 @@ private:
     void setAgentHeatDecisionsForZone(std::shared_ptr<Building_Zone> zone);
     void setAgentCountForZone(std::shared_ptr<Building_Zone> zone);
     void setAppGainsForZone(std::shared_ptr<Building_Zone> zone);
-    void initialiseStates();
+
     void setZones(const std::vector<std::shared_ptr<Building_Zone>> & zones);
     void buildingInteractions();
-    void matchStateToZone(State &s);
     std::vector<float> presenceProfile;
     std::vector<Agent> population;
-    StateMachine stateMachine;
     std::vector<std::shared_ptr<Building_Zone>> zones;
     std::string name;
 

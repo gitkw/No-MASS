@@ -5,17 +5,17 @@
 
 #include "Gen.h"
 #include "DataStore.h"
-#include "Agent_Action_Lights.h"
+#include "Agent_Action_Lights_BDI.h"
 #include "gtest/gtest.h"
 
-class Test_Agent_Action_Lights : public ::testing::Test {
+class Test_Agent_Action_Lights_BDI : public ::testing::Test {
  protected:
-    Agent_Action_Lights aal;
+    Agent_Action_Lights_BDI aal;
     std::vector<double> activities;
     virtual void SetUp();
 };
 
-void Test_Agent_Action_Lights::SetUp() {
+void Test_Agent_Action_Lights_BDI::SetUp() {
   SimulationConfig::reset();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
@@ -34,4 +34,43 @@ void Test_Agent_Action_Lights::SetUp() {
   DataStore::addValue("Block1:KitchenZoneAirRelativeHumidity", 18);
   DataStore::addValue("Block1:KitchenZoneMeanRadiantTemperature", 18);
   DataStore::addValue("Block1:KitchenDaylightingReferencePoint1Illuminance", 1);
+}
+
+TEST_F(Test_Agent_Action_Lights_BDI, OffDuringSleep) {
+  ZoneStruct zs;
+  zs.name = "Block1:Kitchen";
+  zs.id = 1;
+  Building_Zone z_Kitchen(zs);
+  aal.setOffDuringSleep(true);
+
+  activities.push_back(0);
+  aal.step(z_Kitchen, true, false, activities);
+  aal.doRecipe(activities);
+  ASSERT_EQ(aal.getResult(), 0);
+
+  SimulationConfig::step();
+  activities.push_back(1);
+  aal.step(z_Kitchen, true, false, activities);
+  aal.doRecipe(activities);
+  ASSERT_EQ(aal.getResult(), 1);
+}
+
+TEST_F(Test_Agent_Action_Lights_BDI, OffDuringAudioVisual) {
+  ZoneStruct zs;
+  zs.name = "Block1:Kitchen";
+  zs.id = 1;
+  Building_Zone z_Kitchen(zs);
+  aal.setOffDuringAudioVisual(true);
+  aal.getResult();
+
+  activities.push_back(2);
+  aal.step(z_Kitchen, true, false, activities);
+  aal.doRecipe(activities);
+  ASSERT_EQ(aal.getResult(), 0);
+
+  SimulationConfig::step();
+  activities.push_back(1);
+  aal.step(z_Kitchen, true, false, activities);
+  aal.doRecipe(activities);
+  ASSERT_EQ(aal.getResult(), 1);
 }

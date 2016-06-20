@@ -28,7 +28,7 @@ public:
     Agent();
     void setup(int newId, const std::vector<std::shared_ptr<Building_Zone>> &zones);
 
-    void step(StateMachine *sm);
+    void step();
     void setState(State &state);
     void postTimeStep();
     void zoneInteractions();
@@ -76,6 +76,9 @@ private:
     void model_presenceFromPage();
     void model_pastAndFutureDurations();
     void model_activity();
+    void matchStateToZone(State &s, const std::vector<std::shared_ptr<Building_Zone>> &zones);
+
+    void initialiseStates(const std::vector<std::shared_ptr<Building_Zone>> &zones);
     bool calculateLightInteractionsOnZone(const Building_Zone &zone);
     bool calculateWindowInteractionsOnZone(const Building_Zone &zone);
     double calculateExternalShadeInteractionsOnZone(const Building_Zone &zone);
@@ -83,6 +86,7 @@ private:
     double getPMV(const Building_Zone &zone) const;
     std::string updateLocation(const State& state) const;
 
+    StateMachine stateMachine;
 };
 
 #endif	/* AGENT_H */

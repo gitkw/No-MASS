@@ -16,15 +16,16 @@
 #include "Model_Presence.h"
 #include "StateMachine.h"
 #include "State.h"
-
-#include "Agent_Action_Window.h"
+#include "Agent_Action_Window_Stochastic.h"
+#include "Agent_Action_Window_Stochastic_BDI.h"
 #include "Agent_Action_Window_Learning.h"
 #include "Agent_Action_Lights.h"
-#include "Agent_Action_HeatingSetPoints_Learning.h"
-#include "Agent_Action_Appliance.h"
-
+#include "Agent_Action_Lights_BDI.h"
 #include "Agent_Action_Shades.h"
+#include "Agent_Action_Shades_BDI.h"
+#include "Agent_Action_Appliance_BDI.h"
 #include "Agent_Action_Heat_Gains.h"
+#include "Agent_Action_HeatingSetPoints_Learning.h"
 /**
  * @brief The Agent understand of a zone
  * @details Contains all information about the occupants and there associated interactions with a zone
@@ -65,7 +66,14 @@ public:
 
 private:
 
+    void setupWindows(int agentid, const agentStruct &agent, const Building_Zone & buldingZone);
+    void setupLights(const agentStruct &agent, const Building_Zone & buldingZone);
+    void setupShades(const agentStruct &agent, const Building_Zone & buldingZone);
+
     bool isInBuilding() const;
+    void disableBDI();
+    void enableBDI();
+    void BDI(const std::vector<double> &activities);
 
     int id;
     bool ActionWindow;
@@ -76,6 +84,7 @@ private:
     bool ActionAppliance;
     bool desiredLightState;
     bool desiredWindowState;
+    bool hasBDI;
     double desiredShadeState;
     double desiredHeatingSetPoint;
     double desiredApplianceState;
@@ -86,13 +95,17 @@ private:
     double ppd;
     double previous_pmv;
     std::vector<int> availableActions;
-    Agent_Action_Window aaw;
+
+    Agent_Action_Window_Stochastic aaw;
+    Agent_Action_Window_Stochastic_BDI aawBDI;
     Agent_Action_Window_Learning aawLearn;
     Agent_Action_Lights aal;
+    Agent_Action_Lights_BDI aalBDI;
     Agent_Action_Shades aas;
+    Agent_Action_Shades_BDI aasBDI;
     Agent_Action_Heat_Gains aahg;
     Agent_Action_HeatingSetPoints_Learning aalearn;
-    Agent_Action_Appliance aaa;
+    Agent_Action_Appliance_BDI aaa;
 
     bool BDIEnabled = false;
 };

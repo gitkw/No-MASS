@@ -10,7 +10,7 @@
 class Agent_Action_Window_Learning : public Agent_Action_Window {
     public:
 
-        void setup(const int id, const int learn);
+        void setup(const int id);
         void step(const Building_Zone& zone, const bool inZone,
         const bool previouslyInZone);
         void print();

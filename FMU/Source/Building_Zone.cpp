@@ -176,3 +176,7 @@ void Building_Zone::setBlindState(double state) {
 void Building_Zone::setAppFraction(double appFraction) {
     this->appFraction = appFraction;
 }
+
+int Building_Zone::getNumberOfActivities() const {
+  return activities.size();
+}

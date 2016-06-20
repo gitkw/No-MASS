@@ -36,7 +36,7 @@ void Test_Agent_Action_Window_Learning::SetUp() {
 }
 
 TEST_F(Test_Agent_Action_Window_Learning, Learn) {
-  aal.setup(1, 1);
+  aal.setup(1);
 
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
