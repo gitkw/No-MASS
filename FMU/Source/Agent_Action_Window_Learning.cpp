@@ -21,8 +21,9 @@ void Agent_Action_Window_Learning::setup(const int id, const int learnid) {
   DataStore::addVariable(variableNameWindowDesire);
   std::string zoneIdStr = std::to_string(zoneId);
   learn.setFilename("window-" + zoneIdStr + "-");
-  learn.setStates(630);
-  learn.setStates(1260);  // double for depatures
+  //  learn.setStates(630);
+  //  learn.setStates(1260);  // double for depatures
+  learn.setStates(400);
   learn.setId(learnid);
   learn.setup();
   window_name = "Weekday-" + zoneIdStr + "-_pmv" + std::to_string(learnid);
@@ -40,14 +41,14 @@ void Agent_Action_Window_Learning::step(const Building_Zone& zone,
     if (temp > 29) temp = 29;
     if (temp < 10) temp = 10;
     temp = temp -10;
-    if (outdoorTemperature > 30) outdoorTemperature = 30;
-    if (outdoorTemperature < 1) outdoorTemperature = 1;
-    outdoorTemperature = outdoorTemperature;
+    if (outdoorTemperature > 29) outdoorTemperature = 29;
+    if (outdoorTemperature < 10) outdoorTemperature = 10;
+    outdoorTemperature = outdoorTemperature - 10;
 
-    int state = (temp * 30) + outdoorTemperature;
-    if (previouslyInZone && !inZone) {
-      state + 630;
-    }
+    int state = (temp * 20) + outdoorTemperature;
+  //  if (previouslyInZone && !inZone) {
+    //  state += 630;
+  //  }
 
     learn.setState(state);
     int winState = zone.getWindowState();
