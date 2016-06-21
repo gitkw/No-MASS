@@ -41,7 +41,9 @@ TEST_F(Test_Agent_Action_HeatingSetPoints_Learning, Learn) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen(zs);
+  Building_Zone z_Kitchen;
+  z_Kitchen.setName(zs.name);
+  z_Kitchen.setup(zs);
   activities.push_back(4);
 
   double heating;

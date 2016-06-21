@@ -11,10 +11,8 @@
 class Building_Zone {
 public:
     Building_Zone();
-    Building_Zone(const ZoneStruct & zoneStruct);
-
     void step();
-    void setup();
+    void setup(const ZoneStruct & zoneStruct);
     void setName(std::string name);
     void setCurrentAgentGains(double currentAgentGains);
     void setGroundFloor(bool groundFloor);

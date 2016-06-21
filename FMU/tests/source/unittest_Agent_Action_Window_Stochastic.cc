@@ -44,7 +44,9 @@ TEST_F(Test_Agent_Action_Window_Stochastic, Arrival) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen(zs);
+  Building_Zone z_Kitchen;
+  z_Kitchen.setName(zs.name);
+  z_Kitchen.setup(zs);
   z_Kitchen.setWindowState(0);
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);
   DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 35);

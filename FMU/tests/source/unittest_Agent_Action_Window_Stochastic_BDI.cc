@@ -44,7 +44,9 @@ TEST_F(Test_Agent_Action_Window_Stochastic_BDI, Arrival) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen(zs);
+  Building_Zone z_Kitchen;
+  z_Kitchen.setName(zs.name);
+  z_Kitchen.setup(zs);
   z_Kitchen.setWindowState(0);
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);
   DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 35);
@@ -69,7 +71,9 @@ TEST_F(Test_Agent_Action_Window_Stochastic_BDI, OpenWindowDuringCooking) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen(zs);
+  Building_Zone z_Kitchen;
+  z_Kitchen.setName(zs.name);
+  z_Kitchen.setup(zs);
   aaw.setOpenDuringCooking(true);
 
   activities.push_back(4);
@@ -88,7 +92,9 @@ TEST_F(Test_Agent_Action_Window_Stochastic_BDI, OpenWindowAfterShower) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen(zs);
+  Building_Zone z_Kitchen;
+  z_Kitchen.setName(zs.name);
+  z_Kitchen.setup(zs);
   aaw.setOpenDuringWashing(true);
   aaw.getResult();
 
@@ -132,11 +138,15 @@ TEST_F(Test_Agent_Action_Window_Stochastic_BDI, OpenWindowAfterShower2) {
   zs.name = "Block1:Kitchen";
   zs.id = 1;
   zs.activities = {1, 2, 3};
-  Building_Zone z_Kitchen(zs);
+  Building_Zone z_Kitchen;
+  z_Kitchen.setName(zs.name);
+  z_Kitchen.setup(zs);
   zs.name = "Block1:Bath";
   zs.id = 2;
   zs.activities = {6};
-  Building_Zone z_Bath(zs);
+  Building_Zone z_Bath;
+  z_Bath.setName(zs.name);
+  z_Bath.setup(zs);
 
   Agent_Action_Window_Stochastic_BDI aab;
   if (z_Kitchen.hasActivity(6)) {
@@ -215,7 +225,9 @@ TEST_F(Test_Agent_Action_Window_Stochastic_BDI, multiZone) {
   zs.name = "Block1:Kitchen";
   zs.id = 1;
   zs.activities = {1, 2, 3};
-  Building_Zone z_Kitchen(zs);
+  Building_Zone z_Kitchen;
+  z_Kitchen.setName(zs.name);
+  z_Kitchen.setup(zs);
 
   aaw.getResult();
 

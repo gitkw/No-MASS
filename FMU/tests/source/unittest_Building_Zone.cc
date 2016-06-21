@@ -25,14 +25,18 @@ TEST(Building_Zone, Name) {
   ZoneStruct zs;
   zs.name = "Out";
   zs.id = 0;
-  Building_Zone z_Out(zs);
+  Building_Zone z_Out;
+  z_Out.setName(zs.name);
+  z_Out.setup(zs);
 
   ASSERT_EQ(z_Out.getName(), zs.name);
   ASSERT_EQ(z_Out.isActive(), false);
 
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen(zs);
+  Building_Zone z_Kitchen;
+  z_Kitchen.setName(zs.name);
+  z_Kitchen.setup(zs);
 
   ASSERT_EQ(z_Kitchen.getName(), zs.name);
   ASSERT_EQ(z_Kitchen.isActive(), true);

@@ -38,8 +38,8 @@ void Agent::setup(int newId,
     DataStore::addVariable("Agent_Activity_" + idAsString);
     DataStore::addVariable("AgentGains" + idAsString);
     agentStruct agent = SimulationConfig::agents.at(id);
-    bedroom = agent.bedroom;
-    office = agent.office;
+    bedroom = building + agent.bedroom;
+    office = building + agent.office;
     power = agent.power;
     if (power == 0) {
       // no power causes problems with agent not present allso having no power
@@ -141,7 +141,7 @@ void Agent::step() {
     state = stateMachine.transistionTo(newStateID);
 
     std::shared_ptr<Building_Zone> zonePtr = state.getZonePtr();
-
+    
     metabolicRate = state.getMetabolicRate();
     clo = state.getClo();
     for (Agent_Zone &agentZone : agentZones) {
@@ -372,4 +372,9 @@ void Agent::postTimeStep() {
   for (Agent_Zone &agentZone : agentZones) {
     agentZone.postTimeStep();
   }
+}
+
+
+void Agent::setBuilding(const std::string &building){
+  this->building = building;
 }

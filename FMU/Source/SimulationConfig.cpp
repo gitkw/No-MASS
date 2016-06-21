@@ -50,7 +50,6 @@ void SimulationConfig::parseBuildings(rapidxml::xml_node<> *node) {
 
 void SimulationConfig::parseBuilding(rapidxml::xml_node<> *node) {
     buildingStruct b;
-    b.name = buildings.size();
     int zonecount = 0;
     std::pair<std::string, ZoneStruct> zsOut;
     zsOut.first = "Out";
@@ -60,7 +59,7 @@ void SimulationConfig::parseBuilding(rapidxml::xml_node<> *node) {
     b.zones.insert(zsOut);
     rapidxml::xml_node<> *cnode = node->first_node();
     while (cnode) {
-        if (strComp(cnode->name(), "building")) {
+        if (strComp(cnode->name(), "name")) {
             b.name = cnode->value();
         } else if (strComp(cnode->name(), "agents")) {
             parseAgents(cnode);

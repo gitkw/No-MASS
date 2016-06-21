@@ -45,7 +45,9 @@ void Test_Agent::SetUpSim2() {
   zs.name = "Out";
   zs.id = 0;
   zs.activities = {9};
-  Building_Zone z_Out(zs);
+  Building_Zone z_Out;
+  z_Out.setName(zs.name);
+  z_Out.setup(zs);
 
   z_OutPtr = std::make_shared<Building_Zone>(z_Out);
 
@@ -74,27 +76,37 @@ void Test_Agent::SetUpSim2() {
   zs.name = "Block1:Kitchen";
   zs.id = 1;
   zs.activities = {4, 5};
-  Building_Zone z_Kitchen(zs);
+  Building_Zone z_Kitchen;
+  z_Kitchen.setName(zs.name);
+  z_Kitchen.setup(zs);
   z_KitchenPtr = std::make_shared<Building_Zone>(z_Kitchen);
   zs.name = "Block1:LivingRoom";
   zs.id = 2;
   zs.activities = {1, 7, 2};
-  Building_Zone z_LivingRoom(zs);
+  Building_Zone z_LivingRoom;
+  z_LivingRoom.setName(zs.name);
+  z_LivingRoom.setup(zs);
   z_LivingRoomPtr = std::make_shared<Building_Zone>(z_LivingRoom);
   zs.name = "Block2:Bathroom";
   zs.id = 3;
   zs.activities = {6, 8};
-  Building_Zone z_Bathroom(zs);
+  Building_Zone z_Bathroom;
+  z_Bathroom.setName(zs.name);
+  z_Bathroom.setup(zs);
   z_BathroomPtr = std::make_shared<Building_Zone>(z_Bathroom);
   zs.name = "Block2:MasterBedroom";
   zs.id = 4;
   zs.activities = {0};
-  Building_Zone z_MasterBedroom(zs);
+  Building_Zone z_MasterBedroom;
+  z_MasterBedroom.setName(zs.name);
+  z_MasterBedroom.setup(zs);
   z_MasterBedroomPtr = std::make_shared<Building_Zone>(z_MasterBedroom);
   zs.name = "Block2:Office";
   zs.id = 5;
   zs.activities = {3};
-  Building_Zone z_Office(zs);
+  Building_Zone z_Office;
+  z_Office.setName(zs.name);
+  z_Office.setup(zs);
   z_OfficePtr = std::make_shared<Building_Zone>(z_Office);
 
   v.push_back(z_MasterBedroomPtr);
@@ -128,7 +140,9 @@ void Test_Agent::SetUpSim4() {
   zs.name = "Out";
   zs.id = 0;
   zs.activities = {9};
-  Building_Zone z_Out(zs);
+  Building_Zone z_Out;
+  z_Out.setName(zs.name);
+  z_Out.setup(zs);
 
   z_OutPtr = std::make_shared<Building_Zone>(z_Out);
 
@@ -145,12 +159,16 @@ void Test_Agent::SetUpSim4() {
   zs.name = "Block1:Office";
   zs.activities = {3};
   zs.id = 1;
-  Building_Zone z_Office(zs);
+  Building_Zone z_Office;
+  z_Office.setName(zs.name);
+  z_Office.setup(zs);
   z_OfficePtr = std::make_shared<Building_Zone>(z_Office);
   zs.name = "Block2:Office";
   zs.activities = {3};
   zs.id = 2;
-  Building_Zone z_Office2(zs);
+  Building_Zone z_Office2;
+  z_Office2.setName(zs.name);
+  z_Office2.setup(zs);
   z_OfficePtr2 = std::make_shared<Building_Zone>(z_Office2);
 
   v.push_back(z_OfficePtr);

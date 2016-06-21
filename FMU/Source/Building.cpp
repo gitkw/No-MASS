@@ -19,13 +19,16 @@ Building::Building() {}
 void Building::setup(const buildingStruct &b) {
     name = b.name;
     for (std::pair<std::string, ZoneStruct> z : b.zones) {
-      zones.push_back(std::make_shared<Building_Zone>(Building_Zone(z.second)));
+      zones.push_back(std::make_shared<Building_Zone>(Building_Zone()));
+      zones.back()->setName(name + z.second.name);
+      zones.back()->setup(z.second);
     }
     int popSize = SimulationConfig::numberOfAgents();
     std::list<int> pop = Utility::randomIntList(popSize);
     // setup each agent randomly
     for (int a : pop) {
           population.push_back(Agent());
+          population.back().setBuilding(name);
           population.back().setup(a, zones);
     }
 }

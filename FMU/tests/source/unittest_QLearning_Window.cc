@@ -37,15 +37,17 @@ TEST_F(Test_QLearning_Window, learn) {
     ZoneStruct zs;
     zs.name = "Block1:Zone1";
     zs.id = 1;
-    Building_Zone z_Kitchen(zs);
+    Building_Zone z_Kitchen;
+    z_Kitchen.setName(zs.name);
+    z_Kitchen.setup(zs);
 
     double reward = -0.1;
     double result = 1;
     for (int i =0; i < 100000; i++) {
       ql.setState(21);
-      if(result >0){
+      if (result >0) {
         ql.setReward(1);
-      }else{
+      } else {
         ql.setReward(-0.1);
       }
       result = ql.learn();
@@ -63,9 +65,9 @@ TEST_F(Test_QLearning_Window, learn) {
 
     for (int i =0; i < 100000; i++) {
       ql.setState(22);
-      if(result >0){
+      if (result > 0) {
         ql.setReward(-0.1);
-      }else{
+      } else {
         ql.setReward(1);
       }
       result = ql.learn();

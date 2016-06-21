@@ -36,9 +36,9 @@ TEST_F(Test_Building, one) {
     Building building;
     building.setup(SimulationConfig::buildings[0]);
 
-    ASSERT_EQ(building.hasZone("Block1:Zone1"), true);
-    ASSERT_EQ(building.hasZone("Block2:Zone1"), false);
-    ASSERT_EQ(building.hasZone("Out"), true);
+    ASSERT_TRUE(building.hasZone("Block1:Zone1"));
+    ASSERT_FALSE(building.hasZone("Block2:Zone1"));
+    ASSERT_TRUE(building.hasZone("Out"));
 
     for (int i = 0; i < 100; i++) {
       building.step();
@@ -47,7 +47,7 @@ TEST_F(Test_Building, one) {
 }
 
 TEST_F(Test_Building, two) {
-  /*  std::vector<Building> buildings;
+    std::vector<Building> buildings;
 
     for (buildingStruct b : SimulationConfig::buildings) {
       buildings.push_back(Building());
@@ -55,12 +55,12 @@ TEST_F(Test_Building, two) {
     }
 
     EXPECT_EQ(buildings.size(), 2);
-    ASSERT_EQ(buildings[0].hasZone("Block1:Zone1"), true);
-    ASSERT_EQ(buildings[0].hasZone("Block2:Zone1"), false);
-    ASSERT_EQ(buildings[0].hasZone("Out"), true);
-    ASSERT_EQ(buildings[1].hasZone("Block1:Zone1"), false);
-    ASSERT_EQ(buildings[1].hasZone("Block2:Zone1"), true);
-    ASSERT_EQ(buildings[1].hasZone("Out"), true);
+    ASSERT_TRUE(buildings[0].hasZone("Block1:Zone1"));
+    ASSERT_FALSE(buildings[0].hasZone("Block2:Zone1"));
+    ASSERT_TRUE(buildings[0].hasZone("Out"));
+    ASSERT_FALSE(buildings[1].hasZone("Block1:Zone1"));
+    ASSERT_TRUE(buildings[1].hasZone("Block2:Zone1"));
+    ASSERT_TRUE(buildings[1].hasZone("Out"));
 
     std::cout << "hello" << std::endl;
 
@@ -74,5 +74,4 @@ TEST_F(Test_Building, two) {
     for (Building &building : buildings) {
       building.postprocess();
     }
-    */
 }

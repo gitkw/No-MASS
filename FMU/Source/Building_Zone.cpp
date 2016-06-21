@@ -11,42 +11,40 @@
 
 Building_Zone::Building_Zone() {}
 
-Building_Zone::Building_Zone(const ZoneStruct & zoneStruct) :
-                             id(zoneStruct.id),
-                             name(zoneStruct.name),
-                             activities(zoneStruct.activities) {
-    occupantFraction = 0;
-    currentAgentGains = 0;
-    blindState = 1;
-    lightState = 0;
-    windowState = 0;
+void Building_Zone::setup(const ZoneStruct & zoneStruct) {
+  id = zoneStruct.id;
+  activities = zoneStruct.activities;
+  occupantFraction = 0;
+  currentAgentGains = 0;
+  blindState = 1;
+  lightState = 0;
+  windowState = 0;
 
-    setActive(SimulationConfig::activeZone(&name));
-    if (active) {
-        int windowCount = zoneStruct.windowCount;
-        setGroundFloor(SimulationConfig::isZoneGroundFloor(&name));
-        for (int i = 0; i < windowCount; i ++) {
-          std::string windowName = name + "WindowState" + std::to_string(i);
-          variableNameWindow.push_back(windowName);
-          DataStore::addVariable(windowName);
-        }
+  setActive(SimulationConfig::activeZone(&name));
+  if (active) {
+      int windowCount = zoneStruct.windowCount;
+      setGroundFloor(SimulationConfig::isZoneGroundFloor(&name));
+      for (int i = 0; i < windowCount; i ++) {
+        std::string windowName = name + "WindowState" + std::to_string(i);
+        variableNameWindow.push_back(windowName);
+        DataStore::addVariable(windowName);
+      }
 
-        variableNameAppFraction = name + "AppFraction";
-        DataStore::addVariable(variableNameAppFraction);
-        variableNameBlindFraction = name + "BlindFraction";
-        DataStore::addVariable(variableNameBlindFraction);
-        variableNameLight = name + "LightState";
-        DataStore::addVariable(variableNameLight);
-        variableNameHeating = name + "Heating";
-        DataStore::addVariable(variableNameHeating);
-        variableNameNumberOfOccupants = name + "NumberOfOccupants";
-        DataStore::addVariable(variableNameNumberOfOccupants);
-        variableNameAverageGains = name + "AverageGains";
-        DataStore::addVariable(variableNameAverageGains);
-    }
+      variableNameAppFraction = name + "AppFraction";
+      DataStore::addVariable(variableNameAppFraction);
+      variableNameBlindFraction = name + "BlindFraction";
+      DataStore::addVariable(variableNameBlindFraction);
+      variableNameLight = name + "LightState";
+      DataStore::addVariable(variableNameLight);
+      variableNameHeating = name + "Heating";
+      DataStore::addVariable(variableNameHeating);
+      variableNameNumberOfOccupants = name + "NumberOfOccupants";
+      DataStore::addVariable(variableNameNumberOfOccupants);
+      variableNameAverageGains = name + "AverageGains";
+      DataStore::addVariable(variableNameAverageGains);
+  }
+
 }
-
-void Building_Zone::setup() {}
 
 void Building_Zone::step() {
     if (active) {

@@ -39,11 +39,15 @@ void Test_Agent_Zone::SetUp() {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen(zs);
+  Building_Zone z_Kitchen;
+  z_Kitchen.setName(zs.name);
+  z_Kitchen.setup(zs);
   z_KitchenPtr = std::make_shared<Building_Zone>(z_Kitchen);
   zs.name = "Block1:LivingRoom";
   zs.id = 2;
-  Building_Zone z_LivingRoom(zs);
+  Building_Zone z_LivingRoom;
+  z_LivingRoom.setName(zs.name);
+  z_LivingRoom.setup(zs);
   z_LivingRoomPtr = std::make_shared<Building_Zone>(z_LivingRoom);
 
   agentStruct agent = SimulationConfig::agents.at(1);

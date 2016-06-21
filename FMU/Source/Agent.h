@@ -30,6 +30,7 @@ public:
 
     void step();
     void setState(State &state);
+    void setBuilding(const std::string &building);
     void postTimeStep();
     void zoneInteractions();
     void postprocess();
@@ -68,6 +69,7 @@ private:
     std::vector<double> activities;
     std::vector<int> availableActions;
 
+    std::string building; /** building agent belongs to */
     std::string bedroom; /** Which bedroom the occupant sleeps in */
     std::string office; /** Which Office the occupant works in */
     State state; /** Occupants current state */

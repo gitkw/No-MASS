@@ -23,12 +23,16 @@ TEST(StateMachine, statesPage) {
   ZoneStruct zs;
   zs.name = "Block1:Zone1";
   zs.id = 1;
-  Building_Zone z(zs);
+  Building_Zone z;
+  z.setName(zs.name);
+  z.setup(zs);
 
   ZoneStruct zs_out;
   zs_out.name = "Out";
   zs_out.id = 0;
-  Building_Zone z_out(zs_out);
+  Building_Zone z_out;
+  z_out.setName(zs_out.name);
+  z_out.setup(zs_out);
 
   StateMachine stateMachine;
   State_Out out;
@@ -72,7 +76,9 @@ TEST(StateMachine, statesActivity) {
   ZoneStruct zs_out;
   zs_out.name = "Out";
   zs_out.id = 1;
-  Building_Zone z_out(zs_out);
+  Building_Zone z_out;
+  z_out.setName(zs_out.name);
+  z_out.setup(zs_out);
 
   StateMachine stateMachine;
   State_Out out;
@@ -84,19 +90,29 @@ TEST(StateMachine, statesActivity) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen(zs);
+  Building_Zone z_Kitchen;
+  z_Kitchen.setName(zs.name);
+  z_Kitchen.setup(zs);
   zs.name = "Block1:LivingRoom";
   zs.id = 1;
-  Building_Zone z_LivingRoom(zs);
+  Building_Zone z_LivingRoom;
+  z_LivingRoom.setName(zs.name);
+  z_LivingRoom.setup(zs);
   zs.name = "Block2:Bathroom";
   zs.id = 1;
-  Building_Zone z_Bathroom(zs);
+  Building_Zone z_Bathroom;
+  z_Bathroom.setName(zs.name);
+  z_Bathroom.setup(zs);
   zs.name = "Block2:MasterBedroom";
   zs.id = 1;
-  Building_Zone z_MasterBedroom(zs);
+  Building_Zone z_MasterBedroom;
+  z_MasterBedroom.setName(zs.name);
+  z_MasterBedroom.setup(zs);
   zs.name = "Block2:Office";
   zs.id = 1;
-  Building_Zone z_Office(zs);
+  Building_Zone z_Office;
+  z_Office.setName(zs.name);
+  z_Office.setup(zs);
 
   State_Sleep sleep;
   sleep.setZonePtr(std::make_shared<Building_Zone>(z_MasterBedroom));

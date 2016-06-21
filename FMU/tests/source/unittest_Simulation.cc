@@ -30,7 +30,7 @@ TEST(Simulation, HeatGainsOnly) {
   EXPECT_EQ(activity, 9);
   s.postTimeStep();
   s.postprocess();
-  
+
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 21);
   DataStore::addVariable("Block1:Zone1ZoneMeanAirTemperature");
   DataStore::addVariable("Block1:Zone1ZoneAirRelativeHumidity");

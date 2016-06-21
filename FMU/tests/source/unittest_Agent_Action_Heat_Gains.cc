@@ -40,7 +40,9 @@ TEST_F(Test_Agent_Action_Heat_Gains, HeatGains) {
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
-  Building_Zone z_Kitchen(zs);
+  Building_Zone z_Kitchen;
+  z_Kitchen.setName(zs.name);
+  z_Kitchen.setup(zs);
   // aahg.prestep(double clo, double metabolicRate)
   aahg.prestep(1.0, 0.1);
   aahg.step(z_Kitchen, true);
