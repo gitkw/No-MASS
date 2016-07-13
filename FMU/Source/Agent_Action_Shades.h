@@ -13,10 +13,14 @@ class Agent_Action_Shades : public Agent_Action {
   void setup(int windowID);
   void step(const Building_Zone& zone, const bool inZone,
             const bool previouslyInZone);
+  void setIndoorIlluminance(const float lumint);
+
+ protected:
+   float Lumint = 0;
 
  private:
-  Model_ExternalShading m_blindUsage;
 
+  Model_ExternalShading m_blindUsage;
 };
 
 #endif  // FMU_SOURCE_AGENT_ACTION_SHADES_H_

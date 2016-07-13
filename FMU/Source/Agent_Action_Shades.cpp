@@ -27,8 +27,6 @@ void Agent_Action_Shades::step(const Building_Zone& zone, const bool inZone,
   // Evg: Outdoor illuminance in the horizontal plane without obstructions (lux)
   float Evg =
     DataStore::getValue("EnvironmentSiteExteriorHorizontalSkyIlluminance");
-  // Lumint: Indoor illuminance next to window (lux)
-  float Lumint = zone.getDaylightingReferencePoint1Illuminance();
 
   if (inZone && !previouslyInZone) {
     shadingFraction = m_blindUsage.arrival(shadingFraction, Lumint, Evg);
@@ -36,4 +34,9 @@ void Agent_Action_Shades::step(const Building_Zone& zone, const bool inZone,
     shadingFraction = m_blindUsage.departure(shadingFraction, Lumint, Evg);
   }
   result = shadingFraction;
+}
+
+void Agent_Action_Shades::setIndoorIlluminance(const float lumint){
+  //Lumint: Indoor illuminance next to window (lux)
+   this->Lumint = lumint;
 }

@@ -95,7 +95,9 @@ include_directories(${PROJECT_SOURCE_DIR}/Source)
 
 ADD_LIBRARY(FMI SHARED ${SRC} Source/fmuTemplate.cpp  )
 
+if(UNIX)
 set_source_files_properties(${SRC} PROPERTIES COMPILE_FLAGS "-Werror -Wall -Wextra")
+endif()
 
 if(WIN32)
   SET( CMAKE_CXX_CREATE_SHARED_LIBRARY  "${CMAKE_CXX_CREATE_SHARED_LIBRARY} -static -fPIC" )

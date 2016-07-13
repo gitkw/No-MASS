@@ -208,6 +208,7 @@ void Agent_Zone::actionStep(int action,
         break;
       case 2:
             ActionShades = true;
+            aas.setIndoorIlluminance(zone.getDaylightingReferencePoint1Illuminance());
             aas.step(zone, inZone, preZone);
             desiredShadeState = aas.getResult();
         break;
@@ -241,6 +242,7 @@ void Agent_Zone::actionStep(int action,
         break;
       case 8:
             ActionShades = true;
+            aasBDI.setIndoorIlluminance(zone.getDaylightingReferencePoint1Illuminance());
             aasBDI.step(zone, inZone, preZone);
             desiredShadeState = aasBDI.getResult();
         break;

@@ -2,17 +2,16 @@
 ## Current Status Of Build
 ![Build](https://magnum.travis-ci.com/jacoblchapman/No-MASS.svg?token=hNH6EHukhSBPUpNQNYH3&branch=Master "build")
 
-## Guide
+## Guide Linux
 
-This guide is for **linux only**.
 Use a compiler with at least the c++11 standard. Most modern linux systems have this by default, if not it can be installed easily.
 CMake is used to build the make file.
 
-No-MASS can be built on windows using mingw64. This is more complicated and differs in each windows version.
-
 ### Checkout
 
-Clone the repository using git
+Clone the repository using git, ensure you do a recursive clone to recieve all dependencies.
+Needs rapidxml for xml parsing and googletest for testing.
+
 ```sh
 git clone https://github.com/jacoblchapman/No-MASS.git
 
@@ -26,12 +25,12 @@ Alternativly use a GUI such as GitHub Desktop or SourceTree.
 
 ### Compiling
 
-Build the No-MASS using cmake and make 
+Build the No-MASS using cmake and make
 
 ```sh
 cd FMU
 
-make build
+mkdir build
 
 cd build
 
@@ -60,3 +59,12 @@ make
 
 ./runUnitTests
 ```
+
+
+## Guide Windows
+
+No-MASS can be built on windows using mingw-w64 or alternativly visual studio. This differs for each windows version, but the general process is:
+On windows install CMake https://cmake.org/download/
+mingw-w64 installer if not using visual studio http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/
+Use the CMake GUI to create the visual studio project or make files from the FMU directory in the checked out source folder.
+Open in visual studio to compile or use make command as in linux.

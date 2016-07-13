@@ -107,7 +107,6 @@ private:
     Agent_Action_HeatingSetPoints_Learning aalearn;
     Agent_Action_Appliance_BDI aaa;
 
-    bool BDIEnabled = false;
 };
 
 #endif	/* AGENT_ZONE_H */

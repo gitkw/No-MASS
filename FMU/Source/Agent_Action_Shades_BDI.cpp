@@ -51,12 +51,9 @@ bool Agent_Action_Shades_BDI::doRecipe(const std::vector<double> &activities) {
       result = 0;
       bdi = true;
   }
+
   if (ShadeClosedDuringNight > Utility::randomDouble(0, 1)) {
-      int hour = DataStore::getValue("hourOfDay");
-      if (hour < 8) {
-        result = 0;
-        bdi = true;
-      } else if (hour > 20) {
+      if (Lumint < 50) {
         result = 0;
         bdi = true;
       }
