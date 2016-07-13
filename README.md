@@ -3,7 +3,10 @@
 ## Checkout
 
 Clone the repository using git, ensure you do a recursive clone to recieve all dependencies.
-Needs rapidxml for xml parsing and googletest for testing.
+- Rapidxml for xml parsing
+- googletest for testing
+
+Use the following commands or alternativly use a GUI such as GitHub Desktop or SourceTree.
 
 ```sh
 git clone https://github.com/jacoblchapman/No-MASS.git
@@ -13,9 +16,6 @@ cd No-MASS
 git submodule update --init --recursive
 
 ```
-
-Alternativly use a GUI such as GitHub Desktop or SourceTree.
-
 
 ## Guide to compiling on Linux
 
@@ -27,14 +27,16 @@ CMake is used to build the make file.
 Build the No-MASS using cmake and make
 
 ```sh
+# Move it the FMU directory
 cd FMU
 
-mkdir build
+# Create a directory to create the make files in and change to that directory
+mkdir build && cd build
 
-cd build
-
+# Use cmake to create the make files for your system
 cmake ../
 
+# Compile the share library using make
 make
 ```
 
@@ -43,12 +45,16 @@ make
 To run the tests enable testing in CMake, build, and run the test program
 
 ```sh
+# Move into the build directory
 cd FMU/build
 
+# Enable debugging and testing in cake
 cmake -DCMAKE_BUILD_TYPE=Debug -Dtest=on ../
 
+# Compile using make
 make
 
+# Run the tests
 ./runUnitTests
 ```
 
