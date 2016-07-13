@@ -64,7 +64,8 @@ make
 ## Guide Windows
 
 No-MASS can be built on windows using mingw-w64 or alternativly visual studio. This differs for each windows version, but the general process is:
-On windows install [CMake](https://cmake.org/download/)
-[mingw-w64 installer](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/) if not using visual studio.
-Use the CMake GUI to create the visual studio project or make files from the FMU directory in the checked out source folder.
-Open in visual studio to compile or use make command as in linux.
+- Ensure you know which EnergyPlus architecture you are targetting 32bit(i686) or 64bit(x86_64)
+- Install [mingw-w64](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/) or visual studio depending on prefered method of compiling. With mingw-w64 choose the correct architecture.
+- Install [CMake](https://cmake.org/download/)
+- Use the CMake GUI to create the visual studio project or mingw-w64 make files from the FMU directory in the checked out source folder.
+- Open in visual studio to compile or use make command as in linux.
