@@ -45,7 +45,7 @@
     <ScalarVariable causality="input" name="Block1:Zone1ZoneAirSystemSensibleHeatingRate" valueReference="12">
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" />
     </ScalarVariable>
-    <ScalarVariable causality="output" name="Block1:Zone1WindowState" valueReference="13">
+    <ScalarVariable causality="output" name="Block1:Zone1WindowState0" valueReference="13">
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" />
     </ScalarVariable>
     <ScalarVariable causality="output" name="Block1:Zone1LightState" valueReference="14">
