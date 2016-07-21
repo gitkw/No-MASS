@@ -3,10 +3,12 @@
 #ifndef BUILDING_H
 #define	BUILDING_H
 #include <vector>
+#include <deque>
 #include <memory>
 #include "SimulationConfig.h"
-#include "Agent.h"
+#include "Occupant.h"
 #include "Building_Zone.h"
+#include "Building_Appliances.h"
 
 class Building{
 public:
@@ -21,22 +23,27 @@ public:
     static double dailyMeanTemperature;
 
 private:
-    void setAgentGainsForZone(std::shared_ptr<Building_Zone> zone);
-    void setAgentWindowDecisionForZone(std::shared_ptr<Building_Zone> zone);
-    void setAgentLightDecisionForZone(std::shared_ptr<Building_Zone> zone);
-    void setAgentBlindDecisionForZone(std::shared_ptr<Building_Zone> zone);
-    void setAgentHeatDecisionsForZone(std::shared_ptr<Building_Zone> zone);
-    void setAgentCountForZone(std::shared_ptr<Building_Zone> zone);
+    void setOccupantGainsForZone(std::shared_ptr<Building_Zone> zone);
+    void setOccupantWindowDecisionForZone(std::shared_ptr<Building_Zone> zone);
+    void setOccupantLightDecisionForZone(std::shared_ptr<Building_Zone> zone);
+    void setOccupantBlindDecisionForZone(std::shared_ptr<Building_Zone> zone);
+    void setOccupantHeatDecisionsForZone(std::shared_ptr<Building_Zone> zone);
+    void setOccupantCountForZone(std::shared_ptr<Building_Zone> zone);
     void setAppGainsForZone(std::shared_ptr<Building_Zone> zone);
 
     void setZones(const std::vector<std::shared_ptr<Building_Zone>> & zones);
     void buildingInteractions();
+    void calculateDailyMeanTemperature();
     std::vector<float> presenceProfile;
-    std::vector<Agent> population;
+    std::vector<Occupant> population;
     std::vector<std::shared_ptr<Building_Zone>> zones;
     std::string name;
-
     std::deque<double> outDoorTemperatures;
+
+    Building_Appliances appliances;
+
+    int id;
+
 
 };
 

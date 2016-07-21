@@ -27,8 +27,11 @@ public:
     void timeStep();
     void postTimeStep();
 
+    void setSimulationConfigurationFile(const std::string & filename);
+
 private:
     std::vector<int> monthCount;
+    std::string simulationConfigurationFile;
 
     /**
      * Manages the Buildings

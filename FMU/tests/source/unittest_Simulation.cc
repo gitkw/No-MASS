@@ -12,9 +12,9 @@
 TEST(Simulation, HeatGainsOnly) {
   DataStore::clear();
   SimulationConfig::reset();
-  SimulationConfig::FmuLocation = testFiles;
+  SimulationConfig::RunLocation  = testFiles;
   Simulation s;
-  s.parseConfiguration(SimulationConfig::FmuLocation + "/SimulationConfig.xml");
+  s.parseConfiguration(SimulationConfig::RunLocation  + "/SimulationConfig.xml");
   SimulationConfig::info.windows = false;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
@@ -26,7 +26,7 @@ TEST(Simulation, HeatGainsOnly) {
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 21);
   s.timeStep();
   EXPECT_EQ(SimulationConfig::getStepCount(), 0);
-  int activity = DataStore::getValue("Agent_Activity_1");
+  int activity = DataStore::getValue("Occupant_Activity_1");
   EXPECT_EQ(activity, 9);
   s.postTimeStep();
   s.postprocess();
@@ -42,16 +42,16 @@ TEST(Simulation, HeatGainsOnly) {
     s.preTimeStep();
     s.timeStep();
     EXPECT_EQ(SimulationConfig::getStepCount(), i);
-    int activity = DataStore::getValue("Agent_Activity_1");
+    int activity = DataStore::getValue("Occupant_Activity_1");
 
     s.postTimeStep();
     if (activity < 9) {
       EXPECT_EQ(activity, 3);
       ASSERT_NEAR(DataStore::getValue("AgentGains1"), 77.046341167, 0.001);
-      ASSERT_NEAR(DataStore::getValue("Agent_Metabolic_Rate_1"), 70, 0.001);
-      ASSERT_NEAR(DataStore::getValue("Agent_clo_1"), 1, 0.001);
-      ASSERT_NEAR(DataStore::getValue("Agent_ppd_1"), 7.835778219685593, 0.001);
-      ASSERT_NEAR(DataStore::getValue("Agent_pmv_1"), -0.36908214203982, 0.001);
+      ASSERT_NEAR(DataStore::getValue("Occupant_Metabolic_Rate_1"), 70, 0.001);
+      ASSERT_NEAR(DataStore::getValue("Occupant_clo_1"), 1, 0.001);
+      ASSERT_NEAR(DataStore::getValue("Occupant_ppd_1"), 7.835778219685593, 0.001);
+      ASSERT_NEAR(DataStore::getValue("Occupant_pmv_1"), -0.36908214203982, 0.001);
     }
   }
   s.postprocess();
@@ -61,10 +61,10 @@ TEST(Simulation, HeatGainsOnly) {
 TEST(Simulation, HeatGainsWindowsOnly) {
   DataStore::clear();
   SimulationConfig::reset();
-  SimulationConfig::FmuLocation = testFiles;
+  SimulationConfig::RunLocation  = testFiles;
   Simulation s;
 
-  s.parseConfiguration(SimulationConfig::FmuLocation + "/SimulationConfig.xml");
+  s.parseConfiguration(SimulationConfig::RunLocation  + "/SimulationConfig.xml");
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
   SimulationConfig::info.windows = true;

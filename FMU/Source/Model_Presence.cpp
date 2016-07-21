@@ -17,21 +17,9 @@ int Model_Presence::presentForFutureSteps() const {
     return presenceForFutureSteps.at(SimulationConfig::getStepCount());
 }
 
-int Model_Presence::calculateNumberOfDays(const int startDay,
-                                          const int startMonth,
-                                          const int endDay,
-                                          const int endMonth) {
-    static const int daysInMonth[] =
-                              {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    int days = daysInMonth[startMonth - 1] - (startDay -1);
-    for (int i = startMonth; i < endMonth -1; i++) {
-        days += daysInMonth[i];
-    }
-    days += endDay;
-    return days;
-}
 
-void Model_Presence::calculatePresenceFromPage(const int agentID) {
+
+void Model_Presence::calculatePresenceFromPage(const int buildingID, const int agentID) {
     float pMon[24];
     float pTue[24];
     float pWed[24];
@@ -41,7 +29,7 @@ void Model_Presence::calculatePresenceFromPage(const int agentID) {
     float pSun[24];
 
     std::map<int, std::string> probMap =
-                                  SimulationConfig::agents.at(agentID).profile;
+                                  SimulationConfig::buildings[buildingID].agents.at(agentID).profile;
     for (int day = 0; day < 7; day++) {
         std::vector<std::string> tokProbs = Utility::splitCSV(probMap.at(day));
 
@@ -76,7 +64,7 @@ void Model_Presence::calculatePresenceFromPage(const int agentID) {
 
     double timeStepsPerHour =
             static_cast<double>(SimulationConfig::info.timeStepsPerHour);
-    unsigned int days = calculateNumberOfDays(SimulationConfig::info.startDay,
+    unsigned int days = Utility::calculateNumberOfDays(SimulationConfig::info.startDay,
                                               SimulationConfig::info.startMonth,
                                               SimulationConfig::info.endDay,
                                               SimulationConfig::info.endMonth);

@@ -17,6 +17,7 @@ double Model_RandomWeibull::randomWeibull(double scale, double shape) {
     return scale * pow(-log(1.f-random), 1.f / shape);
 }
 
+
 double Model_RandomWeibull::randomDouble() {
     return randomDouble(0.0, 1.0);
 }

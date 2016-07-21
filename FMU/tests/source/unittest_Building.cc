@@ -14,8 +14,8 @@ class Test_Building : public ::testing::Test {
 
 void Test_Building::SetUp() {
     SimulationConfig::reset();
-    SimulationConfig::FmuLocation = testFiles;
-    SimulationConfig::parseConfiguration(SimulationConfig::FmuLocation
+    SimulationConfig::RunLocation  = testFiles;
+    SimulationConfig::parseConfiguration(SimulationConfig::RunLocation 
       + "/SimulationConfig3.xml");
     SimulationConfig::info.windows = false;
     SimulationConfig::info.shading = false;

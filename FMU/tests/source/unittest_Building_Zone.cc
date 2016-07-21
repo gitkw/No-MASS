@@ -44,8 +44,8 @@ TEST(Building_Zone, Name) {
   ASSERT_EQ(z_Kitchen.isActive(), false);
   z_Kitchen.setActive(true);
   ASSERT_EQ(z_Kitchen.isActive(), true);
-  z_Kitchen.setCurrentAgentGains(120);
-  ASSERT_EQ(z_Kitchen.getCurrentAgentGains(), 120);
+  z_Kitchen.setCurrentOccupantGains(120);
+  ASSERT_EQ(z_Kitchen.getCurrentOccupantGains(), 120);
   z_Kitchen.setGroundFloor(true);
   ASSERT_EQ(z_Kitchen.getGroundFloor(), true);
 

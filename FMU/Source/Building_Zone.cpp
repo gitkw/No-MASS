@@ -1,4 +1,4 @@
-// Copyright 2015 Jacob Chapman
+// Copyright 2016 Jacob Chapman
 
 #include <fstream>
 #include <iostream>
@@ -15,7 +15,7 @@ void Building_Zone::setup(const ZoneStruct & zoneStruct) {
   id = zoneStruct.id;
   activities = zoneStruct.activities;
   occupantFraction = 0;
-  currentAgentGains = 0;
+  currentOccupantGains = 0;
   blindState = 1;
   lightState = 0;
   windowState = 0;
@@ -49,7 +49,7 @@ void Building_Zone::setup(const ZoneStruct & zoneStruct) {
 void Building_Zone::step() {
     if (active) {
         DataStore::addValue(variableNameNumberOfOccupants, occupantFraction);
-        DataStore::addValue(variableNameAverageGains, currentAgentGains);
+        DataStore::addValue(variableNameAverageGains, currentOccupantGains);
         for (std::string & name : variableNameWindow) {
           DataStore::addValue(name, windowState);
         }
@@ -78,12 +78,12 @@ int Building_Zone::getId() const {
     return id;
 }
 
-void Building_Zone::setCurrentAgentGains(double currentAgentGains) {
-    this->currentAgentGains = currentAgentGains;
+void Building_Zone::setCurrentOccupantGains(double currentOccupantGains) {
+    this->currentOccupantGains = currentOccupantGains;
 }
 
-double Building_Zone::getCurrentAgentGains() const {
-    return currentAgentGains;
+double Building_Zone::getCurrentOccupantGains() const {
+    return currentOccupantGains;
 }
 
 double Building_Zone::getWindowState() const {

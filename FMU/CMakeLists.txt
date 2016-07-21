@@ -40,20 +40,21 @@ project (FMI)
 
 SET( SRC
 Source/Agent.cpp
-Source/Agent_Action.cpp
-Source/Agent_Action_Heat_Gains.cpp
-Source/Agent_Action_Lights.cpp
-Source/Agent_Action_Lights_BDI.cpp
-Source/Agent_Action_Shades.cpp
-Source/Agent_Action_Shades_BDI.cpp
-Source/Agent_Action_Window.cpp
-Source/Agent_Action_Window_Stochastic.cpp
-Source/Agent_Action_Window_Stochastic_BDI.cpp
-Source/Agent_Action_Window_Learning.cpp
-Source/Agent_Action_Appliance.cpp
-Source/Agent_Action_Appliance_BDI.cpp
-Source/Agent_Action_HeatingSetPoints_Learning.cpp
-Source/Agent_Zone.cpp
+Source/Occupant.cpp
+Source/Occupant_Action.cpp
+Source/Occupant_Action_Heat_Gains.cpp
+Source/Occupant_Action_Lights.cpp
+Source/Occupant_Action_Lights_BDI.cpp
+Source/Occupant_Action_Shades.cpp
+Source/Occupant_Action_Shades_BDI.cpp
+Source/Occupant_Action_Window.cpp
+Source/Occupant_Action_Window_Stochastic.cpp
+Source/Occupant_Action_Window_Stochastic_BDI.cpp
+Source/Occupant_Action_Window_Learning.cpp
+Source/Occupant_Action_Appliance.cpp
+Source/Occupant_Action_Appliance_BDI.cpp
+Source/Occupant_Action_HeatingSetPoints_Learning.cpp
+Source/Occupant_Zone.cpp
 Source/DataStore.cpp
 Source/Log.cpp
 Source/Model_Activity.cpp
@@ -65,6 +66,7 @@ Source/Model_RandomWeibull.cpp
 Source/Model_Windows.cpp
 Source/Model_Appliance_Ownership.cpp
 Source/Model_Appliance_Usage.cpp
+Source/Model_Appliance_Small_Usage.cpp
 Source/Simulation.cpp
 Source/SimulationConfig.cpp
 Source/State.cpp
@@ -83,27 +85,35 @@ Source/State_Washing_Appliance.cpp
 Source/Utility.cpp
 Source/Building.cpp
 Source/Building_Zone.cpp
+Source/Building_Appliances.cpp
 Source/fmiFunctions.cpp
 Source/QLearning.cpp
 Source/QLearning_HeatingSetPoints.cpp
 Source/QLearning_Window.cpp
+Source/Appliance.cpp
+Source/Appliance_large.cpp
 )
 
-include_directories(${PROJECT_SOURCE_DIR}/../Boost/Boost-Source)
 include_directories(${PROJECT_SOURCE_DIR}/../rapidxml)
 include_directories(${PROJECT_SOURCE_DIR}/Source)
 
-ADD_LIBRARY(FMI SHARED ${SRC} Source/fmuTemplate.cpp  )
+ADD_LIBRARY(NoMASSstatic STATIC ${SRC})
+
+ADD_LIBRARY(FMI SHARED Source/fmuTemplate.cpp)
+target_link_libraries(FMI NoMASSstatic)
+
+add_executable(NoMASS Source/main.cpp)
+target_link_libraries(NoMASS NoMASSstatic)
 
 if(UNIX)
-set_source_files_properties(${SRC} PROPERTIES COMPILE_FLAGS "-Werror -Wall -Wextra")
+  set_source_files_properties(${SRC} PROPERTIES COMPILE_FLAGS "-Werror -Wall -Wextra")
 endif()
 
 if(WIN32)
   SET( CMAKE_CXX_CREATE_SHARED_LIBRARY  "${CMAKE_CXX_CREATE_SHARED_LIBRARY} -static -fPIC" )
 endif()
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11")
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
 
 
 SET(CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE} -O2")
@@ -148,25 +158,26 @@ if (Tests)
     tests/source/unittest_SimulationConfig.cc
     tests/source/unittest_Model_Activity.cc
     tests/source/unittest_Model_Windows.cc
-    tests/source/unittest_Agent_Action_HeatingSetPoints_Learning.cc
+    tests/source/unittest_Occupant_Action_HeatingSetPoints_Learning.cc
     tests/source/unittest_Model_Appliance_Usage.cc
     tests/source/unittest_Model_Appliance_Ownership.cc
+    tests/source/unittest_Model_Appliance_Small_Usage.cc
     tests/source/unittest_StateMachine.cc
     tests/source/unittest_Log.cc
-    tests/source/unittest_Agent.cc
-    tests/source/unittest_Agent_Zone.cc
     tests/source/unittest_Building_Zone.cc
     tests/source/unittest_Utility.cc
     tests/source/unittest_Building.cc
-    tests/source/unittest_Agent_Action.cc
-    tests/source/unittest_Agent_Action_Window_Stochastic.cc
-    tests/source/unittest_Agent_Action_Window_Stochastic_BDI.cc
-    tests/source/unittest_Agent_Action_Shades.cc
-    tests/source/unittest_Agent_Action_Shades_BDI.cc
-    tests/source/unittest_Agent_Action_Light.cc
-    tests/source/unittest_Agent_Action_Light_BDI.cc
-    tests/source/unittest_Agent_Action_Window_Learning.cc
-    tests/source/unittest_Agent_Action_Heat_Gains.cc
+    tests/source/unittest_Occupant.cc
+    tests/source/unittest_Occupant_Zone.cc
+    tests/source/unittest_Occupant_Action.cc
+    tests/source/unittest_Occupant_Action_Window_Stochastic.cc
+    tests/source/unittest_Occupant_Action_Window_Stochastic_BDI.cc
+    tests/source/unittest_Occupant_Action_Shades.cc
+    tests/source/unittest_Occupant_Action_Shades_BDI.cc
+    tests/source/unittest_Occupant_Action_Light.cc
+    tests/source/unittest_Occupant_Action_Light_BDI.cc
+    tests/source/unittest_Occupant_Action_Window_Learning.cc
+    tests/source/unittest_Occupant_Action_Heat_Gains.cc
     tests/source/unittest_QLearning_HeatingSetPoints.cc
     tests/source/unittest_QLearning_Window.cc
   )
@@ -181,3 +192,6 @@ if (Tests)
 
   add_test(runUnitTests runUnitTests)
 endif()
+
+configure_file(tests/Files/DSM.xml.in
+                ${CMAKE_CURRENT_BINARY_DIR}/SimulationConfig.xml)

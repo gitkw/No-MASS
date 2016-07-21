@@ -15,13 +15,13 @@ class Test_Activity : public ::testing::Test {
  protected:
     Model_Activity ma;
     std::vector<double> activities;
-
+    int buildingID = 0;
     virtual void SetUp();
     virtual void AfterConfiguration();
 };
 
 void Test_Activity::SetUp() {
-    SimulationConfig::agents.clear();
+    SimulationConfig::buildings[buildingID].agents.clear();
 }
 void Test_Activity::AfterConfiguration() {
   SimulationConfig::info.timeSteps = 105182;
@@ -31,7 +31,7 @@ void Test_Activity::AfterConfiguration() {
   SimulationConfig::info.startDay  = 31;
 
 
-  activities = ma.preProcessActivities(0);
+  activities = ma.preProcessActivities(buildingID, 0);
 }
 
 TEST_F(Test_Activity, Dissagregate) {
@@ -176,9 +176,9 @@ TEST_F(Test_Activity, multinominalP) {
 
     AfterConfiguration();
 
-    std::vector<double> activities = ma.preProcessActivities(0);
+    std::vector<double> activities = ma.preProcessActivities(buildingID, 0);
     double p[4][7][24][10];
-    ma.multinominalP(p, 0);
+    ma.multinominalP(p, buildingID, 0);
     double sum = 0;
     for (int s = 0; s < 4; s++) {
       for (int d = 0; d < 7; d++) {

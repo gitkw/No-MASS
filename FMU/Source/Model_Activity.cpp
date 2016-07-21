@@ -35,12 +35,12 @@
 Model_Activity::Model_Activity() {
 }
 
-std::vector<double> Model_Activity::preProcessActivities(int agentID) {
+std::vector<double> Model_Activity::preProcessActivities(const int buildingID, const int agentID) {
     if (SimulationConfig::ActivityFile == "") {
-        return disaggregate(agentID);
+        return disaggregate(buildingID, agentID);
     } else {
         parseConfiguration(SimulationConfig::ActivityFile);
-        return multinominal(agentID);
+        return multinominal(buildingID, agentID);
     }
 }
 
@@ -92,30 +92,20 @@ std::string Model_Activity::getDay(const int day) const {
 }
 
 int Model_Activity::multinominalActivity(const double *p) const {
-  int activity = -1;
-  double sum = 0;
-  double drand = Utility::randomDouble(0.0, 1.0);
-  for (int i =0; i < 10; i++) {
-    sum += p[i];
-    if (sum >= drand) {
-        activity = i;
-        break;
-    }
-  }
-  return activity;
+  return Utility::cumulativeProbability(p, 24);
 }
 
 void Model_Activity::multinominalP(
-    double p[4][7][24][10], const int agentID) const {
+    double p[4][7][24][10], const int buildingID, const int agentID) const {
 
-    std::string age = SimulationConfig::agents.at(agentID).age;
-    std::string computer = SimulationConfig::agents.at(agentID).computer;
-    std::string civstat = SimulationConfig::agents.at(agentID).civstat;
-    std::string unemp = SimulationConfig::agents.at(agentID).unemp;
-    std::string retired = SimulationConfig::agents.at(agentID).retired;
-    std::string edtry = SimulationConfig::agents.at(agentID).edtry;
-    std::string famstat = SimulationConfig::agents.at(agentID).famstat;
-    std::string sex = SimulationConfig::agents.at(agentID).sex;
+    std::string age = SimulationConfig::buildings[buildingID].agents.at(agentID).age;
+    std::string computer = SimulationConfig::buildings[buildingID].agents.at(agentID).computer;
+    std::string civstat = SimulationConfig::buildings[buildingID].agents.at(agentID).civstat;
+    std::string unemp = SimulationConfig::buildings[buildingID].agents.at(agentID).unemp;
+    std::string retired = SimulationConfig::buildings[buildingID].agents.at(agentID).retired;
+    std::string edtry = SimulationConfig::buildings[buildingID].agents.at(agentID).edtry;
+    std::string famstat = SimulationConfig::buildings[buildingID].agents.at(agentID).famstat;
+    std::string sex = SimulationConfig::buildings[buildingID].agents.at(agentID).sex;
 
     for (int iSeason = 0; iSeason <4; iSeason++) {
       std::string seasonString = getSeasonString(iSeason);
@@ -157,9 +147,9 @@ void Model_Activity::multinominalP(
     }
 }
 
-std::vector<double> Model_Activity::multinominal(const int agentID) const {
+std::vector<double> Model_Activity::multinominal(const int buildingID, const int agentID) const {
     double p[4][7][24][10];
-    multinominalP(p, agentID);
+    multinominalP(p, buildingID, agentID);
 
     std::vector<double> activities;
 
@@ -231,10 +221,10 @@ void Model_Activity::parseConfiguration(const std::string filename) {
   }
 }
 
-std::vector<double> Model_Activity::disaggregate(const int agentID) const {
+std::vector<double> Model_Activity::disaggregate(const int buildingID, const int agentID) const {
     double probabilities[24][10];
     std::map<int, std::string> probMap;
-    probMap = SimulationConfig::agents.at(agentID).profile;
+    probMap = SimulationConfig::buildings[buildingID].agents.at(agentID).profile;
 
     for (int hour = 0; hour < 24; hour++) {
         std::vector<std::string> tokProbs = Utility::splitCSV(probMap.at(hour));

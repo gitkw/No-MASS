@@ -21,17 +21,21 @@ Simulation::Simulation() {
         monthCount.push_back(304);
         monthCount.push_back(334);
         monthCount.push_back(365);
+
+        simulationConfigurationFile = "SimulationConfig.xml";
 }
 
-
+void Simulation::setSimulationConfigurationFile(const std::string & filename){
+  this->simulationConfigurationFile = filename;
+}
 /**
  * @brief Calls the simulation preprocess
  * @details Reads in the configuration file and sends to parser.
  * Sets up the EnergyPlus processor, the AgentModel and the ZoneManager.
  */
 void Simulation::preprocess() {
-  parseConfiguration(SimulationConfig::FmuLocation
-    + "/SimulationConfig.xml");
+  parseConfiguration(SimulationConfig::RunLocation
+    + simulationConfigurationFile);
   if (!LOG.getError()) {
     setupSimulationModel();
   }
@@ -71,6 +75,7 @@ void Simulation::postprocess() {
  */
 void Simulation::preTimeStep() {
   int stepCount = SimulationConfig::getStepCount();
+  std::cout << "step **************: " << stepCount << std::endl;
   int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
   int day = hour / 24;
 

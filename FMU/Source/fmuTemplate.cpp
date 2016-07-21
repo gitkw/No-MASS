@@ -107,6 +107,7 @@ fmiStatus fmiSetReal(fmiComponent c, const fmiValueReference vr[],
       size_t nvr, const fmiReal value[]) {
     for (unsigned int i = 0; i < nvr; i++) {
         DataStore::addValue(valToRefs.at(vr[i]), value[i]);
+        std::cout << valToRefs.at(vr[i]) << " " <<  value[i] << std::endl;
     }
     modelInstance->sim.preTimeStep();
     if (LOG.getError()) {
@@ -170,7 +171,8 @@ fmiComponent fmiInstantiateSlave(fmiString  instanceName, fmiString  GUID,
     fmiBoolean loggingOn) {
     // ignoring arguments: fmuLocation, mimeType, timeout, visible, interactive
 
-    SimulationConfig::FmuLocation = fmuLocation;
+    SimulationConfig::RunLocation = fmuLocation;
+    SimulationConfig::RunLocation = SimulationConfig::RunLocation + "/";
     return instantiateModel("fmiInstantiateSlave", instanceName,
       GUID, functions, loggingOn);
 }
@@ -263,7 +265,7 @@ fmiStatus fmiGetStringStatus(fmiComponent c, const fmiStatusKind s,
  */
 void loadVariables() {
   std::string filename =
-    SimulationConfig::FmuLocation + "/modelDescription.xml";
+    SimulationConfig::RunLocation + "modelDescription.xml";
 
   LOG << " Loading XML file: -" << filename << "-\n";
 

@@ -15,41 +15,42 @@
 #include "SimulationConfig.h"
 
 std::vector<buildingStruct> SimulationConfig::buildings;
-std::vector<agentStruct> SimulationConfig::agents;
 std::map<int, windowStruct> SimulationConfig::windows;
 std::map<int, shadeStruct> SimulationConfig::shades;
 simulationStruct SimulationConfig::info;
 int SimulationConfig::stepCount = -1;
 std::string SimulationConfig::ActivityFile;
-std::string SimulationConfig::FmuLocation;
+std::string SimulationConfig::RunLocation;
 
 SimulationConfig::SimulationConfig() {}
 
 void SimulationConfig::reset() {
   buildings.clear();
-  agents.clear();
   windows.clear();
   shades.clear();
   info = simulationStruct();
   stepCount = -1;
   ActivityFile = "";
-  FmuLocation = "";
+  RunLocation = "";
 }
 
 
 void SimulationConfig::parseBuildings(rapidxml::xml_node<> *node) {
     buildings.clear();
     rapidxml::xml_node<> *cnode = node->first_node();
+    int id = 0;
     while (cnode) {
         if (strComp(cnode->name(), "building")) {
-              parseBuilding(cnode);
+              parseBuilding(cnode, id);
+              id++;
         }
         cnode = cnode->next_sibling();
     }
 }
 
-void SimulationConfig::parseBuilding(rapidxml::xml_node<> *node) {
+void SimulationConfig::parseBuilding(rapidxml::xml_node<> *node, const int id) {
     buildingStruct b;
+    b.id = id;
     int zonecount = 0;
     std::pair<std::string, ZoneStruct> zsOut;
     zsOut.first = "Out";
@@ -62,7 +63,7 @@ void SimulationConfig::parseBuilding(rapidxml::xml_node<> *node) {
         if (strComp(cnode->name(), "name")) {
             b.name = cnode->value();
         } else if (strComp(cnode->name(), "agents")) {
-            parseAgents(cnode);
+            parseOccupants(cnode, &b);
         } else if (strComp(cnode->name(), "zone")) {
             zonecount++;
             std::pair<std::string, ZoneStruct> zone;
@@ -126,8 +127,7 @@ std::vector<int> SimulationConfig::activityNamesToIds(
   return act;
 }
 
-void SimulationConfig::parseAgents(rapidxml::xml_node<> *node) {
-  agents.clear();
+void SimulationConfig::parseOccupants(rapidxml::xml_node<> *node, buildingStruct *b) {
   SimulationConfig::ActivityFile = "";
   info.presencePage = false;
   rapidxml::xml_node<> *cnode = node->first_node();
@@ -236,7 +236,7 @@ void SimulationConfig::parseAgents(rapidxml::xml_node<> *node) {
         LOG << "profile\n";
         LOG.error();
       }
-      agents.push_back(agent);
+      b->agents.push_back(agent);
     }
     cnode = cnode->next_sibling();
   }
@@ -245,8 +245,10 @@ void SimulationConfig::parseAgents(rapidxml::xml_node<> *node) {
 void SimulationConfig::parseModels(rapidxml::xml_node<> *node) {
     rapidxml::xml_node<> *cnode = node->first_node();
     while (cnode) {
-        if (strComp(cnode->name(), "lights")) {
-              SimulationConfig::info.lights = std::stoi(cnode->value());
+        if (strComp(cnode->name(), "AgentHeatGains")) {
+            SimulationConfig::info.agentHeatGains = std::stoi(cnode->value());
+        } else if (strComp(cnode->name(), "lights")) {
+            SimulationConfig::info.lights = std::stoi(cnode->value());
         } else if (strComp(cnode->name(), "windows")) {
             parseWindows(cnode);
         } else if (strComp(cnode->name(), "shades")) {
@@ -474,9 +476,6 @@ bool SimulationConfig::isZoneGroundFloor(std::string* zoneName) {
   return floor;
 }
 
-int SimulationConfig::numberOfAgents() {
-    return SimulationConfig::agents.size();
-}
 
 double SimulationConfig::lengthOfTimestep() {
     return 3600 / SimulationConfig::info.timeStepsPerHour;

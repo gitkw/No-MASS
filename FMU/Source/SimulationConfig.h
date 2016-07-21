@@ -14,6 +14,12 @@
 #include <map>
 #include <rapidxml.hpp>
 
+
+struct ApplianceStruct {
+    std::string name;
+    int id;
+};
+
 struct ZoneStruct {
     std::string name;
     std::vector<int> activities;
@@ -116,7 +122,10 @@ struct windowStruct {
 
 struct buildingStruct {
     std::map<std::string, ZoneStruct> zones;
+    std::map<std::string, ZoneStruct> Appliances;
+    std::vector<agentStruct> agents;
     std::string name;
+    int id;
 };
 
 struct simulationStruct {
@@ -126,6 +135,7 @@ struct simulationStruct {
     bool lights = false;
     bool shading = false;
     bool presencePage = false;
+    bool agentHeatGains = true;
     double timeStepsPerHour;
     double learnep;
     int learn;
@@ -150,23 +160,21 @@ public:
     static bool activeZone(std::string* zoneName);
     static bool isZoneGroundFloor(std::string* zoneName);
     static std::vector<buildingStruct> buildings;
-    static std::vector<agentStruct> agents;
     static std::map<int, windowStruct> windows;
     static std::map<int, shadeStruct> shades;
     static simulationStruct info;
-    static int numberOfAgents();
     static double lengthOfTimestep();
     static void step();
     static int getStepCount();
     static int stepCount;
     static std::string ActivityFile;
-    static std::string FmuLocation;
+    static std::string RunLocation;
 
 private:
     static void timeSteps();
-    static void parseBuilding(rapidxml::xml_node<> *node);
+    static void parseBuilding(rapidxml::xml_node<> *node, const int id);
     static void parseBuildings(rapidxml::xml_node<> *node);
-    static void parseAgents(rapidxml::xml_node<> *node);
+    static void parseOccupants(rapidxml::xml_node<> *node, buildingStruct *b);
     static void parseModels(rapidxml::xml_node<> *node);
     static void parseWindows(rapidxml::xml_node<> *node);
     static void parseShades(rapidxml::xml_node<> *node);

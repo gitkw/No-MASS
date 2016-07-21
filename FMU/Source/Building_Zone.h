@@ -14,7 +14,7 @@ public:
     void step();
     void setup(const ZoneStruct & zoneStruct);
     void setName(std::string name);
-    void setCurrentAgentGains(double currentAgentGains);
+    void setCurrentOccupantGains(double currentOccupantGains);
     void setGroundFloor(bool groundFloor);
     void setActive(bool active);
     void setWindowDurationOpen(double windowDurationOpen);
@@ -30,7 +30,7 @@ public:
     int getCurrentOccupantCount() const;
     int getId() const;
     float getOccupantFraction() const;
-    double getCurrentAgentGains() const;
+    double getCurrentOccupantGains() const;
     double getWindowState() const;
     double getBlindState() const;
     double getHeatingState() const;
@@ -52,7 +52,7 @@ private:
     bool active;
     bool lightState;
     bool windowState;
-    double currentAgentGains;
+    double currentOccupantGains;
     double blindState;
     double occupantFraction;
     double heatingState;
