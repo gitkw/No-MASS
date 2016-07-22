@@ -65,7 +65,7 @@ Source/Model_Presence.cpp
 Source/Model_RandomWeibull.cpp
 Source/Model_Windows.cpp
 Source/Model_Appliance_Ownership.cpp
-Source/Model_Appliance_Usage.cpp
+Source/Model_Appliance_Large_Usage.cpp
 Source/Model_Appliance_Small_Usage.cpp
 Source/Simulation.cpp
 Source/SimulationConfig.cpp
@@ -91,7 +91,8 @@ Source/QLearning.cpp
 Source/QLearning_HeatingSetPoints.cpp
 Source/QLearning_Window.cpp
 Source/Appliance.cpp
-Source/Appliance_large.cpp
+Source/Appliance_Large.cpp
+Source/Appliance_Small.cpp
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/../rapidxml)
@@ -159,7 +160,7 @@ if (Tests)
     tests/source/unittest_Model_Activity.cc
     tests/source/unittest_Model_Windows.cc
     tests/source/unittest_Occupant_Action_HeatingSetPoints_Learning.cc
-    tests/source/unittest_Model_Appliance_Usage.cc
+    tests/source/unittest_Model_Appliance_Large_Usage.cc
     tests/source/unittest_Model_Appliance_Ownership.cc
     tests/source/unittest_Model_Appliance_Small_Usage.cc
     tests/source/unittest_StateMachine.cc
@@ -195,3 +196,6 @@ endif()
 
 configure_file(tests/Files/DSM.xml.in
                 ${CMAKE_CURRENT_BINARY_DIR}/SimulationConfig.xml)
+configure_file(tests/Files/ApplianceUsage.xml
+                ${CMAKE_CURRENT_BINARY_DIR}/ApplianceUsage.xml)
+file(COPY tests/Files/SmallAppliances DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)

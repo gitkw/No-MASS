@@ -75,27 +75,27 @@ void Occupant::initialiseStates(
     State_Present present;
     if (SimulationConfig::info.presencePage) {
         State_IT it;
-        matchStateToZone(it, zones);
+        matchStateToZone(&it, zones);
         present.addState(it);
     } else {
         State_Sleep sleep;
-        matchStateToZone(sleep, zones);
+        matchStateToZone(&sleep, zones);
         State_Passive passive;
-        matchStateToZone(passive, zones);
+        matchStateToZone(&passive, zones);
         State_Washing_Appliance washingAppliance;
-        matchStateToZone(washingAppliance, zones);
+        matchStateToZone(&washingAppliance, zones);
         State_Washing washing;
-        matchStateToZone(washing, zones);
+        matchStateToZone(&washing, zones);
         State_Audio_Visual audioVisual;
-        matchStateToZone(audioVisual, zones);
+        matchStateToZone(&audioVisual, zones);
         State_Cleaning cleaning;
-        matchStateToZone(cleaning, zones);
+        matchStateToZone(&cleaning, zones);
         State_Cooking cooking;
-        matchStateToZone(cooking, zones);
+        matchStateToZone(&cooking, zones);
         State_Metabolic metabolic;
-        matchStateToZone(metabolic, zones);
+        matchStateToZone(&metabolic, zones);
         State_IT it;
-        matchStateToZone(it, zones);
+        matchStateToZone(&it, zones);
         present.addState(sleep);
         present.addState(passive);
         present.addState(washingAppliance);
@@ -108,12 +108,12 @@ void Occupant::initialiseStates(
     }
     stateMachine.addState(present);
     State_Out out;
-    matchStateToZone(out, zones);
+    matchStateToZone(&out, zones);
     stateMachine.addState(out);
     setState(out);
 }
 
-void Occupant::matchStateToZone(State &s,
+void Occupant::matchStateToZone(State *s,
                   const std::vector<std::shared_ptr<Building_Zone>> &zones) {
     for (unsigned int i =0; i < zones.size(); i++) {
       if (SimulationConfig::info.presencePage &&
@@ -127,8 +127,8 @@ void Occupant::matchStateToZone(State &s,
           zones[i]->getNumberOfActivities() == 1) {
         continue;
       }
-      if (zones[i]->hasActivity(s.getId())) {
-          s.setZonePtr(zones[i]);
+      if (zones[i]->hasActivity(s->getId())) {
+          s->setZonePtr(zones[i]);
           break;
       }
     }
@@ -301,7 +301,7 @@ void Occupant::postprocess() {
   }
 }
 
-void Occupant::setState(State &state) {
+void Occupant::setState(const State &state) {
   this->state = state;
 }
 
@@ -372,9 +372,4 @@ void Occupant::postTimeStep() {
   for (Occupant_Zone &agentZone : agentZones) {
     agentZone.postTimeStep();
   }
-}
-
-
-void Occupant::setBuildingID(const int id){
-  this->buildingID = id;
 }

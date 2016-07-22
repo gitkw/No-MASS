@@ -1,7 +1,7 @@
 // Copyright 2015 Jacob Chapman
 
-#ifndef MODEL_APPLIANCE_SMALL_USAGE_H
-#define	MODEL_APPLIANCE_SMALL_USAGE_H
+#ifndef FMU_SOURCE_MODEL_APPLIANCE_SMALL_USAGE_H_
+#define FMU_SOURCE_MODEL_APPLIANCE_SMALL_USAGE_H_
 
 #include <string>
 #include <vector>
@@ -9,35 +9,35 @@
 #include "Model_RandomWeibull.h"
 
 class Model_Appliance_Small_Usage : public Model_RandomWeibull {
+ public:
+    Model_Appliance_Small_Usage();
+    double consumption(const int timeStep);
+    double weibullInvCdf(float loc, float shape, float scale) const;
+    double durationAtState(int state) const;
+    int calculateStateAtTenMin(int timeAsInt) const;
+    void setRatedPowerAt(const int i);
 
-    public:
-      Model_Appliance_Small_Usage();
-      double weibullInvCdf(float loc, float shape, float scale) const;
-      double durationAtState(int state) const;
-      int calculateStateAtTenMin(int timeAsInt) const;
-      void setRatedPowerAt(const int i);
+    void setFolderLocation(const std::string & folderLocation);
+    double getFractionalPowerAtState(int state) const;
+    void readStateProbabilities(const std::string &file);
+    void readWeibullParameters(const std::string &file);
+    void readFractions(const std::string &file);
+    void readSumRatedPowers(const std::string &file);
+    Utility::uTable<double> getStateProbabilities() const;
 
-      void setFolderLocation(const std::string & folderLocation);
-      double getFractionalPowerAtState(int state) const;
-      void readStateProbabilities(const std::string &file);
-      void readWeibullParameters(const std::string &file);
-      void readFractions(const std::string &file);
-      void readSumRatedPowers(const std::string &file);
-      Utility::uTable<double> getStateProbabilities() const;
-    private:
-      std::string folderLocation;
-      Utility::uTable<double> stateProbabilities;
-      std::vector<double> fractions;
-      std::vector<double> weibullLoc;
-      std::vector<double> weibullShape;
-      std::vector<double> weibullScale;
-      std::vector<double> sumRatedPowers;
+ private:
+    std::string folderLocation;
+    std::string name;
+    Utility::uTable<double> stateProbabilities;
+    std::vector<double> fractions;
+    std::vector<double> weibullLoc;
+    std::vector<double> weibullShape;
+    std::vector<double> weibullScale;
+    std::vector<double> sumRatedPowers;
 
-      double ratedPower;
-      double duration;
-      int state;
-
-
+    double ratedPower;
+    double duration;
+    int state;
 };
 
-#endif /* MODEL_APPLIANCE_SMALL_USAGE_H */
+#endif  // FMU_SOURCE_MODEL_APPLIANCE_SMALL_USAGE_H_

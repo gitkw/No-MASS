@@ -1,7 +1,7 @@
 // Copyright 2016 Jacob Chapman
 
-#ifndef AGENT_H
-#define	AGENT_H
+#ifndef FMU_SOURCE_AGENT_H_
+#define FMU_SOURCE_AGENT_H_
 
 /**
  * @brief The Agent
@@ -9,11 +9,21 @@
  */
 
 class Agent {
-public:
+ public:
     Agent();
+    void setup();
+    void step();
+    void postprocess();
+    void preprocess();
+    void postTimeStep();
 
-private:
-
+    void setBuildingID(const int id);
+    void setID(const int id);
+    int getID() const;
+ protected:
+    int buildingID;
+    int id;
+ private:
 };
 
-#endif	/* AGENT_H */
+#endif  // FMU_SOURCE_AGENT_H_

@@ -39,7 +39,6 @@ double DataStore::getValue(const std::string &name) {
 }
 
 void DataStore::clear() {
-std::cout << "clear **************: " << std::endl;
     variableMap.clear();
 }
 

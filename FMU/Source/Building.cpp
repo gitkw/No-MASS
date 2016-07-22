@@ -32,7 +32,13 @@ void Building::setup(const buildingStruct &b) {
           population.back().setBuildingID(id);
           population.back().setup(a, zones);
     }
+    appliances.setBuildingID(id);
     appliances.setup();
+}
+
+
+void Building::preprocess() {
+  appliances.preprocess();
 }
 
 void Building::setZones(
@@ -192,7 +198,8 @@ void Building::setAppGainsForZone(std::shared_ptr<Building_Zone> zone) {
         }
     }
     if (totalRadientGainsAppliance > 0) {
-        aveRadientGains += totalRadientGainsAppliance / numberOfOccupantsAppliance;
+        aveRadientGains += totalRadientGainsAppliance /
+                                    numberOfOccupantsAppliance;
     }
     zone->setAppFraction(aveRadientGains);
 }
@@ -358,7 +365,7 @@ bool Building::hasZone(const std::string& zoneName) const {
   return has;
 }
 
-void Building::calculateDailyMeanTemperature(){
+void Building::calculateDailyMeanTemperature() {
   if (SimulationConfig::info.windows) {
     double outdoorTemperature =
             DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");

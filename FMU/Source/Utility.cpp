@@ -69,19 +69,15 @@ int Utility::calculateNumberOfDays(const int startDay,
                                           const int endMonth) {
     static const int daysInMonth[] =
                               {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    int days = daysInMonth[startMonth - 1] - (startDay -1);
-    for (int i = startMonth; i < endMonth -1; i++) {
+    int days = (startDay -1);
+    for (int i = startMonth -1; i < endMonth -1; i++) {
         days += daysInMonth[i];
     }
     days += endDay;
     return days;
 }
 
-
-
-
-
-int Utility::cumulativeProbability(const double * v, const int len){
+int Utility::cumulativeProbability(const double * v, const int len) {
   return Utility::cumulativeProbability(std::vector<double>(v, v + len));
 }
 
@@ -89,7 +85,7 @@ int Utility::cumulativeProbability(const std::vector<double> &p) {
   int activity = -1;
   double sum = 0;
   double drand = Utility::randomDouble(0.0, 1.0);
-  for (unsigned int i =0; i < p.size(); i++) {
+  for (unsigned int i = 0; i < p.size(); i++) {
     sum += p[i];
     if (sum >= drand) {
         activity = i;

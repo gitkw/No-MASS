@@ -1,4 +1,4 @@
-// Copyright 2015 Jacob Chapman
+// Copyright 2016 Jacob Chapman
 
 #include <iostream>
 #include <map>
@@ -64,6 +64,8 @@ void SimulationConfig::parseBuilding(rapidxml::xml_node<> *node, const int id) {
             b.name = cnode->value();
         } else if (strComp(cnode->name(), "agents")) {
             parseOccupants(cnode, &b);
+        } else if (strComp(cnode->name(), "Appliances")) {
+            parseAppliances(cnode, &b);
         } else if (strComp(cnode->name(), "zone")) {
             zonecount++;
             std::pair<std::string, ZoneStruct> zone;
@@ -127,7 +129,35 @@ std::vector<int> SimulationConfig::activityNamesToIds(
   return act;
 }
 
-void SimulationConfig::parseOccupants(rapidxml::xml_node<> *node, buildingStruct *b) {
+void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
+                                                            buildingStruct *b) {
+  rapidxml::xml_node<> *cnode = node->first_node();
+  while (cnode) {
+    if (strComp(cnode->name(), "Large")) {
+      b->AppliancesLarge.push_back(std::stoi(cnode->value()));
+    } else if (strComp(cnode->name(), "Small")) {
+      rapidxml::xml_node<> *anode = cnode->first_node();
+      appSmallStruct s;
+      while (anode) {
+        if (strComp(anode->name(), "WeibullParameters")) {
+          s.WeibullParameters = anode->value();
+        } else if (strComp(anode->name(), "StateProbabilities")) {
+          s.StateProbabilities = anode->value();
+        } else if (strComp(anode->name(), "Fractions")) {
+          s.Fractions = anode->value();
+        } else if (strComp(anode->name(), "SumRatedPowers")) {
+          s.SumRatedPowers = anode->value();
+        }
+        anode = anode->next_sibling();
+      }
+      b->AppliancesSmall.push_back(s);
+    }
+    cnode = cnode->next_sibling();
+  }
+}
+
+void SimulationConfig::parseOccupants(rapidxml::xml_node<> *node,
+                                                            buildingStruct *b) {
   SimulationConfig::ActivityFile = "";
   info.presencePage = false;
   rapidxml::xml_node<> *cnode = node->first_node();

@@ -25,7 +25,7 @@ Simulation::Simulation() {
         simulationConfigurationFile = "SimulationConfig.xml";
 }
 
-void Simulation::setSimulationConfigurationFile(const std::string & filename){
+void Simulation::setSimulationConfigurationFile(const std::string & filename) {
   this->simulationConfigurationFile = filename;
 }
 /**
@@ -55,6 +55,7 @@ void Simulation::setupSimulationModel() {
     for (buildingStruct b : SimulationConfig::buildings) {
       buildings.push_back(Building());
       buildings.back().setup(b);
+      buildings.back().preprocess();
     }
 }
 
@@ -75,7 +76,6 @@ void Simulation::postprocess() {
  */
 void Simulation::preTimeStep() {
   int stepCount = SimulationConfig::getStepCount();
-  std::cout << "step **************: " << stepCount << std::endl;
   int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
   int day = hour / 24;
 
@@ -93,6 +93,7 @@ void Simulation::preTimeStep() {
   DataStore::addValue("hour", hour);
   DataStore::addValue("hourOfDay", hourOfDay);
   DataStore::addValue("month", month);
+  //std::cout << day << " " << hour << " " << hourOfDay << std::endl;
 }
 
 

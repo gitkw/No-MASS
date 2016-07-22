@@ -30,3 +30,19 @@ TEST(Utility, Distribution) {
   }
   myfile2.close();
 }
+
+
+TEST(Utility, Days) {
+  /*
+  int days = Utility::calculateNumberOfDays(SimulationConfig::info.startDay,
+                                            SimulationConfig::info.startMonth,
+                                            SimulationConfig::info.endDay,
+                                            SimulationConfig::info.endMonth);
+*/
+  int days = Utility::calculateNumberOfDays(1, 1, 1, 1);
+  ASSERT_EQ(days, 1);
+  days = Utility::calculateNumberOfDays(1, 1, 5, 1);
+  ASSERT_EQ(days, 5);
+  days = Utility::calculateNumberOfDays(1, 1, 5, 2);
+  ASSERT_EQ(days, 36);
+}

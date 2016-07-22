@@ -4,3 +4,8 @@
 
 Appliance::Appliance() {
 }
+
+
+double Appliance::powerAt(const int timestep) const {
+  return power[timestep];
+}

@@ -1,10 +1,11 @@
 // Copyright 2016 Jacob Chapman
 
-#ifndef OCCUPANT_H
-#define	OCCUPANT_H
+#ifndef FMU_SOURCE_OCCUPANT_H_
+#define FMU_SOURCE_OCCUPANT_H_
 #include <unordered_map>
 #include <string>
 #include <memory>
+#include <vector>
 
 #include "Model_Activity.h"
 #include "Model_Presence.h"
@@ -15,13 +16,13 @@
 #include "Occupant_Zone.h"
 
 class Occupant : public Agent {
-public:
+ public:
     Occupant();
-    void setup(int newId, const std::vector<std::shared_ptr<Building_Zone>> &zones);
+    void setup(int newId,
+                const std::vector<std::shared_ptr<Building_Zone>> &zones);
 
     void step();
-    void setState(State &state);
-    void setBuildingID(const int buildingID);
+    void setState(const State &state);
     void postTimeStep();
     void zoneInteractions();
     void postprocess();
@@ -45,9 +46,8 @@ public:
     std::string getLocationName(int step, StateMachine *sm);
 
     bool previouslyInZone(const Building_Zone &zone) const;
-private:
 
-    int id;
+ private:
     int action;
     bool heatState;
     bool learn = false;
@@ -59,7 +59,7 @@ private:
     std::vector<Occupant_Zone> agentZones;
     std::vector<double> activities;
     std::vector<int> availableActions;
-    int buildingID;
+
     std::string buildingName; /** building agent belongs to */
     std::string bedroom; /** Which bedroom the occupant sleeps in */
     std::string office; /** Which Office the occupant works in */
@@ -69,9 +69,11 @@ private:
     void model_presenceFromPage();
     void model_pastAndFutureDurations();
     void model_activity();
-    void matchStateToZone(State &s, const std::vector<std::shared_ptr<Building_Zone>> &zones);
+    void matchStateToZone(State *s,
+                    const std::vector<std::shared_ptr<Building_Zone>> &zones);
 
-    void initialiseStates(const std::vector<std::shared_ptr<Building_Zone>> &zones);
+    void initialiseStates(
+                      const std::vector<std::shared_ptr<Building_Zone>> &zones);
     bool calculateLightInteractionsOnZone(const Building_Zone &zone);
     bool calculateWindowInteractionsOnZone(const Building_Zone &zone);
     double calculateExternalShadeInteractionsOnZone(const Building_Zone &zone);
@@ -82,4 +84,4 @@ private:
     StateMachine stateMachine;
 };
 
-#endif	/* OCCUPANT_H */
+#endif  // FMU_SOURCE_OCCUPANT_H_

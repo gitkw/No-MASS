@@ -11,9 +11,23 @@
 
 Model_Appliance_Small_Usage::Model_Appliance_Small_Usage() {}
 
+double Model_Appliance_Small_Usage::consumption(const int timeStep) {
+  double result = 0.0;
+  int leninsec = SimulationConfig::lengthOfTimestep();
+  duration = duration - leninsec * 60;
+  if (duration <= 0) {
+    int ten = static_cast<int>(((timeStep * leninsec) / 360.0)) % 144;
+    state = calculateStateAtTenMin(ten);
+    duration = durationAtState(state);
+  }
+  result += getFractionalPowerAtState(state);
+  return result;
+}
+
+
 double Model_Appliance_Small_Usage::getFractionalPowerAtState(int state) const {
   return fractions[state] *
-          (ratedPower * SimulationConfig::lengthOfTimestep() / 60);
+          (ratedPower * (SimulationConfig::lengthOfTimestep() / 60) / 60);
 }
 
 void Model_Appliance_Small_Usage::setFolderLocation(
@@ -30,28 +44,30 @@ int Model_Appliance_Small_Usage::calculateStateAtTenMin(int timeAsInt) const {
   return Utility::cumulativeProbability(stateProbabilities[timeAsInt]);
 }
 
-void Model_Appliance_Small_Usage::readFractions(const std::string &file){
+void Model_Appliance_Small_Usage::readFractions(const std::string &file) {
   std::string fileName = folderLocation + file;
   Utility::uTable<double> para = Utility::csvToTable<double>(fileName);
-  for(auto p : para){
+  for (auto p : para) {
     fractions.push_back(p[1]);
   }
 }
 
-void Model_Appliance_Small_Usage::readSumRatedPowers(const std::string &file){
+void Model_Appliance_Small_Usage::readSumRatedPowers(const std::string &file) {
   std::string fileName = folderLocation + file;
   Utility::uTable<double> para = Utility::csvToTable<double>(fileName);
-  for(auto p : para){
+  for (auto p : para) {
     sumRatedPowers.push_back(p[0]);
   }
 }
 
-void Model_Appliance_Small_Usage::readStateProbabilities(const std::string &file) {
+void Model_Appliance_Small_Usage::readStateProbabilities(
+                                                    const std::string &file) {
   std::string fileName = folderLocation + file;
   stateProbabilities = Utility::csvToTable<double>(fileName, true);
 }
 
-void Model_Appliance_Small_Usage::readWeibullParameters(const std::string &file){
+void Model_Appliance_Small_Usage::readWeibullParameters(
+                                                    const std::string &file) {
   std::string fileName = folderLocation + file;
   Utility::uTable<double> para = Utility::csvToTable<double>(fileName, true);
   weibullLoc = para[0];
@@ -75,5 +91,5 @@ double Model_Appliance_Small_Usage::weibullInvCdf(float loc,
     """
     */
     double random = randomDouble();
-    return  loc + pow(-pow(scale, shape) * log(1-random),(1/shape));
+    return  loc + pow(-pow(scale, shape) * log(1-random), (1/shape));
 }

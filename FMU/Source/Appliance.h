@@ -1,18 +1,17 @@
 // Copyright 2016 Jacob Chapman
 
-#ifndef APPLIANCE_H
-#define	APPLIANCE_H
+#ifndef FMU_SOURCE_APPLIANCE_H_
+#define FMU_SOURCE_APPLIANCE_H_
 
+#include <vector>
 #include "Agent.h"
 
 class Appliance : public Agent {
-public:
+ public:
     Appliance();
-
-    
-
-private:
-
+    double powerAt(const int timestep) const;
+ protected:
+    std::vector<double> power;
 };
 
-#endif	/* APPLIANCE_H */
+#endif  // FMU_SOURCE_APPLIANCE_H_

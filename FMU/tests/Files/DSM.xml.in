@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <simulation>
   <seed>0</seed>
-  <timeStepsPerHour>12</timeStepsPerHour>
+  <timeStepsPerHour>6</timeStepsPerHour>
   <beginMonth>1</beginMonth>
-  <endMonth>12</endMonth>
+  <endMonth>1</endMonth>
   <beginDay>1</beginDay>
-  <endDay>31</endDay>
+  <endDay>1</endDay>
+  <save>1</save>
   <buildings>
   <building>
     <zone>
@@ -15,10 +16,36 @@
       <windowCount>1</windowCount>
     </zone>
     <Appliances>
-      <large>
-        <name>WashingMachine<name>
-        <id>3<id>
-      <large>
+      <Large>0</Large>
+      <Large>1</Large>
+      <Large>2</Large>
+      <Large>3</Large>
+      <Large>4</Large>
+      <Large>5</Large>
+      <Small>
+        <WeibullParameters>weibull_parameters_audiovisual.csv</WeibullParameters>
+        <StateProbabilities>state_probability_audiovisual.csv</StateProbabilities>
+        <Fractions>mean_fractional_audiovisual.csv</Fractions>
+        <SumRatedPowers>sum_rated_av.txt</SumRatedPowers>
+      </Small>
+      <Small>
+        <WeibullParameters>weibull_parameters_other.csv</WeibullParameters>
+        <StateProbabilities>state_probability_other.csv</StateProbabilities>
+        <Fractions>mean_fractional_other.csv</Fractions>
+        <SumRatedPowers>sum_rated_oth.txt</SumRatedPowers>
+      </Small>
+      <Smallk>
+        <WeibullParameters>weibull_parameters_computing.csv</WeibullParameters>
+        <StateProbabilities>Smallstate_probability_computing.csv</StateProbabilities>
+        <Fractions>mean_fractional_computing.csv</Fractions>
+        <SumRatedPowers>sum_rated_comp.txt</SumRatedPowers>
+      </Smallk>
+      <Small>
+        <WeibullParameters>weibull_parameters_kitchen.csv</WeibullParameters>
+        <StateProbabilities>state_probability_kitchen.csv</StateProbabilities>
+        <Fractions>mean_fractional_kitchen.csv</Fractions>
+        <SumRatedPowers>sum_rated_kit.txt</SumRatedPowers>
+      </Small>
     </Appliances>
     <agents>
       <agent>

@@ -1,17 +1,13 @@
-/*
- * File:   SimulationSetup.h
- * Author: jake
- *
- * Created on September 13, 2013, 10:17 AM
- */
+// Copyright 2016 Jacob Chapman
 
-#ifndef SIMULATIONSETUP_H
-#define	SIMULATIONSETUP_H
+#ifndef FMU_SOURCE_SIMULATIONCONFIG_H_
+#define FMU_SOURCE_SIMULATIONCONFIG_H_
 
 #include <cstddef>
 #include <string>
 #include <vector>
 #include <map>
+
 #include <rapidxml.hpp>
 
 
@@ -120,9 +116,17 @@ struct windowStruct {
     double b10gddep;
 };
 
+struct appSmallStruct {
+  std::string WeibullParameters;
+  std::string StateProbabilities;
+  std::string Fractions;
+  std::string SumRatedPowers;
+};
+
 struct buildingStruct {
     std::map<std::string, ZoneStruct> zones;
-    std::map<std::string, ZoneStruct> Appliances;
+    std::vector<int> AppliancesLarge;
+    std::vector<appSmallStruct> AppliancesSmall;
     std::vector<agentStruct> agents;
     std::string name;
     int id;
@@ -148,11 +152,10 @@ struct simulationStruct {
     int endMonth;
     int caseOrder;
     bool ShadeClosedDuringNight;
-
 };
 
 class SimulationConfig {
-public:
+ public:
     static ZoneStruct getZone(std::string* zoneName);
     static void parseConfiguration(const std::string &filename);
     static void parseConfigurationb(const std::string &filename);
@@ -170,17 +173,19 @@ public:
     static std::string ActivityFile;
     static std::string RunLocation;
 
-private:
+ private:
     static void timeSteps();
     static void parseBuilding(rapidxml::xml_node<> *node, const int id);
     static void parseBuildings(rapidxml::xml_node<> *node);
     static void parseOccupants(rapidxml::xml_node<> *node, buildingStruct *b);
+    static void parseAppliances(rapidxml::xml_node<> *node, buildingStruct *b);
     static void parseModels(rapidxml::xml_node<> *node);
     static void parseWindows(rapidxml::xml_node<> *node);
     static void parseShades(rapidxml::xml_node<> *node);
     static bool strComp(const char * str1, const char * str2);
-    static std::vector<int> activityNamesToIds(const std::vector<std::string> & activities);
+    static std::vector<int> activityNamesToIds(
+                                  const std::vector<std::string> & activities);
     SimulationConfig();
 };
 
-#endif	/* SIMULATIONSETUP_H */
+#endif  //  FMU_SOURCE_SIMULATIONCONFIG_H_

@@ -17,6 +17,7 @@ public:
     void setup(const buildingStruct &b);
     void step();
     void postprocess();
+    void preprocess();
     bool hasZone(const std::string& zoneName) const;
     void postTimeStep();
 
