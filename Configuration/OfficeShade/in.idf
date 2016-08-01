@@ -611,8 +611,8 @@ Construction,2001,                                !- Project external glazing - 
 WindowProperty:ShadingControl,1001,               !- Name of shading control
    ExteriorShade,                                 !- Shading type
    2001,                                          !- Name of glazed construction with shading
-   AlwaysOff,                            !- Shading control type
-   Off,                                          !- Schedule name
+   OnIfScheduleAllows,                            !- Shading control type
+   2864,                                          !- Schedule name
    ,                                              !- Setpoint
    Yes,                                           !- Shading control is scheduled
    No,                                            !- Glare control is active
@@ -1136,21 +1136,21 @@ Schedule:Year, Zone Control Type Sched, Control Type,  !- Control types schedule
    Winter Control Type Week Sch, 10, 1, 12, 31;   !- Start winter
 
 
-! Modified schedule: Office_OpenOff_Heat
-Schedule:Compact,
-Block1:Zone1 Heating SP Sch,
-Temperature,
-Through: 31 Dec,
-For: Weekdays SummerDesignDay WinterDesignDay,
-Until: 05:00,  21,
-Until: 19:00,  21,
-Until: 24:00,  21,
-For: Weekends,
-Until: 24:00,  21,
-For: Holidays,
-Until: 24:00,  21,
-For: AllOtherDays,
-Until: 24:00, 21;
+ ! Modified schedule: Office_OpenOff_Heat
+ Schedule:Compact,
+ Block1:Zone1 Heating SP Sch,
+ Temperature,
+ Through: 31 Dec,
+ For: Weekdays SummerDesignDay WinterDesignDay,
+ Until: 05:00,  10,
+ Until: 19:00,  21,
+ Until: 24:00,  10,
+ For: Weekends,
+ Until: 24:00,  10,
+ For: Holidays,
+ Until: 24:00,  10,
+ For: AllOtherDays,
+ Until: 24:00, 10;
 
 
 
@@ -1180,7 +1180,7 @@ Temperature,
 Through: 31 Dec,
 For: Weekdays SummerDesignDay,
 Until: 05:00, 100,
-Until: 19:00,  26,
+Until: 19:00,  25,
 Until: 24:00, 100,
 For: Weekends,
 Until: 24:00, 100,
@@ -1214,7 +1214,30 @@ ZoneControl:Thermostat, Block1:Zone1 Thermostat, Block1:Zone1,  !- ZoneControl:T
    Zone Control Type Sched,
    ThermostatSetpoint:DualSetpoint, Dual Setpoint - Zone Block1:Zone1;
 
-ThermostatSetpoint:DualSetpoint, Dual Setpoint - Zone Block1:Zone1,Block1:Zone1 Heating SP Sch,Block1:Zone1 Cooling SP Sch;
+
+
+   Schedule:Compact,
+      Block1:Zone1 TempControlSch,
+      Temperature,
+      Through: 31 Dec,
+      For: WinterDesignDay,
+      Until: 24:00, 0.50,
+      For: SummerDesignDay,
+      Until: 24:00, 0.00,
+      For: AllOtherDays,
+      Until: 24:00, 0.50;
+
+   ZoneControl:Thermostat:OperativeTemperature,      !- Defines zone temperature control type
+      Block1:Zone1 Thermostat,                       !- Thermostat name
+      Scheduled,                                     !- Radiative Fraction Input Mode
+      ,                                              !- Fixed Radiative Fraction
+      Block1:Zone1 TempControlSch;                   !- Radiative Fraction Schedule Name
+
+
+
+      !ThermostatSetpoint:DualSetpoint, Dual Setpoint - Zone Block1:Zone1,Block1:Zone1Heating,Block1:Zone1 Cooling SP Sch;
+      ThermostatSetpoint:DualSetpoint, Dual Setpoint - Zone Block1:Zone1,Block1:Zone1 Heating SP Sch,Block1:Zone1 Cooling SP Sch;
+
 
 ZoneHVAC:EquipmentConnections,
    Block1:Zone1, Block1:Zone1 Equipment, Block1:Zone1 Inlets, , Node Block1:Zone1 Zone, Node Block1:Zone1 Out;
@@ -1255,255 +1278,24 @@ NodeList,
    Node Block1:Zone1 In;
 
 
-Output:Table:SummaryReports, AnnualBuildingUtilityPerformanceSummary,
-DemandEndUseComponentsSummary,
-SensibleHeatGainSummary,
-InputVerificationandResultsSummary,
-ClimaticDataSummary,
-EquipmentSummary,
-EnvelopeSummary,
-LightingSummary,
-HVACSizingSummary,
-SystemSummary,
-ComponentSizingSummary,
-OutdoorAirSummary,
-ObjectCountSummary;
+   !Output:Table:SummaryReports, AnnualBuildingUtilityPerformanceSummary,
+   !DemandEndUseComponentsSummary,
+   !SensibleHeatGainSummary,
+   !InputVerificationandResultsSummary,
+   !ClimaticDataSummary,
+   !EquipmentSummary,
+   !EnvelopeSummary,
+   !LightingSummary,
+   !HVACSizingSummary,
+   !SystemSummary,
+   !ComponentSizingSummary,
+   !OutdoorAirSummary,
+   !ObjectCountSummary;
 
-
-OutputControl:Table:Style, CommaAndHTML, JtoKWH;
-Output:Meter,Electricity:Facility,timestep;
-Output:Meter,Gas:Facility,timestep;
-Output:Meter,InteriorEquipment:Electricity,timestep;
-Output:Meter,InteriorLights:Electricity,timestep;
-Output:Meter,Electricity:Facility,hourly;
-Output:Meter,Gas:Facility,hourly;
-Output:Meter,InteriorEquipment:Electricity,hourly;
-Output:Meter,InteriorLights:Electricity,hourly;
-Output:Meter,Electricity:Facility,daily;
-Output:Meter,Gas:Facility,daily;
-Output:Meter,InteriorEquipment:Electricity,daily;
-Output:Meter,InteriorLights:Electricity,daily;
-Output:Meter,Electricity:Facility,monthly;
-Output:Meter,Gas:Facility,monthly;
-Output:Meter,InteriorEquipment:Electricity,monthly;
-Output:Meter,InteriorLights:Electricity,monthly;
-Output:Meter,Electricity:Facility,runperiod;
-Output:Meter,Gas:Facility,runperiod;
-Output:Meter,InteriorEquipment:Electricity,runperiod;
-Output:Meter,InteriorLights:Electricity,runperiod;
-
-OutputControl:IlluminanceMap:Style,
-   Comma;                                         !- Column separator
-
-Output:Variable, Block1:Zone1, Zone Mean Air Temperature, timestep, On;
-Output:Variable, Block1:Zone1, Zone Mean Radiant Temperature, timestep, On;
-Output:Variable, Block1:Zone1, Zone Operative Temperature, timestep, On;
-Output:Variable, Block1:Zone1, Zone Air Relative Humidity, timestep, On;
-Output:Variable, Block1:Zone1, Zone Mean Air Temperature, hourly, On;
-Output:Variable, Block1:Zone1, Zone Mean Radiant Temperature, hourly, On;
-Output:Variable, Block1:Zone1, Zone Operative Temperature, hourly, On;
-Output:Variable, Block1:Zone1, Zone Air Relative Humidity, hourly, On;
-Output:Variable, Block1:Zone1, Zone Mean Air Temperature, daily, On;
-Output:Variable, Block1:Zone1, Zone Mean Radiant Temperature, daily, On;
-Output:Variable, Block1:Zone1, Zone Operative Temperature, daily, On;
-Output:Variable, Block1:Zone1, Zone Air Relative Humidity, daily, On;
-Output:Variable, Block1:Zone1, Zone Mean Air Temperature, monthly, On;
-Output:Variable, Block1:Zone1, Zone Mean Radiant Temperature, monthly, On;
-Output:Variable, Block1:Zone1, Zone Operative Temperature, monthly, On;
-Output:Variable, Block1:Zone1, Zone Air Relative Humidity, monthly, On;
-Output:Variable, Block1:Zone1, Zone Mean Air Temperature, runperiod, On;
-Output:Variable, Block1:Zone1, Zone Mean Radiant Temperature, runperiod, On;
-Output:Variable, Block1:Zone1, Zone Operative Temperature, runperiod, On;
-Output:Variable, Block1:Zone1, Zone Air Relative Humidity, runperiod, On;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Air Change Rate, timestep;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Air Change Rate, hourly;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Air Change Rate, daily;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Air Change Rate, monthly;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Air Change Rate, runperiod;
-Output:Variable, *, Zone Ideal Loads Supply Air Sensible Cooling Rate, timestep;
-Output:Variable, *, Zone Ideal Loads Supply Air Total Cooling Rate, timestep;
-Output:Variable, *, Zone Ideal Loads Supply Air Total Heating Rate, timestep;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Sensible Heating Rate, timestep;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Total Heating Rate, timestep;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Sensible Cooling Rate, timestep;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Total Cooling Rate, timestep;
-Output:Variable, *, Zone Ventilation Fan Electric Energy, timestep;
-Output:Variable, *, Fan Electric Power, timestep;
-Output:Variable, *, Water Use Equipment Heating Rate, timestep;
-Output:Variable, *, Facility Total Produced Electric Energy, timestep;
-Output:Variable, Block1:Zone1, Zone Air System Sensible Heating Rate, timestep;
-Output:Variable, Block1:Zone1, Zone Air System Sensible Cooling Rate, timestep;
-Output:Variable, *, Zone Ideal Loads Supply Air Sensible Cooling Rate, hourly;
-Output:Variable, *, Zone Ideal Loads Supply Air Total Cooling Rate, hourly;
-Output:Variable, *, Zone Ideal Loads Supply Air Total Heating Rate, hourly;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Sensible Heating Rate, hourly;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Total Heating Rate, hourly;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Sensible Cooling Rate, hourly;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Total Cooling Rate, hourly;
-Output:Variable, *, Zone Ventilation Fan Electric Energy, hourly;
-Output:Variable, *, Fan Electric Power, hourly;
-Output:Variable, *, Water Use Equipment Heating Rate, hourly;
-Output:Variable, *, Facility Total Produced Electric Energy, hourly;
-Output:Variable, Block1:Zone1, Zone Air System Sensible Heating Rate, hourly;
-Output:Variable, Block1:Zone1, Zone Air System Sensible Cooling Rate, hourly;
-Output:Variable, *, Zone Ideal Loads Supply Air Sensible Cooling Rate, daily;
-Output:Variable, *, Zone Ideal Loads Supply Air Total Cooling Rate, daily;
-Output:Variable, *, Zone Ideal Loads Supply Air Total Heating Rate, daily;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Sensible Heating Rate, daily;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Total Heating Rate, daily;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Sensible Cooling Rate, daily;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Total Cooling Rate, daily;
-Output:Variable, *, Zone Ventilation Fan Electric Energy, daily;
-Output:Variable, *, Fan Electric Power, daily;
-Output:Variable, *, Water Use Equipment Heating Rate, daily;
-Output:Variable, *, Facility Total Produced Electric Energy, daily;
-Output:Variable, Block1:Zone1, Zone Air System Sensible Heating Rate, daily;
-Output:Variable, Block1:Zone1, Zone Air System Sensible Cooling Rate, daily;
-Output:Variable, *, Zone Ideal Loads Supply Air Sensible Cooling Rate, monthly;
-Output:Variable, *, Zone Ideal Loads Supply Air Total Cooling Rate, monthly;
-Output:Variable, *, Zone Ideal Loads Supply Air Total Heating Rate, monthly;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Sensible Heating Rate, monthly;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Total Heating Rate, monthly;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Sensible Cooling Rate, monthly;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Total Cooling Rate, monthly;
-Output:Variable, *, Zone Ventilation Fan Electric Energy, monthly;
-Output:Variable, *, Fan Electric Power, monthly;
-Output:Variable, *, Water Use Equipment Heating Rate, monthly;
-Output:Variable, *, Facility Total Produced Electric Energy, monthly;
-Output:Variable, Block1:Zone1, Zone Air System Sensible Heating Rate, monthly;
-Output:Variable, Block1:Zone1, Zone Air System Sensible Cooling Rate, monthly;
-Output:Variable, *, Zone Ideal Loads Supply Air Sensible Cooling Rate, runperiod;
-Output:Variable, *, Zone Ideal Loads Supply Air Total Cooling Rate, runperiod;
-Output:Variable, *, Zone Ideal Loads Supply Air Total Heating Rate, runperiod;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Sensible Heating Rate, runperiod;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Total Heating Rate, runperiod;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Sensible Cooling Rate, runperiod;
-Output:Variable, *, Zone Ideal Loads Heat Recovery Total Cooling Rate, runperiod;
-Output:Variable, *, Zone Ventilation Fan Electric Energy, runperiod;
-Output:Variable, *, Fan Electric Power, runperiod;
-Output:Variable, *, Water Use Equipment Heating Rate, runperiod;
-Output:Variable, *, Facility Total Produced Electric Energy, runperiod;
-Output:Variable, Block1:Zone1, Zone Air System Sensible Heating Rate, runperiod;
-Output:Variable, Block1:Zone1, Zone Air System Sensible Cooling Rate, runperiod;
-Output:Variable, Block1:Zone1, Zone People Sensible Heating Rate, timestep;
-Output:Variable, Block1:Zone1, Zone Windows Total Transmitted Solar Radiation Rate, timestep;
-Output:Variable, Block1:Zone1, Zone Interior Windows Total Transmitted Diffuse Solar Radiation Rate, timestep;
-Output:Variable, Block1:Zone1, Zone Interior Windows Total Transmitted Beam Solar Radiation Rate, timestep;
-Output:Variable, Block1:Zone1, Zone Other Equipment Total Heating Energy, timestep;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Sensible Heat Gain Rate, timestep;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Sensible Heat Loss Rate, timestep;
-Output:Variable, Block1:Zone1, AFN Zone Mixing Sensible Heat Gain Rate, timestep;
-Output:Variable, Block1:Zone1, AFN Zone Mixing Sensible Heat Loss Rate, timestep;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#07:InteriorEquipment*, timestep;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#05:InteriorEquipment*, timestep;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#GeneralLights*, timestep;
-Output:Variable, *, Site Outdoor Air Drybulb Temperature, timestep;
-Output:Variable, *, Site Outdoor Air Dewpoint Temperature, timestep;
-Output:Variable, *, Site Wind Speed, timestep;
-Output:Variable, *, Site Wind Direction, timestep;
-Output:Variable, *, Site Direct Solar Radiation Rate per Area, timestep;
-Output:Variable, *, Site Diffuse Solar Radiation Rate per Area, timestep;
-Output:Variable, *, Site Solar Azimuth Angle, timestep;
-Output:Variable, *, Site Solar Altitude Angle, timestep;
-Output:Variable, *, Site Outdoor Air Barometric Pressure, timestep;
-Output:Variable, Block1:Zone1, Zone People Sensible Heating Rate, hourly;
-Output:Variable, Block1:Zone1, Zone Windows Total Transmitted Solar Radiation Rate, hourly;
-Output:Variable, Block1:Zone1, Zone Interior Windows Total Transmitted Diffuse Solar Radiation Rate, hourly;
-Output:Variable, Block1:Zone1, Zone Interior Windows Total Transmitted Beam Solar Radiation Rate, hourly;
-Output:Variable, Block1:Zone1, Zone Other Equipment Total Heating Energy, hourly;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Sensible Heat Gain Rate, hourly;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Sensible Heat Loss Rate, hourly;
-Output:Variable, Block1:Zone1, AFN Zone Mixing Sensible Heat Gain Rate, hourly;
-Output:Variable, Block1:Zone1, AFN Zone Mixing Sensible Heat Loss Rate, hourly;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#07:InteriorEquipment*, hourly;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#05:InteriorEquipment*, hourly;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#GeneralLights*, hourly;
-Output:Variable, *, Site Outdoor Air Drybulb Temperature, hourly;
-Output:Variable, *, Site Outdoor Air Dewpoint Temperature, hourly;
-Output:Variable, *, Site Wind Speed, hourly;
-Output:Variable, *, Site Wind Direction, hourly;
-Output:Variable, *, Site Direct Solar Radiation Rate per Area, hourly;
-Output:Variable, *, Site Diffuse Solar Radiation Rate per Area, hourly;
-Output:Variable, *, Site Solar Azimuth Angle, hourly;
-Output:Variable, *, Site Solar Altitude Angle, hourly;
-Output:Variable, *, Site Outdoor Air Barometric Pressure, hourly;
-Output:Variable, Block1:Zone1, Zone People Sensible Heating Rate, daily;
-Output:Variable, Block1:Zone1, Zone Windows Total Transmitted Solar Radiation Rate, daily;
-Output:Variable, Block1:Zone1, Zone Interior Windows Total Transmitted Diffuse Solar Radiation Rate, daily;
-Output:Variable, Block1:Zone1, Zone Interior Windows Total Transmitted Beam Solar Radiation Rate, daily;
-Output:Variable, Block1:Zone1, Zone Other Equipment Total Heating Energy, daily;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Sensible Heat Gain Rate, daily;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Sensible Heat Loss Rate, daily;
-Output:Variable, Block1:Zone1, AFN Zone Mixing Sensible Heat Gain Rate, daily;
-Output:Variable, Block1:Zone1, AFN Zone Mixing Sensible Heat Loss Rate, daily;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#07:InteriorEquipment*, daily;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#05:InteriorEquipment*, daily;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#GeneralLights*, daily;
-Output:Variable, *, Site Outdoor Air Drybulb Temperature, daily;
-Output:Variable, *, Site Outdoor Air Dewpoint Temperature, daily;
-Output:Variable, *, Site Wind Speed, daily;
-Output:Variable, *, Site Wind Direction, daily;
-Output:Variable, *, Site Direct Solar Radiation Rate per Area, daily;
-Output:Variable, *, Site Diffuse Solar Radiation Rate per Area, daily;
-Output:Variable, *, Site Solar Azimuth Angle, daily;
-Output:Variable, *, Site Solar Altitude Angle, daily;
-Output:Variable, *, Site Outdoor Air Barometric Pressure, daily;
-Output:Variable, Block1:Zone1, Zone People Sensible Heating Rate, monthly;
-Output:Variable, Block1:Zone1, Zone Windows Total Transmitted Solar Radiation Rate, monthly;
-Output:Variable, Block1:Zone1, Zone Interior Windows Total Transmitted Diffuse Solar Radiation Rate, monthly;
-Output:Variable, Block1:Zone1, Zone Interior Windows Total Transmitted Beam Solar Radiation Rate, monthly;
-Output:Variable, Block1:Zone1, Zone Other Equipment Total Heating Energy, monthly;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Sensible Heat Gain Rate, monthly;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Sensible Heat Loss Rate, monthly;
-Output:Variable, Block1:Zone1, AFN Zone Mixing Sensible Heat Gain Rate, monthly;
-Output:Variable, Block1:Zone1, AFN Zone Mixing Sensible Heat Loss Rate, monthly;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#07:InteriorEquipment*, monthly;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#05:InteriorEquipment*, monthly;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#GeneralLights*, monthly;
-Output:Variable, *, Site Outdoor Air Drybulb Temperature, monthly;
-Output:Variable, *, Site Outdoor Air Dewpoint Temperature, monthly;
-Output:Variable, *, Site Wind Speed, monthly;
-Output:Variable, *, Site Wind Direction, monthly;
-Output:Variable, *, Site Direct Solar Radiation Rate per Area, monthly;
-Output:Variable, *, Site Diffuse Solar Radiation Rate per Area, monthly;
-Output:Variable, *, Site Solar Azimuth Angle, monthly;
-Output:Variable, *, Site Solar Altitude Angle, monthly;
-Output:Variable, *, Site Outdoor Air Barometric Pressure, monthly;
-Output:Variable, Block1:Zone1, Zone People Sensible Heating Rate, runperiod;
-Output:Variable, Block1:Zone1, Zone Windows Total Transmitted Solar Radiation Rate, runperiod;
-Output:Variable, Block1:Zone1, Zone Interior Windows Total Transmitted Diffuse Solar Radiation Rate, runperiod;
-Output:Variable, Block1:Zone1, Zone Interior Windows Total Transmitted Beam Solar Radiation Rate, runperiod;
-Output:Variable, Block1:Zone1, Zone Other Equipment Total Heating Energy, runperiod;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Sensible Heat Gain Rate, runperiod;
-Output:Variable, Block1:Zone1, AFN Zone Infiltration Sensible Heat Loss Rate, runperiod;
-Output:Variable, Block1:Zone1, AFN Zone Mixing Sensible Heat Gain Rate, runperiod;
-Output:Variable, Block1:Zone1, AFN Zone Mixing Sensible Heat Loss Rate, runperiod;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#07:InteriorEquipment*, runperiod;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#05:InteriorEquipment*, runperiod;
-Output:Meter, ELECTRIC EQUIPMENT#Block1:Zone1#GeneralLights*, runperiod;
-Output:Variable, *, Site Outdoor Air Drybulb Temperature, runperiod;
-Output:Variable, *, Site Outdoor Air Dewpoint Temperature, runperiod;
-Output:Variable, *, Site Wind Speed, runperiod;
-Output:Variable, *, Site Wind Direction, runperiod;
-Output:Variable, *, Site Direct Solar Radiation Rate per Area, runperiod;
-Output:Variable, *, Site Diffuse Solar Radiation Rate per Area, runperiod;
-Output:Variable, *, Site Solar Azimuth Angle, runperiod;
-Output:Variable, *, Site Solar Altitude Angle, runperiod;
-Output:Variable, *, Site Outdoor Air Barometric Pressure, runperiod;
-
-Output:Surfaces:Drawing, DXF, Triangulate3DFace;
-Output:Surfaces:List, Details;
-Output:Constructions, Construction;
-Output:VariableDictionary, IDF;
-OutputControl:ReportingTolerances,.5,.5;
-Output:Diagnostics, DisplayAdvancedReportVariables;
 
 
 Output:Variable,*,Schedule Value,Timestep;
-
 Output:Variable,*,AFN Surface Venting Window or Door Opening Factor,timestep;
-
-
 Output:Variable,*,Zone Exterior Windows Total Transmitted Beam Solar Radiation Rate,timestep;
 Output:Variable,*,Window Shading Fraction,timestep;
 
@@ -1560,55 +1352,6 @@ Output:Variable,*,Zone Air System Sensible Cooling Rate,runperiod;
 Output:Variable,*,Zone Mean Air Temperature,runperiod;
 
 
-EnergyManagementSystem:ProgramCallingManager,
-    Warm Up Completed,  !- Name
-    AfterNewEnvironmentWarmUpIsComplete,  !- EnergyPlus Model Calling Point
-    outputTime;        !- Program Name 1
-
-EnergyManagementSystem:ProgramCallingManager,
-    get time,  !- Name
-    BeginTimestepBeforePredictor,  !- EnergyPlus Model Calling Point
-    oTime;        !- Program Name 1
-
-EnergyManagementSystem:GlobalVariable,
-    exTime;     !- Erl Variable 1 Name
-
-EnergyManagementSystem:GlobalVariable,
-    epTime;     !- Erl Variable 1 Name
-
-EnergyManagementSystem:OutputVariable,
-    warmUpComplete,  !- Name
-    exTime,     !- EMS Variable Name
-    Averaged,                !- Type of Data in Variable
-    ZoneTimeStep,            !- Update Frequency
-    ,                        !- EMS Program or Subroutine Name
-    ;                       !- Units
-
-EnergyManagementSystem:OutputVariable,
-    epTimeStep,  !- Name
-    epTime,     !- EMS Variable Name
-    Averaged,                !- Type of Data in Variable
-    ZoneTimeStep,            !- Update Frequency
-    ,                        !- EMS Program or Subroutine Name
-    ;                       !- Units
-
-
-EnergyManagementSystem:Program,
-    outputTime,        !- Name
-    SET exTime = CurrentEnvironment;  !- Program Line 1
-
-
-EnergyManagementSystem:Program,
-    oTime,        !- Name
-    SET epTime = CurrentTime;
-
-Output:EnergyManagementSystem,
-    Verbose,                 !- Actuator Availability Dictionary Reporting
-    Verbose,                 !- Internal Variable Availability Dictionary Reporting
-    None;                 !- EMS Runtime Language Debug Output Level
-
-
-
 ExternalInterface,
   FunctionalMockupUnitImport;                !- Name of External Interface
 
@@ -1655,16 +1398,6 @@ ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
   Block1:Zone1NumberOfOccupants,           !- FMU Model Variable Name,
   0.0;                                     !- Initial Value
 
-ExternalInterface:FunctionalMockupUnitImport:To:Actuator,
-  Block1:Zone1_Wall_5_0_0_0_0_0_Win_Shading_Fraction, !- EnergyPlus Variable Name
-  Block1:Zone1_Wall_5_0_0_0_0_0_Win, !- Actuated Component Unique Name
-  Window Shading Fraction, !- Actuated Component Type
-  Control Fraction, !- Actuated Component Control Type
-  agentFMU.fmu, !- FMU Filename
-  FMI, !- FMU Model Name
-  Block1:Zone1BlindFraction, !- FMU Model Variable Name
-  1.0; !- Initial Value!
-
 ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
   Block1:Zone1LightState,                  !- EnergyPlus Key Value,
   Any Number,                              !- Schedule Type Limits Names,
@@ -1674,11 +1407,11 @@ ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
   0.0;                                     !- Initial Value
 
 ExternalInterface:FunctionalMockupUnitImport:To:Schedule,
-  Block1:Zone1WindowState,                 !- EnergyPlus Key Value,
+  Block1:Zone1WindowState0,                 !- EnergyPlus Key Value,
   Any Number,                              !- Schedule Type Limits Names,
   agentFMU.fmu,                            !- FMU Filename,
   FMI,                                     !- FMU Model Name,
-  Block1:Zone1WindowState,                 !- FMU Model Variable Name,
+  Block1:Zone1WindowState0,                 !- FMU Model Variable Name,
   0.0;                                     !- Initial Value
 
 
@@ -1711,23 +1444,13 @@ ExternalInterface:FunctionalMockupUnitImport:From:Variable,
   FMI,                                     !- FMU Instance Name,
   EnvironmentSiteOutdoorAirDrybulbTemperature;!- FMU Variable Name
 
-ExternalInterface:FunctionalMockupUnitImport:From:Variable,
-  EMS,                                     !- EnergyPlus Key Value,
-  warmUpComplete,                          !- EnergyPlus Variable Name,
-  agentFMU.fmu,                            !- FMU Filename,
-  FMI,                                     !- FMU Instance Name,
-  EMSwarmUpComplete;                       !- FMU Variable Name
 
-ExternalInterface:FunctionalMockupUnitImport:From:Variable,
-  EMS,                                     !- EnergyPlus Key Value,
-  epTimeStep,                              !- EnergyPlus Variable Name,
-  agentFMU.fmu,                            !- FMU Filename,
-  FMI,                                     !- FMU Instance Name,
-  EMSepTimeStep;                           !- FMU Variable Name
-
-ExternalInterface:FunctionalMockupUnitImport:From:Variable,
-  Block1:Zone1,                            !- EnergyPlus Key Value,
-  Zone Air System Sensible Heating Rate,   !- EnergyPlus Variable Name,
-  agentFMU.fmu,                            !- FMU Filename,
-  FMI,                                     !- FMU Instance Name,
-  Block1:Zone1ZoneAirSystemSensibleHeatingRate; !- FMU Variable Name
+ExternalInterface:FunctionalMockupUnitImport:To:Actuator,
+  Block1:Zone1_Wall_5_0_0_0_0_0_Win_Shading_Fraction, !- EnergyPlus Variable Name
+  Block1:Zone1_Wall_5_0_0_0_0_0_Win, !- Actuated Component Unique Name
+  Window Shading Fraction, !- Actuated Component Type
+  Control Fraction, !- Actuated Component Control Type
+  agentFMU.fmu, !- FMU Filename
+  FMI, !- FMU Model Name
+  Block1:Zone1BlindFraction, !- FMU Model Variable Name
+  1.0; !- Initial Value!
