@@ -11,10 +11,6 @@
 #include <rapidxml.hpp>
 
 
-struct ApplianceStruct {
-    std::string name;
-    int id;
-};
 
 struct ZoneStruct {
     std::string name;
@@ -116,17 +112,33 @@ struct windowStruct {
     double b10gddep;
 };
 
+struct appLargeStruct {
+    std::string name;
+    int id;
+    double priority;
+    std::vector<int> activities;
+};
+
+struct appPVStruct {
+    std::string file;
+    int id;
+    double priority;
+};
+
 struct appSmallStruct {
   std::string WeibullParameters;
   std::string StateProbabilities;
   std::string Fractions;
   std::string SumRatedPowers;
+  int id;
+  double priority;
 };
 
 struct buildingStruct {
     std::map<std::string, ZoneStruct> zones;
-    std::vector<int> AppliancesLarge;
+    std::vector<appLargeStruct> AppliancesLarge;
     std::vector<appSmallStruct> AppliancesSmall;
+    std::vector<appPVStruct> AppliancesPV;
     std::vector<agentStruct> agents;
     std::string name;
     int id;

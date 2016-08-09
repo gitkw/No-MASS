@@ -134,7 +134,19 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
   rapidxml::xml_node<> *cnode = node->first_node();
   while (cnode) {
     if (strComp(cnode->name(), "Large")) {
-      b->AppliancesLarge.push_back(std::stoi(cnode->value()));
+      rapidxml::xml_node<> *anode = cnode->first_node();
+      appLargeStruct s;
+      while (anode) {
+        if (strComp(anode->name(), "id")) {
+          s.id = std::stoi(anode->value());
+        } else if (strComp(anode->name(), "priority")) {
+          s.priority = std::stoi(anode->value());
+        } else if (strComp(anode->name(), "activities")) {
+          s.activities = activityNamesToIds(Utility::splitCSV(anode->value()));
+        }
+        anode = anode->next_sibling();
+      }
+      b->AppliancesLarge.push_back(s);
     } else if (strComp(cnode->name(), "Small")) {
       rapidxml::xml_node<> *anode = cnode->first_node();
       appSmallStruct s;
@@ -147,11 +159,29 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
           s.Fractions = anode->value();
         } else if (strComp(anode->name(), "SumRatedPowers")) {
           s.SumRatedPowers = anode->value();
+        } else if (strComp(anode->name(), "id")) {
+          s.id = std::stoi(anode->value());
+        } else if (strComp(anode->name(), "priority")) {
+          s.priority = std::stoi(anode->value());
         }
         anode = anode->next_sibling();
       }
       b->AppliancesSmall.push_back(s);
-    }
+    } else if (strComp(cnode->name(), "pv")) {
+        rapidxml::xml_node<> *anode = cnode->first_node();
+        appPVStruct s;
+        while (anode) {
+          if (strComp(anode->name(), "filename")) {
+            s.file = anode->value();
+          } else if (strComp(anode->name(), "id")) {
+            s.id = std::stoi(anode->value());
+          } else if (strComp(anode->name(), "priority")) {
+            s.priority = std::stoi(anode->value());
+          }
+          anode = anode->next_sibling();
+        }
+        b->AppliancesPV.push_back(s);
+      }
     cnode = cnode->next_sibling();
   }
 }

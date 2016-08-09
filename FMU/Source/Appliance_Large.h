@@ -1,21 +1,25 @@
 // Copyright 2016 Jacob Chapman
 
-#ifndef FMU_SOURCE_APPLIANCE_LARGE_H_
-#define FMU_SOURCE_APPLIANCE_LARGE_H_
+#ifndef APPLIANCE_LARGE_H_
+#define APPLIANCE_LARGE_H_
 
 #include <vector>
 #include "Appliance.h"
-#include "Model_Appliance_Large_Usage.h"
+#include "Model_Appliance_Large_Usage_Survival.h"
 
 class Appliance_Large : public Appliance {
  public:
     Appliance_Large();
 
     void setup();
-    void preprocess();
-
+    void step();
+    void setActivities(const std::vector<int> Activities);
+    bool hasActivities(const std::vector<int> Activities);
+    bool isOn() const;
  private:
-    Model_Appliance_Large_Usage model;
+    Model_Appliance_Large_Usage_Survival model;
+    std::vector<int> Activities;
+    bool match;
 };
 
-#endif  // FMU_SOURCE_APPLIANCE_LARGE_H_
+#endif  // APPLIANCE_LARGE_H_

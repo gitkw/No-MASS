@@ -7,7 +7,7 @@
 #include <memory>
 #include <vector>
 
-#include "Model_Activity.h"
+#include "Model_Activity_Survival.h"
 #include "Model_Presence.h"
 #include "StateMachine.h"
 #include "State.h"
@@ -36,6 +36,7 @@ class Occupant : public Agent {
     bool isActionHeatGains(const Building_Zone &zone) const;
     bool isActionLearning(const Building_Zone &zone) const;
     bool isActionAppliance(const Building_Zone &zone) const;
+    int getStateID() const;
     double getDesiredShadeState(const Building_Zone &zone) const;
     double getDesiredAppliance(const Building_Zone &zone) const;
     double getDesiredHeatState(const Building_Zone &zone) const;

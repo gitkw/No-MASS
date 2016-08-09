@@ -35,11 +35,13 @@
 Model_Activity::Model_Activity() {
 }
 
-std::vector<double> Model_Activity::preProcessActivities(const int buildingID, const int agentID) {
+std::vector<double> Model_Activity::preProcessActivities(const int buildingID,
+                                                            const int agentID) {
     if (SimulationConfig::ActivityFile == "") {
         return disaggregate(buildingID, agentID);
     } else {
-        parseConfiguration(SimulationConfig::ActivityFile);
+        parseConfiguration(SimulationConfig::RunLocation
+                                  + SimulationConfig::ActivityFile);
         return multinominal(buildingID, agentID);
     }
 }
@@ -91,21 +93,30 @@ std::string Model_Activity::getDay(const int day) const {
   return "day" + std::to_string(day);
 }
 
-int Model_Activity::multinominalActivity(const double *p) const {
-  return Utility::cumulativeProbability(p, 24);
+int Model_Activity::multinominalActivity(const double p[24][10],
+                                                          const int hourCount) {
+  return Utility::cumulativeProbability(p[hourCount], 10);
 }
 
 void Model_Activity::multinominalP(
     double p[4][7][24][10], const int buildingID, const int agentID) const {
 
-    std::string age = SimulationConfig::buildings[buildingID].agents.at(agentID).age;
-    std::string computer = SimulationConfig::buildings[buildingID].agents.at(agentID).computer;
-    std::string civstat = SimulationConfig::buildings[buildingID].agents.at(agentID).civstat;
-    std::string unemp = SimulationConfig::buildings[buildingID].agents.at(agentID).unemp;
-    std::string retired = SimulationConfig::buildings[buildingID].agents.at(agentID).retired;
-    std::string edtry = SimulationConfig::buildings[buildingID].agents.at(agentID).edtry;
-    std::string famstat = SimulationConfig::buildings[buildingID].agents.at(agentID).famstat;
-    std::string sex = SimulationConfig::buildings[buildingID].agents.at(agentID).sex;
+    std::string age =
+          SimulationConfig::buildings[buildingID].agents.at(agentID).age;
+    std::string computer =
+          SimulationConfig::buildings[buildingID].agents.at(agentID).computer;
+    std::string civstat =
+          SimulationConfig::buildings[buildingID].agents.at(agentID).civstat;
+    std::string unemp =
+          SimulationConfig::buildings[buildingID].agents.at(agentID).unemp;
+    std::string retired =
+          SimulationConfig::buildings[buildingID].agents.at(agentID).retired;
+    std::string edtry =
+          SimulationConfig::buildings[buildingID].agents.at(agentID).edtry;
+    std::string famstat =
+          SimulationConfig::buildings[buildingID].agents.at(agentID).famstat;
+    std::string sex =
+          SimulationConfig::buildings[buildingID].agents.at(agentID).sex;
 
     for (int iSeason = 0; iSeason <4; iSeason++) {
       std::string seasonString = getSeasonString(iSeason);
@@ -147,7 +158,8 @@ void Model_Activity::multinominalP(
     }
 }
 
-std::vector<double> Model_Activity::multinominal(const int buildingID, const int agentID) const {
+std::vector<double> Model_Activity::multinominal(const int buildingID,
+                                                    const int agentID) {
     double p[4][7][24][10];
     multinominalP(p, buildingID, agentID);
 
@@ -157,7 +169,7 @@ std::vector<double> Model_Activity::multinominal(const int buildingID, const int
       {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     int tsph = SimulationConfig::info.timeStepsPerHour;
-    int hourCount = 24;
+    int hourCount = 0;
     int month = SimulationConfig::info.startMonth;
     int day = SimulationConfig::info.startDay -1;
     int dayOfWeek = SimulationConfig::info.startDayOfWeek-1;
@@ -167,7 +179,7 @@ std::vector<double> Model_Activity::multinominal(const int buildingID, const int
     for (int i = 0; i <= SimulationConfig::info.timeSteps; i++) {
         if (i % tsph == 0) {
             hourCount++;
-            if (hourCount > 24) {
+            if (hourCount > 23) {
                 hourCount = 0;
                 day++;
                 dayOfWeek++;
@@ -185,7 +197,7 @@ std::vector<double> Model_Activity::multinominal(const int buildingID, const int
             }
         }
         activities.push_back(
-                    multinominalActivity(p[season][dayOfWeek][hourCount]));
+                    multinominalActivity(p[season][dayOfWeek], hourCount));
     }
     return activities;
 }
@@ -199,32 +211,41 @@ void Model_Activity::parseConfiguration(const std::string filename) {
   rx::xml_node<> *node = root_node->first_node();
   while (node) {
     std::string inter = node->name();
-    inter.erase(0, 8);
-    int hour = std::stoi(inter);
-    std::map<std::string, std::vector<double>> items;
-    rx::xml_node<> *cnode = node->first_node();
-    while (cnode) {
-      std::string name = cnode->name();
-      std::vector<std::string> tokProbs = Utility::splitCSV(cnode->value());
-      std::vector<double> tokProbsD;
-      for (std::string strProb : tokProbs) {
-          tokProbsD.push_back(std::stod(strProb));
+    if (inter.find("interval") != std::string::npos) {
+      inter.erase(0, 8);
+      int hour = std::stoi(inter);
+      std::map<std::string, std::vector<double>> items;
+      rx::xml_node<> *cnode = node->first_node();
+      while (cnode) {
+        std::string name = cnode->name();
+        std::vector<std::string> tokProbs = Utility::splitCSV(cnode->value());
+        std::vector<double> tokProbsD;
+        for (std::string strProb : tokProbs) {
+            tokProbsD.push_back(std::stod(strProb));
+        }
+        std::pair<std::string, std::vector<double>> x(name, tokProbsD);
+        items.insert(x);
+        cnode = cnode->next_sibling();
       }
-      std::pair<std::string, std::vector<double>> x(name, tokProbsD);
-      items.insert(x);
-      cnode = cnode->next_sibling();
+      std::pair<int, std::map<std::string, std::vector<double>>>
+        y(hour, items);
+      dictionary.insert(y);
+    } else {
+      parseOther(node);
     }
-    std::pair<int, std::map<std::string, std::vector<double>>>
-      y(hour, items);
-    dictionary.insert(y);
     node = node->next_sibling();
   }
 }
 
-std::vector<double> Model_Activity::disaggregate(const int buildingID, const int agentID) const {
+void Model_Activity::parseOther(rapidxml::xml_node<> *node) {
+  node->name();
+}
+std::vector<double> Model_Activity::disaggregate(const int buildingID,
+                                                  const int agentID) const {
     double probabilities[24][10];
     std::map<int, std::string> probMap;
-    probMap = SimulationConfig::buildings[buildingID].agents.at(agentID).profile;
+    probMap =
+          SimulationConfig::buildings[buildingID].agents.at(agentID).profile;
 
     for (int hour = 0; hour < 24; hour++) {
         std::vector<std::string> tokProbs = Utility::splitCSV(probMap.at(hour));

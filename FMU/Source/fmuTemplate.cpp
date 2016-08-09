@@ -107,7 +107,7 @@ fmiStatus fmiSetReal(fmiComponent c, const fmiValueReference vr[],
       size_t nvr, const fmiReal value[]) {
     for (unsigned int i = 0; i < nvr; i++) {
         DataStore::addValue(valToRefs.at(vr[i]), value[i]);
-        std::cout << valToRefs.at(vr[i]) << " " <<  value[i] << std::endl;
+        // std::cout << valToRefs.at(vr[i]) << " " <<  value[i] << std::endl;
     }
     modelInstance->sim.preTimeStep();
     if (LOG.getError()) {

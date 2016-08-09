@@ -109,34 +109,34 @@ TEST_F(Test_Activity, multinominalRandom) {
 }
 
 TEST_F(Test_Activity, multinominalActivity) {
-  double p0[10] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  ASSERT_EQ(ma.multinominalActivity(p0), 0);
-  double p1[10] = {0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
-  ASSERT_EQ(ma.multinominalActivity(p1), 1);
-  double p2[10] = {0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
-  ASSERT_EQ(ma.multinominalActivity(p2), 2);
-  double p3[10] = {0, 0, 0, 1, 0, 0, 0, 0, 0, 0};
-  ASSERT_EQ(ma.multinominalActivity(p3), 3);
-  double p4[10] = {0, 0, 0, 0, 1, 0, 0, 0, 0, 0};
-  ASSERT_EQ(ma.multinominalActivity(p4), 4);
-  double p5[10] = {0, 0, 0, 0, 0, 1, 0, 0, 0, 0};
-  ASSERT_EQ(ma.multinominalActivity(p5), 5);
-  double p6[10] = {0, 0, 0, 0, 0, 0, 1, 0, 0, 0};
-  ASSERT_EQ(ma.multinominalActivity(p6), 6);
-  double p7[10] = {0, 0, 0, 0, 0, 0, 0, 1, 0, 0};
-  ASSERT_EQ(ma.multinominalActivity(p7), 7);
-  double p8[10] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 0};
-  ASSERT_EQ(ma.multinominalActivity(p8), 8);
-  double p9[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
-  ASSERT_EQ(ma.multinominalActivity(p9), 9);
+  double p0[1][10] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  ASSERT_EQ(ma.multinominalActivity(p0, 0), 0);
+  double p1[1][10] = {0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
+  ASSERT_EQ(ma.multinominalActivity(p1, 0), 1);
+  double p2[1][10] = {0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
+  ASSERT_EQ(ma.multinominalActivity(p2, 0), 2);
+  double p3[1][10] = {0, 0, 0, 1, 0, 0, 0, 0, 0, 0};
+  ASSERT_EQ(ma.multinominalActivity(p3, 0), 3);
+  double p4[1][10] = {0, 0, 0, 0, 1, 0, 0, 0, 0, 0};
+  ASSERT_EQ(ma.multinominalActivity(p4, 0), 4);
+  double p5[1][10] = {0, 0, 0, 0, 0, 1, 0, 0, 0, 0};
+  ASSERT_EQ(ma.multinominalActivity(p5, 0), 5);
+  double p6[1][10] = {0, 0, 0, 0, 0, 0, 1, 0, 0, 0};
+  ASSERT_EQ(ma.multinominalActivity(p6, 0), 6);
+  double p7[1][10] = {0, 0, 0, 0, 0, 0, 0, 1, 0, 0};
+  ASSERT_EQ(ma.multinominalActivity(p7, 0), 7);
+  double p8[1][10] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 0};
+  ASSERT_EQ(ma.multinominalActivity(p8, 0), 8);
+  double p9[1][10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+  ASSERT_EQ(ma.multinominalActivity(p9, 0), 9);
 
-  double p[10] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
+  double p[1][10] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
 
   double top = 10000;
 
   double px[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   for (int i = 0; i < top; i++) {
-      int activity = ma.multinominalActivity(p);
+      int activity = ma.multinominalActivity(p, 0);
       px[activity] = px[activity] + 1;
   }
 
@@ -145,17 +145,17 @@ TEST_F(Test_Activity, multinominalActivity) {
     px[i] = 0;
   }
 
-  double pp[10] = {0.036078751, 0.12437013, 0.082256370, 0.003995250,
+  double pp[1][10] = {0.036078751, 0.12437013, 0.082256370, 0.003995250,
     0.027476964, 0.030800, 0.114028071, 0.0102342340, 0.043672692, 0.52712584};
 
   double sum = 0;
   for (int i = 0; i < 10; i++) {
-    sum += pp[i];
+    sum += pp[0][i];
   }
   ASSERT_NEAR(sum, 1, 0.001);
 
   for (int i = 0; i < top; i++) {
-      int activity = ma.multinominalActivity(pp);
+      int activity = ma.multinominalActivity(pp, 0);
       px[activity] = px[activity] + 1;
   }
 
@@ -207,16 +207,17 @@ TEST_F(Test_Activity, multinominalP) {
 }
 
 TEST_F(Test_Activity, multinominal) {
+    Utility::setSeed(1);
     SimulationConfig::parseConfiguration("SimulationConfig1.xml");
     AfterConfiguration();
 
     ASSERT_EQ(activities.at(0), 7);
-    ASSERT_EQ(activities.at(1000), 4);
+    ASSERT_EQ(activities.at(1000), 1);
     ASSERT_EQ(activities.at(2000), 1);
-    ASSERT_EQ(activities.at(3000), 4);
-    ASSERT_EQ(activities.at(4000), 1);
-    ASSERT_EQ(activities.at(5000), 4);
-    ASSERT_EQ(activities.at(6000), 1);
+    ASSERT_EQ(activities.at(3000), 9);
+    ASSERT_EQ(activities.at(4000), 2);
+    ASSERT_EQ(activities.at(5000), 2);
+    ASSERT_EQ(activities.at(6000), 9);
     bool found = false;
     for (int i = 0; i < 3; i++) {
       for (double a : activities) {

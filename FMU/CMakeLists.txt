@@ -58,6 +58,7 @@ Source/Occupant_Zone.cpp
 Source/DataStore.cpp
 Source/Log.cpp
 Source/Model_Activity.cpp
+Source/Model_Activity_Survival.cpp
 Source/Model_ExternalShading.cpp
 Source/Model_HeatGains.cpp
 Source/Model_Lights.cpp
@@ -67,6 +68,7 @@ Source/Model_Windows.cpp
 Source/Model_Appliance_Ownership.cpp
 Source/Model_Appliance_Large_Usage.cpp
 Source/Model_Appliance_Small_Usage.cpp
+Source/Model_Appliance_PV_CSV.cpp
 Source/Simulation.cpp
 Source/SimulationConfig.cpp
 Source/State.cpp
@@ -93,6 +95,11 @@ Source/QLearning_Window.cpp
 Source/Appliance.cpp
 Source/Appliance_Large.cpp
 Source/Appliance_Small.cpp
+Source/Appliance_PV.cpp
+Source/LVN.cpp
+Source/LVN_Node.cpp
+Source/LVN_Negotiation.cpp
+Source/Model_Appliance_Large_Usage_Survival.cpp
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/../rapidxml)
@@ -120,6 +127,10 @@ SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
 SET(CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE} -O2")
 string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
+
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+set(testLocationFiles "${PROJECT_SOURCE_DIR}/tests/Files")
+
 ################################
 # Testing
 ################################
@@ -139,8 +150,7 @@ if (Tests)
   ##############
   # Unit Tests
   ##############
-  include_directories("${CMAKE_CURRENT_BINARY_DIR}")
-  set(testLocationFiles "${PROJECT_SOURCE_DIR}/tests/Files")
+
   configure_file(tests/source/Gen.h.in
                   ${CMAKE_CURRENT_BINARY_DIR}/Gen.h)
 
@@ -181,6 +191,8 @@ if (Tests)
     tests/source/unittest_Occupant_Action_Heat_Gains.cc
     tests/source/unittest_QLearning_HeatingSetPoints.cc
     tests/source/unittest_QLearning_Window.cc
+    tests/source/unittest_Appliance_Large.cc
+    tests/source/unittest_Building_Appliances.cc
   )
 
   add_executable(runUnitTests ${TESTSRC})
@@ -196,6 +208,12 @@ endif()
 
 configure_file(tests/Files/DSM.xml.in
                 ${CMAKE_CURRENT_BINARY_DIR}/SimulationConfig.xml)
+configure_file(tests/Files/Activity.xml
+                ${CMAKE_CURRENT_BINARY_DIR}/Activity.xml)
 configure_file(tests/Files/ApplianceUsage.xml
                 ${CMAKE_CURRENT_BINARY_DIR}/ApplianceUsage.xml)
+configure_file(tests/Files/PVBowler2013_365.csv
+                ${CMAKE_CURRENT_BINARY_DIR}/PVBowler2013_365.csv)
+
+
 file(COPY tests/Files/SmallAppliances DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)

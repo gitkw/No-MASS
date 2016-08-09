@@ -6,6 +6,7 @@
 
 #include <string>
 #include <vector>
+#include "LVN.h"
 #include "Building.h"
 #include "Log.h"
 
@@ -34,9 +35,13 @@ private:
     std::string simulationConfigurationFile;
 
     /**
-     * Manages the Buildings
-     */
+    * Manages the Buildings
+    */
     std::vector<Building> buildings;
+    /**
+    * Manages the Buildings
+    */
+    LVN lvn;
 
 };
 

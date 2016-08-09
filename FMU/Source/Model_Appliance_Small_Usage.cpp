@@ -9,25 +9,31 @@
 #include "SimulationConfig.h"
 #include "Model_Appliance_Small_Usage.h"
 
-Model_Appliance_Small_Usage::Model_Appliance_Small_Usage() {}
+Model_Appliance_Small_Usage::Model_Appliance_Small_Usage() {
+  duration = 0;
+}
 
 double Model_Appliance_Small_Usage::consumption(const int timeStep) {
   double result = 0.0;
   int leninsec = SimulationConfig::lengthOfTimestep();
-  duration = duration - leninsec * 60;
-  if (duration <= 0) {
-    int ten = static_cast<int>(((timeStep * leninsec) / 360.0)) % 144;
-    state = calculateStateAtTenMin(ten);
-    duration = durationAtState(state);
+  int now = timeStep * leninsec;
+  int end = timeStep * leninsec + leninsec;
+  while (now < end) {
+    duration = duration - 1;
+    if (duration <= 0) {
+      int ten = static_cast<int>(now / 600) % 144;
+      state = calculateStateAtTenMin(ten);
+      duration = durationAtState(state);
+    }
+    result += getFractionalPowerAtState(state) / 10.0;
+    now += 60;
   }
-  result += getFractionalPowerAtState(state);
   return result;
 }
 
 
 double Model_Appliance_Small_Usage::getFractionalPowerAtState(int state) const {
-  return fractions[state] *
-          (ratedPower * (SimulationConfig::lengthOfTimestep() / 60) / 60);
+  return fractions[state] * ratedPower;
 }
 
 void Model_Appliance_Small_Usage::setFolderLocation(

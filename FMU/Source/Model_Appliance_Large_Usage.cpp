@@ -28,16 +28,23 @@ double Model_Appliance_Large_Usage::probOn(int timestep) const {
   double prob = 0.0;
   int leninsec = SimulationConfig::lengthOfTimestep();
   int ten = static_cast<int>(((timestep * leninsec) / 360.0)) % 144;
-  prob = on[ten];
+  prob = onProbabilities[ten];
   return prob;
 }
 
 double Model_Appliance_Large_Usage::consumption(const int timeStep) {
-        double result = 0.0;
-        if (onAt(timeStep)) {
-                result = getPower();
-        }
-        return result;
+  double result = 0.0;
+  int leninsec = SimulationConfig::lengthOfTimestep();
+  int now = timeStep * leninsec;
+  int end = timeStep * leninsec + leninsec;
+  while (now < end) {
+    int ten = static_cast<int>(now / 600) % 144;
+    if (onAt(ten)) {
+      result += getPower() / 10;
+    }
+    now += 60;
+  }
+  return result;
 }
 
 double Model_Appliance_Large_Usage::getTransitionAt(const int state,
@@ -50,27 +57,27 @@ double Model_Appliance_Large_Usage::getPower() {
 }
 
 double Model_Appliance_Large_Usage::getMeanFraction() {
-        double random = Utility::randomDouble(0.0, 1.0);
-        double currSum = 0;
-        for (int i =0; i < 10; i++) {
-                currSum = currSum + getTransitionAt(state, i);
-                if (random < currSum) {
-                        state = i;
-                        break;
-                }
-        }
-        return meanF[state];
+  double random = Utility::randomDouble(0.0, 1.0);
+  double currSum = 0;
+  for (int i =0; i < 10; i++) {
+    currSum = currSum + getTransitionAt(state, i);
+    if (random < currSum) {
+      state = i;
+      break;
+    }
+  }
+  return meanF[state];
 }
 
-bool Model_Appliance_Large_Usage::onAt(const int timeStep) const {
+bool Model_Appliance_Large_Usage::isOn() const {
+  return on;
+}
 
-        double probability = probOn(timeStep);
-        double random = Utility::randomDouble(0.0, 1.0);
-        bool on = false;
-        if (random < probability) {
-                on = true;
-        }
-        return on;
+bool Model_Appliance_Large_Usage::onAt(const int timeStep) {
+  double probability = probOn(timeStep);
+  double random = Utility::randomDouble(0.0, 1.0);
+  on = random < probability;
+  return on;
 }
 
 template <typename T>
@@ -131,7 +138,9 @@ void Model_Appliance_Large_Usage::parseConfiguration(
         } else if (std::strcmp(cnode->name(), "transitions") == 0) {
             transitions = as_vector_vector<double>(cnode);
         } else if (std::strcmp(cnode->name(), "on") == 0) {
-            on = as_vector<double>(cnode);
+            onProbabilities = as_vector<double>(cnode);
+        } else {
+          parseShapeScale(cnode);
         }
         cnode = cnode->next_sibling();
       }
@@ -139,4 +148,8 @@ void Model_Appliance_Large_Usage::parseConfiguration(
     }
     node = node->next_sibling();
   }
+}
+
+void Model_Appliance_Large_Usage::parseShapeScale(rapidxml::xml_node<> *node) {
+  node->value();
 }

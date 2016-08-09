@@ -21,7 +21,8 @@ void DataStore::addValue(const std::string &name, const double value) {
     variableMap[name].push_back(value);
 }
 
-double DataStore::getValueForZone(const std::string &name, const std::string &zoneName) {
+double DataStore::getValueForZone(const std::string &name,
+                                        const std::string &zoneName) {
     return getValue(zoneName + name);
 }
 

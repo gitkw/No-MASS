@@ -1,12 +1,7 @@
-/*
- * File:   VariableStore.h
- * Author: jake
- *
- * Created on September 15, 2013, 9:05 PM
- */
+// Copyright 2015 Jacob Chapman
 
-#ifndef VARIABLESTORE_H
-#define VARIABLESTORE_H
+#ifndef DATASTORE_H
+#define DATASTORE_H
 
 #include <unordered_map>
 #include <vector>
@@ -25,4 +20,4 @@ private:
     static std::unordered_map<std::string, std::vector<double> > variableMap;
 };
 
-#endif  /* VARIABLESTORE_H */
+#endif  /* DATASTORE_H */

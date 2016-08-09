@@ -1,51 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <simulation>
   <seed>0</seed>
-  <timeStepsPerHour>6</timeStepsPerHour>
+  <timeStepsPerHour>60</timeStepsPerHour>
   <beginMonth>1</beginMonth>
   <endMonth>1</endMonth>
   <beginDay>1</beginDay>
-  <endDay>1</endDay>
+  <endDay>10</endDay>
   <save>1</save>
   <buildings>
   <building>
-    <zone>
-      <name>Block1:Zone1</name>
-      <activities>IT</activities>
-      <groundFloor>1</groundFloor>
-      <windowCount>1</windowCount>
-    </zone>
+        <zone>
+            <name>Block1:Kitchen</name>
+            <activities>Cooking,Cleaning</activities>
+            <groundFloor>0</groundFloor>
+            <windowCount>1</windowCount>
+        </zone>
+        <zone>
+            <name>Block1:LivingRoom</name>
+            <activities>AudioVisual,Metabolic,Passive</activities>
+            <groundFloor>0</groundFloor>
+            <windowCount>1</windowCount>
+        </zone>
+        <zone>
+            <name>Block2:Bathroom</name>
+            <activities>Washing,WashingAppliance</activities>
+            <groundFloor>0</groundFloor>
+            <windowCount>1</windowCount>
+        </zone>
+        <zone>
+            <name>Block2:MasterBedroom</name>
+            <activities>Sleep</activities>
+            <groundFloor>0</groundFloor>
+            <windowCount>1</windowCount>
+        </zone>
+        <zone>
+            <name>Block2:Office</name>
+            <activities>IT</activities>
+            <groundFloor>0</groundFloor>
+            <windowCount>1</windowCount>
+        </zone>
     <Appliances>
-      <Large>0</Large>
-      <Large>1</Large>
-      <Large>2</Large>
-      <Large>3</Large>
-      <Large>4</Large>
-      <Large>5</Large>
+      <Large>
+        <id>0</id>
+        <priority>0</priority>
+      </Large>
+      <Large>
+        <id>1</id>
+        <priority>1</priority>
+        <activities>WashingAppliance</activities>
+      </Large>
+      <Large>
+        <id>2</id>
+        <priority>2</priority>
+      </Large>
+      <Large>
+        <id>3</id>
+        <priority>3</priority>
+      </Large>
+      <Large>
+        <id>4</id>
+        <priority>4</priority>
+      </Large>
+      <Large>
+        <id>5</id>
+        <priority>5</priority>
+      </Large>
       <Small>
+        <id>6</id>
+        <priority>6</priority>
         <WeibullParameters>weibull_parameters_audiovisual.csv</WeibullParameters>
         <StateProbabilities>state_probability_audiovisual.csv</StateProbabilities>
         <Fractions>mean_fractional_audiovisual.csv</Fractions>
         <SumRatedPowers>sum_rated_av.txt</SumRatedPowers>
       </Small>
       <Small>
+        <id>7</id>
+        <priority>7</priority>
         <WeibullParameters>weibull_parameters_other.csv</WeibullParameters>
         <StateProbabilities>state_probability_other.csv</StateProbabilities>
         <Fractions>mean_fractional_other.csv</Fractions>
         <SumRatedPowers>sum_rated_oth.txt</SumRatedPowers>
       </Small>
       <Smallk>
+        <id>8</id>
+        <priority>8</priority>
         <WeibullParameters>weibull_parameters_computing.csv</WeibullParameters>
         <StateProbabilities>Smallstate_probability_computing.csv</StateProbabilities>
         <Fractions>mean_fractional_computing.csv</Fractions>
         <SumRatedPowers>sum_rated_comp.txt</SumRatedPowers>
       </Smallk>
       <Small>
+        <id>9</id>
+        <priority>9</priority>
         <WeibullParameters>weibull_parameters_kitchen.csv</WeibullParameters>
         <StateProbabilities>state_probability_kitchen.csv</StateProbabilities>
         <Fractions>mean_fractional_kitchen.csv</Fractions>
         <SumRatedPowers>sum_rated_kit.txt</SumRatedPowers>
       </Small>
+      <pv>
+        <id>10</id>
+        <priority>0</priority>
+        <filename>PVBowler2013_365.csv</filename>
+      </pv>
     </Appliances>
     <agents>
       <agent>
@@ -53,14 +109,17 @@
         <window>1</window>
         <office>Block1:Zone1</office>
         <power>0.5</power>
+        <age>age2</age>
+        <computer>computer0</computer>
+        <civstat>civstat1</civstat>
+        <unemp>unemp0</unemp>
+        <retired>retired1</retired>
+        <edtry>edtry1</edtry>
+        <famstat>famstat3</famstat>
+        <sex>sex2</sex>
+        <bedroom>Block2:MasterBedroom</bedroom>
         <profile>
-          <monday>0.021,0.021,0.021,0.021,0.021,0.021,0.021,0.025,0.250,0.422,0.309,0.377,0.187,0.375,0.426,0.396,0.375,0.432,0.084,0.070,0.047,0.039,0.038,0.038</monday>
-          <tuesday>0.040,0.038,0.038,0.038,0.038,0.038,0.038,0.046,0.320,0.401,0.325,0.417,0.196,0.372,0.435,0.402,0.334,0.435,0.100,0.053,0.044,0.044,0.042,0.042</tuesday>
-          <wednesday>0.041,0.041,0.041,0.041,0.041,0.041,0.041,0.062,0.342,0.403,0.297,0.342,0.194,0.354,0.395,0.363,0.336,0.383,0.080,0.043,0.027,0.026,0.026,0.026</wednesday>
-          <thursday>0.024,0.024,0.024,0.024,0.024,0.024,0.024,0.029,0.265,0.373,0.271,0.368,0.193,0.361,0.402,0.357,0.324,0.367,0.094,0.067,0.032,0.032,0.030,0.030</thursday>
-          <friday>0.030,0.029,0.029,0.029,0.029,0.029,0.029,0.055,0.327,0.367,0.304,0.373,0.215,0.317,0.280,0.239,0.197,0.125,0.066,0.069,0.031,0.029,0.027,0.027</friday>
-          <saturday>0.028,0.030,0.029,0.029,0.030,0.029,0.029,0.030,0.030,0.030,0.035,0.037,0.030,0.032,0.041,0.045,0.042,0.034,0.035,0.032,0.027,0.024,0.021,0.021</saturday>
-          <sunday>0.021,0.021,0.021,0.021,0.021,0.021,0.021,0.021,0.024,0.025,0.032,0.045,0.040,0.041,0.033,0.032,0.033,0.031,0.031,0.028,0.026,0.027,0.025,0.025</sunday>
+          <file>@testLocationFiles@/Activity.xml</file>
         </profile>
       </agent>
       <agent>
@@ -68,22 +127,27 @@
         <window>1</window>
         <power>0.5</power>
         <office>Block1:Zone1</office>
+
+        <age>age2</age>
+        <computer>computer0</computer>
+        <civstat>civstat1</civstat>
+        <unemp>unemp0</unemp>
+        <retired>retired1</retired>
+        <edtry>edtry1</edtry>
+        <famstat>famstat3</famstat>
+        <sex>sex2</sex>
+        <bedroom>Block2:MasterBedroom</bedroom>
         <profile>
-          <monday>0.021,0.021,0.021,0.021,0.021,0.021,0.021,0.025,0.250,0.422,0.309,0.377,0.187,0.375,0.426,0.396,0.375,0.432,0.084,0.070,0.047,0.039,0.038,0.038</monday>
-          <tuesday>0.040,0.038,0.038,0.038,0.038,0.038,0.038,0.046,0.320,0.401,0.325,0.417,0.196,0.372,0.435,0.402,0.334,0.435,0.100,0.053,0.044,0.044,0.042,0.042</tuesday>
-          <wednesday>0.041,0.041,0.041,0.041,0.041,0.041,0.041,0.062,0.342,0.403,0.297,0.342,0.194,0.354,0.395,0.363,0.336,0.383,0.080,0.043,0.027,0.026,0.026,0.026</wednesday>
-          <thursday>0.024,0.024,0.024,0.024,0.024,0.024,0.024,0.029,0.265,0.373,0.271,0.368,0.193,0.361,0.402,0.357,0.324,0.367,0.094,0.067,0.032,0.032,0.030,0.030</thursday>
-          <friday>0.030,0.029,0.029,0.029,0.029,0.029,0.029,0.055,0.327,0.367,0.304,0.373,0.215,0.317,0.280,0.239,0.197,0.125,0.066,0.069,0.031,0.029,0.027,0.027</friday>
-          <saturday>0.028,0.030,0.029,0.029,0.030,0.029,0.029,0.030,0.030,0.030,0.035,0.037,0.030,0.032,0.041,0.045,0.042,0.034,0.035,0.032,0.027,0.024,0.021,0.021</saturday>
-          <sunday>0.021,0.021,0.021,0.021,0.021,0.021,0.021,0.021,0.024,0.025,0.032,0.045,0.040,0.041,0.033,0.032,0.033,0.031,0.031,0.028,0.026,0.027,0.025,0.025</sunday>
+          <file>@testLocationFiles@/Activity.xml</file>
         </profile>
+
       </agent>
     </agents>
   </building>
 
 </buildings>
   <models>
-    <presencePage>1</presencePage>
+    <presencePage>0</presencePage>
     <shades>
       <enabled>0</enabled>
       <shade>

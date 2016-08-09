@@ -54,7 +54,11 @@ void Building::step() {
     std::list<int> pop = Utility::randomIntList(popSize);
     for (int a : pop) {
         population[a].step();
+        appliances.addCurrentStates(population[a].getStateID());
     }
+
+    appliances.step();
+
     for (std::shared_ptr<Building_Zone> &zone : zones) {
         if (!zone->isActive()) {
             continue;
@@ -82,7 +86,7 @@ void Building::step() {
         zone->step();
       }
     }
-    appliances.step();
+
 }
 
 void Building::buildingInteractions() {

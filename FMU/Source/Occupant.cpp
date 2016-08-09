@@ -156,7 +156,7 @@ void Occupant::step() {
 }
 
 void Occupant::model_activity() {
-    Model_Activity ma;
+    Model_Activity_Survival ma;
     activities = ma.preProcessActivities(buildingID, id);
 }
 
@@ -372,4 +372,8 @@ void Occupant::postTimeStep() {
   for (Occupant_Zone &agentZone : agentZones) {
     agentZone.postTimeStep();
   }
+}
+
+int Occupant::getStateID() const {
+  return state.getId();
 }
