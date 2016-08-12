@@ -1,16 +1,14 @@
 // Copyright 2016 Jacob Chapman
 
-#ifndef FMU_SOURCE_SIMULATIONCONFIG_H_
-#define FMU_SOURCE_SIMULATIONCONFIG_H_
+#ifndef SIMULATIONCONFIG_H_
+#define SIMULATIONCONFIG_H_
 
 #include <cstddef>
 #include <string>
 #include <vector>
 #include <map>
 
-#include <rapidxml.hpp>
-
-
+#include "rapidxml.hpp"
 
 struct ZoneStruct {
     std::string name;
@@ -134,11 +132,20 @@ struct appSmallStruct {
   double priority;
 };
 
+struct appFMIStruct {
+  std::string variableName;
+  int id;
+  double priority;
+};
+
 struct buildingStruct {
     std::map<std::string, ZoneStruct> zones;
     std::vector<appLargeStruct> AppliancesLarge;
+    std::vector<appLargeStruct> AppliancesGrid;
+    std::vector<appLargeStruct> AppliancesLargeLearning;
     std::vector<appSmallStruct> AppliancesSmall;
     std::vector<appPVStruct> AppliancesPV;
+    std::vector<appFMIStruct> AppliancesFMI;
     std::vector<agentStruct> agents;
     std::string name;
     int id;
@@ -200,4 +207,4 @@ class SimulationConfig {
     SimulationConfig();
 };
 
-#endif  //  FMU_SOURCE_SIMULATIONCONFIG_H_
+#endif  //  SIMULATIONCONFIG_H_

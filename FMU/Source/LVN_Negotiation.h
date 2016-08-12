@@ -8,8 +8,8 @@
 struct contract {
     int id;
     double requested;
-    double supplied;
     double recieved;
+    double supplied;
     double priority;
 };
 
@@ -18,7 +18,8 @@ class LVN_Negotiation {
     LVN_Negotiation();
     void submit(contract c);
     void process();
-    contract getContract(int id);
+    contract getContract(const int id);
+    double getRecievedPowerForContract(const int id);
     void clear();
 
  private:

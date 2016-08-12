@@ -14,7 +14,7 @@ void Appliance_Small::setup() {
   model.readStateProbabilities(StateProbabilities);
   model.readFractions(Fractions);
   model.readSumRatedPowers(SumRatedPowers);
-  model.setRatedPowerAt(10);
+  model.setRatedPowerAt(Utility::randomInt(0, 24));
 }
 
 void Appliance_Small::preprocess() {

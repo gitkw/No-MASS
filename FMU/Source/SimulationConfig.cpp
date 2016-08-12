@@ -133,7 +133,9 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
                                                             buildingStruct *b) {
   rapidxml::xml_node<> *cnode = node->first_node();
   while (cnode) {
-    if (strComp(cnode->name(), "Large")) {
+    if (strComp(cnode->name(), "Large") ||
+                strComp(cnode->name(), "LargeLearning") ||
+                            strComp(cnode->name(), "Grid")) {
       rapidxml::xml_node<> *anode = cnode->first_node();
       appLargeStruct s;
       while (anode) {
@@ -146,7 +148,13 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         }
         anode = anode->next_sibling();
       }
-      b->AppliancesLarge.push_back(s);
+      if (strComp(cnode->name(), "Large")) {
+        b->AppliancesLarge.push_back(s);
+      } else if (strComp(cnode->name(), "LargeLearning")) {
+        b->AppliancesLargeLearning.push_back(s);
+      } else if (strComp(cnode->name(), "Grid")) {
+        b->AppliancesGrid.push_back(s);
+      }
     } else if (strComp(cnode->name(), "Small")) {
       rapidxml::xml_node<> *anode = cnode->first_node();
       appSmallStruct s;
@@ -167,6 +175,20 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         anode = anode->next_sibling();
       }
       b->AppliancesSmall.push_back(s);
+    }  else if (strComp(cnode->name(), "FMI")) {
+      rapidxml::xml_node<> *anode = cnode->first_node();
+      appFMIStruct s;
+      while (anode) {
+        if (strComp(anode->name(), "variablename")) {
+          s.variableName = anode->value();
+        } else if (strComp(anode->name(), "id")) {
+          s.id = std::stoi(anode->value());
+        } else if (strComp(anode->name(), "priority")) {
+          s.priority = std::stoi(anode->value());
+        }
+        anode = anode->next_sibling();
+      }
+      b->AppliancesFMI.push_back(s);
     } else if (strComp(cnode->name(), "pv")) {
         rapidxml::xml_node<> *anode = cnode->first_node();
         appPVStruct s;

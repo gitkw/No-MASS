@@ -96,6 +96,9 @@ Source/Appliance.cpp
 Source/Appliance_Large.cpp
 Source/Appliance_Small.cpp
 Source/Appliance_PV.cpp
+Source/Appliance_FMI.cpp
+Source/Appliance_Large_Learning.cpp
+Source/Appliance_Grid.cpp
 Source/LVN.cpp
 Source/LVN_Node.cpp
 Source/LVN_Negotiation.cpp

@@ -3,9 +3,9 @@
   <seed>0</seed>
   <timeStepsPerHour>60</timeStepsPerHour>
   <beginMonth>1</beginMonth>
-  <endMonth>1</endMonth>
+  <endMonth>12</endMonth>
   <beginDay>1</beginDay>
-  <endDay>10</endDay>
+  <endDay>31</endDay>
   <save>1</save>
   <buildings>
   <building>
@@ -81,14 +81,14 @@
         <Fractions>mean_fractional_other.csv</Fractions>
         <SumRatedPowers>sum_rated_oth.txt</SumRatedPowers>
       </Small>
-      <Smallk>
+      <Small>
         <id>8</id>
         <priority>8</priority>
         <WeibullParameters>weibull_parameters_computing.csv</WeibullParameters>
-        <StateProbabilities>Smallstate_probability_computing.csv</StateProbabilities>
+        <StateProbabilities>state_probability_computing.csv</StateProbabilities>
         <Fractions>mean_fractional_computing.csv</Fractions>
         <SumRatedPowers>sum_rated_comp.txt</SumRatedPowers>
-      </Smallk>
+      </Small>
       <Small>
         <id>9</id>
         <priority>9</priority>

@@ -28,7 +28,7 @@ double Model_Appliance_Large_Usage::probOn(int timestep) const {
   double prob = 0.0;
   int leninsec = SimulationConfig::lengthOfTimestep();
   int ten = static_cast<int>(((timestep * leninsec) / 360.0)) % 144;
-  prob = onProbabilities[ten];
+  prob = onProbabilities[ten] / 10.0;
   return prob;
 }
 
@@ -57,6 +57,7 @@ double Model_Appliance_Large_Usage::getPower() {
 }
 
 double Model_Appliance_Large_Usage::getMeanFraction() {
+/*
   double random = Utility::randomDouble(0.0, 1.0);
   double currSum = 0;
   for (int i =0; i < 10; i++) {
@@ -66,6 +67,8 @@ double Model_Appliance_Large_Usage::getMeanFraction() {
       break;
     }
   }
+  */
+  state = Utility::cumulativeProbability(transitions[state]);
   return meanF[state];
 }
 

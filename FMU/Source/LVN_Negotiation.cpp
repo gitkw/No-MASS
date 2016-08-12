@@ -31,9 +31,9 @@ void LVN_Negotiation::process() {
   }
   for (contract & c : contracts) {
     if (totalPower >= c.requested) {
-      totalPower -= c.requested;
       c.recieved = c.requested;
     }
+    totalPower -= c.requested;
   }
 }
 
@@ -45,6 +45,10 @@ contract LVN_Negotiation::getContract(int id) {
     }
   }
   return *it;
+}
+
+double LVN_Negotiation::getRecievedPowerForContract(const int id) {
+  return getContract(id).recieved;
 }
 
 void LVN_Negotiation::clear() {
