@@ -38,7 +38,6 @@ void Appliance_PV::preprocess() {
       }
       now += 60;
     }
-
     // watt hour per timeperhour
     power.push_back(0);
     supply.push_back(p);

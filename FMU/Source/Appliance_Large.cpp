@@ -11,16 +11,20 @@ Appliance_Large::Appliance_Large() {
 }
 
 void Appliance_Large::setup() {
+  setupModel();
+}
+
+void Appliance_Large::setupModel() {
   model.setID(id);
   model.parseConfiguration(SimulationConfig::RunLocation +
-                                                "ApplianceUsage.xml");
+                                                "AppliancesLarge.xml");
 }
 
 void Appliance_Large::step() {
-  int stepCount = SimulationConfig::getStepCount();
   model.decreaseDuration();
   double p = 0.0;
   if (isOn() || match) {
+    int stepCount = SimulationConfig::getStepCount();
     p = model.consumption(stepCount);
   }
   power.push_back(p);

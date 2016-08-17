@@ -5,6 +5,11 @@
 
 #include "Appliance.h"
 
+/**
+ * @brief Grid appliances class
+ * @details This will handles the power coming from the grid
+ */
+
 class Appliance_Grid : public Appliance {
  public:
   Appliance_Grid();

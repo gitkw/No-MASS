@@ -13,7 +13,10 @@
 #include "Appliance_PV.h"
 #include "LVN_Negotiation.h"
 
-
+/**
+ * @brief Manages the different building appliances agents
+ * @details Each building has a set of applaince this class manages them
+ */
 class Building_Appliances {
  public:
     Building_Appliances();
@@ -25,7 +28,8 @@ class Building_Appliances {
     void stepLarge();
     void setBuildingID(const int id);
     void addCurrentStates(const int stateid);
-    void sendContract(int id, double priority, double request, double supply);
+    void sendContract(int id, double priority, double request,
+                              double supply, double cost);
     double getTotalPower() const;
 
  private:
@@ -53,7 +57,8 @@ class Building_Appliances {
     void addAppToDataStrore(const int id);
     void addAppVariableToDataStrore(const int id, const int requested,
                                     const int supplied);
-    void addAppRecievedToDataStrore(const int id, const int recieved);
+    void addAppRecievedToDataStrore(const int id, const int recieved,
+                                    const int cost);
 };
 
 #endif  // BUILDING_APPLIANCES_H_

@@ -17,6 +17,7 @@ void Building_Appliances::setup() {
   DataStore::addVariable(buildingString + "_Sum_Recieved");
   DataStore::addVariable(buildingString + "_Sum_Small");
   DataStore::addVariable(buildingString + "_Sum_Large");
+  DataStore::addVariable(buildingString + "_Sum_Cost");
 
   std::vector<appPVStruct> appPV =
                   SimulationConfig::buildings[buildingID].AppliancesPV;
@@ -24,6 +25,7 @@ void Building_Appliances::setup() {
     pv.push_back(Appliance_PV());
     pv.back().setID(s.id);
     pv.back().setPriority(s.priority);
+    pv.back().setCost(s.cost);
     pv.back().setBuildingID(buildingID);
     pv.back().setFileName(s.file);
     pv.back().setup();
@@ -58,6 +60,7 @@ void Building_Appliances::setup() {
     grid.push_back(Appliance_Grid());
     grid.back().setID(s.id);
     grid.back().setPriority(s.priority);
+    grid.back().setCost(s.cost);
     grid.back().setBuildingID(buildingID);
     grid.back().setup();
     addAppToDataStrore(s.id);
@@ -101,12 +104,13 @@ void Building_Appliances::preprocess() {
 }
 
 void Building_Appliances::sendContract(int id, double priority,
-                                        double request, double supply) {
+                                double request, double supply, double cost) {
   contract c;
   c.id = id;
   c.requested = request;
   c.priority = priority;
   c.supplied = supply;
+  c.suppliedCost = cost;
   app_negotiation.submit(c);
   PowerRequested += request;
   PowerGenerated += supply;
@@ -115,29 +119,27 @@ void Building_Appliances::sendContract(int id, double priority,
 
 void Building_Appliances::stepLarge() {
   std::list<int> pop = Utility::randomIntList(large.size());
-  int stepCount = SimulationConfig::getStepCount();
   for (int a : pop) {
     large[a].hasActivities(currentStates);
     large[a].step();
     int appid = large[a].getID();
     double priority = large[a].getPriority();
-    double power = large[a].powerAt(stepCount);
-    double supply = large[a].supplyAt(stepCount);
-    sendContract(appid, priority, power, supply);
+    double power = large[a].powerBack();
+    double supply = large[a].supplyBack();
+    sendContract(appid, priority, power, supply, 0);
   }
 }
 
 void Building_Appliances::stepLargeLearning() {
-  std::list<int> pop = Utility::randomIntList(large.size());
-  int stepCount = SimulationConfig::getStepCount();
+  std::list<int> pop = Utility::randomIntList(largeLearning.size());
   for (int a : pop) {
-    large[a].hasActivities(currentStates);
-    large[a].step();
-    int appid = large[a].getID();
-    double priority = large[a].getPriority();
-    double power = large[a].powerAt(stepCount);
-    double supply = large[a].supplyAt(stepCount);
-    sendContract(appid, priority, power, supply);
+    largeLearning[a].hasActivities(currentStates);
+    largeLearning[a].step();
+    int appid = largeLearning[a].getID();
+    double priority = largeLearning[a].getPriority();
+    double power = largeLearning[a].powerBack();
+    double supply = largeLearning[a].supplyBack();
+    sendContract(appid, priority, power, supply, 0);
   }
 }
 
@@ -148,7 +150,7 @@ void Building_Appliances::stepSmall() {
     double power = small[a].powerAt(SimulationConfig::getStepCount());
     double supply = small[a].supplyAt(SimulationConfig::getStepCount());
     double priority = small[a].getPriority();
-    sendContract(appid, priority, power, supply);
+    sendContract(appid, priority, power, supply, 0);
   }
 }
 
@@ -158,7 +160,8 @@ void Building_Appliances::stepPV() {
     int appid = pv[a].getID();
     double supply = pv[a].supplyAt(SimulationConfig::getStepCount());
     double priority = pv[a].getPriority();
-    sendContract(appid, priority, 0, supply);
+    double cost = pv[a].getCost();
+    sendContract(appid, priority, 0, supply, cost);
   }
 }
 
@@ -167,24 +170,24 @@ void Building_Appliances::stepFMI() {
   for (int a : pop) {
     fmi[a].step();
     int appid = fmi[a].getID();
-    double power = fmi[a].powerAt(SimulationConfig::getStepCount());
-    double supply = fmi[a].supplyAt(SimulationConfig::getStepCount());
+    double power = fmi[a].powerBack();
+    double supply = fmi[a].supplyBack();
     double priority = fmi[a].getPriority();
-    sendContract(appid, priority, power, supply);
+    sendContract(appid, priority, power, supply, 0);
   }
 }
 
 void Building_Appliances::stepGrid() {
   std::list<int> pop = Utility::randomIntList(grid.size());
-  int stepCount = SimulationConfig::getStepCount();
   for (int a : pop) {
-    grid[a].setRequiredPower(PowerRequested - PowerGenerated);
+    grid[a].setRequiredPower(PowerRequested + 1 - PowerGenerated);
     grid[a].step();
     int appid = grid[a].getID();
     double priority = grid[a].getPriority();
-    double power = grid[a].powerAt(stepCount);
-    double supply = grid[a].supplyAt(stepCount);
-    sendContract(appid, priority, power, supply);
+    double power = grid[a].powerBack();
+    double supply = grid[a].supplyBack();
+    double cost = grid[a].getCost();
+    sendContract(appid, priority, power, supply, cost);
   }
   PowerRequested = 0;
   PowerGenerated = 0;
@@ -195,16 +198,31 @@ void Building_Appliances::step() {
   stepLarge();
   stepSmall();
   stepFMI();
+  stepLargeLearning();
   stepGrid();  // Grid must step last
 
   app_negotiation.process();
   double sum_large = 0;
+  double sum_cost = 0;
   std::list<int> pop = Utility::randomIntList(large.size());
   for (int a : pop) {
     int appid = large[a].getID();
     double power = app_negotiation.getRecievedPowerForContract(appid);
+    double cost = app_negotiation.getCostOfPowerForContract(appid);
     sum_large += power;
-    addAppRecievedToDataStrore(appid, power);
+    sum_cost += cost;
+    addAppRecievedToDataStrore(appid, power, cost);
+  }
+
+  pop = Utility::randomIntList(largeLearning.size());
+  for (int a : pop) {
+    int appid = largeLearning[a].getID();
+    double power = app_negotiation.getRecievedPowerForContract(appid);
+    double cost = app_negotiation.getCostOfPowerForContract(appid);
+    largeLearning[a].addToCost(cost);
+    sum_large += power;
+    sum_cost += cost;
+    addAppRecievedToDataStrore(appid, power, cost);
   }
 
   double sum_small = 0;
@@ -212,8 +230,10 @@ void Building_Appliances::step() {
   for (int a : pop) {
     int appid = small[a].getID();
     double power = app_negotiation.getRecievedPowerForContract(appid);
+    double cost = app_negotiation.getCostOfPowerForContract(appid);
     sum_small += power;
-    addAppRecievedToDataStrore(appid, power);
+    sum_cost += cost;
+    addAppRecievedToDataStrore(appid, power, cost);
   }
 
   double sum_fmi = 0;
@@ -221,20 +241,27 @@ void Building_Appliances::step() {
   for (int a : pop) {
     int appid = fmi[a].getID();
     double power = app_negotiation.getRecievedPowerForContract(appid);
+    double cost = app_negotiation.getCostOfPowerForContract(appid);
     sum_fmi += power;
-    addAppRecievedToDataStrore(appid, power);
+    sum_cost += cost;
+    addAppRecievedToDataStrore(appid, power, cost);
   }
   totalPower = sum_small + sum_large + sum_fmi;
   DataStore::addValue(buildingString + "_Sum_Small", sum_small);
   DataStore::addValue(buildingString + "_Sum_Large", sum_large);
   DataStore::addValue(buildingString + "_Sum_fmi", sum_fmi);
   DataStore::addValue(buildingString + "_Sum_Recieved", totalPower);
+  DataStore::addValue(buildingString + "_Sum_Cost", sum_cost);
 
   currentStates.clear();
   app_negotiation.clear();
 }
 
 void Building_Appliances::postprocess() {
+  std::list<int> pop = Utility::randomIntList(largeLearning.size());
+  for (int a : pop) {
+    largeLearning[a].postprocess();
+  }
 }
 
 void Building_Appliances::postTimeStep() {
@@ -260,9 +287,10 @@ void Building_Appliances::addAppVariableToDataStrore(const int id,
 }
 
 void Building_Appliances::addAppRecievedToDataStrore(const int id,
-                                  const int recieved) {
+                                  const int recieved, const int cost) {
   std::string s_id = buildingString + std::to_string(id);
   DataStore::addValue(s_id + "_recieved", recieved);
+  DataStore::addValue(s_id + "_cost", cost);
 }
 
 void Building_Appliances::addAppToDataStrore(const int id) {
@@ -270,4 +298,5 @@ void Building_Appliances::addAppToDataStrore(const int id) {
   DataStore::addVariable(s_id + "_supplied");
   DataStore::addVariable(s_id + "_recieved");
   DataStore::addVariable(s_id + "_requested");
+  DataStore::addVariable(s_id + "_cost");
 }

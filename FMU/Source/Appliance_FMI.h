@@ -6,11 +6,15 @@
 #include <string>
 #include "Appliance.h"
 
+/**
+ * @brief FMI appliances class
+ * @details This will handles the power coming from the FMI interface
+ * for example electric heaters
+ */
+
 class Appliance_FMI : public Appliance {
  public:
     Appliance_FMI();
-
-
     void step();
     void setFMIVariableName(const std::string & FMIVariableName);
  private:

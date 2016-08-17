@@ -1,8 +1,7 @@
-// Copyright 2015 Jacob Chapman
+// Copyright 2016 Jacob Chapman
 
-
-#ifndef SIMULATION_H
-#define	SIMULATION_H
+#ifndef SIMULATION_H_
+#define SIMULATION_H_
 
 #include <string>
 #include <vector>
@@ -15,10 +14,8 @@
  * @details Called through the FMU interface, manages the simulation of the NoMass platform
  */
 class Simulation {
-
-public:
+ public:
     Simulation();
-    ~Simulation(){}
 
     void preprocess();
     void parseConfiguration(const std::string file);
@@ -30,19 +27,18 @@ public:
 
     void setSimulationConfigurationFile(const std::string & filename);
 
-private:
+ private:
     std::vector<int> monthCount;
     std::string simulationConfigurationFile;
 
     /**
-    * Manages the Buildings
+    * The Buildings
     */
     std::vector<Building> buildings;
     /**
     * Manages the Buildings
     */
     LVN lvn;
-
 };
 
-#endif	/* SIMULATION_H */
+#endif  // SIMULATION_H_

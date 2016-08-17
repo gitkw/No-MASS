@@ -25,7 +25,7 @@ double Model_Appliance_Small_Usage::consumption(const int timeStep) {
       state = calculateStateAtTenMin(ten);
       duration = durationAtState(state);
     }
-    result += getFractionalPowerAtState(state) / 10.0;
+    result += getFractionalPowerAtState(state);
     now += 60;
   }
   return result;

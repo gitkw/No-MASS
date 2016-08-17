@@ -1,9 +1,9 @@
 // Copyright 2015 Jacob Chapman
 
 #include "DataStore.h"
-#include "QLearning_Window.h"
+#include "QLearning_Appliance.h"
 
-void QLearning_Window::setId(const int id) {
+void QLearning_Appliance::setId(const int id) {
     this->id = id;
     reward_name = filename + "_reward"+ std::to_string(id);
     action_name = filename + "_action"+ std::to_string(id);
@@ -15,21 +15,25 @@ void QLearning_Window::setId(const int id) {
     DataStore::addVariable(previous_state_name);
 }
 
-QLearning_Window::QLearning_Window() {
-    actions = 2;
+QLearning_Appliance::QLearning_Appliance() {
+    actions = 24;
     action = 0;
     previous_state = 0;
 }
 
-void QLearning_Window::reset() {}
+void QLearning_Appliance::reset() {}
 
-double QLearning_Window::learn() {
+double QLearning_Appliance::learn() {
     DataStore::addValue(reward_name, reward);
     DataStore::addValue(action_name, action);
     DataStore::addValue(state_name, state);
     DataStore::addValue(previous_state_name, previous_state);
     updateQ(previous_state, action, reward, state);
-    previous_state = state;
-    action = greedySelection(state);
+    return action;
+}
+
+double QLearning_Appliance::getAction() {
+  action = greedySelection(state);
+  previous_state = state;
     return action;
 }

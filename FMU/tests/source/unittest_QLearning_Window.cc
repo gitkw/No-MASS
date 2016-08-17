@@ -7,6 +7,7 @@
 #include "DataStore.h"
 #include "QLearning_Window.h"
 
+#include "Building_Zone.h"
 #include "QLearning.h"
 #include "gtest/gtest.h"
 

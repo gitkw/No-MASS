@@ -1,12 +1,17 @@
 // Copyright 2016 Jacob Chapman
 
-#ifndef FMU_SOURCE_APPLIANCE_PV_H_
-#define FMU_SOURCE_APPLIANCE_PV_H_
+#ifndef APPLIANCE_PV_H_
+#define APPLIANCE_PV_H_
 
 #include <vector>
 #include <string>
 #include "Appliance.h"
 #include "Model_Appliance_PV_CSV.h"
+
+/**
+ * @brief PV appliance class
+ * @details The PV agent, handles the csv model
+ */
 
 class Appliance_PV : public Appliance {
  public:
@@ -21,4 +26,4 @@ class Appliance_PV : public Appliance {
     std::string filename;
 };
 
-#endif  // FMU_SOURCE_APPLIANCE_PV_H_
+#endif  // APPLIANCE_PV_H_

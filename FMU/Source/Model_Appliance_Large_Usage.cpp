@@ -40,7 +40,7 @@ double Model_Appliance_Large_Usage::consumption(const int timeStep) {
   while (now < end) {
     int ten = static_cast<int>(now / 600) % 144;
     if (onAt(ten)) {
-      result += getPower() / 10;
+      result += getPower();
     }
     now += 60;
   }

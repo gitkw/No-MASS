@@ -4,12 +4,15 @@
 #define LVN_NEGOTIATION_H_
 
 #include <vector>
+#include <map>
 
 struct contract {
     int id;
     double requested;
     double recieved;
+    double recievedCost;
     double supplied;
+    double suppliedCost;
     double priority;
 };
 
@@ -20,11 +23,10 @@ class LVN_Negotiation {
     void process();
     contract getContract(const int id);
     double getRecievedPowerForContract(const int id);
+    double getCostOfPowerForContract(const int id);
     void clear();
 
  private:
-    double totalPower;
-    double demandedPower;
     std::vector<contract> contracts;
 };
 

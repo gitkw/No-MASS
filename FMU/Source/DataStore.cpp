@@ -46,7 +46,7 @@ void DataStore::clear() {
 void DataStore::print() {
   if (SimulationConfig::info.save) {
     std::ofstream myfile;
-    myfile.open("agent.csv");
+    myfile.open("NoMASS.out");
     myfile << "stepCount,";
     unsigned int maxSize = 0;
     for (std::unordered_map<std::string, std::vector<double> >::iterator it=variableMap.begin(); it != variableMap.end(); ++it) {

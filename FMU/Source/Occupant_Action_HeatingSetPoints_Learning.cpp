@@ -1,16 +1,12 @@
 // Copyright 2015 Jacob Chapman
 
-#include <vector>
-#include <iostream>
-#include <cmath>
 #include <string>
-// #include "QLearning_PMV.h"
-// #include "QLearning_HeatingRate.h"
 #include "DataStore.h"
 #include "QLearning_HeatingSetPoints.h"
 #include "Occupant_Action_HeatingSetPoints_Learning.h"
 
-Occupant_Action_HeatingSetPoints_Learning::Occupant_Action_HeatingSetPoints_Learning() {
+Occupant_Action_HeatingSetPoints_Learning::
+                  Occupant_Action_HeatingSetPoints_Learning() {
     setPoint = 20;
     pmv = -1.0;
     result = 20;
@@ -25,39 +21,27 @@ void Occupant_Action_HeatingSetPoints_Learning::reset() {
   qlWeekEnd.reset();
 }
 
-void Occupant_Action_HeatingSetPoints_Learning::setup(const int id, const int learn) {
+void Occupant_Action_HeatingSetPoints_Learning::setup(const int id,
+                                                      const int learn) {
   learnId = learn;
   agentId = id;
-  switch (learnId) {
-    case 0:
-
-      break;
-    case 1:
-
-        std::string zoneIdStr = std::to_string(zoneId);
-        qlWeekDay.setFilename("Weekday-" + zoneIdStr + "-");
-        qlWeekEnd.setFilename("Weekend-" + zoneIdStr + "-");
-        qlWeekDay.setStates(24 * 12);
-        qlWeekEnd.setStates(24 * 12);
-        qlWeekDay.setId(id);
-        qlWeekDay.setup();
-        qlWeekEnd.setId(id);
-        qlWeekEnd.setup();
-        pmv_name = "Weekday-" + zoneIdStr + "-_pmv" + std::to_string(id);
-        DataStore::addVariable(pmv_name);
-        step_name = "Weekday-" + zoneIdStr + "-_steps" + std::to_string(id);
-        DataStore::addVariable(step_name);
-      break;
-    /*case 2:
-    //  ql = std::shared_ptr<QLearning_PMV>(new QLearning_PMV);
-      break;
-    case 3:
-    //  ql = std::shared_ptr<QLearning_HeatingRate>(new QLearning_HeatingRate);
-      break;*/
-  }
+  std::string zoneIdStr = std::to_string(zoneId);
+  qlWeekDay.setFilename("Weekday-" + zoneIdStr + "-");
+  qlWeekEnd.setFilename("Weekend-" + zoneIdStr + "-");
+  qlWeekDay.setStates(24 * 12);
+  qlWeekEnd.setStates(24 * 12);
+  qlWeekDay.setId(id);
+  qlWeekDay.setup();
+  qlWeekEnd.setId(id);
+  qlWeekEnd.setup();
+  pmv_name = "Weekday-" + zoneIdStr + "-_pmv" + std::to_string(id);
+  DataStore::addVariable(pmv_name);
+  step_name = "Weekday-" + zoneIdStr + "-_steps" + std::to_string(id);
+  DataStore::addVariable(step_name);
 }
 
-void Occupant_Action_HeatingSetPoints_Learning::step(const Building_Zone& zone, const bool inZone) {
+void Occupant_Action_HeatingSetPoints_Learning::step(const Building_Zone& zone,
+                                                      const bool inZone) {
     int hour = DataStore::getValue("hour");
 
     if (inZone) {

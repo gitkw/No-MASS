@@ -5,8 +5,7 @@
 #include "Utility.h"
 #include "Appliance_Small.h"
 
-Appliance_Small::Appliance_Small() {
-}
+Appliance_Small::Appliance_Small() {}
 
 void Appliance_Small::setup() {
   model.setFolderLocation(SimulationConfig::RunLocation + "SmallAppliances/");

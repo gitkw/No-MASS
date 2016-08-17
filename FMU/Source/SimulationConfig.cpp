@@ -145,6 +145,8 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
           s.priority = std::stoi(anode->value());
         } else if (strComp(anode->name(), "activities")) {
           s.activities = activityNamesToIds(Utility::splitCSV(anode->value()));
+        } else if (strComp(anode->name(), "cost")) {
+          s.cost = std::stod(anode->value());
         }
         anode = anode->next_sibling();
       }
@@ -199,6 +201,8 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
             s.id = std::stoi(anode->value());
           } else if (strComp(anode->name(), "priority")) {
             s.priority = std::stoi(anode->value());
+          } else if (strComp(anode->name(), "cost")) {
+            s.cost = std::stod(anode->value());
           }
           anode = anode->next_sibling();
         }

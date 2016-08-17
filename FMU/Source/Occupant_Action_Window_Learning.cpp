@@ -1,8 +1,5 @@
 // Copyright 2016 Jacob Chapman
 
-#include <vector>
-#include <iostream>
-#include <cmath>
 #include <string>
 #include "SimulationConfig.h"
 #include "DataStore.h"
@@ -44,13 +41,9 @@ void Occupant_Action_Window_Learning::step(const Building_Zone& zone,
     outdoorTemperature = outdoorTemperature - 10;
 
     int state = (temp * 20) + outdoorTemperature;
-  //  if (previouslyInZone && !inZone) {
-    //  state += 630;
-  //  }
 
     learn.setState(state);
     int winState = zone.getWindowState();
-  //  learn.setState(temp);
     reward = 0;
     if (winState == 1 && pmv > 0.5) {
       reward = 0.1;

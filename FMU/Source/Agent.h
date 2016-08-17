@@ -1,11 +1,11 @@
 // Copyright 2016 Jacob Chapman
 
-#ifndef FMU_SOURCE_AGENT_H_
-#define FMU_SOURCE_AGENT_H_
+#ifndef AGENT_H_
+#define AGENT_H_
 
 /**
  * @brief The Agent
- * @details Contains all information about the occupants and there associated interactions
+ * @details Contains all information about the Agents
  */
 
 class Agent {
@@ -26,4 +26,4 @@ class Agent {
  private:
 };
 
-#endif  // FMU_SOURCE_AGENT_H_
+#endif  // AGENT_H_

@@ -7,6 +7,8 @@
 #include "DataStore.h"
 #include "QLearning_HeatingSetPoints.h"
 
+#include "Building_Zone.h"
+#include "SimulationConfig.h"
 #include "QLearning.h"
 #include "gtest/gtest.h"
 

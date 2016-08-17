@@ -104,8 +104,7 @@ double QLearning::learn() {
   return 0;
 }
 
-void QLearning::reset() {
-}
+void QLearning::reset() {}
 
 void QLearning::setAction(const double action) {
   this->action = action;

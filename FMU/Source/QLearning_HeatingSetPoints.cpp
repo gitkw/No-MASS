@@ -1,7 +1,5 @@
 // Copyright 2015 Jacob Chapman
-#include <iostream>
-#include <string>
-#include <cmath>
+
 #include "DataStore.h"
 #include "QLearning_HeatingSetPoints.h"
 
@@ -23,8 +21,7 @@ QLearning_HeatingSetPoints::QLearning_HeatingSetPoints() {
     previous_state = 0;
 }
 
-void QLearning_HeatingSetPoints::reset() {
-}
+void QLearning_HeatingSetPoints::reset() {}
 
 double QLearning_HeatingSetPoints::learn() {
     int month = DataStore::getValue("month") - 1;

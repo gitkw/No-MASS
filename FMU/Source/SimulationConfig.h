@@ -114,12 +114,14 @@ struct appLargeStruct {
     std::string name;
     int id;
     double priority;
+    double cost;
     std::vector<int> activities;
 };
 
 struct appPVStruct {
     std::string file;
     int id;
+    double cost;
     double priority;
 };
 

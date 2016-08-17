@@ -92,6 +92,7 @@ Source/fmiFunctions.cpp
 Source/QLearning.cpp
 Source/QLearning_HeatingSetPoints.cpp
 Source/QLearning_Window.cpp
+Source/QLearning_Appliance.cpp
 Source/Appliance.cpp
 Source/Appliance_Large.cpp
 Source/Appliance_Small.cpp
@@ -209,12 +210,12 @@ if (Tests)
   add_test(runUnitTests runUnitTests)
 endif()
 
-configure_file(tests/Files/DSM.xml.in
+configure_file(tests/Files/DSM.xml
                 ${CMAKE_CURRENT_BINARY_DIR}/SimulationConfig.xml)
 configure_file(tests/Files/Activity.xml
                 ${CMAKE_CURRENT_BINARY_DIR}/Activity.xml)
-configure_file(tests/Files/ApplianceUsage.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/ApplianceUsage.xml)
+configure_file(tests/Files/AppliancesLarge.xml
+                ${CMAKE_CURRENT_BINARY_DIR}/AppliancesLarge.xml)
 configure_file(tests/Files/PVBowler2013_365.csv
                 ${CMAKE_CURRENT_BINARY_DIR}/PVBowler2013_365.csv)
 

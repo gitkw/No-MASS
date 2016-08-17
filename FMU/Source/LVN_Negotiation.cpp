@@ -1,6 +1,8 @@
 // Copyright 2016 Jacob Chapman
 
 #include <vector>
+#include <utility>
+#include <iostream>
 #include "LVN_Negotiation.h"
 
 
@@ -22,18 +24,38 @@ void LVN_Negotiation::submit(contract c) {
 }
 
 void LVN_Negotiation::process() {
-  totalPower = 0;
-  demandedPower = 0;
+  std::vector<double> power;
+  std::vector<double> cost;
+
   for (contract & c : contracts) {
-    totalPower += c.supplied;
-    demandedPower += c.requested;
     c.recieved = 0;
-  }
-  for (contract & c : contracts) {
-    if (totalPower >= c.requested) {
-      c.recieved = c.requested;
+    c.recievedCost = 0;
+    if (c.supplied > 0) {
+      std::pair<double, double> p;
+      power.push_back(c.supplied);
+      cost.push_back(c.suppliedCost);
     }
-    totalPower -= c.requested;
+  }
+
+  for (contract & c : contracts) {
+      double totalcost = 0;
+      double totalrecieved = 0;
+      double fractionalPower = c.requested;
+      for (unsigned int i = 0; i < cost.size(); i++) {
+          if (power[i] - fractionalPower > 0) {
+              totalcost += cost[i] * fractionalPower;
+              totalrecieved += fractionalPower;
+              power[i] = power[i] - fractionalPower;
+              break;
+          } else {
+              totalcost += cost[i] * power[i];
+              totalrecieved += power[i];
+              fractionalPower -= power[i];
+              power[i] = 0.0;
+          }
+      }
+      c.recievedCost = totalcost;
+      c.recieved = totalrecieved;
   }
 }
 
@@ -49,6 +71,10 @@ contract LVN_Negotiation::getContract(int id) {
 
 double LVN_Negotiation::getRecievedPowerForContract(const int id) {
   return getContract(id).recieved;
+}
+
+double LVN_Negotiation::getCostOfPowerForContract(const int id) {
+  return getContract(id).recievedCost;
 }
 
 void LVN_Negotiation::clear() {
