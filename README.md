@@ -1,4 +1,7 @@
-# No-MASS ![Build](https://magnum.travis-ci.com/jacoblchapman/No-MASS.svg?token=hNH6EHukhSBPUpNQNYH3&branch=Master "build")
+# Compiling No-MASS    {#compile}
+
+## Build Status
+![Build](https://magnum.travis-ci.com/jacoblchapman/No-MASS.svg?token=hNH6EHukhSBPUpNQNYH3&branch=Master "build")
 
 ## Checkout
 
@@ -79,4 +82,3 @@ Take the compiled library (FMI.so or FML.dll) and place into the FMU zip file in
 
 Create model description file and the SimulationConfig file for your simulation.
 Place the fmu file in the EnergyPlus folder, define the variables in the IDF and run EnergyPlus.
-
