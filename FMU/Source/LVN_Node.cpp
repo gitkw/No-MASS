@@ -164,7 +164,7 @@ void LVN_Node::runUntilConvergence(double tolerance) {
  * @return true if node is found.
  */
 bool LVN_Node::setPowerForID(const double power, const int id) {
-  bool found = this->id = id;
+  bool found = this->id == id;
   if (found) {
     setComplexPower(power);
   } else {
