@@ -7,10 +7,18 @@
 Appliance_FMI::Appliance_FMI() {
 }
 
+/**
+ * @brief Set the variable name of the variable we want to retrieve at run time
+ */
 void Appliance_FMI::setFMIVariableName(const std::string & FMIVariableName) {
   this->FMIVariableName = FMIVariableName;
 }
 
+/**
+ * @brief retrieves the value from the given variable name in the DataStore
+ * @details At each simulation timestep with FMI all input variables are written
+ * to the data store, this simply returns the variable
+ */
 void Appliance_FMI::step() {
   double p = DataStore::getValue(FMIVariableName);
   power.push_back(p);

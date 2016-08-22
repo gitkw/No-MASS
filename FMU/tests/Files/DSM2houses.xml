@@ -5,10 +5,20 @@
   <beginMonth>1</beginMonth>
   <endMonth>1</endMonth>
   <beginDay>1</beginDay>
-  <endDay>7</endDay>
+  <endDay>1</endDay>
   <save>1</save>
   <learnupdate>1</learnupdate>
   <learnep>0.01</learnep>
+  <LVN>
+    <node>
+      <id>1</id>
+      <children>
+        <node>
+          <id>2</id>
+        </node>
+      </children>
+    </node>
+  </LVN>
   <buildings>
   <building>
         <zone>

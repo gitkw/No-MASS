@@ -9,11 +9,14 @@ It contains the information for the simulation period, buildings, zones, agents 
 The intial tag to define a number simulation
 ~~~~
 <simulation>
+...
+</simulation>
 ~~~~
 
 ## Seed {#Seed}
 ## Seed
 As we use stochastic models we define a seed value. This can be removed and No-MASS will generate its own. However as it is often required for results can be repeated, doing it manully will allow the random values to be the same.
+
 ~~~~
   <seed>0</seed>
 ~~~~
@@ -93,6 +96,7 @@ There are 10 activities as defined by the activity model:
 * Sleep
 * IT
 * Out
+
 These are given to a zone and are comma seperated like below, however Out does not need to be defined.
 
 The activities assign an agent to a zone, for example if Cooking is defined as an activity for that zone when an agent is in the state cooking they are also defined to this zone.
@@ -205,7 +209,7 @@ Cost is the how much the supplied power is.
 ## FMI {#AppliancesFMI}
 ## FMI
 
-Only used for appliances from energyplus
+Only used for appliances from the FMI interface (such as EnergyPlus sending the power), the variable name needs to correspond with the name in the modeldescription.xml file.
 
 ~~~~
       <FMI>

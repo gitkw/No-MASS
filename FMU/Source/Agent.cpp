@@ -2,23 +2,17 @@
 
 #include "Agent.h"
 
-Agent::Agent() {
-}
+Agent::Agent() {}
 
-void Agent::setup() {
-}
+void Agent::setup() {}
 
-void Agent::preprocess() {
-}
+void Agent::preprocess() {}
 
-void Agent::step() {
-}
+void Agent::step() {}
 
-void Agent::postprocess() {
-}
+void Agent::postprocess() {}
 
-void Agent::postTimeStep() {
-}
+void Agent::postTimeStep() {}
 
 void Agent::setBuildingID(const int id) {
     buildingID = id;

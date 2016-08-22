@@ -85,6 +85,7 @@ Source/State_Sleep.cpp
 Source/State_Washing.cpp
 Source/State_Washing_Appliance.cpp
 Source/Utility.cpp
+Source/Environment.cpp
 Source/Building.cpp
 Source/Building_Zone.cpp
 Source/Building_Appliances.cpp
@@ -212,6 +213,8 @@ endif()
 
 configure_file(tests/Files/DSM.xml
                 ${CMAKE_CURRENT_BINARY_DIR}/SimulationConfig.xml)
+configure_file(tests/Files/DSM2houses.xml
+                ${CMAKE_CURRENT_BINARY_DIR}/DSM2houses.xml)
 configure_file(tests/Files/Activity.xml
                 ${CMAKE_CURRENT_BINARY_DIR}/Activity.xml)
 configure_file(tests/Files/AppliancesLarge.xml

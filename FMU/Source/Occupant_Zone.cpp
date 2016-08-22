@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "Building.h"
+#include "Environment.h"
 #include "DataStore.h"
 #include "Occupant_Zone.h"
 
@@ -202,16 +202,22 @@ void Occupant_Zone::actionStep(int action,
 
         break;
       case 1:
-            ActionWindow = true;
-            aaw.setDailyMeanTemperature(Building::dailyMeanTemperature);
-            aaw.step(zone, inZone, preZone, activities);
-            desiredWindowState = aaw.getResult();
+            {
+              ActionWindow = true;
+              double dailyMeanTe = Environment::getDailyMeanTemperature();
+              aaw.setDailyMeanTemperature(dailyMeanTe);
+              aaw.step(zone, inZone, preZone, activities);
+              desiredWindowState = aaw.getResult();
+            }
         break;
       case 2:
-            ActionShades = true;
-            aas.setIndoorIlluminance(zone.getDaylightingReferencePoint1Illuminance());
-            aas.step(zone, inZone, preZone);
-            desiredShadeState = aas.getResult();
+            {
+              ActionShades = true;
+              double ill = zone.getDaylightingReferencePoint1Illuminance();
+              aas.setIndoorIlluminance(ill);
+              aas.step(zone, inZone, preZone);
+              desiredShadeState = aas.getResult();
+            }
         break;
       case 3:
             ActionLights = true;
@@ -231,10 +237,13 @@ void Occupant_Zone::actionStep(int action,
             desiredHeatingSetPoint = aalearn.getResult();
         break;
       case 6:
-            ActionWindow = true;
-            aawBDI.setDailyMeanTemperature(Building::dailyMeanTemperature);
-            aawBDI.step(zone, inZone, preZone, activities);
-            desiredWindowState = aawBDI.getResult();
+            {
+              ActionWindow = true;
+              double dailyMeanTe = Environment::getDailyMeanTemperature();
+              aawBDI.setDailyMeanTemperature(dailyMeanTe);
+              aawBDI.step(zone, inZone, preZone, activities);
+              desiredWindowState = aawBDI.getResult();
+            }
         break;
       case 7:
             ActionLights = true;
@@ -242,10 +251,13 @@ void Occupant_Zone::actionStep(int action,
             desiredLightState = aalBDI.getResult();
         break;
       case 8:
-            ActionShades = true;
-            aasBDI.setIndoorIlluminance(zone.getDaylightingReferencePoint1Illuminance());
-            aasBDI.step(zone, inZone, preZone);
-            desiredShadeState = aasBDI.getResult();
+            {
+              ActionShades = true;
+              double ill = zone.getDaylightingReferencePoint1Illuminance();
+              aasBDI.setIndoorIlluminance(ill);
+              aasBDI.step(zone, inZone, preZone);
+              desiredShadeState = aasBDI.getResult();
+            }
         break;
       }
 }

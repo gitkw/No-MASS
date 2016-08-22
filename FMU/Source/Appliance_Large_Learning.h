@@ -4,6 +4,7 @@
 #define APPLIANCE_LARGE_LEARNING_H_
 
 #include <vector>
+#include <string>
 #include "QLearning_Appliance.h"
 #include "Appliance_Large.h"
 
@@ -14,23 +15,31 @@
 
 class Appliance_Large_Learning : public Appliance_Large {
  public:
-    Appliance_Large_Learning();
-    void setup();
-    void step();
-    void postprocess();
-    void addToCost(const double cost);
+  Appliance_Large_Learning();
+  void setup();
+  void step();
+  void postprocess();
+  void addToCost(const double cost);
 
  private:
-      std::vector<double> powerProfile;
-      double cost;
-      bool learning;
-      int startTime;
-      unsigned int learningStep;
-      QLearning_Appliance qLearning;
-      int x;
-      void stepOff();
-      void getProfile();
-      void getStart();
+  bool isLearningPeriod;
+  bool isWaitingForApplianceToStart;
+  int startTime;
+  unsigned int learningStep;
+  unsigned int nonLearningStep;
+  double cost;
+  std::string s_fullname_actual;
+  std::vector<double> powerProfile;
+  QLearning_Appliance qLearning;
+
+  void stepApplianceOffAndNotLearning();
+  void calculateProfile();
+  void calculateLearntStartTime();
+  void startLearningPeriod(const int hourOfTheDay);
+  void stopLearningPeriod(const int hourOfTheDay);
+  void saveActualProfile();
+  int calculateHourOfDay() const;
+  double calculateReward();
 };
 
 #endif  // APPLIANCE_LARGE_LEARNING_H_

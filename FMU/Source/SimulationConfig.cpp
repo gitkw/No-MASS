@@ -15,6 +15,7 @@
 #include "SimulationConfig.h"
 
 std::vector<buildingStruct> SimulationConfig::buildings;
+std::vector<LVNNodeStruct> SimulationConfig::lvn;
 std::map<int, windowStruct> SimulationConfig::windows;
 std::map<int, shadeStruct> SimulationConfig::shades;
 simulationStruct SimulationConfig::info;
@@ -34,6 +35,40 @@ void SimulationConfig::reset() {
   RunLocation = "";
 }
 
+void SimulationConfig::parseLVN(rapidxml::xml_node<> *node) {
+    buildings.clear();
+    rapidxml::xml_node<> *cnode = node->first_node();
+    LVNNodeStruct l;
+    l.id = -1;
+    parseLVNNode(cnode, &l);
+}
+
+void SimulationConfig::parseLVNNode(rapidxml::xml_node<> *node,
+                                                        LVNNodeStruct * p) {
+    rapidxml::xml_node<> *cnode = node->first_node();
+    bool children = false;
+    LVNNodeStruct l;
+    l.parent = p->id;
+    while (cnode) {
+        if (strComp(cnode->name(), "children")) {
+          children = true;
+        } else if (strComp(cnode->name(), "id")) {
+          l.id = std::stoi(cnode->value());
+        }
+        cnode = cnode->next_sibling();
+    }
+    if (children) {
+      cnode = node->first_node();
+      while (cnode) {
+          if (strComp(cnode->name(), "children")) {
+            parseLVNNode(cnode->first_node(), &l);
+          }
+          cnode = cnode->next_sibling();
+      }
+    }
+    p->children.push_back(l.id);
+    lvn.push_back(l);
+}
 
 void SimulationConfig::parseBuildings(rapidxml::xml_node<> *node) {
     buildings.clear();
@@ -520,6 +555,8 @@ void SimulationConfig::parseConfiguration(const std::string & filename) {
        parseModels(node);
     } else if (strComp(node->name(), "buildings")) {
         parseBuildings(node);
+    } else if (strComp(node->name(), "LVN")) {
+        parseLVN(node);
     }
 
     node = node->next_sibling();

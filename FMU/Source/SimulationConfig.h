@@ -10,6 +10,12 @@
 
 #include "rapidxml.hpp"
 
+struct LVNNodeStruct {
+    int id;
+    int parent;
+    std::vector<int> children;
+};
+
 struct ZoneStruct {
     std::string name;
     std::vector<int> activities;
@@ -184,6 +190,7 @@ class SimulationConfig {
     static bool activeZone(std::string* zoneName);
     static bool isZoneGroundFloor(std::string* zoneName);
     static std::vector<buildingStruct> buildings;
+    static std::vector<LVNNodeStruct> lvn;
     static std::map<int, windowStruct> windows;
     static std::map<int, shadeStruct> shades;
     static simulationStruct info;
@@ -198,6 +205,8 @@ class SimulationConfig {
     static void timeSteps();
     static void parseBuilding(rapidxml::xml_node<> *node, const int id);
     static void parseBuildings(rapidxml::xml_node<> *node);
+    static void parseLVN(rapidxml::xml_node<> *node);
+    static void parseLVNNode(rapidxml::xml_node<> *node, LVNNodeStruct * p);
     static void parseOccupants(rapidxml::xml_node<> *node, buildingStruct *b);
     static void parseAppliances(rapidxml::xml_node<> *node, buildingStruct *b);
     static void parseModels(rapidxml::xml_node<> *node);

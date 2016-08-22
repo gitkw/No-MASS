@@ -3,9 +3,11 @@
 #include <iostream>
 #include <string>
 
+#include "Environment.h"
 #include "SimulationConfig.h"
 #include "DataStore.h"
 #include "Building.h"
+#include "LVN_Node.h"
 #include "Simulation.h"
 
 Simulation::Simulation() {
@@ -57,6 +59,7 @@ void Simulation::setupSimulationModel() {
       buildings.back().setup(b);
       buildings.back().preprocess();
     }
+    lvn.setup();
 }
 
 /**
@@ -93,7 +96,9 @@ void Simulation::preTimeStep() {
   DataStore::addValue("hour", hour);
   DataStore::addValue("hourOfDay", hourOfDay);
   DataStore::addValue("month", month);
-  //std::cout << day << " " << hour << " " << hourOfDay << std::endl;
+  //  std::cout << day << " " << hour << " " << hourOfDay << std::endl;
+
+  Environment::calculateDailyMeanTemperature();
 }
 
 
@@ -103,11 +108,11 @@ void Simulation::preTimeStep() {
  * Also we send any effects the agent have to the zones they are located in.
  */
 void Simulation::timeStep() {
-        SimulationConfig::step();
-        for (Building &b : buildings) {
-            b.step();
-        }
-        postTimeStep();
+  SimulationConfig::step();
+  for (Building &b : buildings) {
+      b.step();
+  }
+  postTimeStep();
 }
 
 /**
@@ -116,5 +121,7 @@ void Simulation::timeStep() {
 void Simulation::postTimeStep() {
   for (Building &b : buildings) {
       b.postTimeStep();
+      lvn.setPowerForID(b.getPower(), b.getID());
   }
+  lvn.postTimeStep();
 }

@@ -36,7 +36,7 @@ class Simulation {
     */
     std::vector<Building> buildings;
     /**
-    * Manages the Buildings
+    * Manages the low voltage network
     */
     LVN lvn;
 };

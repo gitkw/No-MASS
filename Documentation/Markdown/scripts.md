@@ -1,4 +1,4 @@
-# Scripts NoMASS                        {#scripts}
+# Scripts For NoMASS                        {#scripts}
 
 There is a NoMASS.py script that implements an interface fro running No-MASS as a standalone program.
 The NoMASS class can be called like so.
@@ -20,4 +20,4 @@ nomass.deleteLearningData()
 
 ## runLocation
 
-NoMASS runs stochastically and often runs over multiple relicates. Therefore
+NoMASS runs stochastically and often runs over multiple relicates.

@@ -180,7 +180,7 @@ void Building_Appliances::stepFMI() {
 void Building_Appliances::stepGrid() {
   std::list<int> pop = Utility::randomIntList(grid.size());
   for (int a : pop) {
-    grid[a].setRequiredPower(PowerRequested + 1 - PowerGenerated);
+    grid[a].setRequiredPower(PowerRequested - PowerGenerated);
     grid[a].step();
     int appid = grid[a].getID();
     double priority = grid[a].getPriority();
@@ -189,11 +189,11 @@ void Building_Appliances::stepGrid() {
     double cost = grid[a].getCost();
     sendContract(appid, priority, power, supply, cost);
   }
-  PowerRequested = 0;
-  PowerGenerated = 0;
 }
 
 void Building_Appliances::step() {
+  PowerRequested = 0;
+  PowerGenerated = 0;
   stepPV();
   stepLarge();
   stepSmall();
@@ -246,13 +246,13 @@ void Building_Appliances::step() {
     sum_cost += cost;
     addAppRecievedToDataStrore(appid, power, cost);
   }
-  totalPower = sum_small + sum_large + sum_fmi;
+  double totalPowerRecieved = sum_small + sum_large + sum_fmi;
   DataStore::addValue(buildingString + "_Sum_Small", sum_small);
   DataStore::addValue(buildingString + "_Sum_Large", sum_large);
   DataStore::addValue(buildingString + "_Sum_fmi", sum_fmi);
-  DataStore::addValue(buildingString + "_Sum_Recieved", totalPower);
+  DataStore::addValue(buildingString + "_Sum_Recieved", totalPowerRecieved);
   DataStore::addValue(buildingString + "_Sum_Cost", sum_cost);
-
+  totalPower = PowerRequested - PowerGenerated;
   currentStates.clear();
   app_negotiation.clear();
 }

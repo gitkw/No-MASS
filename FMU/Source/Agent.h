@@ -23,7 +23,6 @@ class Agent {
  protected:
     int buildingID;
     int id;
- private:
 };
 
 #endif  // AGENT_H_
