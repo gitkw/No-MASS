@@ -1,6 +1,7 @@
 
 import sys, os, stat
 from shutil import copyfile, copytree, rmtree
+import glob
 import subprocess
 import random
 
@@ -21,7 +22,7 @@ class NoMASS(object):
         self.smallApplianceFolder = "SmallAppliances"
         self.resultsLocation = "Results"
         self.outFile = "NoMASS.out"
-        self.appLearningFile = "Appliance-1-1.dat"
+        self.appLearningFile = '*.dat'
         self.numberOfSimulations = 1
         self.learnUpToSimulation = 0
         self.clean = True
@@ -97,12 +98,13 @@ class NoMASS(object):
         copyfile(self.runLoc(x)+self.outFile, rl+outfileStr)
         outfileStr = "SimulationConfig-" + str(x).zfill(5) + ".xml"
         copyfile(self.runLoc(x)+self.simulationFile, rl+outfileStr)
-        outfileStr = "Appliance-" + str(x).zfill(5) + ".dat"
         if self.learning(x):
-            if os.path.exists(self.runLoc(x) + self.appLearningFile):
-                copyfile(self.runLoc(x) + self.appLearningFile, rl + outfileStr)
+            for f in glob.glob(self.runLoc(x) + self.appLearningFile):
+                path = os.path.dirname(f)
+                filename = os.path.basename(f)
+                copyfile(f, rl + filename + "." + str(x).zfill(5))
                 ll = self.learnLoc()
-                copyfile(self.runLoc(x) + self.appLearningFile, ll + self.appLearningFile)
+                copyfile(f, ll + filename)
 
     def runLoc(self, x):
         return self.runLocation + self.simulationLocation + str(x) +  "/"

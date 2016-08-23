@@ -67,6 +67,7 @@ Source/Model_RandomWeibull.cpp
 Source/Model_Windows.cpp
 Source/Model_Appliance_Ownership.cpp
 Source/Model_Appliance_Large_Usage.cpp
+Source/Model_Appliance_Large_Usage_Survival.cpp
 Source/Model_Appliance_Small_Usage.cpp
 Source/Model_Appliance_PV_CSV.cpp
 Source/Simulation.cpp
@@ -104,7 +105,6 @@ Source/Appliance_Grid.cpp
 Source/LVN.cpp
 Source/LVN_Node.cpp
 Source/LVN_Negotiation.cpp
-Source/Model_Appliance_Large_Usage_Survival.cpp
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/../rapidxml)

@@ -3,6 +3,7 @@
 #ifndef LVN_NODE_H_
 #define LVN_NODE_H_
 
+#include <string>
 #include <vector>
 
 /**
@@ -30,13 +31,15 @@ class LVN_Node {
   void runUntilConvergence(double tolerance);
   bool setPowerForID(const double power, const int id);
   void setID(const int id);
+  void setup();
   int getID() const;
   void addChildren(const std::vector<int> & ids);
+  void save();
 
  private:
   void setComplexPower(double power);
   bool root;
-  double id;
+  int id;
   double complexPower;
   double voltage;
   double iteration;
@@ -47,6 +50,17 @@ class LVN_Node {
   double impedance;
   double nominalVoltage;
   double nodeLoad;
+
+  std::string complexPowerStr;
+  std::string voltageStr;
+  std::string iterationStr;
+  //! Used for error calculations and decisive to start backward sweep.
+  std::string slackVoltageStr;
+  std::string currentLineStr;
+  std::string currentLoadStr;
+  std::string impedanceStr;
+  std::string nominalVoltageStr;
+  std::string nodeLoadStr;
 
   std::vector<LVN_Node> joinedNodes;
 };

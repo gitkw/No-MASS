@@ -1,7 +1,9 @@
 // Copyright 2016 Jacob Chapman
 #include <complex>
 #include <vector>
+#include <string>
 #include "SimulationConfig.h"
+#include "DataStore.h"
 #include "LVN_Node.h"
 
 LVN_Node::LVN_Node() {
@@ -13,6 +15,28 @@ LVN_Node::LVN_Node() {
   currentLoad = 0.0;
   impedance = 0.0047;
   nominalVoltage = 220;
+}
+
+void LVN_Node::setup() {
+  std::string idStr = std::to_string(id);
+  complexPowerStr = "LVN_complexPower_" + idStr;
+  voltageStr = "LVN_voltage_" + idStr;
+  iterationStr = "LVN_iteration_" + idStr;
+  slackVoltageStr = "LVN_slackVoltage_" + idStr;
+  currentLineStr = "LVN_currentLine_" + idStr;
+  currentLoadStr = "LVN_currentLoad_" + idStr;
+  impedanceStr = "LVN_impedance_" + idStr;
+  nominalVoltageStr = "LVN_nominalVoltage_" + idStr;
+  nodeLoadStr = "LVN_nodeLoad_" + idStr;
+  DataStore::addVariable(complexPowerStr);
+  DataStore::addVariable(voltageStr);
+  DataStore::addVariable(iterationStr);
+  DataStore::addVariable(slackVoltageStr);
+  DataStore::addVariable(currentLineStr);
+  DataStore::addVariable(currentLoadStr);
+  DataStore::addVariable(impedanceStr);
+  DataStore::addVariable(nominalVoltageStr);
+  DataStore::addVariable(nodeLoadStr);
 }
 
 /**
@@ -155,6 +179,23 @@ void LVN_Node::runUntilConvergence(double tolerance) {
     backwardSweep(slackVoltage);
     runUntilConvergence(tolerance);
   }
+  save();
+}
+
+void LVN_Node::save() {
+  for (LVN_Node & childnode : joinedNodes) {
+    //  # considering all childchildnodes it may have.
+    childnode.save();
+  }
+  DataStore::addValue(complexPowerStr, complexPower);
+  DataStore::addValue(voltageStr, voltage);
+  DataStore::addValue(iterationStr, iteration);
+  DataStore::addValue(slackVoltageStr, slackVoltage);
+  DataStore::addValue(currentLineStr, currentLine);
+  DataStore::addValue(currentLoadStr, currentLoad);
+  DataStore::addValue(impedanceStr, impedance);
+  DataStore::addValue(nominalVoltageStr, nominalVoltage);
+  DataStore::addValue(nodeLoadStr, nodeLoad);
 }
 
 /**
@@ -185,6 +226,7 @@ void LVN_Node::addChildren(const std::vector<int> & ids) {
         joinedNodes.push_back(LVN_Node());
         joinedNodes.back().setID(l.id);
         joinedNodes.back().addChildren(l.children);
+        joinedNodes.back().setup();
         break;
       }
     }
