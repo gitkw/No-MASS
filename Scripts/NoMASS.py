@@ -129,8 +129,10 @@ class NoMASS(object):
         if self.learning(x):
             if not os.path.exists(ll):
                 os.makedirs(ll)
-        if os.path.exists(ll + self.appLearningFile):
-            copyfile(ll + self.appLearningFile, rl + self.appLearningFile)
+        for f in glob.glob(ll + self.appLearningFile):
+            path = os.path.dirname(f)
+            filename = os.path.basename(f)
+            copyfile(f, rl + filename)
 
 
 
