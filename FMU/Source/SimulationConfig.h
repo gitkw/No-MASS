@@ -121,13 +121,17 @@ struct appLargeStruct {
     int id;
     double priority;
     double cost;
+    double epsilon = 0.1;   // probability of a random action selection
+    double alpha = 0.1;     // learning rate
+    double gamma = 0.1;     // discount factor (how soon do you care)
+    bool update = false;
     std::vector<int> activities;
 };
 
 struct appPVStruct {
     std::string file;
     int id;
-    double cost;
+    std::vector<double> cost;
     double priority;
 };
 
@@ -169,6 +173,7 @@ struct simulationStruct {
     bool agentHeatGains = true;
     double timeStepsPerHour;
     double learnep;
+    std::vector<double> GridCost;
     int learn;
     int learnupdate;
     int timeSteps;
@@ -185,11 +190,9 @@ class SimulationConfig {
  public:
     static ZoneStruct getZone(std::string* zoneName);
     static void parseConfiguration(const std::string &filename);
-    static void parseConfigurationb(const std::string &filename);
     static void reset();
     static bool activeZone(std::string* zoneName);
     static bool isZoneGroundFloor(std::string* zoneName);
-    static std::vector<buildingStruct> buildings;
     static std::vector<LVNNodeStruct> lvn;
     static std::map<int, windowStruct> windows;
     static std::map<int, shadeStruct> shades;
@@ -197,9 +200,11 @@ class SimulationConfig {
     static double lengthOfTimestep();
     static void step();
     static int getStepCount();
+
     static int stepCount;
     static std::string ActivityFile;
     static std::string RunLocation;
+    static std::vector<buildingStruct> buildings;
 
  private:
     static void timeSteps();
@@ -213,6 +218,7 @@ class SimulationConfig {
     static void parseWindows(rapidxml::xml_node<> *node);
     static void parseShades(rapidxml::xml_node<> *node);
     static bool strComp(const char * str1, const char * str2);
+    static std::vector<double> csvToDouble(const std::string & s);
     static std::vector<int> activityNamesToIds(
                                   const std::vector<std::string> & activities);
     SimulationConfig();

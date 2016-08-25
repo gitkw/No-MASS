@@ -12,7 +12,8 @@ Building_Appliances::Building_Appliances() {
     PowerGenerated = 0;
 }
 
-void Building_Appliances::setup() {
+void Building_Appliances::setup(const buildingStruct & b) {
+  buildingID = b.id;
   buildingString = "Building" + std::to_string(buildingID) + "_Appliance";
   DataStore::addVariable(buildingString + "_Sum_Recieved");
   DataStore::addVariable(buildingString + "_Sum_Small");
@@ -20,20 +21,22 @@ void Building_Appliances::setup() {
   DataStore::addVariable(buildingString + "_Sum_Cost");
 
   std::vector<appPVStruct> appPV =
-                  SimulationConfig::buildings[buildingID].AppliancesPV;
+                  b.AppliancesPV;
   for (const appPVStruct s : appPV) {
     pv.push_back(Appliance_PV());
     pv.back().setID(s.id);
     pv.back().setPriority(s.priority);
-    pv.back().setCost(s.cost);
+    pv.back().setHourlyCost(s.cost);
     pv.back().setBuildingID(buildingID);
     pv.back().setFileName(s.file);
     pv.back().setup();
-    addAppToDataStrore(s.id);
+    pv.back().setIDString(buildingString + std::to_string(s.id));
+    pv.back().saveSetup();
+    //  addAppToDataStrore(s.id);
   }
 
   std::vector<appLargeStruct> app =
-                  SimulationConfig::buildings[buildingID].AppliancesLarge;
+                  b.AppliancesLarge;
   for (const appLargeStruct &s : app) {
     large.push_back(Appliance_Large());
     large.back().setID(s.id);
@@ -41,33 +44,30 @@ void Building_Appliances::setup() {
     large.back().setBuildingID(buildingID);
     large.back().setActivities(s.activities);
     large.back().setup();
-    addAppToDataStrore(s.id);
+    large.back().setIDString(buildingString + std::to_string(s.id));
+    large.back().saveSetup();
+    //  addAppToDataStrore(s.id);
   }
 
-  app = SimulationConfig::buildings[buildingID].AppliancesLargeLearning;
+  app = b.AppliancesLargeLearning;
   for (const appLargeStruct &s : app) {
     largeLearning.push_back(Appliance_Large_Learning());
+    largeLearning.back().setEpsilon(s.epsilon);
+    largeLearning.back().setAlpha(s.alpha);
+    largeLearning.back().setGamma(s.gamma);
+    largeLearning.back().setUpdate(s.update);
     largeLearning.back().setID(s.id);
     largeLearning.back().setPriority(s.priority);
     largeLearning.back().setBuildingID(buildingID);
     largeLearning.back().setActivities(s.activities);
     largeLearning.back().setup();
-    addAppToDataStrore(s.id);
-  }
-
-  app = SimulationConfig::buildings[buildingID].AppliancesGrid;
-  for (const appLargeStruct &s : app) {
-    grid.push_back(Appliance_Grid());
-    grid.back().setID(s.id);
-    grid.back().setPriority(s.priority);
-    grid.back().setCost(s.cost);
-    grid.back().setBuildingID(buildingID);
-    grid.back().setup();
-    addAppToDataStrore(s.id);
+    largeLearning.back().setIDString(buildingString + std::to_string(s.id));
+    largeLearning.back().saveSetup();
+    //  addAppToDataStrore(s.id);
   }
 
   std::vector<appSmallStruct> appSmall =
-                  SimulationConfig::buildings[buildingID].AppliancesSmall;
+                  b.AppliancesSmall;
   for (const appSmallStruct s : appSmall) {
     small.push_back(Appliance_Small());
     small.back().setID(s.id);
@@ -77,18 +77,22 @@ void Building_Appliances::setup() {
     small.back().setFractions(s.Fractions);
     small.back().setSumRatedPowers(s.SumRatedPowers);
     small.back().setup();
-    addAppToDataStrore(s.id);
+    small.back().setIDString(buildingString + std::to_string(s.id));
+    small.back().saveSetup();
+    //  addAppToDataStrore(s.id);
   }
 
   std::vector<appFMIStruct> appFMI =
-                  SimulationConfig::buildings[buildingID].AppliancesFMI;
+                  b.AppliancesFMI;
   for (const appFMIStruct s : appFMI) {
     fmi.push_back(Appliance_FMI());
     fmi.back().setID(s.id);
     fmi.back().setPriority(s.priority);
     fmi.back().setFMIVariableName(s.variableName);
     fmi.back().setup();
-    addAppToDataStrore(s.id);
+    fmi.back().setIDString(buildingString + std::to_string(s.id));
+    fmi.back().saveSetup();
+    //  addAppToDataStrore(s.id);
   }
 }
 
@@ -103,155 +107,295 @@ void Building_Appliances::preprocess() {
   }
 }
 
-void Building_Appliances::sendContract(int id, double priority,
-                                double request, double supply, double cost) {
-  contract c;
-  c.id = id;
-  c.requested = request;
-  c.priority = priority;
-  c.supplied = supply;
-  c.suppliedCost = cost;
-  app_negotiation.submit(c);
-  PowerRequested += request;
-  PowerGenerated += supply;
-  addAppVariableToDataStrore(id, request, supply);
+bool Building_Appliances::sendContractGlobal(const contract & c) {
+  bool send = (c.requested > c.recieved || c.suppliedLeft > 0);
+  if (send) {
+    contract x;
+    x.id = c.id;
+    x.buildingID = buildingID;
+    x.recievedCost = c.recievedCost;
+    x.requested = c.requested - c.recieved;
+    x.recieved = c.recieved;
+    x.supplied = c.suppliedLeft;
+    x.suppliedCost = c.suppliedCost;
+    globalContracts.push_back(x);
+  }
+  return send;
 }
 
-void Building_Appliances::stepLarge() {
+void Building_Appliances::sendContractLocal(const Appliance & a) {
+  int stepcount = SimulationConfig::getStepCount();
+  contract c;
+  c.id = a.getID();
+  c.buildingID = buildingID;
+  c.requested = a.powerAt(stepcount);
+  c.priority = a.getPriority();
+  c.supplied = a.supplyAt(stepcount);
+  c.suppliedCost = a.supplyCostAt(stepcount);
+  c.recievedCost = 0;
+  c.recieved = 0;
+  app_negotiation.submit(c);
+  PowerRequested += c.requested;
+  PowerGenerated += c.supplied;
+}
+
+void Building_Appliances::stepLocalLarge() {
   std::list<int> pop = Utility::randomIntList(large.size());
   for (int a : pop) {
     large[a].hasActivities(currentStates);
     large[a].step();
-    int appid = large[a].getID();
-    double priority = large[a].getPriority();
-    double power = large[a].powerBack();
-    double supply = large[a].supplyBack();
-    sendContract(appid, priority, power, supply, 0);
+    sendContractLocal(large[a]);
   }
 }
 
-void Building_Appliances::stepLargeLearning() {
+void Building_Appliances::stepLocalLargeLearning() {
   std::list<int> pop = Utility::randomIntList(largeLearning.size());
   for (int a : pop) {
     largeLearning[a].hasActivities(currentStates);
     largeLearning[a].step();
-    int appid = largeLearning[a].getID();
-    double priority = largeLearning[a].getPriority();
-    double power = largeLearning[a].powerBack();
-    double supply = largeLearning[a].supplyBack();
-    sendContract(appid, priority, power, supply, 0);
+    sendContractLocal(largeLearning[a]);
   }
 }
 
-void Building_Appliances::stepSmall() {
+void Building_Appliances::stepLocalSmall() {
   std::list<int> pop = Utility::randomIntList(small.size());
   for (int a : pop) {
-    int appid = small[a].getID();
-    double power = small[a].powerAt(SimulationConfig::getStepCount());
-    double supply = small[a].supplyAt(SimulationConfig::getStepCount());
-    double priority = small[a].getPriority();
-    sendContract(appid, priority, power, supply, 0);
+    sendContractLocal(small[a]);
   }
 }
 
-void Building_Appliances::stepPV() {
+void Building_Appliances::stepLocalPV() {
   std::list<int> pop = Utility::randomIntList(pv.size());
   for (int a : pop) {
-    int appid = pv[a].getID();
-    double supply = pv[a].supplyAt(SimulationConfig::getStepCount());
-    double priority = pv[a].getPriority();
-    double cost = pv[a].getCost();
-    sendContract(appid, priority, 0, supply, cost);
+    sendContractLocal(pv[a]);
   }
 }
 
-void Building_Appliances::stepFMI() {
+void Building_Appliances::stepLocalFMI() {
   std::list<int> pop = Utility::randomIntList(fmi.size());
   for (int a : pop) {
     fmi[a].step();
-    int appid = fmi[a].getID();
-    double power = fmi[a].powerBack();
-    double supply = fmi[a].supplyBack();
-    double priority = fmi[a].getPriority();
-    sendContract(appid, priority, power, supply, 0);
+    sendContractLocal(fmi[a]);
   }
 }
 
-void Building_Appliances::stepGrid() {
-  std::list<int> pop = Utility::randomIntList(grid.size());
-  for (int a : pop) {
-    grid[a].setRequiredPower(PowerRequested - PowerGenerated);
-    grid[a].step();
-    int appid = grid[a].getID();
-    double priority = grid[a].getPriority();
-    double power = grid[a].powerBack();
-    double supply = grid[a].supplyBack();
-    double cost = grid[a].getCost();
-    sendContract(appid, priority, power, supply, cost);
-  }
-}
-
-void Building_Appliances::step() {
+void Building_Appliances::stepLocal() {
   PowerRequested = 0;
   PowerGenerated = 0;
-  stepPV();
-  stepLarge();
-  stepSmall();
-  stepFMI();
-  stepLargeLearning();
-  stepGrid();  // Grid must step last
+  stepLocalPV();
+  stepLocalLarge();
+  stepLocalSmall();
+  stepLocalFMI();
+  stepLocalLargeLearning();
+}
 
+
+void Building_Appliances::stepLocalNegotiation() {
+  sum_large = 0;
+  sum_cost = 0;
+  sum_fmi = 0;
+  sum_small = 0;
   app_negotiation.process();
-  double sum_large = 0;
-  double sum_cost = 0;
+  localNegotiationSmall();
+  localNegotiationLarge();
+  localNegotiationLargeLearning();
+  localNegotiationFMI();
+  localNegotiationPV();
+  app_negotiation.clear();
+}
+
+void Building_Appliances::globalNegotiationSmall(
+                                const LVN_Negotiation & building_negotiation) {
+  std::list<int> pop = Utility::randomIntList(small.size());
+  for (int a : pop) {
+    if (small[a].isGlobal()) {
+      int appid = small[a].getID();
+      contract c = building_negotiation.getContract(buildingID, appid);
+      double power = c.recieved;
+      double cost = c.recievedCost;
+      small[a].setRecieved(power);
+      small[a].setRecievedCost(cost);
+      small[a].save();
+      sum_small += power;
+      sum_cost += cost;
+    }
+  }
+}
+
+void Building_Appliances::localNegotiationSmall() {
+  std::list<int> pop = Utility::randomIntList(small.size());
+  for (int a : pop) {
+    int appid = small[a].getID();
+    contract c = app_negotiation.getContract(buildingID, appid);
+    small[a].setGlobal(sendContractGlobal(c));
+    if (!small[a].isGlobal()) {
+      double power = c.recieved;
+      double cost = c.recievedCost;
+      small[a].setRecieved(power);
+      small[a].setRecievedCost(cost);
+      small[a].save();
+      sum_small += power;
+      sum_cost += cost;
+    }
+  }
+}
+
+void Building_Appliances::globalNegotiationLarge(const LVN_Negotiation & building_negotiation) {
+  std::list<int> pop = Utility::randomIntList(large.size());
+  for (int a : pop) {
+    if (large[a].isGlobal()) {
+      int appid = large[a].getID();
+      contract c = building_negotiation.getContract(buildingID, appid);
+      double power = c.recieved;
+      double cost = c.recievedCost;
+      large[a].setRecieved(power);
+      large[a].setRecievedCost(cost);
+      large[a].save();
+      sum_large += power;
+      sum_cost += cost;
+    }
+  }
+}
+
+void Building_Appliances::localNegotiationLarge() {
   std::list<int> pop = Utility::randomIntList(large.size());
   for (int a : pop) {
     int appid = large[a].getID();
-    double power = app_negotiation.getRecievedPowerForContract(appid);
-    double cost = app_negotiation.getCostOfPowerForContract(appid);
-    sum_large += power;
-    sum_cost += cost;
-    addAppRecievedToDataStrore(appid, power, cost);
+    contract c = app_negotiation.getContract(buildingID, appid);
+    large[a].setGlobal(sendContractGlobal(c));
+    if (!large[a].isGlobal()) {
+      double power = c.recieved;
+      double cost = c.recievedCost;
+      large[a].setRecieved(power);
+      large[a].setRecievedCost(cost);
+      large[a].save();
+      sum_large += power;
+      sum_cost += cost;
+    }
   }
+}
 
-  pop = Utility::randomIntList(largeLearning.size());
+void Building_Appliances::globalNegotiationLargeLearning(
+                                const LVN_Negotiation & building_negotiation) {
+  std::list<int> pop = Utility::randomIntList(largeLearning.size());
+  for (int a : pop) {
+    if (largeLearning[a].isGlobal()) {
+      int appid = largeLearning[a].getID();
+      contract c = building_negotiation.getContract(buildingID, appid);
+      double power = c.recieved;
+      double cost = c.recievedCost;
+      largeLearning[a].addToCost(cost);
+      largeLearning[a].setRecieved(power);
+      largeLearning[a].setRecievedCost(cost);
+      largeLearning[a].save();
+      sum_large += power;
+      sum_cost += cost;
+    }
+  }
+}
+
+void Building_Appliances::localNegotiationLargeLearning() {
+  std::list<int> pop = Utility::randomIntList(largeLearning.size());
   for (int a : pop) {
     int appid = largeLearning[a].getID();
-    double power = app_negotiation.getRecievedPowerForContract(appid);
-    double cost = app_negotiation.getCostOfPowerForContract(appid);
-    largeLearning[a].addToCost(cost);
-    sum_large += power;
-    sum_cost += cost;
-    addAppRecievedToDataStrore(appid, power, cost);
+    contract c = app_negotiation.getContract(buildingID, appid);
+    largeLearning[a].setGlobal(sendContractGlobal(c));
+    if (!largeLearning[a].isGlobal()) {
+      double power = c.recieved;
+      double cost = c.recievedCost;
+      largeLearning[a].addToCost(cost);
+      largeLearning[a].setRecieved(power);
+      largeLearning[a].setRecievedCost(cost);
+      largeLearning[a].save();
+      sum_large += power;
+      sum_cost += cost;
+    }
   }
+}
 
-  double sum_small = 0;
-  pop = Utility::randomIntList(small.size());
+void Building_Appliances::globalNegotiationPV(
+                                const LVN_Negotiation & building_negotiation) {
+  std::list<int> pop = Utility::randomIntList(pv.size());
   for (int a : pop) {
-    int appid = small[a].getID();
-    double power = app_negotiation.getRecievedPowerForContract(appid);
-    double cost = app_negotiation.getCostOfPowerForContract(appid);
-    sum_small += power;
-    sum_cost += cost;
-    addAppRecievedToDataStrore(appid, power, cost);
+    if (pv[a].isGlobal()) {
+    int appid = pv[a].getID();
+    contract c = building_negotiation.getContract(buildingID, appid);
+    double power = c.recieved;
+    double cost = c.recievedCost;
+    pv[a].setRecieved(power);
+    pv[a].setRecievedCost(cost);
+    pv[a].save();
+    }
   }
+}
 
-  double sum_fmi = 0;
-  pop = Utility::randomIntList(fmi.size());
+void Building_Appliances::localNegotiationPV() {
+  std::list<int> pop = Utility::randomIntList(pv.size());
   for (int a : pop) {
+    int appid = pv[a].getID();
+    contract c = app_negotiation.getContract(buildingID, appid);
+    pv[a].setGlobal(sendContractGlobal(c));
+    if (!pv[a].isGlobal()) {
+      double power = c.recieved;
+      double cost = c.recievedCost;
+      pv[a].setRecieved(power);
+      pv[a].setRecievedCost(cost);
+      pv[a].save();
+    }
+  }
+}
+
+void Building_Appliances::globalNegotiationFMI(
+                                const LVN_Negotiation & building_negotiation) {
+  std::list<int> pop = Utility::randomIntList(fmi.size());
+  for (int a : pop) {
+    if (fmi[a].isGlobal()) {
     int appid = fmi[a].getID();
-    double power = app_negotiation.getRecievedPowerForContract(appid);
-    double cost = app_negotiation.getCostOfPowerForContract(appid);
+    contract c = building_negotiation.getContract(buildingID, appid);
+    double power = c.recieved;
+    double cost = c.recievedCost;
+    fmi[a].setRecieved(power);
+    fmi[a].setRecievedCost(cost);
+    fmi[a].save();
     sum_fmi += power;
     sum_cost += cost;
-    addAppRecievedToDataStrore(appid, power, cost);
+    }
   }
+}
+
+void Building_Appliances::localNegotiationFMI() {
+  std::list<int> pop = Utility::randomIntList(fmi.size());
+  for (int a : pop) {
+    int appid = fmi[a].getID();
+    contract c = app_negotiation.getContract(buildingID, appid);
+    fmi[a].setGlobal(sendContractGlobal(c));
+    if (!fmi[a].isGlobal()) {
+      double power = c.recieved;
+      double cost = c.recievedCost;
+      fmi[a].setRecieved(power);
+      fmi[a].setRecievedCost(cost);
+      fmi[a].save();
+      sum_fmi += power;
+      sum_cost += cost;
+    }
+  }
+}
+
+void Building_Appliances::stepGlobalNegotiation(const LVN_Negotiation & building_negotiation) {
+
+  globalNegotiationLarge(building_negotiation);
+  globalNegotiationLargeLearning(building_negotiation);
+  globalNegotiationSmall(building_negotiation);
+  globalNegotiationFMI(building_negotiation);
+  globalNegotiationPV(building_negotiation);
+  globalContracts.clear();
   double totalPowerRecieved = sum_small + sum_large + sum_fmi;
   DataStore::addValue(buildingString + "_Sum_Small", sum_small);
   DataStore::addValue(buildingString + "_Sum_Large", sum_large);
   DataStore::addValue(buildingString + "_Sum_fmi", sum_fmi);
   DataStore::addValue(buildingString + "_Sum_Recieved", totalPowerRecieved);
   DataStore::addValue(buildingString + "_Sum_Cost", sum_cost);
+
   totalPower = PowerRequested - PowerGenerated;
   currentStates.clear();
   app_negotiation.clear();
@@ -267,10 +411,6 @@ void Building_Appliances::postprocess() {
 void Building_Appliances::postTimeStep() {
 }
 
-void Building_Appliances::setBuildingID(const int id) {
-    buildingID = id;
-}
-
 double Building_Appliances::getTotalPower() const {
   return totalPower;
 }
@@ -279,24 +419,9 @@ void Building_Appliances::addCurrentStates(const int stateid) {
     currentStates.push_back(stateid);
 }
 
-void Building_Appliances::addAppVariableToDataStrore(const int id,
-                                const int requested, const int supplied) {
-  std::string s_id = buildingString + std::to_string(id);
-  DataStore::addValue(s_id + "_supplied", supplied);
-  DataStore::addValue(s_id + "_requested", requested);
-}
-
-void Building_Appliances::addAppRecievedToDataStrore(const int id,
-                                  const int recieved, const int cost) {
-  std::string s_id = buildingString + std::to_string(id);
-  DataStore::addValue(s_id + "_recieved", recieved);
-  DataStore::addValue(s_id + "_cost", cost);
-}
-
-void Building_Appliances::addAppToDataStrore(const int id) {
-  std::string s_id = buildingString + std::to_string(id);
-  DataStore::addVariable(s_id + "_supplied");
-  DataStore::addVariable(s_id + "_recieved");
-  DataStore::addVariable(s_id + "_requested");
-  DataStore::addVariable(s_id + "_cost");
+void Building_Appliances::addContactsTo(
+                                      LVN_Negotiation * building_negotiation) {
+  for (const contract & c : globalContracts) {
+    building_negotiation->submit(c);
+  }
 }

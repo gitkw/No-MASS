@@ -25,11 +25,14 @@ void LVN::postTimeStep() {
     double tolerance = 0.00001;
     rootNode.setImpedance(0.0047);
     rootNode.runUntilConvergence(tolerance);
+    rootNode.save();
+    rootNode.resetIterations();
   }
 }
 
 void LVN::setPowerForID(const double power, const int id) {
   if (enabled) {
-    rootNode.setPowerForID(power, id);
+    double p = power;
+    rootNode.setPowerForID(p, id);
   }
 }

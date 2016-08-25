@@ -10,16 +10,13 @@
 #include "SimulationConfig.h"
 #include "Model_Presence.h"
 
-Model_Presence::Model_Presence() {
-}
+Model_Presence::Model_Presence() {}
 
 int Model_Presence::presentForFutureSteps() const {
     return presenceForFutureSteps.at(SimulationConfig::getStepCount());
 }
 
-
-
-void Model_Presence::calculatePresenceFromPage(const int buildingID, const int agentID) {
+void Model_Presence::calculatePresenceFromPage() {
     float pMon[24];
     float pTue[24];
     float pWed[24];
@@ -28,8 +25,6 @@ void Model_Presence::calculatePresenceFromPage(const int buildingID, const int a
     float pSat[24];
     float pSun[24];
 
-    std::map<int, std::string> probMap =
-                                  SimulationConfig::buildings[buildingID].agents.at(agentID).profile;
     for (int day = 0; day < 7; day++) {
         std::vector<std::string> tokProbs = Utility::splitCSV(probMap.at(day));
 
@@ -260,4 +255,8 @@ double Model_Presence::getT11(const double pcurr, const double pnext,
     }
   }
   return T11;
+}
+
+void Model_Presence::setProbMap(const std::map<int, std::string> & probMap) {
+  this->probMap = probMap;
 }

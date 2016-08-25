@@ -1,6 +1,7 @@
 // Copyright 2016 Jacob Chapman
 
 #include <string>
+#include "DataStore.h"
 #include "SimulationConfig.h"
 #include "Utility.h"
 #include "Appliance_PV.h"
@@ -29,6 +30,7 @@ void Appliance_PV::preprocess() {
     int minute = numberOfSeconds / 60;
     int minuteOfDay = minute % 1440;
     int hour = numberOfSeconds / 3600;
+    int hourOfDay = hour % 24;
     int day = hour / 24;
     int now = numberOfSeconds;
     int end = numberOfSeconds + leninsec;
@@ -43,8 +45,11 @@ void Appliance_PV::preprocess() {
       now += 60;
     }
     // watt hour per timeperhour
-    power.push_back(0);
     supply.push_back(p);
+    supplyCost.push_back(hourlyCost[hourOfDay]);
+    power.push_back(0);
+    recieved.push_back(0);
+    recievedCost.push_back(0);
   }
 }
 

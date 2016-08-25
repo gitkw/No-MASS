@@ -16,7 +16,6 @@
 class Appliance_PV : public Appliance {
  public:
     Appliance_PV();
-
     void setup();
     void preprocess();
     void setFileName(std::string filename);

@@ -16,18 +16,27 @@ class Appliance : public Agent {
     Appliance();
     double powerAt(const int timestep) const;
     double supplyAt(const int timestep) const;
+    double supplyCostAt(const int timestep) const;
     double powerBack() const;
     double supplyBack() const;
     double getPriority() const;
     void setPriority(double priority);
-    double getCost() const;
-    void setCost(double cost);
+    void setRecieved(const double r);
+    void setHourlyCost(const std::vector<double> cost);
+    void setRecievedCost(const double c);
+    void save();
+    void saveSetup();
+    bool isGlobal() const;
+    void setGlobal(bool global);
 
  protected:
     std::vector<double> power;
     std::vector<double> supply;
-
-    double cost;
+    std::vector<double> supplyCost;
+    std::vector<double> recieved;
+    std::vector<double> recievedCost;
+    std::vector<double> hourlyCost;
+    bool global;
     double priority;
 };
 

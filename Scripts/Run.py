@@ -10,6 +10,7 @@ nomass.locationOfNoMASS = "../FMU/build/"
 nomass.configurationDirectory = home +"/git/No-MASSDSM/Configuration/WinterWeek/"
 
 nomass.resultsLocation = "../FMU/build/Results/"
+nomass.PVFile = "PVBowler2013_365.csv"
 nomass.printInput = True
 nomass.numberOfSimulations = 101
 nomass.learnUpToSimulation = 100

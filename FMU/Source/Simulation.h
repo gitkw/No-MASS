@@ -39,6 +39,10 @@ class Simulation {
     * Manages the low voltage network
     */
     LVN lvn;
+    /**
+    * Manages the building power negotiation
+    */
+    LVN_Negotiation building_negotiation;
 };
 
 #endif  // SIMULATION_H_

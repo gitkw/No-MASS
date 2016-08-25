@@ -18,6 +18,9 @@ class QLearning {
     void setStates(const int states);
     void setReward(const double reward);
     void setEpsilon(const double epsilon);
+    void setAlpha(double alpha);
+    void setGamma(double gamma);
+    void setUpdate(bool update);
     void setup();
     void setAction(const double action);
     virtual double learn();
@@ -35,13 +38,14 @@ class QLearning {
     double previous_reward;
     std::string filename;
 
+
  private:
     std::vector<std::vector<double>> qTable;
+
     double epsilon = 1;   // probability of a random action selection
     double alpha = 0.1;     // learning rate
     double gamma = 0.1;     // discount factor (how soon do you care)
     bool update;
-
     int getBestAction(const int s) const;
 };
 

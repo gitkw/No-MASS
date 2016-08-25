@@ -1,7 +1,7 @@
 // Copyright 2016 Jacob Chapman
 
-#ifndef FMU_SOURCE_OCCUPANT_H_
-#define FMU_SOURCE_OCCUPANT_H_
+#ifndef OCCUPANT_H_
+#define OCCUPANT_H_
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -18,11 +18,12 @@
 class Occupant : public Agent {
  public:
     Occupant();
-    void setup(int newId,
+    void setup(int id, const agentStruct &agent,
                 const std::vector<std::shared_ptr<Building_Zone>> &zones);
 
     void step();
     void setState(const State &state);
+    void setBuildingName(const std::string & buildingName);
     void postTimeStep();
     void zoneInteractions();
     void postprocess();
@@ -36,6 +37,7 @@ class Occupant : public Agent {
     bool isActionHeatGains(const Building_Zone &zone) const;
     bool isActionLearning(const Building_Zone &zone) const;
     bool isActionAppliance(const Building_Zone &zone) const;
+    bool previouslyInZone(const Building_Zone &zone) const;
     int getStateID() const;
     double getDesiredShadeState(const Building_Zone &zone) const;
     double getDesiredAppliance(const Building_Zone &zone) const;
@@ -45,8 +47,6 @@ class Occupant : public Agent {
 
     std::string getLocationType(int step, StateMachine *sm);
     std::string getLocationName(int step, StateMachine *sm);
-
-    bool previouslyInZone(const Building_Zone &zone) const;
 
  private:
     int action;
@@ -67,9 +67,9 @@ class Occupant : public Agent {
     State state; /** Occupants current state */
     std::shared_ptr<Building_Zone> zonePtrPrevious;
 
-    void model_presenceFromPage();
+    void model_presenceFromPage(const agentStruct &agent);
     void model_pastAndFutureDurations();
-    void model_activity();
+    void model_activity(const agentStruct &agent);
     void matchStateToZone(State *s,
                     const std::vector<std::shared_ptr<Building_Zone>> &zones);
 
@@ -85,4 +85,4 @@ class Occupant : public Agent {
     StateMachine stateMachine;
 };
 
-#endif  // FMU_SOURCE_OCCUPANT_H_
+#endif  // OCCUPANT_H_

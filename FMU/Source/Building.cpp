@@ -18,21 +18,25 @@ Building::Building() {}
 void Building::setup(const buildingStruct &b) {
     name = b.name;
     id = b.id;
+    std::string buildingID = "Building" + std::to_string(id) + "_";
     for (std::pair<std::string, ZoneStruct> z : b.zones) {
       zones.push_back(std::make_shared<Building_Zone>(Building_Zone()));
-      zones.back()->setName(name + z.second.name);
+      zones.back()->setName(z.second.name);
+      zones.back()->setIDString(buildingID + z.second.name);
       zones.back()->setup(z.second);
     }
     int popSize = b.agents.size();
     std::list<int> pop = Utility::randomIntList(popSize);
     // setup each agent randomly
     for (int a : pop) {
-          population.push_back(Occupant());
-          population.back().setBuildingID(id);
-          population.back().setup(a, zones);
+      std::string occid = std::to_string(a);
+      population.push_back(Occupant());
+      population.back().setBuildingID(id);
+      population.back().setBuildingName(name);
+      population.back().setIDString(buildingID + "Occupant" + occid + "_");
+      population.back().setup(a, b.agents[a], zones);
     }
-    appliances.setBuildingID(id);
-    appliances.setup();
+    appliances.setup(b);
 }
 
 
@@ -46,6 +50,20 @@ void Building::setZones(
 }
 
 
+void Building::stepAppliancesUse() {
+  appliances.stepLocal();
+  appliances.stepLocalNegotiation();
+}
+
+
+void Building::stepAppliancesNegotiation(const LVN_Negotiation & building_negotiation) {
+      appliances.stepGlobalNegotiation(building_negotiation);
+}
+
+double Building::getPower() const {
+  return appliances.getTotalPower();
+}
+
 void Building::step() {
     int popSize = population.size();
     std::list<int> pop = Utility::randomIntList(popSize);
@@ -54,7 +72,6 @@ void Building::step() {
         appliances.addCurrentStates(population[a].getStateID());
     }
 
-    appliances.step();
 
     for (std::shared_ptr<Building_Zone> &zone : zones) {
         if (!zone->isActive()) {
@@ -365,10 +382,10 @@ bool Building::hasZone(const std::string& zoneName) const {
   return has;
 }
 
-double Building::getPower() const {
-  return appliances.getTotalPower();
-}
-
 int Building::getID() const {
     return id;
+}
+
+void Building::addContactsTo(LVN_Negotiation * building_negotiation) {
+  appliances.addContactsTo(building_negotiation);
 }

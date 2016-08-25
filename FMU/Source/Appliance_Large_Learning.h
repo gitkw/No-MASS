@@ -20,6 +20,10 @@ class Appliance_Large_Learning : public Appliance_Large {
   void step();
   void postprocess();
   void addToCost(const double cost);
+  void setEpsilon(double epsilon);
+  void setAlpha(double alpha);
+  void setGamma(double gamma);
+  void setUpdate(bool update);
 
  private:
   bool isLearningPeriod;
@@ -40,6 +44,11 @@ class Appliance_Large_Learning : public Appliance_Large {
   void saveActualProfile();
   int calculateHourOfDay() const;
   double calculateReward();
+
+  double epsilon;   // probability of a random action selection
+  double alpha;     // learning rate
+  double gamma;     // discount factor (how soon do you care)
+  bool update;
 };
 
 #endif  // APPLIANCE_LARGE_LEARNING_H_

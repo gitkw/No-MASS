@@ -24,6 +24,7 @@ public:
     void setHeatingState(double state);
     void setOccupantFraction(double occupantFraction);
     void setAppFraction(double appFraction);
+    void setIDString(const std::string & idString);
 
     bool isActive() const;
     bool hasActivity(int activity) const;
@@ -59,6 +60,7 @@ private:
     double appFraction;
 
     int id;
+    std::string idString;
     std::string name;
     std::string variableNameBlindFraction;
     std::string variableNameNumberOfOccupants;
