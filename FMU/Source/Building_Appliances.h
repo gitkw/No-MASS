@@ -60,7 +60,6 @@ class Building_Appliances {
     void stepLocalLargeLearning();
     void stepLocalPV();
     void stepLocalFMI();
-    void stepLocalAppliance(std::unique_ptr<Appliance> a);
     void localNegotiationSmall();
     void localNegotiationLarge();
     void localNegotiationLargeLearning();
