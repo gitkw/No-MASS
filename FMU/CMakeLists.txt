@@ -212,6 +212,8 @@ endif()
 
 configure_file(tests/Files/DSM.xml
                 ${CMAKE_CURRENT_BINARY_DIR}/SimulationConfig.xml)
+configure_file(tests/Files/DSM1house.xml
+                ${CMAKE_CURRENT_BINARY_DIR}/DSM1house.xml)
 configure_file(tests/Files/DSM2houses.xml
                 ${CMAKE_CURRENT_BINARY_DIR}/DSM2houses.xml)
 configure_file(tests/Files/DSM10houses.xml

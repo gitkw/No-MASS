@@ -117,7 +117,10 @@ void Simulation::timeStep() {
   if (building_negotiation.getDifference() < 0) {
     contract m;
     m.supplied = std::abs(building_negotiation.getDifference());
-    m.suppliedCost = SimulationConfig::info.GridCost;
+    int stepCount = SimulationConfig::getStepCount();
+    int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
+    int hourOfDay = hour % 24;
+    m.suppliedCost = SimulationConfig::info.GridCost[hourOfDay];
     m.requested = 0;
     building_negotiation.submit(m);
   }

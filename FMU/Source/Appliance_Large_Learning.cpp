@@ -103,6 +103,7 @@ void Appliance_Large_Learning::step() {
   saveActualProfile();
   power.push_back(p);
   supply.push_back(0.0);
+  supplyCost.push_back(0.0);
 }
 
 void Appliance_Large_Learning::saveActualProfile() {

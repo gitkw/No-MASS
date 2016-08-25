@@ -46,6 +46,7 @@ void Appliance_Large::step() {
   }
   power.push_back(p);
   supply.push_back(0.0);
+  supplyCost.push_back(0.0);
 }
 
 /**

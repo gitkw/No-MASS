@@ -1,6 +1,7 @@
 // Copyright 2016 Jacob Chapman
 
 #include <string>
+#include <vector>
 #include "DataStore.h"
 #include "SimulationConfig.h"
 #include "Appliance.h"
@@ -13,6 +14,11 @@ double Appliance::powerAt(const int timestep) const {
 
 double Appliance::supplyAt(const int timestep) const {
   return supply[timestep];
+}
+
+
+double Appliance::supplyCostAt(const int timestep) const {
+  return supplyCost[timestep];
 }
 
 double Appliance::powerBack() const {
@@ -31,14 +37,6 @@ void Appliance::setPriority(double priority) {
   this->priority = priority;
 }
 
-double Appliance::getCost() const {
-  return cost;
-}
-
-void Appliance::setCost(double cost) {
-  this->cost = cost;
-}
-
 void Appliance::setRecieved(const double r) {
   recieved.push_back(r);
 }
@@ -49,6 +47,7 @@ void Appliance::setRecievedCost(const double c) {
 
 void Appliance::saveSetup() {
   DataStore::addVariable(idString + "_supplied");
+  DataStore::addVariable(idString + "_suppliedCost");
   DataStore::addVariable(idString + "_recieved");
   DataStore::addVariable(idString + "_requested");
   DataStore::addVariable(idString + "_cost");
@@ -59,6 +58,7 @@ void Appliance::save() {
   DataStore::addValue(idString + "_recieved", recieved[timestep]);
   DataStore::addValue(idString + "_cost", recievedCost[timestep]);
   DataStore::addValue(idString + "_supplied", supply[timestep]);
+  DataStore::addValue(idString + "_suppliedCost", supplyCost[timestep]);
   DataStore::addValue(idString + "_requested", power[timestep]);
 }
 
@@ -69,4 +69,8 @@ bool Appliance::isGlobal() const {
 
 void Appliance::setGlobal(bool global) {
   this->global = global;
+}
+
+void Appliance::setHourlyCost(const std::vector<double> cost) {
+  hourlyCost = cost;
 }

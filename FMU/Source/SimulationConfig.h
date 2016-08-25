@@ -131,7 +131,7 @@ struct appLargeStruct {
 struct appPVStruct {
     std::string file;
     int id;
-    double cost;
+    std::vector<double> cost;
     double priority;
 };
 
@@ -173,7 +173,7 @@ struct simulationStruct {
     bool agentHeatGains = true;
     double timeStepsPerHour;
     double learnep;
-    double GridCost;
+    std::vector<double> GridCost;
     int learn;
     int learnupdate;
     int timeSteps;
@@ -218,6 +218,7 @@ class SimulationConfig {
     static void parseWindows(rapidxml::xml_node<> *node);
     static void parseShades(rapidxml::xml_node<> *node);
     static bool strComp(const char * str1, const char * str2);
+    static std::vector<double> csvToDouble(const std::string & s);
     static std::vector<int> activityNamesToIds(
                                   const std::vector<std::string> & activities);
     SimulationConfig();

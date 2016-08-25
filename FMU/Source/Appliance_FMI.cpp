@@ -23,4 +23,5 @@ void Appliance_FMI::step() {
   double p = DataStore::getValue(FMIVariableName);
   power.push_back(p);
   supply.push_back(0.0);
+  supplyCost.push_back(0.0);
 }

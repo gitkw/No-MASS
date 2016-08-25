@@ -247,7 +247,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
           } else if (strComp(anode->name(), "priority")) {
             s.priority = std::stoi(anode->value());
           } else if (strComp(anode->name(), "cost")) {
-            s.cost = std::stod(anode->value());
+            s.cost = csvToDouble(anode->value());
           }
           anode = anode->next_sibling();
         }
@@ -557,7 +557,7 @@ void SimulationConfig::parseConfiguration(const std::string & filename) {
     } else if (strComp(node->name(), "learnep")) {
         SimulationConfig::info.learnep = std::stod(node->value());
     } else if (strComp(node->name(), "GridCost")) {
-        SimulationConfig::info.GridCost = std::stod(node->value());
+        SimulationConfig::info.GridCost = csvToDouble(node->value());
     } else if (strComp(node->name(), "case")) {
         SimulationConfig::info.caseOrder = std::stoi(node->value());
     } else if (strComp(node->name(), "ShadeClosedDuringNight")) {
@@ -639,4 +639,12 @@ void SimulationConfig::timeSteps() {
 
 bool SimulationConfig::strComp(const char * str1, const char * str2) {
   return std::strcmp(str1, str2) == 0;
+}
+
+std::vector<double> SimulationConfig::csvToDouble(const std::string & s) {
+  std::vector<double> items;
+  for (std::string &item : Utility::splitCSV(s)) {
+      items.push_back(std::stod(item));
+  }
+  return items;
 }

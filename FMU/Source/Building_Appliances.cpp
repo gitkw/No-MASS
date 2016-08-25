@@ -26,7 +26,7 @@ void Building_Appliances::setup(const buildingStruct & b) {
     pv.push_back(Appliance_PV());
     pv.back().setID(s.id);
     pv.back().setPriority(s.priority);
-    pv.back().setCost(s.cost);
+    pv.back().setHourlyCost(s.cost);
     pv.back().setBuildingID(buildingID);
     pv.back().setFileName(s.file);
     pv.back().setup();
@@ -131,7 +131,7 @@ void Building_Appliances::sendContractLocal(const Appliance & a) {
   c.requested = a.powerAt(stepcount);
   c.priority = a.getPriority();
   c.supplied = a.supplyAt(stepcount);
-  c.suppliedCost = a.getCost();
+  c.suppliedCost = a.supplyCostAt(stepcount);
   c.recievedCost = 0;
   c.recieved = 0;
   app_negotiation.submit(c);

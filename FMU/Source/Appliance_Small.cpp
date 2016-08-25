@@ -27,6 +27,7 @@ void Appliance_Small::preprocess() {
   for (int timeStep = 0; timeStep < totoaltimesteps; timeStep++) {
     power.push_back(model.consumption(timeStep));
     supply.push_back(0.0);
+    supplyCost.push_back(0.0);
   }
 }
 

@@ -9,7 +9,7 @@
   <save>1</save>
   <learnupdate>1</learnupdate>
   <learnep>0.01</learnep>
-  <GridCost>1.0</GridCost>
+  <GridCost>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</GridCost>
   <LVN>
     <node>
       <id>1</id>
@@ -118,7 +118,7 @@
         <id>10</id>
         <priority>0</priority>
         <filename>PVBowler2013_365.csv</filename>
-        <cost>0.02</cost>
+        <cost>0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.0,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2</cost>
       </pv>
       <FMIx>
         <id>11</id>
@@ -263,7 +263,7 @@
         <id>10</id>
         <priority>0</priority>
         <filename>PVBowler2013_365.csv</filename>
-        <cost>0.02</cost>
+        <cost>0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.0,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2</cost>
       </pvx>
       <FMIx>
         <id>11</id>

@@ -5,13 +5,19 @@
   <beginMonth>1</beginMonth>
   <endMonth>1</endMonth>
   <beginDay>1</beginDay>
-  <endDay>7</endDay>
+  <endDay>1</endDay>
   <save>1</save>
   <learnupdate>1</learnupdate>
   <learnep>0.01</learnep>
   <GridCost>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</GridCost>
+  <LVN>
+    <node>
+      <id>1</id>
+    </node>
+  </LVN>
   <buildings>
   <building>
+    <id>1</id>
         <zone>
             <name>Block1:Kitchen</name>
             <activities>Cooking,Cleaning</activities>
@@ -50,6 +56,10 @@
       <LargeLearning>
         <id>1</id>
         <priority>1</priority>
+        <epsilon>0.1</epsilon>
+        <alpha>0.1</alpha>
+        <gamma>0.1</gamma>
+        <updateQTable>1</updateQTable>
       </LargeLearning>
       <Large>
         <id>2</id>
@@ -151,7 +161,6 @@
       </agent>
     </agents>
   </building>
-
 </buildings>
   <models>
     <presencePage>0</presencePage>
