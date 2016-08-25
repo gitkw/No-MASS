@@ -2,7 +2,7 @@
 
 #ifndef LVN_NODE_H_
 #define LVN_NODE_H_
-
+#include <complex>
 #include <string>
 #include <vector>
 
@@ -21,15 +21,15 @@ class LVN_Node {
  public:
   LVN_Node();
   void resetIterations();
-  void addNode(LVN_Node node);
-  void setImpedance(double value);
-  void setNominalVoltage(double value);
-  void setNodeLoad(double nodeLoad);
+  void addNode(const LVN_Node & node);
+  void setImpedance(const std::complex<double> & value);
+  void setNominalVoltage(const std::complex<double> & value);
+  void setNodeLoad(const std::complex<double> & nodeLoad);
   void forwardSweep();
   double checkTolerance();
-  void backwardSweep(double parent_voltage);
+  void backwardSweep(const std::complex<double> & parent_voltage);
   void runUntilConvergence(double tolerance);
-  bool setPowerForID(const double power, const int id);
+  bool setPowerForID(const std::complex<double> & power, const int id);
   void setID(const int id);
   void setup();
   int getID() const;
@@ -37,19 +37,19 @@ class LVN_Node {
   void save();
 
  private:
-  void setComplexPower(double power);
+  void setComplexPower(const std::complex<double> & power);
   bool root;
   int id;
-  double complexPower;
-  double voltage;
-  double iteration;
+  std::complex<double> complexPower;
+  std::complex<double> voltage;
+  int iteration;
   //! Used for error calculations and decisive to start backward sweep.
-  double slackVoltage;
-  double currentLine;
-  double currentLoad;
-  double impedance;
-  double nominalVoltage;
-  double nodeLoad;
+  std::complex<double> slackVoltage;
+  std::complex<double> currentLine;
+  std::complex<double> currentLoad;
+  std::complex<double> impedance;
+  std::complex<double> nominalVoltage;
+  std::complex<double> nodeLoad;
 
   std::string complexPowerStr;
   std::string voltageStr;

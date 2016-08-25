@@ -40,7 +40,7 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
-EnergyPlusBuild/
-NoMassDocumentation/Doxygen/html
-NoMassDocumentation/Doxygen/latex
-
+FMU/build
+FMU/xcode
+Documentation/Doxygen/html
+Documentation/Doxygen/latex

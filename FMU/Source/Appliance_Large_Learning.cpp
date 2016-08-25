@@ -12,10 +12,15 @@ void Appliance_Large_Learning::setup() {
   isLearningPeriod = false;
   isWaitingForApplianceToStart = false;
   startTime = -1;
+  nonLearningStep = 0;
   std::string buildingString = "Building" + std::to_string(buildingID);
   std::string s_fullname = buildingString + "_Appliance" + std::to_string(id);
   s_fullname_actual = s_fullname + "_actual";
   DataStore::addVariable(s_fullname_actual);
+  qLearning.setEpsilon(epsilon);
+  qLearning.setAlpha(alpha);
+  qLearning.setGamma(gamma);
+  qLearning.setUpdate(update);
   qLearning.setFilename(s_fullname + "-");
   qLearning.setStates(24);
   qLearning.setId(id);
@@ -145,4 +150,17 @@ int Appliance_Large_Learning::calculateHourOfDay() const {
   int stepCount = SimulationConfig::getStepCount();
   int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
   return hour % 24;
+}
+
+void Appliance_Large_Learning::setEpsilon(double epsilon) {
+  this->epsilon = epsilon;
+}
+void Appliance_Large_Learning::setAlpha(double alpha) {
+  this->alpha = alpha;
+}
+void Appliance_Large_Learning::setGamma(double gamma) {
+  this->gamma = gamma;
+}
+void Appliance_Large_Learning::setUpdate(bool update) {
+  this->update = update;
 }

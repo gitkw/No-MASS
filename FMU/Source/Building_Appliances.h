@@ -7,11 +7,12 @@
 #include <string>
 #include "Appliance_Large.h"
 #include "Appliance_Large_Learning.h"
-#include "Appliance_Grid.h"
 #include "Appliance_Small.h"
 #include "Appliance_FMI.h"
 #include "Appliance_PV.h"
+#include "Appliance.h"
 #include "LVN_Negotiation.h"
+#include "SimulationConfig.h"
 
 /**
  * @brief Manages the different building appliances agents
@@ -20,27 +21,26 @@
 class Building_Appliances {
  public:
     Building_Appliances();
-    void setup();
-    void step();
+    void setup(const buildingStruct & b);
+    void stepLocal();
+    void stepLocalNegotiation();
+    void stepGlobalNegotiation(const LVN_Negotiation & building_negotiation);
     void postprocess();
     void preprocess();
     void postTimeStep();
-    void stepLarge();
-    void setBuildingID(const int id);
     void addCurrentStates(const int stateid);
-    void sendContract(int id, double priority, double request,
-                              double supply, double cost);
+
     double getTotalPower() const;
+    void addContactsTo(LVN_Negotiation * building_negotiation);
 
  private:
-    int buildingID;
     double PowerRequested;
     double PowerGenerated;
     double totalPower;
+    int buildingID;
 
     std::vector<Appliance_Large> large;
     std::vector<Appliance_Large_Learning> largeLearning;
-    std::vector<Appliance_Grid> grid;
     std::vector<Appliance_Small> small;
     std::vector<Appliance_FMI> fmi;
     std::vector<Appliance_PV> pv;
@@ -49,16 +49,30 @@ class Building_Appliances {
 
     LVN_Negotiation app_negotiation;
 
-    void stepSmall();
-    void stepLargeLearning();
-    void stepPV();
-    void stepFMI();
-    void stepGrid();
-    void addAppToDataStrore(const int id);
-    void addAppVariableToDataStrore(const int id, const int requested,
-                                    const int supplied);
-    void addAppRecievedToDataStrore(const int id, const int recieved,
-                                    const int cost);
+    std::vector<contract> globalContracts;
+
+    double sum_large;
+    double sum_cost;
+    double sum_fmi;
+    double sum_small;
+    void stepLocalSmall();
+    void stepLocalLarge();
+    void stepLocalLargeLearning();
+    void stepLocalPV();
+    void stepLocalFMI();
+    void stepLocalAppliance(std::unique_ptr<Appliance> a);
+    void localNegotiationSmall();
+    void localNegotiationLarge();
+    void localNegotiationLargeLearning();
+    void localNegotiationPV();
+    void localNegotiationFMI();
+    void globalNegotiationLarge(const LVN_Negotiation & building_negotiation);
+    void globalNegotiationLargeLearning(const LVN_Negotiation & building_negotiation);
+    void globalNegotiationFMI(const LVN_Negotiation & building_negotiation);
+    void globalNegotiationSmall(const LVN_Negotiation & building_negotiation);
+    void globalNegotiationPV(const LVN_Negotiation & building_negotiation);
+    void sendContractLocal(const Appliance & a);
+    bool sendContractGlobal(const contract & c);
 };
 
 #endif  // BUILDING_APPLIANCES_H_

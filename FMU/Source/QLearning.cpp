@@ -12,11 +12,12 @@
 #include "Utility.h"
 #include "QLearning.h"
 
-QLearning::QLearning() {}
+QLearning::QLearning() {
+  epsilon = SimulationConfig::info.learnep;
+  update = SimulationConfig::info.learnupdate;
+}
 
 void QLearning::setup() {
-    epsilon = SimulationConfig::info.learnep;
-    update = SimulationConfig::info.learnupdate;
     std::ifstream in_file;
     std::string filenameWithID = filename + std::to_string(id) + ".dat";
     in_file.open(filenameWithID, std::ios::binary);
@@ -116,4 +117,16 @@ void QLearning::setEpsilon(const double epsilon) {
 
 void QLearning::setFilename(const std::string filename) {
   this->filename = filename;
+}
+
+void QLearning::setAlpha(double alpha) {
+  this->alpha = alpha;
+}
+
+void QLearning::setGamma(double gamma) {
+  this->gamma = gamma;
+}
+
+void QLearning::setUpdate(bool update) {
+  this->update = update;
 }

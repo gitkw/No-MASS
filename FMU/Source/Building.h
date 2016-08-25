@@ -21,6 +21,10 @@ class Building{
   double getPower() const;
   int getID() const;
 
+  void stepAppliancesUse();
+  void stepAppliancesNegotiation(const LVN_Negotiation & building_negotiation);
+  void addContactsTo(LVN_Negotiation * building_negotiation);
+
  private:
   void setOccupantGainsForZone(std::shared_ptr<Building_Zone> zone);
   void setOccupantWindowDecisionForZone(std::shared_ptr<Building_Zone> zone);

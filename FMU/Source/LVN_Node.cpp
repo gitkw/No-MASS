@@ -53,7 +53,7 @@ void LVN_Node::resetIterations() {
  * @brief Add node to object node, to create a network.
  * @param node: node to be added.
  */
-void LVN_Node::addNode(LVN_Node node) {
+void LVN_Node::addNode(const LVN_Node & node) {
   joinedNodes.push_back(node);
 }
 
@@ -61,7 +61,7 @@ void LVN_Node::addNode(LVN_Node node) {
  * @brief Set value of the cable impedance between self node and the parent node.
  * @param value: value of impedance in Ohms
  */
-void LVN_Node::setImpedance(double value) {
+void LVN_Node::setImpedance(const std::complex<double> & value) {
   this->impedance = value;
 }
 
@@ -69,7 +69,7 @@ void LVN_Node::setImpedance(double value) {
  * @brief Set value of the nominal voltage.
  * @param value: value of nominal voltage in Volts.
  */
-void LVN_Node::setNominalVoltage(double value) {
+void LVN_Node::setNominalVoltage(const std::complex<double> & value) {
   this->nominalVoltage = value;
 }
 
@@ -77,7 +77,7 @@ void LVN_Node::setNominalVoltage(double value) {
  * @brief Assign the corresponding NodeLoad to the node, such as HouseLoad, ApplianceLoad, etc.
  * @param NodeLoad: NodeLoad object contains NodeLoad.profile, an array of the power profile.
  */
-void LVN_Node::setNodeLoad(double nodeLoad) {
+void LVN_Node::setNodeLoad(const std::complex<double> & nodeLoad) {
   this->nodeLoad = nodeLoad;
 }
 
@@ -85,7 +85,7 @@ void LVN_Node::setNodeLoad(double nodeLoad) {
  * @brief Set complex power drawn from the node, using NodeLoad.getComplexPowerValue(time_ix).
  * @param time_ix Index of the array corresponding to time step.
  */
-void LVN_Node::setComplexPower(double power) {
+void LVN_Node::setComplexPower(const std::complex<double> & power) {
   // Load from appliances
   complexPower = power;
 }
@@ -150,7 +150,7 @@ double LVN_Node::checkTolerance() {
  * @details V[j] = V[j-1] - Iline[j]*z[j]
  * unless you are root, and then: V[j-1] = Vnominal
  */
-void LVN_Node::backwardSweep(double parent_voltage) {
+void LVN_Node::backwardSweep(const std::complex<double> & parent_voltage) {
   // # V[j] = V[j-1] - Iline[j]*z[j]
   voltage = parent_voltage - currentLine * impedance;
   //  # do this for all nodes: each childnode is looped,
@@ -179,7 +179,6 @@ void LVN_Node::runUntilConvergence(double tolerance) {
     backwardSweep(slackVoltage);
     runUntilConvergence(tolerance);
   }
-  save();
 }
 
 void LVN_Node::save() {
@@ -187,15 +186,15 @@ void LVN_Node::save() {
     //  # considering all childchildnodes it may have.
     childnode.save();
   }
-  DataStore::addValue(complexPowerStr, complexPower);
-  DataStore::addValue(voltageStr, voltage);
+  DataStore::addValue(complexPowerStr, complexPower.real());
+  DataStore::addValue(voltageStr, voltage.real());
   DataStore::addValue(iterationStr, iteration);
-  DataStore::addValue(slackVoltageStr, slackVoltage);
-  DataStore::addValue(currentLineStr, currentLine);
-  DataStore::addValue(currentLoadStr, currentLoad);
-  DataStore::addValue(impedanceStr, impedance);
-  DataStore::addValue(nominalVoltageStr, nominalVoltage);
-  DataStore::addValue(nodeLoadStr, nodeLoad);
+  DataStore::addValue(slackVoltageStr, slackVoltage.real());
+  DataStore::addValue(currentLineStr, currentLine.real());
+  DataStore::addValue(currentLoadStr, currentLoad.real());
+  DataStore::addValue(impedanceStr, impedance.real());
+  DataStore::addValue(nominalVoltageStr, nominalVoltage.real());
+  DataStore::addValue(nodeLoadStr, nodeLoad.real());
 }
 
 /**
@@ -204,7 +203,7 @@ void LVN_Node::save() {
  * @param id of the node we are searching for.
  * @return true if node is found.
  */
-bool LVN_Node::setPowerForID(const double power, const int id) {
+bool LVN_Node::setPowerForID(const std::complex<double> & power, const int id) {
   bool found = this->id == id;
   if (found) {
     setComplexPower(power);

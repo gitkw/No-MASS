@@ -101,7 +101,6 @@ Source/Appliance_Small.cpp
 Source/Appliance_PV.cpp
 Source/Appliance_FMI.cpp
 Source/Appliance_Large_Learning.cpp
-Source/Appliance_Grid.cpp
 Source/LVN.cpp
 Source/LVN_Node.cpp
 Source/LVN_Negotiation.cpp
@@ -215,6 +214,8 @@ configure_file(tests/Files/DSM.xml
                 ${CMAKE_CURRENT_BINARY_DIR}/SimulationConfig.xml)
 configure_file(tests/Files/DSM2houses.xml
                 ${CMAKE_CURRENT_BINARY_DIR}/DSM2houses.xml)
+configure_file(tests/Files/DSM10houses.xml
+                ${CMAKE_CURRENT_BINARY_DIR}/DSM10houses.xml)
 configure_file(tests/Files/Activity.xml
                 ${CMAKE_CURRENT_BINARY_DIR}/Activity.xml)
 configure_file(tests/Files/AppliancesLarge.xml

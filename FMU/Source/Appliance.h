@@ -22,11 +22,19 @@ class Appliance : public Agent {
     void setPriority(double priority);
     double getCost() const;
     void setCost(double cost);
+    void setRecieved(const double r);
+    void setRecievedCost(const double c);
+    void save();
+    void saveSetup();
+    bool isGlobal() const;
+    void setGlobal(bool global);
 
  protected:
     std::vector<double> power;
     std::vector<double> supply;
-
+    std::vector<double> recieved;
+    std::vector<double> recievedCost;
+    bool global;
     double cost;
     double priority;
 };

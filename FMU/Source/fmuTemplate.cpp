@@ -133,6 +133,7 @@ fmiStatus fmiSetString(fmiComponent c, const fmiValueReference vr[],
 
 fmiStatus fmiGetReal(fmiComponent c, const fmiValueReference vr[],
     size_t nvr, fmiReal value[]) {
+    modelInstance->sim.postTimeStep();
     for (unsigned int i = 0; i < nvr; i++) {
         value[i] = DataStore::getValue(valToRefs.at(vr[i]));
     }

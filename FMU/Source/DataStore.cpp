@@ -14,11 +14,15 @@ std::unordered_map<std::string, std::vector<double> > DataStore::variableMap;
 DataStore::DataStore() {}
 
 void DataStore::addVariable(const std::string &name) {
-    variableMap.insert(std::make_pair(name, std::vector<double>()));
+    if(name != ""){
+        variableMap.insert(std::make_pair(name, std::vector<double>()));
+    }
 }
 
 void DataStore::addValue(const std::string &name, const double value) {
-    variableMap[name].push_back(value);
+    if(name != ""){
+        variableMap[name].push_back(value);
+    }
 }
 
 double DataStore::getValueForZone(const std::string &name,

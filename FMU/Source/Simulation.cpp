@@ -111,8 +111,21 @@ void Simulation::timeStep() {
   SimulationConfig::step();
   for (Building &b : buildings) {
       b.step();
+      b.stepAppliancesUse();
+      b.addContactsTo(&building_negotiation);
   }
-  postTimeStep();
+  if (building_negotiation.getDifference() < 0) {
+    contract m;
+    m.supplied = std::abs(building_negotiation.getDifference());
+    m.suppliedCost = SimulationConfig::info.GridCost;
+    m.requested = 0;
+    building_negotiation.submit(m);
+  }
+  building_negotiation.process();
+  for (Building &b : buildings) {
+    b.stepAppliancesNegotiation(building_negotiation);
+  }
+  building_negotiation.clear();
 }
 
 /**

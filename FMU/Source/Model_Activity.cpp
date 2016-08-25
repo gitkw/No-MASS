@@ -32,17 +32,15 @@
  * out
  */
 
-Model_Activity::Model_Activity() {
-}
+Model_Activity::Model_Activity() {}
 
-std::vector<double> Model_Activity::preProcessActivities(const int buildingID,
-                                                            const int agentID) {
+std::vector<double> Model_Activity::preProcessActivities() {
     if (SimulationConfig::ActivityFile == "") {
-        return disaggregate(buildingID, agentID);
+        return disaggregate();
     } else {
         parseConfiguration(SimulationConfig::RunLocation
                                   + SimulationConfig::ActivityFile);
-        return multinominal(buildingID, agentID);
+        return multinominal();
     }
 }
 
@@ -98,25 +96,7 @@ int Model_Activity::multinominalActivity(const double p[24][10],
   return Utility::cumulativeProbability(p[hourCount], 10);
 }
 
-void Model_Activity::multinominalP(
-    double p[4][7][24][10], const int buildingID, const int agentID) const {
-
-    std::string age =
-          SimulationConfig::buildings[buildingID].agents.at(agentID).age;
-    std::string computer =
-          SimulationConfig::buildings[buildingID].agents.at(agentID).computer;
-    std::string civstat =
-          SimulationConfig::buildings[buildingID].agents.at(agentID).civstat;
-    std::string unemp =
-          SimulationConfig::buildings[buildingID].agents.at(agentID).unemp;
-    std::string retired =
-          SimulationConfig::buildings[buildingID].agents.at(agentID).retired;
-    std::string edtry =
-          SimulationConfig::buildings[buildingID].agents.at(agentID).edtry;
-    std::string famstat =
-          SimulationConfig::buildings[buildingID].agents.at(agentID).famstat;
-    std::string sex =
-          SimulationConfig::buildings[buildingID].agents.at(agentID).sex;
+void Model_Activity::multinominalP(double p[4][7][24][10]) const {
 
     for (int iSeason = 0; iSeason <4; iSeason++) {
       std::string seasonString = getSeasonString(iSeason);
@@ -158,10 +138,9 @@ void Model_Activity::multinominalP(
     }
 }
 
-std::vector<double> Model_Activity::multinominal(const int buildingID,
-                                                    const int agentID) {
+std::vector<double> Model_Activity::multinominal() {
     double p[4][7][24][10];
-    multinominalP(p, buildingID, agentID);
+    multinominalP(p);
 
     std::vector<double> activities;
 
@@ -240,12 +219,8 @@ void Model_Activity::parseConfiguration(const std::string filename) {
 void Model_Activity::parseOther(rapidxml::xml_node<> *node) {
   node->name();
 }
-std::vector<double> Model_Activity::disaggregate(const int buildingID,
-                                                  const int agentID) const {
+std::vector<double> Model_Activity::disaggregate() const {
     double probabilities[24][10];
-    std::map<int, std::string> probMap;
-    probMap =
-          SimulationConfig::buildings[buildingID].agents.at(agentID).profile;
 
     for (int hour = 0; hour < 24; hour++) {
         std::vector<std::string> tokProbs = Utility::splitCSV(probMap.at(hour));
@@ -277,4 +252,41 @@ std::vector<double> Model_Activity::disaggregate(const int buildingID,
         }
     }
     return activities;
+}
+
+
+void Model_Activity::setAge(const std::string & age) {
+  this->age = age;
+}
+
+void Model_Activity::setComputer(const std::string & computer) {
+  this->computer = computer;
+}
+
+void Model_Activity::setCivstat(const std::string & civstat) {
+  this->civstat = civstat;
+}
+
+void Model_Activity::setUnemp(const std::string & unemp) {
+  this->unemp = unemp;
+}
+
+void Model_Activity::setRetired(const std::string & retired) {
+  this->retired = retired;
+}
+
+void Model_Activity::setEdtry(const std::string & edtry) {
+  this->edtry = edtry;
+}
+
+void Model_Activity::setFamstat(const std::string & famstat) {
+  this->famstat = famstat;
+}
+
+void Model_Activity::setSex(const std::string & sex) {
+  this->sex = sex;
+}
+
+void Model_Activity::setProbMap(const std::map<int, std::string> & probMap) {
+  this->probMap = probMap;
 }

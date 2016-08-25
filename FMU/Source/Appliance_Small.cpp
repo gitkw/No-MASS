@@ -1,6 +1,7 @@
 // Copyright 2016 Jacob Chapman
 
 #include <string>
+#include "DataStore.h"
 #include "SimulationConfig.h"
 #include "Utility.h"
 #include "Appliance_Small.h"

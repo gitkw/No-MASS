@@ -8,12 +8,14 @@
 
 struct contract {
     int id;
-    double requested;
-    double recieved;
-    double recievedCost;
-    double supplied;
-    double suppliedCost;
-    double priority;
+    int buildingID;
+    double requested = 0.0;
+    double recieved = 0.0;
+    double recievedCost = 0.0;
+    double supplied = 0.0;
+    double suppliedCost = 0.0;
+    double suppliedLeft = 0.0;
+    double priority = 0.0;
 };
 
 class LVN_Negotiation {
@@ -21,13 +23,17 @@ class LVN_Negotiation {
     LVN_Negotiation();
     void submit(contract c);
     void process();
-    contract getContract(const int id);
-    double getRecievedPowerForContract(const int id);
-    double getCostOfPowerForContract(const int id);
+    contract getContract(const int buildingID, const int id) const;
+    double getRecievedPowerForContract(const int buildingID, const int id);
+    double getCostOfPowerForContract(const int buildingID, const int id);
     void clear();
+    double getDifference() const;
 
  private:
+    void processContracts();
+    int bestSupply();
     std::vector<contract> contracts;
+    double difference;
 };
 
 #endif  // LVN_NEGOTIATION_H_

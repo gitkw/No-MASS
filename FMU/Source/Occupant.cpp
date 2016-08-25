@@ -30,14 +30,11 @@
 
 Occupant::Occupant() {}
 
-void Occupant::setup(int newId,
+void Occupant::setup(int id, const agentStruct &agent,
       const std::vector<std::shared_ptr<Building_Zone>> &zones) {
-    id = newId;
-    std::string idAsString = std::to_string(newId);
-    DataStore::addVariable("Occupant_Activity_" + idAsString);
-    DataStore::addVariable("AgentGains" + idAsString);
-    agentStruct agent = SimulationConfig::buildings[buildingID].agents.at(id);
-    buildingName = SimulationConfig::buildings[buildingID].name;
+    this->id = id;
+    DataStore::addVariable(idString + "Activity");
+    DataStore::addVariable(idString + "HeatGains");
     bedroom = buildingName + agent.bedroom;
     office = buildingName + agent.office;
     power = agent.power;
@@ -63,9 +60,9 @@ void Occupant::setup(int newId,
         agentZones.back().setup(*buldingZone, id, agent);
     }
     if (SimulationConfig::info.presencePage) {
-      model_presenceFromPage();
+      model_presenceFromPage(agent);
     } else {
-      model_activity();
+      model_activity(agent);
     }
     initialiseStates(zones);
 }
@@ -149,20 +146,29 @@ void Occupant::step() {
       agentZone.setMetabolicRate(metabolicRate);
       agentZone.step(*zonePtr, *zonePtrPrevious, activities);
     }
-    std::string name = "AgentGains" + std::to_string(id);
-    DataStore::addValue(name.c_str(), getCurrentRadientGains(*zonePtr));
-    name = "Occupant_Activity_" + std::to_string(id);
-    DataStore::addValue(name.c_str(), newStateID);
+    DataStore::addValue(idString + "HeatGains",
+                                getCurrentRadientGains(*zonePtr));
+    DataStore::addValue(idString + "Activity", newStateID);
 }
 
-void Occupant::model_activity() {
+void Occupant::model_activity(const agentStruct &agent) {
     Model_Activity_Survival ma;
-    activities = ma.preProcessActivities(buildingID, id);
+    ma.setAge(agent.age);
+    ma.setComputer(agent.computer);
+    ma.setCivstat(agent.civstat);
+    ma.setUnemp(agent.unemp);
+    ma.setRetired(agent.retired);
+    ma.setEdtry(agent.edtry);
+    ma.setFamstat(agent.famstat);
+    ma.setSex(agent.sex);
+    ma.setProbMap(agent.profile);
+    activities = ma.preProcessActivities();
 }
 
-void Occupant::model_presenceFromPage() {
+void Occupant::model_presenceFromPage(const agentStruct &agent) {
     Model_Presence presence;
-    presence.calculatePresenceFromPage(buildingID, id);
+    presence.setProbMap(agent.profile);
+    presence.calculatePresenceFromPage();
     for (unsigned int i = 0; i < presence.size(); ++i) {
         if (presence.at(i)) {
             activities.push_back(3);
@@ -376,4 +382,8 @@ void Occupant::postTimeStep() {
 
 int Occupant::getStateID() const {
   return state.getId();
+}
+
+void Occupant::setBuildingName(const std::string & buildingName) {
+  this->buildingName = buildingName;
 }

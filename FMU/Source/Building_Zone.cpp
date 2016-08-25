@@ -25,22 +25,22 @@ void Building_Zone::setup(const ZoneStruct & zoneStruct) {
       int windowCount = zoneStruct.windowCount;
       setGroundFloor(SimulationConfig::isZoneGroundFloor(&name));
       for (int i = 0; i < windowCount; i ++) {
-        std::string windowName = name + "WindowState" + std::to_string(i);
+        std::string windowName = idString + "WindowState" + std::to_string(i);
         variableNameWindow.push_back(windowName);
         DataStore::addVariable(windowName);
       }
 
-      variableNameAppFraction = name + "AppFraction";
+      variableNameAppFraction = idString + "AppFraction";
       DataStore::addVariable(variableNameAppFraction);
-      variableNameBlindFraction = name + "BlindFraction";
+      variableNameBlindFraction = idString + "BlindFraction";
       DataStore::addVariable(variableNameBlindFraction);
-      variableNameLight = name + "LightState";
+      variableNameLight = idString + "LightState";
       DataStore::addVariable(variableNameLight);
-      variableNameHeating = name + "Heating";
+      variableNameHeating = idString + "Heating";
       DataStore::addVariable(variableNameHeating);
-      variableNameNumberOfOccupants = name + "NumberOfOccupants";
+      variableNameNumberOfOccupants = idString + "NumberOfOccupants";
       DataStore::addVariable(variableNameNumberOfOccupants);
-      variableNameAverageGains = name + "AverageGains";
+      variableNameAverageGains = idString + "AverageGains";
       DataStore::addVariable(variableNameAverageGains);
   }
 
@@ -50,8 +50,8 @@ void Building_Zone::step() {
     if (active) {
         DataStore::addValue(variableNameNumberOfOccupants, occupantFraction);
         DataStore::addValue(variableNameAverageGains, currentOccupantGains);
-        for (std::string & name : variableNameWindow) {
-          DataStore::addValue(name, windowState);
+        for (std::string & wname : variableNameWindow) {
+          DataStore::addValue(wname, windowState);
         }
         DataStore::addValue(variableNameLight, lightState);
         // Shade in EP is
@@ -177,4 +177,8 @@ void Building_Zone::setAppFraction(double appFraction) {
 
 int Building_Zone::getNumberOfActivities() const {
   return activities.size();
+}
+
+void Building_Zone::setIDString(const std::string & idString) {
+  this->idString = idString;
 }
