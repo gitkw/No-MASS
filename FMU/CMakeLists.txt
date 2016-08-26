@@ -133,7 +133,7 @@ string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
-set(testLocationFiles "${PROJECT_SOURCE_DIR}/tests/Files")
+set(testLocationFiles "${PROJECT_SOURCE_DIR}/tests/Files/")
 
 ################################
 # Testing
