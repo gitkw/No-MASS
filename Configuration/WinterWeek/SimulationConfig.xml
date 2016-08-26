@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <simulation>
-  <seedx>0</seedx>
+  <seed>0</seed>
   <timeStepsPerHour>60</timeStepsPerHour>
   <beginMonth>1</beginMonth>
   <endMonth>1</endMonth>
@@ -9,6 +9,7 @@
   <save>1</save>
   <learnupdate>1</learnupdate>
   <learnep>0.01</learnep>
+  <GridCost>0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1</GridCost>
   <buildings>
     <building>
           <zone>
@@ -49,6 +50,10 @@
         <LargeLearning>
           <id>1</id>
           <priority>1</priority>
+          <epsilon>0.1</epsilon>
+          <alpha>0.1</alpha>
+          <gamma>0.1</gamma>
+          <updateQTable>0</updateQTable>
         </LargeLearning>
         <Large>
           <id>2</id>
@@ -102,18 +107,13 @@
           <id>10</id>
           <priority>0</priority>
           <filename>PVBowler2013_365.csv</filename>
-          <cost>0.02</cost>
+          <cost>0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002</cost>
         </pv>
         <FMIx>
           <id>11</id>
           <priority>0</priority>
           <variablename>HVACPower</variablename>
         </FMIx>
-        <Grid>
-          <id>1000</id>
-          <priority>0</priority>
-          <cost>1.00</cost>
-        </Grid>
       </Appliances>
       <agents>
         <agent>
