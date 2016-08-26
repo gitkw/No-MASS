@@ -96,8 +96,6 @@ void Simulation::preTimeStep() {
   DataStore::addValue("hour", hour);
   DataStore::addValue("hourOfDay", hourOfDay);
   DataStore::addValue("month", month);
-  //  std::cout << day << " " << hour << " " << hourOfDay << std::endl;
-
   Environment::calculateDailyMeanTemperature();
 }
 
@@ -120,7 +118,11 @@ void Simulation::timeStep() {
     int stepCount = SimulationConfig::getStepCount();
     int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
     int hourOfDay = hour % 24;
-    m.suppliedCost = SimulationConfig::info.GridCost[hourOfDay];
+    if (SimulationConfig::info.GridCost.size() == 24) {
+      m.suppliedCost = SimulationConfig::info.GridCost[hourOfDay];
+    } else {
+      m.suppliedCost = SimulationConfig::info.GridCost[0];
+    }
     m.requested = 0;
     building_negotiation.submit(m);
   }

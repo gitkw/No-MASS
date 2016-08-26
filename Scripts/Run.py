@@ -15,7 +15,7 @@ nomass.epsilon = 0.1
 nomass.alpha = 0.1
 nomass.gamma = 0.1
 nomass.printInput = True
-nomass.numberOfSimulations = 10
-nomass.learnUpToSimulation = 5
+nomass.numberOfSimulations = 100
+nomass.learnUpToSimulation = 98
 nomass.simulate()
 nomass.deleteLearningData()
