@@ -46,7 +46,11 @@ void Appliance_PV::preprocess() {
     }
     // watt hour per timeperhour
     supply.push_back(p);
-    supplyCost.push_back(hourlyCost[hourOfDay]);
+    if (hourlyCost.size() == 24) {
+      supplyCost.push_back(hourlyCost[hourOfDay]);
+    } else {
+      supplyCost.push_back(hourlyCost[0]);
+    }
     power.push_back(0);
     recieved.push_back(0);
     recievedCost.push_back(0);

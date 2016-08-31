@@ -30,8 +30,17 @@ void Test_Activity::AfterConfiguration() {
   SimulationConfig::info.startMonth  = 1;
   SimulationConfig::info.startDay  = 31;
 
-
-  activities = ma.preProcessActivities(buildingID, 0);
+  agentStruct agent = SimulationConfig::buildings[0].agents[0];
+  ma.setAge(agent.age);
+  ma.setComputer(agent.computer);
+  ma.setCivstat(agent.civstat);
+  ma.setUnemp(agent.unemp);
+  ma.setRetired(agent.retired);
+  ma.setEdtry(agent.edtry);
+  ma.setFamstat(agent.famstat);
+  ma.setSex(agent.sex);
+  ma.setProbMap(agent.profile);
+  activities = ma.preProcessActivities();
 }
 
 TEST_F(Test_Activity, Dissagregate) {
@@ -159,16 +168,16 @@ TEST_F(Test_Activity, multinominalActivity) {
       px[activity] = px[activity] + 1;
   }
 
-  ASSERT_NEAR(px[0] / top, 0.036, 0.005);
-  ASSERT_NEAR(px[1] / top, 0.124, 0.005);
-  ASSERT_NEAR(px[2] / top, 0.087, 0.005);
-  ASSERT_NEAR(px[3] / top, 0.003, 0.005);
-  ASSERT_NEAR(px[4] / top, 0.027, 0.005);
-  ASSERT_NEAR(px[5] / top, 0.030, 0.005);
-  ASSERT_NEAR(px[6] / top, 0.112, 0.005);
-  ASSERT_NEAR(px[7] / top, 0.010, 0.005);
-  ASSERT_NEAR(px[8] / top, 0.043, 0.005);
-  ASSERT_NEAR(px[9] / top, 0.527, 0.05);
+  EXPECT_NEAR(px[0] / top, 0.036, 0.005);
+  EXPECT_NEAR(px[1] / top, 0.124, 0.005);
+  EXPECT_NEAR(px[2] / top, 0.087, 0.005);
+  EXPECT_NEAR(px[3] / top, 0.003, 0.005);
+  EXPECT_NEAR(px[4] / top, 0.027, 0.005);
+  EXPECT_NEAR(px[5] / top, 0.030, 0.005);
+  EXPECT_NEAR(px[6] / top, 0.112, 0.005);
+  EXPECT_NEAR(px[7] / top, 0.010, 0.005);
+  EXPECT_NEAR(px[8] / top, 0.043, 0.005);
+  EXPECT_NEAR(px[9] / top, 0.527, 0.05);
 }
 
 TEST_F(Test_Activity, multinominalP) {
@@ -176,9 +185,9 @@ TEST_F(Test_Activity, multinominalP) {
 
     AfterConfiguration();
 
-    std::vector<double> activities = ma.preProcessActivities(buildingID, 0);
+    std::vector<double> activities = ma.preProcessActivities();
     double p[4][7][24][10];
-    ma.multinominalP(p, buildingID, 0);
+    ma.multinominalP(p);
     double sum = 0;
     for (int s = 0; s < 4; s++) {
       for (int d = 0; d < 7; d++) {

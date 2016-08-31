@@ -32,8 +32,9 @@ void Test_QLearning_Window::SetUp() {
 TEST_F(Test_QLearning_Window, learn) {
     ql.setId(1);
     ql.setFilename("window-1-");
+    ql.setEpsilon(0.1);
+    ql.setUpdate(1);
     ql.setup();
-    ql.setEpsilon(0.0);
 
     ZoneStruct zs;
     zs.name = "Block1:Zone1";
@@ -42,11 +43,10 @@ TEST_F(Test_QLearning_Window, learn) {
     z_Kitchen.setName(zs.name);
     z_Kitchen.setup(zs);
 
-    double reward = -0.1;
     double result = 1;
     for (int i =0; i < 100000; i++) {
       ql.setState(21);
-      if (result >0) {
+      if (result > 0) {
         ql.setReward(1);
       } else {
         ql.setReward(-0.1);
@@ -55,14 +55,14 @@ TEST_F(Test_QLearning_Window, learn) {
     }
 
     result = ql.learn();
-    ASSERT_NEAR(result, 1, 0.1);
+    EXPECT_NEAR(result, 1, 0.1);
     ql.printQ();
 
+    ql.setEpsilon(0.1);
     ql.setup();
-    ql.setEpsilon(0.0);
 
     result = ql.learn();
-    ASSERT_NEAR(result, 1, 0.1);
+    EXPECT_NEAR(result, 1, 0.1);
 
     for (int i =0; i < 100000; i++) {
       ql.setState(22);
@@ -74,6 +74,6 @@ TEST_F(Test_QLearning_Window, learn) {
       result = ql.learn();
     }
 
-    ASSERT_NEAR(result, 0, 0.1);
+    EXPECT_NEAR(result, 0, 0.1);
     ql.printQ();
 }

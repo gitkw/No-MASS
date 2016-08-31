@@ -23,7 +23,8 @@ void Test_Occupant_Action_Window_Learning::SetUp() {
   SimulationConfig::info.windows = false;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
-  SimulationConfig::info.learnep = 0.8;
+  SimulationConfig::info.learnep = 0.1;
+  SimulationConfig::info.learn = 1;
   DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
   DataStore::addVariable("hour");
   DataStore::addVariable("month");
@@ -36,11 +37,12 @@ void Test_Occupant_Action_Window_Learning::SetUp() {
 }
 
 TEST_F(Test_Occupant_Action_Window_Learning, Learn) {
+  aal.setZoneId(10);
   aal.setup(1);
-
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";
   zs.id = 1;
+
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
   z_Kitchen.setup(zs);
@@ -53,15 +55,15 @@ TEST_F(Test_Occupant_Action_Window_Learning, Learn) {
      } else {
        aal.setReward(-0.1);
      }
-
      aal.step(z_Kitchen, true, true);
      result = aal.getResult();
+     z_Kitchen.setWindowState(result);
      DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 21);
   }
 
   aal.step(z_Kitchen, true, true);
   result = aal.getResult();
-  ASSERT_NEAR(result, 1, 0.1);
+  EXPECT_NEAR(result, 1, 0.1);
 
   for (int i =0; i < 100; i++) {
      if (result > 0) {
@@ -71,10 +73,11 @@ TEST_F(Test_Occupant_Action_Window_Learning, Learn) {
      }
      aal.step(z_Kitchen, true, true);
      result = aal.getResult();
+     z_Kitchen.setWindowState(result);
      DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 21);
   }
 
   aal.step(z_Kitchen, true, true);
   result = aal.getResult();
-  ASSERT_NEAR(result, 0, 0.1);
+  EXPECT_NEAR(result, 1, 0.1);
 }

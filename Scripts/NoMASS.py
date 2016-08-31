@@ -28,6 +28,9 @@ class NoMASS(object):
         self.clean = True
         self.seed = -1
         self.printInput = False
+        self.epsilon = 0.1
+        self.alpha = 0.1
+        self.gamma = 0.1
 
     def deleteLearningData(self):
         ll = self.learnLoc()
@@ -63,8 +66,10 @@ class NoMASS(object):
         if self.printInput:
             self.printConfiguration()
         for x in range(0, self.numberOfSimulations):
+            print "Simulation: " + str(x)
             self.copyToRunLocation(x)
             self.makeExecutable(x)
+            self.configuration(x)
             self.run(x)
             self.copyToResultsLocation(x)
             if self.clean:
@@ -81,13 +86,41 @@ class NoMASS(object):
             random.seed()
         else:
             random.seed(self.seed)
-        root.find('seed').text = str(random.randint(1,99999))
-        if self.learning(x):
-            root.find('learnupdate').text = 1
-            root.find('learnep').text = 0.1
-        else:
-            root.find('learnupdate').text = 0
-            root.find('learnep').text = 0.0
+        s = str(random.randint(1,99999))
+        root.find('seed').text = s
+
+        for buildings in root.findall('buildings'):
+            for building in buildings.findall('building'):
+                for apps in building.findall('Appliances'):
+                    for ll in apps.findall('LargeLearning'):
+                        if ll.find('updateQTable') is not None :
+                            if self.learning(x):
+                                ll.find('updateQTable').text = str(1)
+                            else:
+                                ll.find('updateQTable').text = str(0)
+                        else:
+                            newNode = ET.Element('updateQTable')
+                            newNode.text = '1'
+                            ll.append(newNode)
+                        if ll.find('epsilon') is not None :
+                            ll.find('epsilon').text = str(self.epsilon)
+                        else:
+                            newNode = ET.Element('epsilon')
+                            newNode.text = str(self.epsilon)
+                            ll.append(newNode)
+                        if ll.find('alpha') is not None :
+                            ll.find('alpha').text = str(self.alpha)
+                        else:
+                            newNode = ET.Element('alpha')
+                            newNode.text = str(self.alpha)
+                            ll.append(newNode)
+                        if ll.find('gamma') is not None :
+                            ll.find('gamma').text = str(self.gamma)
+                        else:
+                            newNode = ET.Element('gamma')
+                            newNode.text = str(self.gamma)
+                            ll.append(newNode)
+        tree.write(rl + self.simulationFile)
 
 
     def copyToResultsLocation(self, x):

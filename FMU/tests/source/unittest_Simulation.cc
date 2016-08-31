@@ -26,7 +26,7 @@ TEST(Simulation, HeatGainsOnly) {
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 21);
   s.timeStep();
   EXPECT_EQ(SimulationConfig::getStepCount(), 0);
-  int activity = DataStore::getValue("Occupant_Activity_1");
+  int activity = DataStore::getValue("Building0_Occupant1_Activity");
   EXPECT_EQ(activity, 9);
   s.postTimeStep();
   s.postprocess();
@@ -42,12 +42,12 @@ TEST(Simulation, HeatGainsOnly) {
     s.preTimeStep();
     s.timeStep();
     EXPECT_EQ(SimulationConfig::getStepCount(), i);
-    int activity = DataStore::getValue("Occupant_Activity_1");
+    int activity = DataStore::getValue("Building0_Occupant1_Activity");
 
     s.postTimeStep();
     if (activity < 9) {
       EXPECT_EQ(activity, 3);
-      ASSERT_NEAR(DataStore::getValue("AgentGains1"), 77.046341167, 0.001);
+      ASSERT_NEAR(DataStore::getValue("Building0_Occupant1_HeatGains"), 77.046341167, 0.001);
       ASSERT_NEAR(DataStore::getValue("Occupant_Metabolic_Rate_1"), 70, 0.001);
       ASSERT_NEAR(DataStore::getValue("Occupant_clo_1"), 1, 0.001);
       ASSERT_NEAR(DataStore::getValue("Occupant_ppd_1"), 7.835778219685593, 0.001);
@@ -83,7 +83,7 @@ TEST(Simulation, HeatGainsWindowsOnly) {
   s.preTimeStep();
   s.timeStep();
   EXPECT_EQ(SimulationConfig::getStepCount(), 0.0);
-  int WindowState = DataStore::getValue("Block1:Zone1WindowState0");
+  int WindowState = DataStore::getValue("Building0_Block1:Zone1WindowState0");
   EXPECT_EQ(WindowState, 0);
   s.postTimeStep();
   s.postprocess();
@@ -104,7 +104,7 @@ TEST(Simulation, HeatGainsWindowsOnly) {
     s.preTimeStep();
     s.timeStep();
     EXPECT_EQ(SimulationConfig::getStepCount(), i);
-    WindowState = DataStore::getValue("Block1:Zone1WindowState0");
+    WindowState = DataStore::getValue("Building0_Block1:Zone1WindowState0");
     // EXPECT_EQ(WindowState, 0);
     s.postTimeStep();
   }
@@ -119,8 +119,8 @@ TEST(Simulation, HeatGainsWindowsOnly) {
     s.preTimeStep();
     s.timeStep();
     EXPECT_EQ(SimulationConfig::getStepCount(), i);
-    WindowState = DataStore::getValue("Block1:Zone1WindowState0");
-    int occs = DataStore::getValue("Block1:Zone1NumberOfOccupants");
+    WindowState = DataStore::getValue("Building0_Block1:Zone1WindowState0");
+    int occs = DataStore::getValue("Building0_Block1:Zone1NumberOfOccupants");
     if (occs > 0) {
       //  EXPECT_EQ(WindowState, 1);
       break;

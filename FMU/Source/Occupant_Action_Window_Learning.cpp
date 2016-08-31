@@ -20,6 +20,8 @@ void Occupant_Action_Window_Learning::setup(const int id) {
   learn.setFilename("window-" + zoneIdStr + "-");
   learn.setStates(400);
   learn.setId(id);
+  learn.setUpdate(SimulationConfig::info.learn);
+  learn.setEpsilon(SimulationConfig::info.learnep);
   learn.setup();
   window_name = "Weekday-" + zoneIdStr + "-_pmv" + std::to_string(id);
   DataStore::addVariable(window_name);

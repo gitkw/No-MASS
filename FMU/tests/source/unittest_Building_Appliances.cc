@@ -17,8 +17,8 @@ void Test_Building_Appliances::SetUp() {
   SimulationConfig::reset();
   SimulationConfig::parseConfiguration("SimulationConfig.xml");
   SimulationConfig::stepCount = -1;
-  appliances.setBuildingID(0);
-  appliances.setup();
+  buildingStruct b = SimulationConfig::buildings[0];
+  appliances.setup(b);
   appliances.preprocess();
 }
 
@@ -27,11 +27,13 @@ void Test_Building_Appliances::AfterConfiguration() {}
 TEST_F(Test_Building_Appliances, power) {
   SimulationConfig::step();
   appliances.addCurrentStates(8);
-  appliances.stepLarge();
+  appliances.stepLocal();
 
   for (int i = 1; i < 10000; i++) {
     SimulationConfig::step();
     appliances.addCurrentStates(8);
-    appliances.stepLarge();
+      appliances.stepLocal();
+      appliances.stepLocalNegotiation();
+      appliances.postTimeStep();
   }
 }

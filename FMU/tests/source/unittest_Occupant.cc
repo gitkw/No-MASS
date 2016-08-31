@@ -31,7 +31,6 @@ class Test_Occupant : public ::testing::Test {
 void Test_Occupant::SetUp() {
   SimulationConfig::reset();
     v.clear();
-
 }
 
 void Test_Occupant::SetUpSim2() {
@@ -118,19 +117,20 @@ void Test_Occupant::SetUpSim2() {
   v.push_back(z_OutPtr);
 
 
-    Occupant agent;
-    agent.setBuildingID(0);
-  agent.setup(0, v);
+    agentStruct agentS = SimulationConfig::buildings[0].agents[0];
+  Occupant agent;
+  agent.setBuildingID(0);
+  agent.setup(0, agentS, v);
   agent.step();
-    
-    Occupant agentb;
-    agentb.setBuildingID(0);
-  agentb.setup(1, v);
+
+  agentS = SimulationConfig::buildings[0].agents[1];
+  Occupant agentb;
+  agentb.setBuildingID(0);
+  agentb.setup(1, agentS, v);
   agentb.step();
 
   a = std::make_shared<Occupant>(agent);
   b = std::make_shared<Occupant>(agentb);
-
 }
 
 void Test_Occupant::SetUpSim4() {
@@ -180,20 +180,20 @@ void Test_Occupant::SetUpSim4() {
   v.push_back(z_OfficePtr2);
   v.push_back(z_OutPtr);
 
+  agentStruct agentS = SimulationConfig::buildings[0].agents[0];
   Occupant agent;
-    
-    agent.setBuildingID(0);
-  agent.setup(0, v);
+  agent.setBuildingID(0);
+  agent.setup(0, agentS, v);
   agent.step();
+
+  agentS = SimulationConfig::buildings[0].agents[1];
   Occupant agentb;
-    
-    agentb.setBuildingID(0);
-    agentb.setup(1, v);
+  agentb.setBuildingID(0);
+  agentb.setup(1, agentS, v);
   agentb.step();
 
   a = std::make_shared<Occupant>(agent);
   b = std::make_shared<Occupant>(agentb);
-
 }
 
 TEST_F(Test_Occupant, windows) {
