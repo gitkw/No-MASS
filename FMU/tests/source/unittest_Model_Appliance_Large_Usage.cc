@@ -68,22 +68,22 @@ TEST_F(Test_Appliance_Usage, on) {
     for (int timeStep = 0; timeStep < 144; timeStep++) {
       switch (app) {
         case 0:
-            //ASSERT_NEAR(on[timeStep] / sims, onCooker[timeStep], 0.005);
+            //EXPECT_NEAR(on[timeStep] / sims, onCooker[timeStep], 0.005);
           break;
         case 1:
-            //ASSERT_NEAR(on[timeStep] / sims, onMicroWave[timeStep], 0.004);
+            //EXPECT_NEAR(on[timeStep] / sims, onMicroWave[timeStep], 0.004);
           break;
         case 2:
-            //ASSERT_NEAR(on[timeStep] / sims, onTv[timeStep], 0.005);
+            //EXPECT_NEAR(on[timeStep] / sims, onTv[timeStep], 0.005);
           break;
         case 3:
-            //ASSERT_NEAR(on[timeStep] / sims, onWashingMachine[timeStep], 0.004);
+            //EXPECT_NEAR(on[timeStep] / sims, onWashingMachine[timeStep], 0.004);
           break;
         case 4:
-            //ASSERT_NEAR(on[timeStep] / sims, onDishWasher[timeStep], 0.005);
+            //EXPECT_NEAR(on[timeStep] / sims, onDishWasher[timeStep], 0.005);
           break;
         case 5:
-            //ASSERT_NEAR(on[timeStep] / sims, onFridge[timeStep], 1);
+            //EXPECT_NEAR(on[timeStep] / sims, onFridge[timeStep], 1);
           break;
       }
       myfile << on[timeStep] / sims;

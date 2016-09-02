@@ -8,13 +8,13 @@
 TEST(Utility, ran) {
   Utility::setSeed(1);
 
-  ASSERT_NEAR(Utility::randomDouble(0, 1), 0.13640703, 0.001);
-  ASSERT_EQ(Utility::randomInt(0, 1), 0);
-  ASSERT_TRUE(Utility::tossACoin());
-  ASSERT_TRUE(Utility::tossACoin());
-  ASSERT_FALSE(Utility::tossACoin());
-  ASSERT_NEAR(Utility::randomDouble(0, 1), 0.4707521, 0.001);
-  //ASSERT_EQ(Utility::randomInt(0, 1000), 777);
+  EXPECT_NEAR(Utility::randomDouble(0, 1), 0.13640703, 0.001);
+  EXPECT_EQ(Utility::randomInt(0, 1), 0);
+  EXPECT_TRUE(Utility::tossACoin());
+  EXPECT_TRUE(Utility::tossACoin());
+  EXPECT_FALSE(Utility::tossACoin());
+  EXPECT_NEAR(Utility::randomDouble(0, 1), 0.4707521, 0.001);
+  //EXPECT_EQ(Utility::randomInt(0, 1000), 777);
 }
 
 
@@ -40,9 +40,9 @@ TEST(Utility, Days) {
                                             SimulationConfig::info.endMonth);
 */
   int days = Utility::calculateNumberOfDays(1, 1, 1, 1);
-  ASSERT_EQ(days, 1);
+  EXPECT_EQ(days, 1);
   days = Utility::calculateNumberOfDays(1, 1, 5, 1);
-  ASSERT_EQ(days, 5);
+  EXPECT_EQ(days, 5);
   days = Utility::calculateNumberOfDays(1, 1, 5, 2);
-  ASSERT_EQ(days, 36);
+  EXPECT_EQ(days, 36);
 }

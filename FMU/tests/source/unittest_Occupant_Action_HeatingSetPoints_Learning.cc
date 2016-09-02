@@ -56,5 +56,5 @@ TEST_F(Test_Occupant_Action_HeatingSetPoints_Learning, Learn) {
 
   aal.step(z_Kitchen, true);
   heating = aal.getResult();
-//  ASSERT_NEAR(heating, 21, 0.1);
+//  EXPECT_NEAR(heating, 21, 0.1);
 }

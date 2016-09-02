@@ -7,8 +7,8 @@
 TEST(Log, error) {
   LOG.reset();
   LOG << "hello";
-  EXPECT_EQ(LOG.getError(), false);
+  EXPECT_FALSE(LOG.getError());
   LOG.error();
-  EXPECT_EQ(LOG.getError(), true);
+  EXPECT_TRUE(LOG.getError());
   LOG.reset();
 }

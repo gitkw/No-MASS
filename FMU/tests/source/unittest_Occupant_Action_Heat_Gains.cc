@@ -47,8 +47,8 @@ TEST_F(Test_Occupant_Action_Heat_Gains, HeatGains) {
   // aahg.prestep(double clo, double metabolicRate)
   aahg.prestep(1.0, 0.1);
   aahg.step(z_Kitchen, true);
-  ASSERT_NEAR(aahg.getResult(), 85.5, 0.01);
+  EXPECT_NEAR(aahg.getResult(), 85.5, 0.01);
   SimulationConfig::step();
   aahg.step(z_Kitchen, true);
-  ASSERT_NEAR(aahg.getResult(), 85.5, 0.01);
+  EXPECT_NEAR(aahg.getResult(), 85.5, 0.01);
 }

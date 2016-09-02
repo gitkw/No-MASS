@@ -33,17 +33,17 @@ TEST_F(Appliance_Small_Usage, weibull) {
   double shape = 0.7429984677226016;
   double scale = 10.735999774030896;
 
-  ASSERT_NEAR(smallApp.weibullInvCdf(loc, shape, scale), 98.7442, 0.001);
+  EXPECT_NEAR(smallApp.weibullInvCdf(loc, shape, scale), 98.7442, 0.001);
 }
 
 TEST_F(Appliance_Small_Usage, weibullFromFile) {
   Utility::setSeed(0);
-  ASSERT_NEAR(smallApp.durationAtState(0), 98.7442, 0.001);
+  EXPECT_NEAR(smallApp.durationAtState(0), 98.7442, 0.001);
 }
 
 TEST_F(Appliance_Small_Usage, stateFromFile) {
   Utility::setSeed(0);
-  ASSERT_EQ(smallApp.calculateStateAtTenMin(0), 10);
+  EXPECT_EQ(smallApp.calculateStateAtTenMin(0), 10);
 }
 
 TEST_F(Appliance_Small_Usage, All) {

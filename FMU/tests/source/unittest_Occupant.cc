@@ -215,13 +215,13 @@ TEST_F(Test_Occupant, windows) {
     for (std::shared_ptr<Building_Zone> &zone : v) {
       if (zone->getId() > 0) {
         if (a->currentlyInZone(*zone)) {
-          ASSERT_TRUE(a->isActionWindow(*zone));
+          EXPECT_TRUE(a->isActionWindow(*zone));
         }
         if (a->previouslyInZone(*zone)) {
-          ASSERT_TRUE(a->isActionWindow(*zone));
+          EXPECT_TRUE(a->isActionWindow(*zone));
         }
         if (!a->currentlyInZone(*zone) && !a->previouslyInZone(*zone)) {
-          ASSERT_FALSE(a->isActionWindow(*zone));
+          EXPECT_FALSE(a->isActionWindow(*zone));
         }
       }
     }
@@ -241,22 +241,22 @@ TEST_F(Test_Occupant, windowsTwo) {
     for (std::shared_ptr<Building_Zone> &zone : v) {
       if (zone->getId() > 0) {
         if (a->currentlyInZone(*zone)) {
-          ASSERT_TRUE(a->isActionWindow(*zone));
+          EXPECT_TRUE(a->isActionWindow(*zone));
         }
         if (a->previouslyInZone(*zone)) {
-          ASSERT_TRUE(a->isActionWindow(*zone));
+          EXPECT_TRUE(a->isActionWindow(*zone));
         }
         if (!a->currentlyInZone(*zone) && !a->previouslyInZone(*zone)) {
-          ASSERT_FALSE(a->isActionWindow(*zone));
+          EXPECT_FALSE(a->isActionWindow(*zone));
         }
         if (b->currentlyInZone(*zone)) {
-          ASSERT_TRUE(b->isActionWindow(*zone));
+          EXPECT_TRUE(b->isActionWindow(*zone));
         }
         if (b->previouslyInZone(*zone)) {
-          ASSERT_TRUE(b->isActionWindow(*zone));
+          EXPECT_TRUE(b->isActionWindow(*zone));
         }
         if (!b->currentlyInZone(*zone) && !b->previouslyInZone(*zone)) {
-          ASSERT_FALSE(b->isActionWindow(*zone));
+          EXPECT_FALSE(b->isActionWindow(*zone));
         }
       }
     }
@@ -277,10 +277,10 @@ TEST_F(Test_Occupant, office) {
     b->step();
     for (std::shared_ptr<Building_Zone> &zone : v) {
       if (zone->getId() == 2) {
-        ASSERT_FALSE(a->currentlyInZone(*zone));
+        EXPECT_FALSE(a->currentlyInZone(*zone));
       }
       if (zone->getId() == 1) {
-        ASSERT_FALSE(b->currentlyInZone(*zone));
+        EXPECT_FALSE(b->currentlyInZone(*zone));
       }
     }
     a->postTimeStep();

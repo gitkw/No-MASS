@@ -64,7 +64,7 @@ TEST_F(Test_QLearning_HeatingSetPoints, learn) {
 
     ql.setEpsilon(0.0);
     heating = ql.learn();
-  //  ASSERT_NEAR(heating, 21, 0.1);
+  //  EXPECT_NEAR(heating, 21, 0.1);
 }
 
 

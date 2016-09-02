@@ -37,19 +37,20 @@ TEST_F(Test_Occupant_Action_Shades_BDI, ClosedDuringSleep) {
   zs.id = 1;
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   aas.setClosedDuringSleep(true);
 
   activities.push_back(1);
   aas.step(z_Kitchen, true, false);
   aas.doRecipe(activities);
-  ASSERT_GT(aas.getResult(), 0);
+  EXPECT_GT(aas.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(0);
   aas.step(z_Kitchen, true, false);
   aas.doRecipe(activities);
-  ASSERT_EQ(aas.getResult(), 0);
+  EXPECT_EQ(aas.getResult(), 0);
 }
 
 TEST_F(Test_Occupant_Action_Shades_BDI, ClosedDuringWashing) {
@@ -58,6 +59,7 @@ TEST_F(Test_Occupant_Action_Shades_BDI, ClosedDuringWashing) {
   zs.id = 1;
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   aas.setClosedDuringWashing(true);
   aas.getResult();
@@ -65,11 +67,11 @@ TEST_F(Test_Occupant_Action_Shades_BDI, ClosedDuringWashing) {
   activities.push_back(6);
   aas.step(z_Kitchen, true, false);
   aas.doRecipe(activities);
-  ASSERT_EQ(aas.getResult(), 0);
+  EXPECT_EQ(aas.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
   aas.step(z_Kitchen, true, false);
   aas.doRecipe(activities);
-  ASSERT_EQ(aas.getResult(), 1);
+  EXPECT_EQ(aas.getResult(), 1);
 }

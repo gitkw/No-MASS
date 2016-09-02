@@ -75,7 +75,7 @@ TEST_F(Test_Occupant_Zone, oneZone) {
   activities.push_back(6);
   SimulationConfig::step();
   az->step(*z_KitchenPtr, *z_KitchenPtr, activities);
-  ASSERT_FALSE(az->getDesiredWindowState());
+  EXPECT_FALSE(az->getDesiredWindowState());
   az->postTimeStep();
 
   while (!az->getDesiredWindowState() ||
@@ -87,7 +87,7 @@ TEST_F(Test_Occupant_Zone, oneZone) {
       az->postTimeStep();
   }
   int previousDuration = az->getDesiredWindowDuration();
-  ASSERT_GT(previousDuration, 995);
+  EXPECT_GT(previousDuration, 995);
   while (az->getDesiredWindowDuration() > 0) {
     SimulationConfig::step();
     activities.push_back(6);
@@ -96,11 +96,11 @@ TEST_F(Test_Occupant_Zone, oneZone) {
     previousDuration = previousDuration - 5;
     if (previousDuration < 0) previousDuration = 0;
     if (previousDuration > 0) {
-      ASSERT_TRUE(az->getDesiredWindowState());
-      ASSERT_EQ(az->getDesiredWindowDuration(), previousDuration);
+      EXPECT_TRUE(az->getDesiredWindowState());
+      EXPECT_EQ(az->getDesiredWindowDuration(), previousDuration);
     } else {
-      ASSERT_FALSE(az->getDesiredWindowState());
-      ASSERT_EQ(az->getDesiredWindowDuration(), 0);
+      EXPECT_FALSE(az->getDesiredWindowState());
+      EXPECT_EQ(az->getDesiredWindowDuration(), 0);
     }
     az->postTimeStep();
   }
@@ -125,7 +125,7 @@ TEST_F(Test_Occupant_Zone, twoZone) {
   SimulationConfig::step();
   az->step(*z_KitchenPtr, *z_LivingRoomPtr, activities);
 
-  ASSERT_FALSE(az->getDesiredWindowState());
+  EXPECT_FALSE(az->getDesiredWindowState());
   az->postTimeStep();
 
   while (!az->getDesiredWindowState() ||
@@ -138,41 +138,41 @@ TEST_F(Test_Occupant_Zone, twoZone) {
   }
   int previousDuration = az->getDesiredWindowDuration();
 
-  ASSERT_GT(previousDuration, 995);
+  EXPECT_GT(previousDuration, 995);
 
   SimulationConfig::step();
   activities.push_back(6);
   az->step(*z_LivingRoomPtr, *z_KitchenPtr, activities);
   z_KitchenPtr->setWindowState(az->getDesiredWindowState());
-  ASSERT_EQ(az->getDesiredWindowDuration(), previousDuration);
-  ASSERT_GT(az->getDesiredWindowDuration() , 995);
-  ASSERT_TRUE(az->getDesiredWindowState());
+  EXPECT_EQ(az->getDesiredWindowDuration(), previousDuration);
+  EXPECT_GT(az->getDesiredWindowDuration() , 995);
+  EXPECT_TRUE(az->getDesiredWindowState());
   az->postTimeStep();
 
   for (int i = 0; i < 10000; i++) {
     az->step(*z_LivingRoomPtr, *z_LivingRoomPtr, activities);
-    ASSERT_EQ(az->getDesiredWindowDuration(), previousDuration);
-    ASSERT_GT(az->getDesiredWindowDuration() , 995);
-    ASSERT_TRUE(az->getDesiredWindowState());
+    EXPECT_EQ(az->getDesiredWindowDuration(), previousDuration);
+    EXPECT_GT(az->getDesiredWindowDuration() , 995);
+    EXPECT_TRUE(az->getDesiredWindowState());
     az->postTimeStep();
   }
   az->step(*z_KitchenPtr, *z_LivingRoomPtr, activities);
   z_KitchenPtr->setWindowState(az->getDesiredWindowState());
   previousDuration = az->getDesiredWindowDuration();
-  ASSERT_EQ(az->getDesiredWindowDuration(), previousDuration);
-  ASSERT_TRUE(az->getDesiredWindowState());
+  EXPECT_EQ(az->getDesiredWindowDuration(), previousDuration);
+  EXPECT_TRUE(az->getDesiredWindowState());
   az->postTimeStep();
 
   az->step(*z_KitchenPtr, *z_KitchenPtr, activities);
   z_KitchenPtr->setWindowState(az->getDesiredWindowState());
-  ASSERT_EQ(az->getDesiredWindowDuration(), previousDuration - 5);
-  ASSERT_TRUE(az->getDesiredWindowState());
+  EXPECT_EQ(az->getDesiredWindowDuration(), previousDuration - 5);
+  EXPECT_TRUE(az->getDesiredWindowState());
   az->postTimeStep();
 
   z_KitchenPtr->setWindowState(0);
   az->step(*z_KitchenPtr, *z_KitchenPtr, activities);
-  ASSERT_EQ(az->getDesiredWindowDuration(), 0);
-  ASSERT_FALSE(az->getDesiredWindowState());
+  EXPECT_EQ(az->getDesiredWindowDuration(), 0);
+  EXPECT_FALSE(az->getDesiredWindowState());
   az->postTimeStep();
 
   while (!az->getDesiredWindowState() ||
@@ -182,16 +182,16 @@ TEST_F(Test_Occupant_Zone, twoZone) {
     az->postTimeStep();
   }
   previousDuration = az->getDesiredWindowDuration();
-  ASSERT_EQ(az->getDesiredWindowDuration(), previousDuration);
-  ASSERT_TRUE(az->getDesiredWindowState());
+  EXPECT_EQ(az->getDesiredWindowDuration(), previousDuration);
+  EXPECT_TRUE(az->getDesiredWindowState());
   az->postTimeStep();
   z_KitchenPtr->setWindowState(0);
   az->step(*z_KitchenPtr, *z_KitchenPtr, activities);
-  ASSERT_FALSE(az->getDesiredWindowState());
+  EXPECT_FALSE(az->getDesiredWindowState());
   az->postTimeStep();
   z_KitchenPtr->setWindowState(1);
   az->step(*z_KitchenPtr, *z_KitchenPtr, activities);
-  ASSERT_FALSE(az->getDesiredWindowState());
+  EXPECT_FALSE(az->getDesiredWindowState());
   az->postTimeStep();
 
   for (int i = 0; i < 100000; i++) {
@@ -204,7 +204,7 @@ TEST_F(Test_Occupant_Zone, twoZone) {
     int second = az->getDesiredWindowDuration();
     az->postTimeStep();
     if (first > 0 && second > 0) {
-      ASSERT_FALSE(first == second);
+      EXPECT_FALSE(first == second);
     }
   }
   for (int i = 0; i < 100000; i++) {
@@ -217,7 +217,7 @@ TEST_F(Test_Occupant_Zone, twoZone) {
     int second = az->getDesiredWindowDuration();
     az->postTimeStep();
     if (first > 0 && second > 0) {
-      ASSERT_FALSE(first == second);
+      EXPECT_FALSE(first == second);
     }
   }
 
@@ -231,7 +231,7 @@ TEST_F(Test_Occupant_Zone, twoZone) {
     int second = az->getDesiredWindowDuration();
     az->postTimeStep();
     if (first > 0 && second > 0) {
-      //  ASSERT_FALSE(first == second);
+      //  EXPECT_FALSE(first == second);
     }
   }
 }
