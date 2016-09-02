@@ -21,7 +21,7 @@ void Test_Occupant_Action_Window_Stochastic::SetUp() {
   SimulationConfig::reset();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   SimulationConfig::info.windows = false;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
@@ -46,6 +46,7 @@ TEST_F(Test_Occupant_Action_Window_Stochastic, Arrival) {
   zs.id = 1;
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   z_Kitchen.setWindowState(0);
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);

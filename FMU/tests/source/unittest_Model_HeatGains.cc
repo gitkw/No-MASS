@@ -18,9 +18,9 @@ TEST(HeatGains, test) {
     double heatgains = h.getAllHeatGains();
     double ppd = h.getPpd();
     double pmv = h.getPmv();
-    ASSERT_NEAR(heatgains, 69.678744, 0.001);
-    ASSERT_NEAR(ppd, 100, 0.001);
-    ASSERT_NEAR(pmv, -7.8784461, 0.001);
+    EXPECT_NEAR(heatgains, 69.678744, 0.001);
+    EXPECT_NEAR(ppd, 100, 0.001);
+    EXPECT_NEAR(pmv, -7.8784461, 0.001);
 }
 
 
@@ -37,9 +37,9 @@ TEST(HeatGains, test2) {
   double heatgains = h.getAllHeatGains();
   double ppd = h.getPpd();
   double pmv = h.getPmv();
-  //  ASSERT_NEAR(heatgains, 69.5992,0.001);
-  //  ASSERT_NEAR(ppd, 100,0.001);
-  ASSERT_NEAR(pmv, -0.126434037, 0.001);
+  //  EXPECT_NEAR(heatgains, 69.5992,0.001);
+  //  EXPECT_NEAR(ppd, 100,0.001);
+  EXPECT_NEAR(pmv, -0.126434037, 0.001);
 }
 
 
@@ -56,10 +56,10 @@ TEST(HeatGains, test3) {
   double heatgains = h.getAllHeatGains();
   double ppd = h.getPpd();
   double pmv = h.getPmv();
-  //  ASSERT_NEAR(heatgains, 69.5992,0.001);
-  //  ASSERT_NEAR(ppd, 100,0.001);
-  //ASSERT_NEAR(pmv, -0.06860287, 0.001);
-  ASSERT_NEAR(pmv, 0.046210610, 0.001);
+  //  EXPECT_NEAR(heatgains, 69.5992,0.001);
+  //  EXPECT_NEAR(ppd, 100,0.001);
+  //EXPECT_NEAR(pmv, -0.06860287, 0.001);
+  EXPECT_NEAR(pmv, 0.046210610, 0.001);
 }
 
 TEST(HeatGains, test4) {
@@ -75,10 +75,10 @@ TEST(HeatGains, test4) {
   double heatgains = h.getAllHeatGains();
   double ppd = h.getPpd();
   double pmv = h.getPmv();
-  //  ASSERT_NEAR(heatgains, 69.5992,0.001);
-  //  ASSERT_NEAR(ppd, 100,0.001);
-  //ASSERT_NEAR(pmv, -0.06860287, 0.001);
-  ASSERT_NEAR(pmv, 0.57141005349, 0.001);
+  //  EXPECT_NEAR(heatgains, 69.5992,0.001);
+  //  EXPECT_NEAR(ppd, 100,0.001);
+  //EXPECT_NEAR(pmv, -0.06860287, 0.001);
+  EXPECT_NEAR(pmv, 0.57141005349, 0.001);
 }
 
 TEST(HeatGains, test5) {
@@ -94,8 +94,8 @@ TEST(HeatGains, test5) {
   double heatgains = h.getAllHeatGains();
   double ppd = h.getPpd();
   double pmv = h.getPmv();
-  //  ASSERT_NEAR(heatgains, 69.5992,0.001);
-  //  ASSERT_NEAR(ppd, 100,0.001);
-  //ASSERT_NEAR(pmv, -0.06860287, 0.001);
-  ASSERT_NEAR(pmv, -2.5655824, 0.001);
+  //  EXPECT_NEAR(heatgains, 69.5992,0.001);
+  //  EXPECT_NEAR(ppd, 100,0.001);
+  //EXPECT_NEAR(pmv, -0.06860287, 0.001);
+  EXPECT_NEAR(pmv, -2.5655824, 0.001);
 }

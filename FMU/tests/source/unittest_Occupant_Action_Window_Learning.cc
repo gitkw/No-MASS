@@ -19,11 +19,11 @@ void Test_Occupant_Action_Window_Learning::SetUp() {
   SimulationConfig::buildings[0].agents.clear();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   SimulationConfig::info.windows = false;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
-  SimulationConfig::info.learnep = 0.1;
+  SimulationConfig::info.learnep = 0.0;
   SimulationConfig::info.learn = 1;
   DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
   DataStore::addVariable("hour");
@@ -45,6 +45,7 @@ TEST_F(Test_Occupant_Action_Window_Learning, Learn) {
 
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   activities.push_back(4);
 

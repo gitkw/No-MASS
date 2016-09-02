@@ -21,7 +21,7 @@ void Test_Occupant_Action_Window_Stochastic_BDI::SetUp() {
   SimulationConfig::reset();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   SimulationConfig::info.windows = false;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
@@ -46,6 +46,7 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, Arrival) {
   zs.id = 1;
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   z_Kitchen.setWindowState(0);
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);
@@ -73,19 +74,20 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowDuringCooking) {
   zs.id = 1;
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   aaw.setOpenDuringCooking(true);
 
   activities.push_back(4);
   aaw.step(z_Kitchen, true, false, activities);
   aaw.doRecipe(activities);
-  ASSERT_EQ(aaw.getResult(), 1);
+  EXPECT_EQ(aaw.getResult(), 1);
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, false, activities);
   aaw.doRecipe(activities);
-  ASSERT_EQ(aaw.getResult(), 0);
+  EXPECT_EQ(aaw.getResult(), 0);
 }
 
 TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowAfterShower) {
@@ -94,6 +96,7 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowAfterShower) {
   zs.id = 1;
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   aaw.setOpenDuringWashing(true);
   aaw.getResult();
@@ -101,37 +104,37 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowAfterShower) {
   activities.push_back(6);
   aaw.step(z_Kitchen, true, false, activities);
   aaw.doRecipe(activities);
-  ASSERT_EQ(aaw.getResult(), 0);
+  EXPECT_EQ(aaw.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(6);
   aaw.step(z_Kitchen, true, false, activities);
   aaw.doRecipe(activities);
-  ASSERT_EQ(aaw.getResult(), 0);
+  EXPECT_EQ(aaw.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, false, activities);
   aaw.doRecipe(activities);
-  ASSERT_EQ(aaw.getResult(), 1);
+  EXPECT_EQ(aaw.getResult(), 1);
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, false, activities);
   aaw.doRecipe(activities);
-  ASSERT_EQ(aaw.getResult(), 0);
+  EXPECT_EQ(aaw.getResult(), 0);
 }
 
 
 
 TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowAfterShower2) {
-  DataStore::addVariable("Block1:BathZoneMeanAirTemperature");
-  DataStore::addVariable("Block1:BathZoneAirRelativeHumidity");
-  DataStore::addVariable("Block1:BathZoneMeanRadiantTemperature");
+  DataStore::addVariable("Block2:BathroomZoneMeanAirTemperature");
+  DataStore::addVariable("Block2:BathroomZoneAirRelativeHumidity");
+  DataStore::addVariable("Block2:BathroomZoneMeanRadiantTemperature");
 
-  DataStore::addValue("Block1:BathZoneMeanAirTemperature", 18);
-  DataStore::addValue("Block1:BathZoneAirRelativeHumidity", 18);
-  DataStore::addValue("Block1:BathZoneMeanRadiantTemperature", 18);
+  DataStore::addValue("Block2:BathroomZoneMeanAirTemperature", 18);
+  DataStore::addValue("Block2:BathroomZoneAirRelativeHumidity", 18);
+  DataStore::addValue("Block2:BathroomZoneMeanRadiantTemperature", 18);
 
 
   ZoneStruct zs;
@@ -140,12 +143,16 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowAfterShower2) {
   zs.activities = {1, 2, 3};
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
+  z_Kitchen.setIDString(zs.name);
   z_Kitchen.setup(zs);
-  zs.name = "Block1:Bath";
+  zs.name = "Block2:Bathroom";
   zs.id = 2;
   zs.activities = {6};
   Building_Zone z_Bath;
   z_Bath.setName(zs.name);
+  z_Bath.setActive(true);
+  z_Bath.setIDString(zs.name);
   z_Bath.setup(zs);
 
   Occupant_Action_Window_Stochastic_BDI aab;
@@ -162,57 +169,57 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowAfterShower2) {
   activities.push_back(6);
   aaw.step(z_Kitchen, true, false, activities);
   aaw.doRecipe(activities);
-  ASSERT_FALSE(aaw.doRecipe(activities));
-  ASSERT_EQ(aaw.getResult(), 0);
+  EXPECT_FALSE(aaw.doRecipe(activities));
+  EXPECT_EQ(aaw.getResult(), 0);
   aab.step(z_Bath, true, false, activities);
-  ASSERT_FALSE(aab.doRecipe(activities));
-  ASSERT_EQ(aab.getResult(), 0);
+  EXPECT_FALSE(aab.doRecipe(activities));
+  EXPECT_EQ(aab.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(6);
   aaw.step(z_Kitchen, true, false, activities);
-  ASSERT_FALSE(aaw.doRecipe(activities));
-  ASSERT_EQ(aaw.getResult(), 0);
+  EXPECT_FALSE(aaw.doRecipe(activities));
+  EXPECT_EQ(aaw.getResult(), 0);
   aab.step(z_Bath, true, false, activities);
-  ASSERT_FALSE(aab.doRecipe(activities));
-  ASSERT_EQ(aab.getResult(), 0);
+  EXPECT_FALSE(aab.doRecipe(activities));
+  EXPECT_EQ(aab.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, false, activities);
-  ASSERT_FALSE(aaw.doRecipe(activities));
-  ASSERT_EQ(aaw.getResult(), 0);
+  EXPECT_FALSE(aaw.doRecipe(activities));
+  EXPECT_EQ(aaw.getResult(), 0);
   aab.step(z_Bath, true, false, activities);
-  ASSERT_TRUE(aab.doRecipe(activities));
-  ASSERT_EQ(aab.getResult(), 1);
+  EXPECT_TRUE(aab.doRecipe(activities));
+  EXPECT_EQ(aab.getResult(), 1);
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, false, activities);
-  ASSERT_FALSE(aaw.doRecipe(activities));
-  ASSERT_EQ(aaw.getResult(), 0);
+  EXPECT_FALSE(aaw.doRecipe(activities));
+  EXPECT_EQ(aaw.getResult(), 0);
   aab.step(z_Bath, true, false, activities);
-  ASSERT_TRUE(aab.doRecipe(activities));
-  ASSERT_EQ(aab.getResult(), 0);
+  EXPECT_TRUE(aab.doRecipe(activities));
+  EXPECT_EQ(aab.getResult(), 0);
 
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, false, activities);
-  ASSERT_FALSE(aaw.doRecipe(activities));
-  ASSERT_EQ(aaw.getResult(), 0);
+  EXPECT_FALSE(aaw.doRecipe(activities));
+  EXPECT_EQ(aaw.getResult(), 0);
   aab.step(z_Bath, true, false, activities);
-  ASSERT_FALSE(aab.doRecipe(activities));
-  ASSERT_EQ(aab.getResult(), 0);
+  EXPECT_FALSE(aab.doRecipe(activities));
+  EXPECT_EQ(aab.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, false, activities);
-  ASSERT_FALSE(aaw.doRecipe(activities));
-  ASSERT_EQ(aaw.getResult(), 0);
+  EXPECT_FALSE(aaw.doRecipe(activities));
+  EXPECT_EQ(aaw.getResult(), 0);
   aab.step(z_Bath, true, false, activities);
-  ASSERT_FALSE(aab.doRecipe(activities));
-  ASSERT_EQ(aab.getResult(), 0);
+  EXPECT_FALSE(aab.doRecipe(activities));
+  EXPECT_EQ(aab.getResult(), 0);
 }
 
 TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, multiZone) {
@@ -227,6 +234,7 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, multiZone) {
   zs.activities = {1, 2, 3};
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
 
   aaw.getResult();
@@ -235,8 +243,8 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, multiZone) {
     activities.push_back(0);
     aaw.step(z_Kitchen, false, false, activities);
     z_Kitchen.setWindowState(aaw.getResult());
-    ASSERT_FALSE(aaw.doRecipe(activities));
-    ASSERT_EQ(aaw.getResult(), 0);
+    EXPECT_FALSE(aaw.doRecipe(activities));
+    EXPECT_EQ(aaw.getResult(), 0);
   }
 
   while (aaw.getResult() == 0 || aaw.durationOpen() < 1000) {
@@ -244,58 +252,58 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, multiZone) {
     activities.push_back(1);
     aaw.step(z_Kitchen, true, false, activities);
     z_Kitchen.setWindowState(aaw.getResult());
-    ASSERT_FALSE(aaw.doRecipe(activities));
+    EXPECT_FALSE(aaw.doRecipe(activities));
   }
-  ASSERT_EQ(aaw.getResult(), 1);
-  ASSERT_EQ(aaw.durationOpen(), 1007);
+  EXPECT_EQ(aaw.getResult(), 1);
+  EXPECT_EQ(aaw.durationOpen(), 1007);
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, true, activities);
   z_Kitchen.setWindowState(aaw.getResult());
-  ASSERT_FALSE(aaw.doRecipe(activities));
-  ASSERT_EQ(aaw.durationOpen(), 1002);
-  ASSERT_EQ(aaw.getResult(), 1);
+  EXPECT_FALSE(aaw.doRecipe(activities));
+  EXPECT_EQ(aaw.durationOpen(), 1002);
+  EXPECT_EQ(aaw.getResult(), 1);
 
   SimulationConfig::step();
   activities.push_back(2);
   aaw.step(z_Kitchen, true, true, activities);
   z_Kitchen.setWindowState(aaw.getResult());
-  ASSERT_FALSE(aaw.doRecipe(activities));
-  ASSERT_EQ(aaw.durationOpen(), 997);
-  ASSERT_EQ(aaw.getResult(), 1);
+  EXPECT_FALSE(aaw.doRecipe(activities));
+  EXPECT_EQ(aaw.durationOpen(), 997);
+  EXPECT_EQ(aaw.getResult(), 1);
   int prevDuration =  aaw.durationOpen();
   while (aaw.durationOpen() > 0) {
     SimulationConfig::step();
     activities.push_back(2);
     aaw.step(z_Kitchen, true, true, activities);
     z_Kitchen.setWindowState(aaw.getResult());
-    ASSERT_FALSE(aaw.doRecipe(activities));
+    EXPECT_FALSE(aaw.doRecipe(activities));
     prevDuration = prevDuration - 5;
     if (prevDuration < 0 ) prevDuration = 0;
-    ASSERT_EQ(aaw.durationOpen(), prevDuration);
+    EXPECT_EQ(aaw.durationOpen(), prevDuration);
     if (prevDuration > 0) {
-      ASSERT_EQ(aaw.getResult(), 1);
+      EXPECT_EQ(aaw.getResult(), 1);
     } else {
-      ASSERT_EQ(aaw.getResult(), 0);
+      EXPECT_EQ(aaw.getResult(), 0);
     }
   }
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, false, activities);
-  ASSERT_FALSE(aaw.doRecipe(activities));
-  ASSERT_EQ(aaw.getResult(), 0);
+  EXPECT_FALSE(aaw.doRecipe(activities));
+  EXPECT_EQ(aaw.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, false, activities);
-  ASSERT_FALSE(aaw.doRecipe(activities));
-  ASSERT_EQ(aaw.getResult(), 0);
+  EXPECT_FALSE(aaw.doRecipe(activities));
+  EXPECT_EQ(aaw.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
   aaw.step(z_Kitchen, true, false, activities);
-  ASSERT_FALSE(aaw.doRecipe(activities));
-  ASSERT_EQ(aaw.getResult(), 0);
+  EXPECT_FALSE(aaw.doRecipe(activities));
+  EXPECT_EQ(aaw.getResult(), 0);
 }

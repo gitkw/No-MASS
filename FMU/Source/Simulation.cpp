@@ -43,12 +43,12 @@ void Simulation::preprocess() {
   }
 }
 
-void Simulation::parseConfiguration(const std::string file) {
+void Simulation::parseConfiguration(const std::string & file) {
     SimulationConfig::parseConfiguration(file);
 }
 
 void Simulation::setupSimulationModel() {
-    SimulationConfig::stepCount = -1;
+    SimulationConfig::setStepCount(-1);
     DataStore::addVariable("day");
     DataStore::addVariable("month");
     DataStore::addVariable("hour");

@@ -28,7 +28,7 @@ TEST(StateMachine, statesPage) {
   z.setup(zs);
 
   ZoneStruct zs_out;
-  zs_out.name = "Out";
+  zs_out.name = "out";
   zs_out.id = 0;
   Building_Zone z_out;
   z_out.setName(zs_out.name);
@@ -59,22 +59,20 @@ TEST(StateMachine, statesPage) {
   EXPECT_EQ(s.getId(), 9);
   EXPECT_EQ(s.getMetabolicRate(), 0);
   EXPECT_EQ(s.getClo(), 1);
-  EXPECT_EQ(s.getLocation(), "Out");
-  EXPECT_EQ(s.getActivity(), "Out");
+  EXPECT_TRUE(s.isInActivity("Out"));
 
 
   s = stateMachine.transistionTo(3);
   EXPECT_EQ(s.getId(), 3);
   EXPECT_EQ(s.getMetabolicRate(), 70);
   EXPECT_EQ(s.getClo(), 1);
-  EXPECT_EQ(s.getActivity(), "IT");
-  EXPECT_EQ(s.getLocation(), "Block1:Zone1");
+  EXPECT_TRUE(s.isInActivity("IT"));
 //  EXPECT_EQ(s.getZonePtr()->getName(), "Block1:Zone1");
 }
 
 TEST(StateMachine, statesActivity) {
   ZoneStruct zs_out;
-  zs_out.name = "Out";
+  zs_out.name = "out";
   zs_out.id = 1;
   Building_Zone z_out;
   z_out.setName(zs_out.name);
@@ -163,60 +161,50 @@ TEST(StateMachine, statesActivity) {
   EXPECT_EQ(s.getId(), 9);
   EXPECT_EQ(s.getMetabolicRate(), 0);
   EXPECT_EQ(s.getClo(), 1);
-  EXPECT_EQ(s.getLocation(), "Out");
-  EXPECT_EQ(s.getActivity(), "Out");
+  EXPECT_TRUE(s.isInActivity("Out"));
   s = stateMachine.transistionTo(8);
   EXPECT_EQ(s.getId(), 8);
   EXPECT_EQ(s.getMetabolicRate(), 116);
   EXPECT_EQ(s.getClo(), 1);
-  EXPECT_EQ(s.getLocation(), "Block2:Bathroom");
-  EXPECT_EQ(s.getActivity(), "WashingAppliance");
+  EXPECT_TRUE(s.isInActivity("WashingAppliance"));
   s = stateMachine.transistionTo(7);
   EXPECT_EQ(s.getId(), 7);
   EXPECT_EQ(s.getMetabolicRate(), 93);
   EXPECT_EQ(s.getClo(), 1);
-  EXPECT_EQ(s.getLocation(), "Block1:LivingRoom");
-  EXPECT_EQ(s.getActivity(), "Metabolic");
+  EXPECT_TRUE(s.isInActivity("Metabolic"));
   s = stateMachine.transistionTo(6);
   EXPECT_EQ(s.getId(), 6);
   EXPECT_EQ(s.getMetabolicRate(), 116);
   EXPECT_EQ(s.getClo(), 0);
-  EXPECT_EQ(s.getLocation(), "Block2:Bathroom");
-  EXPECT_EQ(s.getActivity(), "Washing");
+  EXPECT_TRUE(s.isInActivity("Washing"));
   s = stateMachine.transistionTo(5);
   EXPECT_EQ(s.getId(), 5);
   EXPECT_EQ(s.getMetabolicRate(), 116);
   EXPECT_EQ(s.getClo(), 1);
-  EXPECT_EQ(s.getLocation(), "Block1:Kitchen");
-  EXPECT_EQ(s.getActivity(), "Cleaning");
+  EXPECT_TRUE(s.isInActivity("Cleaning"));
   s = stateMachine.transistionTo(4);
   EXPECT_EQ(s.getId(), 4);
   EXPECT_EQ(s.getMetabolicRate(), 116);
   EXPECT_EQ(s.getClo(), 1);
-  EXPECT_EQ(s.getLocation(), "Block1:Kitchen");
-  EXPECT_EQ(s.getActivity(), "Cooking");
+  EXPECT_TRUE(s.isInActivity("Cooking"));
   s = stateMachine.transistionTo(3);
   EXPECT_EQ(s.getId(), 3);
   EXPECT_EQ(s.getMetabolicRate(), 70);
   EXPECT_EQ(s.getClo(), 1);
-  EXPECT_EQ(s.getLocation(), "Block2:Office");
-  EXPECT_EQ(s.getActivity(), "IT");
+  EXPECT_TRUE(s.isInActivity("IT"));
   s = stateMachine.transistionTo(2);
   EXPECT_EQ(s.getId(), 2);
   EXPECT_EQ(s.getMetabolicRate(), 70);
   EXPECT_EQ(s.getClo(), 1);
-  EXPECT_EQ(s.getLocation(), "Block1:LivingRoom");
-  EXPECT_EQ(s.getActivity(), "AudioVisual");
+  EXPECT_TRUE(s.isInActivity("AudioVisual"));
   s = stateMachine.transistionTo(1);
   EXPECT_EQ(s.getId(), 1);
   EXPECT_EQ(s.getMetabolicRate(), 58);
   EXPECT_EQ(s.getClo(), 1);
-  EXPECT_EQ(s.getLocation(), "Block1:LivingRoom");
-  EXPECT_EQ(s.getActivity(), "Passive");
+  EXPECT_TRUE(s.isInActivity("Passive"));
   s = stateMachine.transistionTo(0);
   EXPECT_EQ(s.getId(), 0);
   EXPECT_EQ(s.getMetabolicRate(), 46);
   EXPECT_EQ(s.getClo(), 2.55);
-  EXPECT_EQ(s.getLocation(), "Block2:MasterBedroom");
-  EXPECT_EQ(s.getActivity(), "Sleep");
+  EXPECT_TRUE(s.isInActivity("Sleep"));
 }

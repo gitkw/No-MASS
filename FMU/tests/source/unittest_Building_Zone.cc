@@ -12,7 +12,7 @@ TEST(Building_Zone, Name) {
   SimulationConfig::reset();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   SimulationConfig::info.windows = false;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
@@ -23,45 +23,47 @@ TEST(Building_Zone, Name) {
   DataStore::addValue("Block1:KitchenZoneMeanRadiantTemperature", 18);
 
   ZoneStruct zs;
-  zs.name = "Out";
+  zs.name = "out";
   zs.id = 0;
   Building_Zone z_Out;
+  z_Out.setActive(false);
   z_Out.setName(zs.name);
   z_Out.setup(zs);
 
-  ASSERT_EQ(z_Out.getName(), zs.name);
-  ASSERT_EQ(z_Out.isActive(), false);
+  EXPECT_TRUE(z_Out.isNamed(zs.name));
+  EXPECT_FALSE(z_Out.isActive());
 
   zs.name = "Block1:Kitchen";
   zs.id = 1;
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
   z_Kitchen.setup(zs);
-
-  ASSERT_EQ(z_Kitchen.getName(), zs.name);
-  ASSERT_EQ(z_Kitchen.isActive(), true);
-  z_Kitchen.setActive(false);
-  ASSERT_EQ(z_Kitchen.isActive(), false);
   z_Kitchen.setActive(true);
-  ASSERT_EQ(z_Kitchen.isActive(), true);
+
+  EXPECT_TRUE(z_Kitchen.isNamed(zs.name));
+  EXPECT_TRUE(z_Kitchen.isActive());
+  z_Kitchen.setActive(false);
+  EXPECT_FALSE(z_Kitchen.isActive());
+  z_Kitchen.setActive(true);
+  EXPECT_TRUE(z_Kitchen.isActive());
   z_Kitchen.setCurrentOccupantGains(120);
-  ASSERT_EQ(z_Kitchen.getCurrentOccupantGains(), 120);
+  EXPECT_EQ(z_Kitchen.getCurrentOccupantGains(), 120);
   z_Kitchen.setGroundFloor(true);
-  ASSERT_EQ(z_Kitchen.getGroundFloor(), true);
+  EXPECT_TRUE(z_Kitchen.getGroundFloor());
 
   // z_Kitchen.setWindowDurationOpen(300.0);
-  // ASSERT_EQ(z_Kitchen.getWindowDurationOpen(), 300);
+  // EXPECT_EQ(z_Kitchen.getWindowDurationOpen(), 300);
 
   z_Kitchen.setWindowState(true);
-  ASSERT_EQ(z_Kitchen.getWindowState(), 1);
+  EXPECT_EQ(z_Kitchen.getWindowState(), 1);
   z_Kitchen.setWindowState(false);
-  ASSERT_EQ(z_Kitchen.getWindowState(), 0);
+  EXPECT_EQ(z_Kitchen.getWindowState(), 0);
   z_Kitchen.setLightState(true);
-  ASSERT_EQ(z_Kitchen.getLightState(), 1);
+  EXPECT_EQ(z_Kitchen.getLightState(), 1);
   z_Kitchen.setLightState(false);
-  ASSERT_EQ(z_Kitchen.getLightState(), 0);
+  EXPECT_EQ(z_Kitchen.getLightState(), 0);
   z_Kitchen.setBlindState(0.67);
-  ASSERT_EQ(z_Kitchen.getBlindState(), 0.67);
+  EXPECT_EQ(z_Kitchen.getBlindState(), 0.67);
   z_Kitchen.setOccupantFraction(0.55);
-  ASSERT_NEAR(z_Kitchen.getOccupantFraction(), 0.55, 0.001);
+  EXPECT_NEAR(z_Kitchen.getOccupantFraction(), 0.55, 0.001);
 }

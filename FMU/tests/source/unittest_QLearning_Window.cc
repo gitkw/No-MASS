@@ -41,6 +41,7 @@ TEST_F(Test_QLearning_Window, learn) {
     zs.id = 1;
     Building_Zone z_Kitchen;
     z_Kitchen.setName(zs.name);
+    z_Kitchen.setActive(true);
     z_Kitchen.setup(zs);
 
     double result = 1;

@@ -45,9 +45,6 @@ class Occupant : public Agent {
     double getCurrentRadientGains(const Building_Zone &zone) const;
     double getPower() const;
 
-    std::string getLocationType(int step, StateMachine *sm);
-    std::string getLocationName(int step, StateMachine *sm);
-
  private:
     int action;
     bool heatState;
@@ -67,6 +64,9 @@ class Occupant : public Agent {
     State state; /** Occupants current state */
     std::shared_ptr<Building_Zone> zonePtrPrevious;
 
+    std::string idStringActivity;
+    std::string idStringHeatGains;
+
     void model_presenceFromPage(const agentStruct &agent);
     void model_pastAndFutureDurations();
     void model_activity(const agentStruct &agent);
@@ -80,7 +80,6 @@ class Occupant : public Agent {
     double calculateExternalShadeInteractionsOnZone(const Building_Zone &zone);
     double calculateMetabolicHeatGainsOnZone(const Building_Zone &zone);
     double getPMV(const Building_Zone &zone) const;
-    std::string updateLocation(const State& state) const;
 
     StateMachine stateMachine;
 };

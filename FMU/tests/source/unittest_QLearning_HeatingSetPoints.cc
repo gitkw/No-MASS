@@ -38,6 +38,7 @@ TEST_F(Test_QLearning_HeatingSetPoints, learn) {
     zs.id = 1;
     Building_Zone z_Kitchen;
     z_Kitchen.setName(zs.name);
+    z_Kitchen.setActive(true);
     z_Kitchen.setup(zs);
 
     DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature", 1);
@@ -64,7 +65,7 @@ TEST_F(Test_QLearning_HeatingSetPoints, learn) {
 
     ql.setEpsilon(0.0);
     heating = ql.learn();
-  //  ASSERT_NEAR(heating, 21, 0.1);
+  //  EXPECT_NEAR(heating, 21, 0.1);
 }
 
 

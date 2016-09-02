@@ -21,7 +21,7 @@ void Test_Building::SetUp() {
     SimulationConfig::info.shading = false;
     SimulationConfig::info.lights = false;
 
-    SimulationConfig::stepCount = -1;
+    SimulationConfig::setStepCount(-1);
     DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature", 21);
     DataStore::addValue("Block1:Zone1ZoneAirRelativeHumidity", 21);
     DataStore::addValue("Block1:Zone1ZoneMeanRadiantTemperature", 21);
@@ -36,9 +36,9 @@ TEST_F(Test_Building, one) {
     Building building;
     building.setup(SimulationConfig::buildings[0]);
 
-    ASSERT_TRUE(building.hasZone("Block1:Zone1"));
-    ASSERT_FALSE(building.hasZone("Block2:Zone1"));
-    ASSERT_TRUE(building.hasZone("Out"));
+    EXPECT_TRUE(building.hasZone("Block1:Zone1"));
+    EXPECT_FALSE(building.hasZone("Block2:Zone1"));
+    EXPECT_TRUE(building.hasZone("out"));
 
     for (int i = 0; i < 100; i++) {
       building.step();
@@ -55,12 +55,12 @@ TEST_F(Test_Building, two) {
     }
 
     EXPECT_EQ(buildings.size(), 2);
-    ASSERT_TRUE(buildings[0].hasZone("Block1:Zone1"));
-    ASSERT_FALSE(buildings[0].hasZone("Block2:Zone1"));
-    ASSERT_TRUE(buildings[0].hasZone("Out"));
-    ASSERT_FALSE(buildings[1].hasZone("Block1:Zone1"));
-    ASSERT_TRUE(buildings[1].hasZone("Block2:Zone1"));
-    ASSERT_TRUE(buildings[1].hasZone("Out"));
+    EXPECT_TRUE(buildings[0].hasZone("Block1:Zone1"));
+    EXPECT_FALSE(buildings[0].hasZone("Block2:Zone1"));
+    EXPECT_TRUE(buildings[0].hasZone("out"));
+    EXPECT_FALSE(buildings[1].hasZone("Block1:Zone1"));
+    EXPECT_TRUE(buildings[1].hasZone("Block2:Zone1"));
+    EXPECT_TRUE(buildings[1].hasZone("out"));
 
     std::cout << "hello" << std::endl;
 

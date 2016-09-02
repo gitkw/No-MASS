@@ -19,7 +19,7 @@ void Test_Occupant_Action_HeatingSetPoints_Learning::SetUp() {
   SimulationConfig::buildings[0].agents.clear();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   SimulationConfig::info.windows = false;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
@@ -56,5 +56,5 @@ TEST_F(Test_Occupant_Action_HeatingSetPoints_Learning, Learn) {
 
   aal.step(z_Kitchen, true);
   heating = aal.getResult();
-//  ASSERT_NEAR(heating, 21, 0.1);
+//  EXPECT_NEAR(heating, 21, 0.1);
 }

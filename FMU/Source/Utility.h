@@ -21,7 +21,7 @@ class Utility {
     static void setSeed(int seed);
     static int cumulativeProbability(const std::vector<double> &v);
     static int cumulativeProbability(const double * v, const int len);
-    static std::list<int> randomIntList(int number);
+    static std::vector<int> randomIntVect(int number);
     static std::vector<std::string> splitCSV(const std::string & typeString);
     static int calculateNumberOfDays(int startDay, int startMonth,
                                               int endDay, int endMonth);

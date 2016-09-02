@@ -19,7 +19,7 @@ void Test_Occupant_Action_Lights_BDI::SetUp() {
   SimulationConfig::reset();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   SimulationConfig::info.windows = false;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
@@ -42,19 +42,20 @@ TEST_F(Test_Occupant_Action_Lights_BDI, OffDuringSleep) {
   zs.id = 1;
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   aal.setOffDuringSleep(true);
 
   activities.push_back(0);
   aal.step(z_Kitchen, true, false, activities);
   aal.doRecipe(activities);
-  ASSERT_EQ(aal.getResult(), 0);
+  EXPECT_EQ(aal.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
   aal.step(z_Kitchen, true, false, activities);
   aal.doRecipe(activities);
-  ASSERT_EQ(aal.getResult(), 1);
+  EXPECT_EQ(aal.getResult(), 1);
 }
 
 TEST_F(Test_Occupant_Action_Lights_BDI, OffDuringAudioVisual) {
@@ -63,6 +64,7 @@ TEST_F(Test_Occupant_Action_Lights_BDI, OffDuringAudioVisual) {
   zs.id = 1;
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   aal.setOffDuringAudioVisual(true);
   aal.getResult();
@@ -70,11 +72,11 @@ TEST_F(Test_Occupant_Action_Lights_BDI, OffDuringAudioVisual) {
   activities.push_back(2);
   aal.step(z_Kitchen, true, false, activities);
   aal.doRecipe(activities);
-  ASSERT_EQ(aal.getResult(), 0);
+  EXPECT_EQ(aal.getResult(), 0);
 
   SimulationConfig::step();
   activities.push_back(1);
   aal.step(z_Kitchen, true, false, activities);
   aal.doRecipe(activities);
-  ASSERT_EQ(aal.getResult(), 1);
+  EXPECT_EQ(aal.getResult(), 1);
 }

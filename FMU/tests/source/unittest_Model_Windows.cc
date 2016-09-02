@@ -40,17 +40,17 @@ TEST_F(Test_Windows, Arrival) {
 
   mw.arrival(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
-  ASSERT_NEAR(0, mw.getDurationOpen(), 0.01);
+  EXPECT_NEAR(0, mw.getDurationOpen(), 0.01);
   EXPECT_FALSE(mw.getWindowState());
 
   mw.arrival(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
-  ASSERT_NEAR(0, mw.getDurationOpen(), 0.01);
+  EXPECT_NEAR(0, mw.getDurationOpen(), 0.01);
   EXPECT_FALSE(mw.getWindowState());
 
   mw.arrival(indoorTemperature, outdoorTemperature,
       previousDuration, rain, timeStepLengthInMinutes);
-  ASSERT_NEAR(0, mw.getDurationOpen(), 0.01);
+  EXPECT_NEAR(0, mw.getDurationOpen(), 0.01);
   EXPECT_FALSE(mw.getWindowState());
 
   int dur = mw.getDurationOpen();
@@ -60,7 +60,7 @@ TEST_F(Test_Windows, Arrival) {
     dur = mw.getDurationOpen();
   }
 
-  ASSERT_NEAR(4754, mw.getDurationOpen(), 0.01);
+  EXPECT_NEAR(4754, mw.getDurationOpen(), 0.01);
   EXPECT_TRUE(mw.getWindowState());
 }
 

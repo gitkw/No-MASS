@@ -145,7 +145,7 @@ void Occupant_Zone::step(const Building_Zone& zone,
 
     if (isInBuilding()) {
       if (inZone || previouslyInZone) {
-        std::random_shuffle(availableActions.begin(), availableActions.end() );
+        std::random_shuffle(availableActions.begin(), availableActions.end());
         for (int a : availableActions) {
           if (inZone) {
             actionStep(a, zone, inZone, previouslyInZone, activities);

@@ -1,7 +1,7 @@
 // Copyright 2015 Jacob Chapman
 
-#ifndef BUILDING_ZONE_H
-#define	BUILDING_ZONE_H
+#ifndef BUILDING_ZONE_H_
+#define BUILDING_ZONE_H_
 #include <string>
 #include <vector>
 
@@ -9,11 +9,11 @@
 #include "Model_Windows.h"
 
 class Building_Zone {
-public:
+ public:
     Building_Zone();
     void step();
     void setup(const ZoneStruct & zoneStruct);
-    void setName(std::string name);
+    void setName(const std::string & name);
     void setCurrentOccupantGains(double currentOccupantGains);
     void setGroundFloor(bool groundFloor);
     void setActive(bool active);
@@ -28,8 +28,10 @@ public:
 
     bool isActive() const;
     bool hasActivity(int activity) const;
+    bool isNamed(const std::string & name) const;
     int getCurrentOccupantCount() const;
     int getId() const;
+    int getNumberOfActivities() const;
     float getOccupantFraction() const;
     double getCurrentOccupantGains() const;
     double getWindowState() const;
@@ -43,12 +45,10 @@ public:
     double getMeanRadiantTemperature() const;
     double getDaylightingReferencePoint1Illuminance() const;
     double getWindowDurationOpen() const;
+
     std::vector<int> getActivities() const;
-    int getNumberOfActivities() const;
-    std::string getName() const;
 
-private:
-
+ private:
     bool groundFloor;
     bool active;
     bool lightState;
@@ -68,9 +68,13 @@ private:
     std::string variableNameLight;
     std::string variableNameHeating;
     std::string variableNameAppFraction;
+    std::string variableNameZoneMeanAirTemperature;
+    std::string variableNameZoneAirRelativeHumidity;
+    std::string variableNameZoneMeanRadiantTemp;
+    std::string variableNameDaylighting;
+    std::string variableNameZoneAirHeating;
     std::vector<std::string> variableNameWindow;
     std::vector<int> activities;
-
 };
 
-#endif	/* BUILDING_ZONE_H */
+#endif  // BUILDING_ZONE_H_

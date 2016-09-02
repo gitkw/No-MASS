@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 #include "Utility.h"
 
@@ -34,19 +35,13 @@ int Utility::randomInt(int min, int max) {
     return uniform_dist(engine);
 }
 
-std::list<int> Utility::randomIntList(int number) {
+std::vector<int> Utility::randomIntVect(int number) {
     std::vector<int> numbers;
-    std::list<int> randNumbers;
     for (int i =0; i < number; i++) {
         numbers.push_back(i);
     }
-
-    while (!numbers.empty()) {
-        int i = randomInt(0, numbers.size() -1);
-        randNumbers.push_back(numbers[i]);
-        numbers.erase(numbers.begin() +i);
-    }
-    return randNumbers;
+    std::random_shuffle(numbers.begin(), numbers.end());
+    return numbers;
 }
 
 std::vector<std::string> Utility::splitCSV(const std::string & typeString) {

@@ -22,12 +22,8 @@ double State::getClo()const {
     return clo;
 }
 
-std::string State::getLocation() const {
-     return zone->getName();
-}
-
-std::string State::getActivity() const {
-    return activity;
+bool State::isInActivity(const std::string & activity) const {
+  return this->activity == activity;
 }
 
 void State::addState(State s) {
@@ -36,7 +32,7 @@ void State::addState(State s) {
 
 bool State::hasState(const int stateID) const {
   bool found = false;
-  for (State s : states) {
+  for (const State & s : states) {
       if (s.getId() == stateID || s.hasState(stateID)) {
           found = true;
         break;
@@ -47,7 +43,7 @@ bool State::hasState(const int stateID) const {
 
 State State::getState(const int stateID) const {
   State x;
-  for (State s : states) {
+  for (const State & s : states) {
     if (s.getId() == stateID) {
       x = s;
       break;

@@ -1,34 +1,35 @@
-#ifndef STATE_H
-#define STATE_H
+// Copyright 2015 Jacob Chapman
+
+#ifndef STATE_H_
+#define STATE_H_
 #include <string>
 #include <memory>
+#include <vector>
 #include "Building_Zone.h"
 
-class State
-{
-    public:
-        State();
-        virtual ~State();
-        virtual bool hasState(const int stateID) const;
-        virtual State getState(const int stateID) const;
+class State {
+ public:
+  State();
+  virtual ~State();
+  virtual bool hasState(const int stateID) const;
+  virtual State getState(const int stateID) const;
 
-        void addState(State s);
-        void setZonePtr(std::shared_ptr<Building_Zone> zoneptr);
-        int getId() const;
-        unsigned int numberOfSubStates() const;
-        double getMetabolicRate() const;
-        double getClo() const;
-        std::string getActivity() const;
-        std::string getLocation() const;
-        std::shared_ptr<Building_Zone> getZonePtr() const;
+  void addState(State s);
+  void setZonePtr(std::shared_ptr<Building_Zone> zoneptr);
+  int getId() const;
+  unsigned int numberOfSubStates() const;
+  double getMetabolicRate() const;
+  double getClo() const;
+  bool isInActivity(const std::string & activity) const;
+  std::shared_ptr<Building_Zone> getZonePtr() const;
 
-    protected:
-        int id;
-        double metabolicRate;
-        double clo;
-        std::string activity;
-        std::vector<State> states;
-        std::shared_ptr<Building_Zone> zone;
+ protected:
+  int id;
+  double metabolicRate;
+  double clo;
+  std::string activity;
+  std::vector<State> states;
+  std::shared_ptr<Building_Zone> zone;
 };
 
-#endif // STATE_H
+#endif  // STATE_H_

@@ -20,6 +20,7 @@ struct ZoneStruct {
     std::string name;
     std::vector<int> activities;
     bool groundFloor = 0;
+    bool active = false;
     int windowCount = 0;
     int id = 0;
 };
@@ -188,25 +189,25 @@ struct simulationStruct {
 
 class SimulationConfig {
  public:
-    static ZoneStruct getZone(std::string* zoneName);
     static void parseConfiguration(const std::string &filename);
     static void reset();
-    static bool activeZone(std::string* zoneName);
+    static void step();
+    static void setStepCount(const int stepcount);
     static bool isZoneGroundFloor(std::string* zoneName);
+    static int getStepCount();
+    static double lengthOfTimestep();
+    static ZoneStruct getZone(std::string* zoneName);
+
     static std::vector<LVNNodeStruct> lvn;
     static std::map<int, windowStruct> windows;
     static std::map<int, shadeStruct> shades;
     static simulationStruct info;
-    static double lengthOfTimestep();
-    static void step();
-    static int getStepCount();
-
-    static int stepCount;
     static std::string ActivityFile;
     static std::string RunLocation;
     static std::vector<buildingStruct> buildings;
 
  private:
+    SimulationConfig();
     static void timeSteps();
     static void parseBuilding(rapidxml::xml_node<> *node, const int id);
     static void parseBuildings(rapidxml::xml_node<> *node);
@@ -218,10 +219,14 @@ class SimulationConfig {
     static void parseWindows(rapidxml::xml_node<> *node);
     static void parseShades(rapidxml::xml_node<> *node);
     static bool strComp(const char * str1, const char * str2);
+    static bool nodeNameIs(const rapidxml::xml_node<> *node, const char * str2);
+    static bool nodeNameIs(const std::string & name, const char * str2);
     static std::vector<double> csvToDouble(const std::string & s);
     static std::vector<int> activityNamesToIds(
                                   const std::vector<std::string> & activities);
-    SimulationConfig();
+    static const std::string nameToLower(const rapidxml::xml_node<> *node);
+
+    static int stepCount;
 };
 
 #endif  //  SIMULATIONCONFIG_H_
