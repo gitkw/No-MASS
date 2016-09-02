@@ -12,7 +12,7 @@ TEST(Building_Zone, Name) {
   SimulationConfig::reset();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   SimulationConfig::info.windows = false;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
@@ -23,13 +23,13 @@ TEST(Building_Zone, Name) {
   DataStore::addValue("Block1:KitchenZoneMeanRadiantTemperature", 18);
 
   ZoneStruct zs;
-  zs.name = "Out";
+  zs.name = "out";
   zs.id = 0;
   Building_Zone z_Out;
   z_Out.setName(zs.name);
   z_Out.setup(zs);
 
-  ASSERT_EQ(z_Out.getName(), zs.name);
+  ASSERT_TRUE(z_Out.isNamed(zs.name));
   ASSERT_EQ(z_Out.isActive(), false);
 
   zs.name = "Block1:Kitchen";
@@ -37,8 +37,9 @@ TEST(Building_Zone, Name) {
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
   z_Kitchen.setup(zs);
+  z_Kitchen.setActive(true);
 
-  ASSERT_EQ(z_Kitchen.getName(), zs.name);
+  ASSERT_TRUE(z_Kitchen.isNamed(zs.name));
   ASSERT_EQ(z_Kitchen.isActive(), true);
   z_Kitchen.setActive(false);
   ASSERT_EQ(z_Kitchen.isActive(), false);

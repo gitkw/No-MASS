@@ -21,7 +21,7 @@ void Test_Occupant_Action_Window_Stochastic_BDI::SetUp() {
   SimulationConfig::reset();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   SimulationConfig::info.windows = false;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
@@ -46,6 +46,7 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, Arrival) {
   zs.id = 1;
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   z_Kitchen.setWindowState(0);
   DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);
@@ -73,6 +74,7 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowDuringCooking) {
   zs.id = 1;
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   aaw.setOpenDuringCooking(true);
 
@@ -94,6 +96,7 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowAfterShower) {
   zs.id = 1;
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   aaw.setOpenDuringWashing(true);
   aaw.getResult();
@@ -125,13 +128,13 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowAfterShower) {
 
 
 TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowAfterShower2) {
-  DataStore::addVariable("Block1:BathZoneMeanAirTemperature");
-  DataStore::addVariable("Block1:BathZoneAirRelativeHumidity");
-  DataStore::addVariable("Block1:BathZoneMeanRadiantTemperature");
+  DataStore::addVariable("Block2:BathroomZoneMeanAirTemperature");
+  DataStore::addVariable("Block2:BathroomZoneAirRelativeHumidity");
+  DataStore::addVariable("Block2:BathroomZoneMeanRadiantTemperature");
 
-  DataStore::addValue("Block1:BathZoneMeanAirTemperature", 18);
-  DataStore::addValue("Block1:BathZoneAirRelativeHumidity", 18);
-  DataStore::addValue("Block1:BathZoneMeanRadiantTemperature", 18);
+  DataStore::addValue("Block2:BathroomZoneMeanAirTemperature", 18);
+  DataStore::addValue("Block2:BathroomZoneAirRelativeHumidity", 18);
+  DataStore::addValue("Block2:BathroomZoneMeanRadiantTemperature", 18);
 
 
   ZoneStruct zs;
@@ -140,12 +143,16 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowAfterShower2) {
   zs.activities = {1, 2, 3};
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
+  z_Kitchen.setIDString(zs.name);
   z_Kitchen.setup(zs);
-  zs.name = "Block1:Bath";
+  zs.name = "Block2:Bathroom";
   zs.id = 2;
   zs.activities = {6};
   Building_Zone z_Bath;
   z_Bath.setName(zs.name);
+  z_Bath.setActive(true);
+  z_Bath.setIDString(zs.name);
   z_Bath.setup(zs);
 
   Occupant_Action_Window_Stochastic_BDI aab;
@@ -227,6 +234,7 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, multiZone) {
   zs.activities = {1, 2, 3};
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
 
   aaw.getResult();

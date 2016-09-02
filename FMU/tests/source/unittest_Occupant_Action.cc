@@ -19,7 +19,7 @@ class Test_Occupant_Action : public ::testing::Test {
 
 void Test_Occupant_Action::SetUp() {
   SimulationConfig::info.timeStepsPerHour = 12;
-  SimulationConfig::stepCount = 5;
+  SimulationConfig::setStepCount(5);
 
   availableActivities.push_back(1);
   availableActivities.push_back(2);
@@ -39,73 +39,73 @@ void Test_Occupant_Action::SetUp() {
 
 TEST_F(Test_Occupant_Action, getFutureDurationOfAbsenceState) {
   EXPECT_EQ(aa.getFutureDurationOfAbsenceState(activities), 300);
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   EXPECT_EQ(aa.getFutureDurationOfAbsenceState(activities), 600);
-  SimulationConfig::stepCount = 1;
+  SimulationConfig::setStepCount(1);
   EXPECT_EQ(aa.getFutureDurationOfAbsenceState(activities), 300);
-  SimulationConfig::stepCount = 2;
+  SimulationConfig::setStepCount(2);
   EXPECT_EQ(aa.getFutureDurationOfAbsenceState(activities), 0);
-  SimulationConfig::stepCount = 3;
+  SimulationConfig::setStepCount(3);
   EXPECT_EQ(aa.getFutureDurationOfAbsenceState(activities), 0);
-  SimulationConfig::stepCount = 4;
+  SimulationConfig::setStepCount(4);
   EXPECT_EQ(aa.getFutureDurationOfAbsenceState(activities), 600);
-  SimulationConfig::stepCount = 5;
+  SimulationConfig::setStepCount(5);
   EXPECT_EQ(aa.getFutureDurationOfAbsenceState(activities), 300);
-  SimulationConfig::stepCount = 6;
+  SimulationConfig::setStepCount(6);
   EXPECT_EQ(aa.getFutureDurationOfAbsenceState(activities), 0);
-  SimulationConfig::stepCount = 7;
+  SimulationConfig::setStepCount(7);
   EXPECT_EQ(aa.getFutureDurationOfAbsenceState(activities), 0);
-  SimulationConfig::stepCount = 8;
+  SimulationConfig::setStepCount(8);
   EXPECT_EQ(aa.getFutureDurationOfAbsenceState(activities), 0);
-  SimulationConfig::stepCount = 9;
+  SimulationConfig::setStepCount(9);
   EXPECT_EQ(aa.getFutureDurationOfAbsenceState(activities), 300);
 }
 
 
 TEST_F(Test_Occupant_Action, getPreviousDurationOfAbsenceState) {
   EXPECT_EQ(aa.getPreviousDurationOfAbsenceState(activities), 300);
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   EXPECT_EQ(aa.getPreviousDurationOfAbsenceState(activities), 0);
-  SimulationConfig::stepCount = 1;
+  SimulationConfig::setStepCount(1);
   EXPECT_EQ(aa.getPreviousDurationOfAbsenceState(activities), 300);
-  SimulationConfig::stepCount = 2;
+  SimulationConfig::setStepCount(2);
   EXPECT_EQ(aa.getPreviousDurationOfAbsenceState(activities), 600);
-  SimulationConfig::stepCount = 3;
+  SimulationConfig::setStepCount(3);
   EXPECT_EQ(aa.getPreviousDurationOfAbsenceState(activities), 0);
-  SimulationConfig::stepCount = 4;
+  SimulationConfig::setStepCount(4);
   EXPECT_EQ(aa.getPreviousDurationOfAbsenceState(activities), 0);
-  SimulationConfig::stepCount = 5;
+  SimulationConfig::setStepCount(5);
   EXPECT_EQ(aa.getPreviousDurationOfAbsenceState(activities), 300);
-  SimulationConfig::stepCount = 6;
+  SimulationConfig::setStepCount(6);
   EXPECT_EQ(aa.getPreviousDurationOfAbsenceState(activities), 600);
-  SimulationConfig::stepCount = 7;
+  SimulationConfig::setStepCount(7);
   EXPECT_EQ(aa.getPreviousDurationOfAbsenceState(activities), 0);
-  SimulationConfig::stepCount = 8;
+  SimulationConfig::setStepCount(8);
   EXPECT_EQ(aa.getPreviousDurationOfAbsenceState(activities), 0);
-  SimulationConfig::stepCount = 9;
+  SimulationConfig::setStepCount(9);
   EXPECT_EQ(aa.getPreviousDurationOfAbsenceState(activities), 0);
 }
 
 TEST_F(Test_Occupant_Action, getCurrentDurationOfPresenceState) {
   EXPECT_EQ(aa.getCurrentDurationOfPresenceState(activities), 0);
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   EXPECT_EQ(aa.getCurrentDurationOfPresenceState(activities), 0);
-  SimulationConfig::stepCount = 1;
+  SimulationConfig::setStepCount(1);
   EXPECT_EQ(aa.getCurrentDurationOfPresenceState(activities), 0);
-  SimulationConfig::stepCount = 2;
+  SimulationConfig::setStepCount(2);
   EXPECT_EQ(aa.getCurrentDurationOfPresenceState(activities), 0);
-  SimulationConfig::stepCount = 3;
+  SimulationConfig::setStepCount(3);
   EXPECT_EQ(aa.getCurrentDurationOfPresenceState(activities), 300);
-  SimulationConfig::stepCount = 4;
+  SimulationConfig::setStepCount(4);
   EXPECT_EQ(aa.getCurrentDurationOfPresenceState(activities), 0);
-  SimulationConfig::stepCount = 5;
+  SimulationConfig::setStepCount(5);
   EXPECT_EQ(aa.getCurrentDurationOfPresenceState(activities), 0);
-  SimulationConfig::stepCount = 6;
+  SimulationConfig::setStepCount(6);
   EXPECT_EQ(aa.getCurrentDurationOfPresenceState(activities), 0);
-  SimulationConfig::stepCount = 7;
+  SimulationConfig::setStepCount(7);
   EXPECT_EQ(aa.getCurrentDurationOfPresenceState(activities), 300);
-  SimulationConfig::stepCount = 8;
+  SimulationConfig::setStepCount(8);
   EXPECT_EQ(aa.getCurrentDurationOfPresenceState(activities), 600);
-  SimulationConfig::stepCount = 9;
+  SimulationConfig::setStepCount(9);
   EXPECT_EQ(aa.getCurrentDurationOfPresenceState(activities), 0);
 }

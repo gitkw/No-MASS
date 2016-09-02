@@ -33,8 +33,10 @@ Occupant::Occupant() {}
 void Occupant::setup(int id, const agentStruct &agent,
       const std::vector<std::shared_ptr<Building_Zone>> &zones) {
     this->id = id;
-    DataStore::addVariable(idString + "Activity");
-    DataStore::addVariable(idString + "HeatGains");
+    idStringActivity = idString + "Activity";
+    idStringHeatGains = idString + "HeatGains";
+    DataStore::addVariable(idStringActivity);
+    DataStore::addVariable(idStringHeatGains);
     bedroom = buildingName + agent.bedroom;
     office = buildingName + agent.office;
     power = agent.power;
@@ -47,12 +49,12 @@ void Occupant::setup(int id, const agentStruct &agent,
     for (const std::shared_ptr<Building_Zone> & buldingZone : zones) {
         if (SimulationConfig::info.presencePage &&
             buldingZone->hasActivity(3) &&
-            buldingZone->getName() != office) {
+            !buldingZone->isNamed(office)) {
           continue;
         }
         if (!SimulationConfig::info.presencePage &&
             buldingZone->hasActivity(0) &&
-            buldingZone->getName() != bedroom &&
+            !buldingZone->isNamed(bedroom) &&
             buldingZone->getNumberOfActivities() == 1) {
           continue;
         }
@@ -115,12 +117,12 @@ void Occupant::matchStateToZone(State *s,
     for (unsigned int i =0; i < zones.size(); i++) {
       if (SimulationConfig::info.presencePage &&
           zones[i]->hasActivity(3) &&
-          zones[i]->getName() != office) {
+          !zones[i]->isNamed(office)) {
         continue;
       }
       if (!SimulationConfig::info.presencePage &&
           zones[i]->hasActivity(0) &&
-          zones[i]->getName() != bedroom &&
+          !zones[i]->isNamed(bedroom) &&
           zones[i]->getNumberOfActivities() == 1) {
         continue;
       }
@@ -146,9 +148,9 @@ void Occupant::step() {
       agentZone.setMetabolicRate(metabolicRate);
       agentZone.step(*zonePtr, *zonePtrPrevious, activities);
     }
-    DataStore::addValue(idString + "HeatGains",
+    DataStore::addValue(idStringHeatGains,
                                 getCurrentRadientGains(*zonePtr));
-    DataStore::addValue(idString + "Activity", newStateID);
+    DataStore::addValue(idStringActivity, newStateID);
 }
 
 void Occupant::model_activity(const agentStruct &agent) {
@@ -275,30 +277,6 @@ bool Occupant::previouslyInZone(const Building_Zone &zone) const {
 
 bool Occupant::InteractionOnZone(const Building_Zone &zone) const {
   return currentlyInZone(zone) || previouslyInZone(zone);
-}
-
-std::string Occupant::getLocationType(int step, StateMachine *sm) {
-    int newStateID = activities.at(step);
-    State s = sm->transistionTo(newStateID);
-    return s.getActivity();
-}
-
-std::string Occupant::getLocationName(int step, StateMachine *sm) {
-    int newStateID = activities.at(step);
-    State s = sm->transistionTo(newStateID);
-    return updateLocation(s);
-}
-
-std::string Occupant::updateLocation(const State& s) const {
-    std::string tempLocation = s.getLocation();
-    if (s.getActivity() == "Sleeping") {
-        tempLocation = bedroom;
-    } else if (s.getActivity() == "IT" && SimulationConfig::info.presencePage) {
-        if (office != "") {
-            tempLocation = office;
-        }
-    }
-    return tempLocation;
 }
 
 void Occupant::postprocess() {

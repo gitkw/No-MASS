@@ -20,7 +20,7 @@ void Test_Occupant_Zone::SetUp() {
   SimulationConfig::reset();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   SimulationConfig::info.windows = true;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;

@@ -18,7 +18,7 @@ class Test_Appliance_Large_Usage : public ::testing::Test {
 
 void Test_Appliance_Large_Usage::SetUp() {
   SimulationConfig::parseConfiguration("SimulationConfig.xml");
-  SimulationConfig::stepCount = -1;
+  SimulationConfig::setStepCount(-1);
   al.setID(1);
   al.setup();
 }

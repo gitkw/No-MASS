@@ -36,17 +36,18 @@ void Test_Occupant::SetUp() {
 void Test_Occupant::SetUpSim2() {
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   SimulationConfig::info.windows = true;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
 
   ZoneStruct zs;
-  zs.name = "Out";
+  zs.name = "out";
   zs.id = 0;
   zs.activities = {9};
   Building_Zone z_Out;
   z_Out.setName(zs.name);
+  z_Out.setActive(true);
   z_Out.setup(zs);
 
   z_OutPtr = std::make_shared<Building_Zone>(z_Out);
@@ -78,6 +79,7 @@ void Test_Occupant::SetUpSim2() {
   zs.activities = {4, 5};
   Building_Zone z_Kitchen;
   z_Kitchen.setName(zs.name);
+  z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   z_KitchenPtr = std::make_shared<Building_Zone>(z_Kitchen);
   zs.name = "Block1:LivingRoom";
@@ -85,6 +87,7 @@ void Test_Occupant::SetUpSim2() {
   zs.activities = {1, 7, 2};
   Building_Zone z_LivingRoom;
   z_LivingRoom.setName(zs.name);
+  z_LivingRoom.setActive(true);
   z_LivingRoom.setup(zs);
   z_LivingRoomPtr = std::make_shared<Building_Zone>(z_LivingRoom);
   zs.name = "Block2:Bathroom";
@@ -92,6 +95,7 @@ void Test_Occupant::SetUpSim2() {
   zs.activities = {6, 8};
   Building_Zone z_Bathroom;
   z_Bathroom.setName(zs.name);
+  z_Bathroom.setActive(true);
   z_Bathroom.setup(zs);
   z_BathroomPtr = std::make_shared<Building_Zone>(z_Bathroom);
   zs.name = "Block2:MasterBedroom";
@@ -99,6 +103,7 @@ void Test_Occupant::SetUpSim2() {
   zs.activities = {0};
   Building_Zone z_MasterBedroom;
   z_MasterBedroom.setName(zs.name);
+  z_MasterBedroom.setActive(true);
   z_MasterBedroom.setup(zs);
   z_MasterBedroomPtr = std::make_shared<Building_Zone>(z_MasterBedroom);
   zs.name = "Block2:Office";
@@ -106,6 +111,7 @@ void Test_Occupant::SetUpSim2() {
   zs.activities = {3};
   Building_Zone z_Office;
   z_Office.setName(zs.name);
+  z_Office.setActive(true);
   z_Office.setup(zs);
   z_OfficePtr = std::make_shared<Building_Zone>(z_Office);
 
@@ -136,17 +142,18 @@ void Test_Occupant::SetUpSim2() {
 void Test_Occupant::SetUpSim4() {
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig4.xml");
 
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   SimulationConfig::info.windows = true;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
 
   ZoneStruct zs;
-  zs.name = "Out";
+  zs.name = "out";
   zs.id = 0;
   zs.activities = {9};
   Building_Zone z_Out;
   z_Out.setName(zs.name);
+  z_Out.setActive(true);
   z_Out.setup(zs);
 
   z_OutPtr = std::make_shared<Building_Zone>(z_Out);
@@ -166,6 +173,7 @@ void Test_Occupant::SetUpSim4() {
   zs.id = 1;
   Building_Zone z_Office;
   z_Office.setName(zs.name);
+  z_Office.setActive(true);
   z_Office.setup(zs);
   z_OfficePtr = std::make_shared<Building_Zone>(z_Office);
   zs.name = "Block2:Office";
@@ -173,6 +181,7 @@ void Test_Occupant::SetUpSim4() {
   zs.id = 2;
   Building_Zone z_Office2;
   z_Office2.setName(zs.name);
+  z_Office2.setActive(true);
   z_Office2.setup(zs);
   z_OfficePtr2 = std::make_shared<Building_Zone>(z_Office2);
 

@@ -18,7 +18,7 @@ class Simulation {
     Simulation();
 
     void preprocess();
-    void parseConfiguration(const std::string file);
+    void parseConfiguration(const std::string & file);
     void setupSimulationModel();
     void postprocess();
     void preTimeStep();

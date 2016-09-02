@@ -54,7 +54,6 @@ static fmiValueReference vrStates[NUMBER_OF_STATES] = STATES;
 static fmiComponent instantiateModel(const char* fname, fmiString instanceName,
     fmiString GUID, fmiCallbackFunctions functions, fmiBoolean loggingOn) {
     DataStore::clear();
-    SimulationConfig::stepCount = -1;
     if (valToRefs.empty()) {
         modelInstance->sim.preprocess();
         loadVariables();

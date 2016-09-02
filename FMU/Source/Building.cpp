@@ -22,11 +22,12 @@ void Building::setup(const buildingStruct &b) {
     for (std::pair<std::string, ZoneStruct> z : b.zones) {
       zones.push_back(std::make_shared<Building_Zone>(Building_Zone()));
       zones.back()->setName(z.second.name);
+      zones.back()->setActive(z.second.active);
       zones.back()->setIDString(buildingID + z.second.name);
       zones.back()->setup(z.second);
     }
     int popSize = b.agents.size();
-    std::list<int> pop = Utility::randomIntList(popSize);
+    std::vector<int> pop = Utility::randomIntVect(popSize);
     // setup each agent randomly
     for (int a : pop) {
       std::string occid = std::to_string(a);
@@ -56,7 +57,8 @@ void Building::stepAppliancesUse() {
 }
 
 
-void Building::stepAppliancesNegotiation(const LVN_Negotiation & building_negotiation) {
+void Building::stepAppliancesNegotiation(
+                                const LVN_Negotiation & building_negotiation) {
       appliances.stepGlobalNegotiation(building_negotiation);
 }
 
@@ -66,7 +68,7 @@ double Building::getPower() const {
 
 void Building::step() {
     int popSize = population.size();
-    std::list<int> pop = Utility::randomIntList(popSize);
+    std::vector<int> pop = Utility::randomIntVect(popSize);
     for (int a : pop) {
         population[a].step();
         appliances.addCurrentStates(population[a].getStateID());
@@ -375,7 +377,7 @@ void Building::postprocess() {
 bool Building::hasZone(const std::string& zoneName) const {
   bool has = false;
   for (const std::shared_ptr<Building_Zone> & z : zones) {
-    if (zoneName == z->getName()) {
+    if (z->isNamed(zoneName)) {
       has = true;
     }
   }

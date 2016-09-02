@@ -97,11 +97,11 @@ void Building_Appliances::setup(const buildingStruct & b) {
 }
 
 void Building_Appliances::preprocess() {
-  std::list<int> pop = Utility::randomIntList(small.size());
+  std::vector<int> pop = Utility::randomIntVect(small.size());
   for (int a : pop) {
       small[a].preprocess();
   }
-  pop = Utility::randomIntList(pv.size());
+  pop = Utility::randomIntVect(pv.size());
   for (int a : pop) {
       pv[a].preprocess();
   }
@@ -140,7 +140,7 @@ void Building_Appliances::sendContractLocal(const Appliance & a) {
 }
 
 void Building_Appliances::stepLocalLarge() {
-  std::list<int> pop = Utility::randomIntList(large.size());
+  std::vector<int> pop = Utility::randomIntVect(large.size());
   for (int a : pop) {
     large[a].hasActivities(currentStates);
     large[a].step();
@@ -149,7 +149,7 @@ void Building_Appliances::stepLocalLarge() {
 }
 
 void Building_Appliances::stepLocalLargeLearning() {
-  std::list<int> pop = Utility::randomIntList(largeLearning.size());
+  std::vector<int> pop = Utility::randomIntVect(largeLearning.size());
   for (int a : pop) {
     largeLearning[a].hasActivities(currentStates);
     largeLearning[a].step();
@@ -158,21 +158,21 @@ void Building_Appliances::stepLocalLargeLearning() {
 }
 
 void Building_Appliances::stepLocalSmall() {
-  std::list<int> pop = Utility::randomIntList(small.size());
+  std::vector<int> pop = Utility::randomIntVect(small.size());
   for (int a : pop) {
     sendContractLocal(small[a]);
   }
 }
 
 void Building_Appliances::stepLocalPV() {
-  std::list<int> pop = Utility::randomIntList(pv.size());
+  std::vector<int> pop = Utility::randomIntVect(pv.size());
   for (int a : pop) {
     sendContractLocal(pv[a]);
   }
 }
 
 void Building_Appliances::stepLocalFMI() {
-  std::list<int> pop = Utility::randomIntList(fmi.size());
+  std::vector<int> pop = Utility::randomIntVect(fmi.size());
   for (int a : pop) {
     fmi[a].step();
     sendContractLocal(fmi[a]);
@@ -206,7 +206,7 @@ void Building_Appliances::stepLocalNegotiation() {
 
 void Building_Appliances::globalNegotiationSmall(
                                 const LVN_Negotiation & building_negotiation) {
-  std::list<int> pop = Utility::randomIntList(small.size());
+  std::vector<int> pop = Utility::randomIntVect(small.size());
   for (int a : pop) {
     if (small[a].isGlobal()) {
       int appid = small[a].getID();
@@ -223,7 +223,7 @@ void Building_Appliances::globalNegotiationSmall(
 }
 
 void Building_Appliances::localNegotiationSmall() {
-  std::list<int> pop = Utility::randomIntList(small.size());
+  std::vector<int> pop = Utility::randomIntVect(small.size());
   for (int a : pop) {
     int appid = small[a].getID();
     contract c = app_negotiation.getContract(buildingID, appid);
@@ -241,7 +241,7 @@ void Building_Appliances::localNegotiationSmall() {
 }
 
 void Building_Appliances::globalNegotiationLarge(const LVN_Negotiation & building_negotiation) {
-  std::list<int> pop = Utility::randomIntList(large.size());
+  std::vector<int> pop = Utility::randomIntVect(large.size());
   for (int a : pop) {
     if (large[a].isGlobal()) {
       int appid = large[a].getID();
@@ -258,7 +258,7 @@ void Building_Appliances::globalNegotiationLarge(const LVN_Negotiation & buildin
 }
 
 void Building_Appliances::localNegotiationLarge() {
-  std::list<int> pop = Utility::randomIntList(large.size());
+  std::vector<int> pop = Utility::randomIntVect(large.size());
   for (int a : pop) {
     int appid = large[a].getID();
     contract c = app_negotiation.getContract(buildingID, appid);
@@ -277,7 +277,7 @@ void Building_Appliances::localNegotiationLarge() {
 
 void Building_Appliances::globalNegotiationLargeLearning(
                                 const LVN_Negotiation & building_negotiation) {
-  std::list<int> pop = Utility::randomIntList(largeLearning.size());
+  std::vector<int> pop = Utility::randomIntVect(largeLearning.size());
   for (int a : pop) {
     if (largeLearning[a].isGlobal()) {
       int appid = largeLearning[a].getID();
@@ -295,7 +295,7 @@ void Building_Appliances::globalNegotiationLargeLearning(
 }
 
 void Building_Appliances::localNegotiationLargeLearning() {
-  std::list<int> pop = Utility::randomIntList(largeLearning.size());
+  std::vector<int> pop = Utility::randomIntVect(largeLearning.size());
   for (int a : pop) {
     int appid = largeLearning[a].getID();
     contract c = app_negotiation.getContract(buildingID, appid);
@@ -315,7 +315,7 @@ void Building_Appliances::localNegotiationLargeLearning() {
 
 void Building_Appliances::globalNegotiationPV(
                                 const LVN_Negotiation & building_negotiation) {
-  std::list<int> pop = Utility::randomIntList(pv.size());
+  std::vector<int> pop = Utility::randomIntVect(pv.size());
   for (int a : pop) {
     if (pv[a].isGlobal()) {
     int appid = pv[a].getID();
@@ -330,7 +330,7 @@ void Building_Appliances::globalNegotiationPV(
 }
 
 void Building_Appliances::localNegotiationPV() {
-  std::list<int> pop = Utility::randomIntList(pv.size());
+  std::vector<int> pop = Utility::randomIntVect(pv.size());
   for (int a : pop) {
     int appid = pv[a].getID();
     contract c = app_negotiation.getContract(buildingID, appid);
@@ -347,7 +347,7 @@ void Building_Appliances::localNegotiationPV() {
 
 void Building_Appliances::globalNegotiationFMI(
                                 const LVN_Negotiation & building_negotiation) {
-  std::list<int> pop = Utility::randomIntList(fmi.size());
+  std::vector<int> pop = Utility::randomIntVect(fmi.size());
   for (int a : pop) {
     if (fmi[a].isGlobal()) {
     int appid = fmi[a].getID();
@@ -364,7 +364,7 @@ void Building_Appliances::globalNegotiationFMI(
 }
 
 void Building_Appliances::localNegotiationFMI() {
-  std::list<int> pop = Utility::randomIntList(fmi.size());
+  std::vector<int> pop = Utility::randomIntVect(fmi.size());
   for (int a : pop) {
     int appid = fmi[a].getID();
     contract c = app_negotiation.getContract(buildingID, appid);
@@ -402,7 +402,7 @@ void Building_Appliances::stepGlobalNegotiation(const LVN_Negotiation & building
 }
 
 void Building_Appliances::postprocess() {
-  std::list<int> pop = Utility::randomIntList(largeLearning.size());
+  std::vector<int> pop = Utility::randomIntVect(largeLearning.size());
   for (int a : pop) {
     largeLearning[a].postprocess();
   }

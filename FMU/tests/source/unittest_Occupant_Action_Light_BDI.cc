@@ -19,7 +19,7 @@ void Test_Occupant_Action_Lights_BDI::SetUp() {
   SimulationConfig::reset();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
-  SimulationConfig::stepCount = 0;
+  SimulationConfig::setStepCount(0);
   SimulationConfig::info.windows = false;
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
