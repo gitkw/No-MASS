@@ -38,8 +38,7 @@ double Model_Appliance_Large_Usage::consumption(const int timeStep) {
   int now = timeStep * leninsec;
   int end = timeStep * leninsec + leninsec;
   while (now < end) {
-    int ten = static_cast<int>(now / 600) % 144;
-    if (onAt(ten)) {
+    if (onAt(timeStep)) {
       result += getPower();
     }
     now += 60;
@@ -57,17 +56,6 @@ double Model_Appliance_Large_Usage::getPower() {
 }
 
 double Model_Appliance_Large_Usage::getMeanFraction() {
-/*
-  double random = Utility::randomDouble(0.0, 1.0);
-  double currSum = 0;
-  for (int i =0; i < 10; i++) {
-    currSum = currSum + getTransitionAt(state, i);
-    if (random < currSum) {
-      state = i;
-      break;
-    }
-  }
-  */
   state = Utility::cumulativeProbability(transitions[state]);
   return meanF[state];
 }
