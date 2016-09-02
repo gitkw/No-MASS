@@ -176,9 +176,9 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
                                                             buildingStruct *b) {
   rapidxml::xml_node<> *cnode = node->first_node();
   while (cnode) {
-    if (nodeNameIs(cnode, "Large") ||
-                nodeNameIs(cnode, "LargeLearning") ||
-                            nodeNameIs(cnode, "Grid")) {
+    if (nodeNameIs(cnode, "large") ||
+                nodeNameIs(cnode, "largelearning") ||
+                            nodeNameIs(cnode, "grid")) {
       rapidxml::xml_node<> *anode = cnode->first_node();
       appLargeStruct s;
       while (anode) {
