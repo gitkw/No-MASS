@@ -13,7 +13,7 @@ void LVN::setup() {
       if (l.parent == -1) {
         rootNode.setID(l.id);
         rootNode.addChildren(l.children);
-          rootNode.setup();
+        rootNode.setup();
         break;
       }
     }

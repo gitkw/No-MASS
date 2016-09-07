@@ -381,8 +381,8 @@ void Building_Appliances::localNegotiationFMI() {
   }
 }
 
-void Building_Appliances::stepGlobalNegotiation(const LVN_Negotiation & building_negotiation) {
-
+void Building_Appliances::stepGlobalNegotiation(
+                                const LVN_Negotiation & building_negotiation) {
   globalNegotiationLarge(building_negotiation);
   globalNegotiationLargeLearning(building_negotiation);
   globalNegotiationSmall(building_negotiation);

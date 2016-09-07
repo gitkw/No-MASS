@@ -48,7 +48,6 @@ void Simulation::parseConfiguration(const std::string & file) {
 }
 
 void Simulation::setupSimulationModel() {
-    SimulationConfig::setStepCount(-1);
     DataStore::addVariable("day");
     DataStore::addVariable("month");
     DataStore::addVariable("hour");
