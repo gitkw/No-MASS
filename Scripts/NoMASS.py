@@ -4,8 +4,9 @@ from shutil import copyfile, copytree, rmtree
 import glob
 import subprocess
 import random
-
+import pandas as pd
 import xml.etree.ElementTree as ET
+import time
 
 class NoMASS(object):
 
@@ -24,16 +25,20 @@ class NoMASS(object):
         self.outFile = "NoMASS.out"
         self.appLearningFile = '*.dat'
         self.numberOfSimulations = 1
-        self.learnUpToSimulation = 0
+        self.learn = False
+        self.learntData = ""
         self.clean = True
+        self.PandasFiles = False
         self.seed = -1
         self.printInput = False
         self.epsilon = 0.1
         self.alpha = 0.1
         self.gamma = 0.1
+        self.pddf = pd.DataFrame()
+        self.start = time.time()
 
     def deleteLearningData(self):
-        ll = self.learnLoc()
+        ll = self.learntDataLocation()
         if os.path.exists(ll):
             rmtree(ll)
 
@@ -44,7 +49,7 @@ class NoMASS(object):
         print "resultsLocation: {}".format(self.resultsLocation)
         print "printInput: {}".format(self.printInput)
         print "numberOfSimulations: {}".format(self.numberOfSimulations)
-        print "learnUpToSimulation: {}".format(self.learnUpToSimulation)
+        print "Learning: {}".format(self.learn)
         con = self.configurationDirectory
         tree = ET.parse(con + self.simulationFile)
         root = tree.getroot()
@@ -63,10 +68,13 @@ class NoMASS(object):
                         print "Grid enabled"
 
     def simulate(self):
+        self.start = time.time()
         if self.printInput:
             self.printConfiguration()
         for x in range(0, self.numberOfSimulations):
-            print "Simulation: " + str(x)
+            if x % 25 == 1:
+                elapsed = time.time() - self.start
+                print "Simulation: %i Time: %02d seconds"  % (x, elapsed)
             self.copyToRunLocation(x)
             self.makeExecutable(x)
             self.configuration(x)
@@ -74,9 +82,11 @@ class NoMASS(object):
             self.copyToResultsLocation(x)
             if self.clean:
                 rmtree(self.runLoc(x))
+        if self.PandasFiles:
+            self.pddf.to_hdf(self.resultsLocation + 'NoMASS.out.hdf','NoMass',mode='w')
 
-    def learning(self, x):
-        return x < self.learnUpToSimulation
+    def learning(self):
+        return self.learn
 
     def configuration(self, x):
         rl = self.runLoc(x)
@@ -94,7 +104,7 @@ class NoMASS(object):
                 for apps in building.findall('Appliances'):
                     for ll in apps.findall('LargeLearning'):
                         if ll.find('updateQTable') is not None :
-                            if self.learning(x):
+                            if self.learning():
                                 ll.find('updateQTable').text = str(1)
                             else:
                                 ll.find('updateQTable').text = str(0)
@@ -129,21 +139,26 @@ class NoMASS(object):
             os.makedirs(rl)
         outfileStr = "NoMASS-" + str(x).zfill(5) + ".out"
         copyfile(self.runLoc(x)+self.outFile, rl+outfileStr)
+        self.createPandasFiles(x, self.runLoc(x)+self.outFile)
         outfileStr = "SimulationConfig-" + str(x).zfill(5) + ".xml"
         copyfile(self.runLoc(x)+self.simulationFile, rl+outfileStr)
-        if self.learning(x):
+        if self.learning():
             for f in glob.glob(self.runLoc(x) + self.appLearningFile):
                 path = os.path.dirname(f)
                 filename = os.path.basename(f)
                 copyfile(f, rl + filename + "." + str(x).zfill(5))
-                ll = self.learnLoc()
+                ll = self.learntDataLocation()
                 copyfile(f, ll + filename)
 
     def runLoc(self, x):
         return self.runLocation + self.simulationLocation + str(x) +  "/"
 
-    def learnLoc(self):
-        return self.runLocation +  "learningdata/"
+    def learntDataLocation(self):
+        if self.learntData == "":
+            self.learntData = self.resultsLocation + "learningdata/"
+            if not os.path.exists(self.learntData):
+                os.makedirs(self.learntData)
+        return self.learntData
 
     def copyToRunLocation(self, x):
         rl = self.runLoc(x)
@@ -158,8 +173,8 @@ class NoMASS(object):
         if os.path.isdir(rl + self.smallApplianceFolder):
             rmtree(rl + self.smallApplianceFolder)
         copytree(con + self.smallApplianceFolder, rl + self.smallApplianceFolder)
-        ll = self.learnLoc()
-        if self.learning(x):
+        ll = self.learntDataLocation()
+        if self.learning():
             if not os.path.exists(ll):
                 os.makedirs(ll)
         for f in glob.glob(ll + self.appLearningFile):
@@ -179,3 +194,9 @@ class NoMASS(object):
         rl = self.runLoc(x)
         p = subprocess.Popen('./' + self.NoMASSstr, cwd=rl)
         p.communicate()
+
+    def createPandasFiles(self, x, filename):
+        if self.PandasFiles:
+            a = pd.read_csv(filename)
+            a['nsim'] = x
+            self.pddf = self.pddf.append(a, ignore_index=True)

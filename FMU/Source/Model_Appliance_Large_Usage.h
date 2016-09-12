@@ -15,7 +15,6 @@ class Model_Appliance_Large_Usage : public Model_RandomWeibull {
       Model_Appliance_Large_Usage();
 
       double consumption(const int timeStep);
-      double getTransitionAt(const int state, const int i);
       double getPower();
       double getMeanFraction();
       virtual bool onAt(const int timeStep);

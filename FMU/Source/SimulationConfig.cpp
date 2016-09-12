@@ -172,6 +172,15 @@ std::vector<int> SimulationConfig::activityNamesToIds(
   return act;
 }
 
+std::vector<double> SimulationConfig::prioritiesToVector(
+                            const std::string & priorities) {
+  std::vector<double> prior(csvToDouble(priorities));
+  while (prior.size() < 24) {
+    prior.push_back(prior.back());
+  }
+  return prior;
+}
+
 void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
                                                             buildingStruct *b) {
   rapidxml::xml_node<> *cnode = node->first_node();
@@ -185,7 +194,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         if (nodeNameIs(anode, "id")) {
           s.id = std::stoi(anode->value());
         } else if (nodeNameIs(anode, "priority")) {
-          s.priority = std::stoi(anode->value());
+          s.priority = prioritiesToVector(anode->value());
         } else if (nodeNameIs(anode, "activities")) {
           s.activities = activityNamesToIds(Utility::splitCSV(anode->value()));
         } else if (nodeNameIs(anode, "cost")) {
@@ -204,6 +213,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
       if (nodeNameIs(cnode, "large")) {
         b->AppliancesLarge.push_back(s);
       } else if (nodeNameIs(cnode, "largelearning")) {
+
         b->AppliancesLargeLearning.push_back(s);
       } else if (nodeNameIs(cnode, "grid")) {
         b->AppliancesGrid.push_back(s);
@@ -223,7 +233,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         } else if (nodeNameIs(anode, "id")) {
           s.id = std::stoi(anode->value());
         } else if (nodeNameIs(anode, "priority")) {
-          s.priority = std::stoi(anode->value());
+          s.priority = prioritiesToVector(anode->value());
         }
         anode = anode->next_sibling();
       }
@@ -237,7 +247,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         } else if (nodeNameIs(anode, "id")) {
           s.id = std::stoi(anode->value());
         } else if (nodeNameIs(anode, "priority")) {
-          s.priority = std::stoi(anode->value());
+          s.priority = prioritiesToVector(anode->value());
         }
         anode = anode->next_sibling();
       }
@@ -251,7 +261,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
           } else if (nodeNameIs(anode, "id")) {
             s.id = std::stoi(anode->value());
           } else if (nodeNameIs(anode, "priority")) {
-            s.priority = std::stoi(anode->value());
+            s.priority = prioritiesToVector(anode->value());
           } else if (nodeNameIs(anode, "cost")) {
             s.cost = csvToDouble(anode->value());
           }

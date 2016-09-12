@@ -29,15 +29,17 @@ class Appliance_Large_Learning : public Appliance_Large {
   bool isLearningPeriod;
   bool isWaitingForApplianceToStart;
   int startTime;
+  int hoursWaited;
+  double maxPriority;
   unsigned int learningStep;
   unsigned int nonLearningStep;
   double cost;
   std::string s_fullname_actual;
-  std::vector<double> powerProfile;
+  std::vector<std::vector<double>> powerProfile;
   QLearning_Appliance qLearning;
 
   void stepApplianceOffAndNotLearning();
-  void calculateProfile();
+  bool calculateProfile();
   void calculateLearntStartTime();
   void startLearningPeriod(const int hourOfTheDay);
   void stopLearningPeriod(const int hourOfTheDay);

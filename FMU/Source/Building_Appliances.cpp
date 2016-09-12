@@ -25,13 +25,15 @@ void Building_Appliances::setup(const buildingStruct & b) {
   for (const appPVStruct s : appPV) {
     pv.push_back(Appliance_PV());
     pv.back().setID(s.id);
-    pv.back().setPriority(s.priority);
+    pv.back().setHoulyPriority(s.priority);
     pv.back().setHourlyCost(s.cost);
     pv.back().setBuildingID(buildingID);
     pv.back().setFileName(s.file);
     pv.back().setup();
     pv.back().setIDString(buildingString + std::to_string(s.id));
-    pv.back().saveSetup();
+    pv.back().setupSave();
+    pv.back().setupPriority();
+
     //  addAppToDataStrore(s.id);
   }
 
@@ -40,12 +42,13 @@ void Building_Appliances::setup(const buildingStruct & b) {
   for (const appLargeStruct &s : app) {
     large.push_back(Appliance_Large());
     large.back().setID(s.id);
-    large.back().setPriority(s.priority);
+    large.back().setHoulyPriority(s.priority);
     large.back().setBuildingID(buildingID);
     large.back().setActivities(s.activities);
     large.back().setup();
     large.back().setIDString(buildingString + std::to_string(s.id));
-    large.back().saveSetup();
+    large.back().setupSave();
+    large.back().setupPriority();
     //  addAppToDataStrore(s.id);
   }
 
@@ -57,12 +60,13 @@ void Building_Appliances::setup(const buildingStruct & b) {
     largeLearning.back().setGamma(s.gamma);
     largeLearning.back().setUpdate(s.update);
     largeLearning.back().setID(s.id);
-    largeLearning.back().setPriority(s.priority);
+    largeLearning.back().setHoulyPriority(s.priority);
     largeLearning.back().setBuildingID(buildingID);
     largeLearning.back().setActivities(s.activities);
     largeLearning.back().setup();
     largeLearning.back().setIDString(buildingString + std::to_string(s.id));
-    largeLearning.back().saveSetup();
+    largeLearning.back().setupSave();
+    largeLearning.back().setupPriority();
     //  addAppToDataStrore(s.id);
   }
 
@@ -71,14 +75,15 @@ void Building_Appliances::setup(const buildingStruct & b) {
   for (const appSmallStruct s : appSmall) {
     small.push_back(Appliance_Small());
     small.back().setID(s.id);
-    small.back().setPriority(s.priority);
+    small.back().setHoulyPriority(s.priority);
     small.back().setWeibullParameters(s.WeibullParameters);
     small.back().setStateProbabilities(s.StateProbabilities);
     small.back().setFractions(s.Fractions);
     small.back().setSumRatedPowers(s.SumRatedPowers);
     small.back().setup();
     small.back().setIDString(buildingString + std::to_string(s.id));
-    small.back().saveSetup();
+    small.back().setupSave();
+    small.back().setupPriority();
     //  addAppToDataStrore(s.id);
   }
 
@@ -87,11 +92,12 @@ void Building_Appliances::setup(const buildingStruct & b) {
   for (const appFMIStruct s : appFMI) {
     fmi.push_back(Appliance_FMI());
     fmi.back().setID(s.id);
-    fmi.back().setPriority(s.priority);
+    fmi.back().setHoulyPriority(s.priority);
     fmi.back().setFMIVariableName(s.variableName);
     fmi.back().setup();
     fmi.back().setIDString(buildingString + std::to_string(s.id));
-    fmi.back().saveSetup();
+    fmi.back().setupSave();
+    fmi.back().setupPriority();
     //  addAppToDataStrore(s.id);
   }
 }
@@ -129,7 +135,7 @@ void Building_Appliances::sendContractLocal(const Appliance & a) {
   c.id = a.getID();
   c.buildingID = buildingID;
   c.requested = a.powerAt(stepcount);
-  c.priority = a.getPriority();
+  c.priority = a.getPriorityAt(stepcount);
   c.supplied = a.supplyAt(stepcount);
   c.suppliedCost = a.supplyCostAt(stepcount);
   c.recievedCost = 0;

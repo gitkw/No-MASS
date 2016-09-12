@@ -36,7 +36,7 @@ double Model_Appliance_Large_Usage::consumption(const int timeStep) {
   double result = 0.0;
   int leninsec = SimulationConfig::lengthOfTimestep();
   int now = timeStep * leninsec;
-  int end = timeStep * leninsec + leninsec;
+  int end = now + leninsec;
   while (now < end) {
     if (onAt(timeStep)) {
       result += getPower();
@@ -46,13 +46,8 @@ double Model_Appliance_Large_Usage::consumption(const int timeStep) {
   return result;
 }
 
-double Model_Appliance_Large_Usage::getTransitionAt(const int state,
-                                                              const int i) {
-        return  transitions[state][i];
-}
-
 double Model_Appliance_Large_Usage::getPower() {
-        return getMeanFraction() * maxPower;
+  return getMeanFraction() * maxPower;
 }
 
 double Model_Appliance_Large_Usage::getMeanFraction() {
@@ -74,26 +69,26 @@ bool Model_Appliance_Large_Usage::onAt(const int timeStep) {
 template <typename T>
 std::vector<T> Model_Appliance_Large_Usage::as_vector(
                                                   rapidxml::xml_node<> *node) {
-    std::vector<T> r;
-    std::string value = node->value();
+  std::vector<T> r;
+  std::string value = node->value();
 
-    std::vector<std::string> tokens = Utility::splitCSV(node->value());
-    for (std::string& item : tokens) {
-        r.push_back(std::stod(item));
-    }
-    return r;
+  std::vector<std::string> tokens = Utility::splitCSV(node->value());
+  for (std::string& item : tokens) {
+      r.push_back(std::stod(item));
+  }
+  return r;
 }
 
 template <typename T>
 std::vector<std::vector<T>> Model_Appliance_Large_Usage::as_vector_vector(
   rapidxml::xml_node<> *node) {
-    std::vector<std::vector<T>> r;
-    rapidxml::xml_node<> *cnode = node->first_node();
-    while (cnode) {
-      r.push_back(as_vector<T>(cnode));
-      cnode = cnode->next_sibling();
-    }
-    return r;
+  std::vector<std::vector<T>> r;
+  rapidxml::xml_node<> *cnode = node->first_node();
+  while (cnode) {
+    r.push_back(as_vector<T>(cnode));
+    cnode = cnode->next_sibling();
+  }
+  return r;
 }
 
 void Model_Appliance_Large_Usage::parseConfiguration(

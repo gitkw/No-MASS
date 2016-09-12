@@ -1,6 +1,7 @@
 // Copyright 2016 Jacob Chapman
 
 #include <string>
+#include <vector>
 #include "SimulationConfig.h"
 #include "DataStore.h"
 #include "Utility.h"
@@ -14,14 +15,15 @@ void Appliance_Large_Learning::setup() {
   startTime = -1;
   nonLearningStep = 0;
   std::string buildingString = "Building" + std::to_string(buildingID);
-  std::string s_fullname = buildingString + "_Appliance" + std::to_string(id);
-  s_fullname_actual = s_fullname + "_actual";
+  std::string s_fullname = buildingString + "_Appliance";
+  s_fullname = s_fullname + std::to_string(id) + "_";
+  s_fullname_actual = s_fullname + "actual";
   DataStore::addVariable(s_fullname_actual);
   qLearning.setEpsilon(epsilon);
   qLearning.setAlpha(alpha);
   qLearning.setGamma(gamma);
   qLearning.setUpdate(update);
-  qLearning.setFilename(s_fullname + "-");
+  qLearning.setFilename(s_fullname);
   qLearning.setStates(24);
   qLearning.setId(id);
   qLearning.setup();
@@ -37,6 +39,11 @@ void Appliance_Large_Learning::calculateLearntStartTime() {
   int hourOfTheDay = calculateHourOfDay();
   qLearning.setState(hourOfTheDay);
   startTime = qLearning.getAction();
+  hoursWaited = startTime - hourOfTheDay;
+  if (hoursWaited < 0) {
+    hoursWaited = (24 - startTime) + hourOfTheDay;
+  }
+  maxPriority = 0;
   learningStep = 0;
   isWaitingForApplianceToStart = true;
 }
@@ -46,16 +53,22 @@ void Appliance_Large_Learning::calculateLearntStartTime() {
  * @details Calculate if the applaince is predicted a turn on
  * if so increment model and save teh power demand until turn off
  */
-void Appliance_Large_Learning::calculateProfile() {
+bool Appliance_Large_Learning::calculateProfile() {
   int stepCount = SimulationConfig::getStepCount();
   double p = model.consumption(stepCount);
+  std::vector<double> newPowerProfile;
   while (isOn()) {
-    powerProfile.push_back(p);
+    newPowerProfile.push_back(p);
     model.decreaseDuration();
     stepCount++;
     nonLearningStep++;
     p = model.consumption(stepCount);
   }
+  bool newProfile = newPowerProfile.size() > 0;
+  if (newProfile) {
+    powerProfile.push_back(newPowerProfile);
+  }
+  return newProfile;
 }
 
 
@@ -74,18 +87,22 @@ void Appliance_Large_Learning::startLearningPeriod(const int hourOfTheDay) {
  * @return the reward
  */
 double Appliance_Large_Learning::calculateReward() {
-  return -cost;
+  // return -(cost / powerProfile.size() * hoursWaited * 0.1);
+  return -(cost / powerProfile.front().size() * maxPriority);
 }
 
 void Appliance_Large_Learning::stopLearningPeriod(const int hourOfTheDay) {
-  if (learningStep >= powerProfile.size()) {
+  if (learningStep >= powerProfile.front().size()) {
     double reward = calculateReward();
     qLearning.setReward(reward);
     qLearning.setState(hourOfTheDay);
     qLearning.learn();
-    powerProfile.clear();
+    powerProfile.erase(powerProfile.begin());
     isLearningPeriod = false;
     startTime = -1;
+    if (!powerProfile.empty()) {
+     calculateLearntStartTime();
+    }
   }
 }
 
@@ -94,13 +111,17 @@ void Appliance_Large_Learning::step() {
   int hourOfTheDay = calculateHourOfDay();
   startLearningPeriod(hourOfTheDay);
   if (isLearningPeriod) {
-    p = powerProfile[learningStep];
+    p = powerProfile.front()[learningStep];
     learningStep++;
     stopLearningPeriod(hourOfTheDay);
   } else if (isWaitingForApplianceToStart == false) {
     stepApplianceOffAndNotLearning();
   }
   saveActualProfile();
+  int stepCount = SimulationConfig::getStepCount();
+  if (maxPriority < priority[stepCount]) {
+    maxPriority = priority[stepCount];
+  }
   power.push_back(p);
   supply.push_back(0.0);
   supplyCost.push_back(0.0);
@@ -109,8 +130,8 @@ void Appliance_Large_Learning::step() {
 void Appliance_Large_Learning::saveActualProfile() {
   double p = 0.0;
   if (nonLearningStep > 0) {
-    int i = powerProfile.size() - nonLearningStep;
-    p = powerProfile[i];
+    int i = powerProfile.front().size() - nonLearningStep;
+    p = powerProfile.front()[i];
     nonLearningStep--;
   }
   DataStore::addValue(s_fullname_actual, p);
@@ -124,8 +145,7 @@ void Appliance_Large_Learning::saveActualProfile() {
  */
 void Appliance_Large_Learning::stepApplianceOffAndNotLearning() {
   if (isOn() || match) {
-    calculateProfile();
-    if (powerProfile.size() > 0) {
+    if (calculateProfile()) {
      calculateLearntStartTime();
     }
   }

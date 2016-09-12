@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include "Utility.h"
 #include "DataStore.h"
 #include "SimulationConfig.h"
 #include "Appliance.h"
@@ -16,7 +17,6 @@ double Appliance::supplyAt(const int timestep) const {
   return supply[timestep];
 }
 
-
 double Appliance::supplyCostAt(const int timestep) const {
   return supplyCost[timestep];
 }
@@ -29,12 +29,8 @@ double Appliance::supplyBack() const {
   return supply.back();
 }
 
-double Appliance::getPriority() const {
-  return priority;
-}
-
-void Appliance::setPriority(double priority) {
-  this->priority = priority;
+double Appliance::getPriorityAt(const int timestep) const {
+  return priority[timestep];
 }
 
 void Appliance::setRecieved(const double r) {
@@ -45,12 +41,27 @@ void Appliance::setRecievedCost(const double c) {
   recievedCost.push_back(c);
 }
 
-void Appliance::saveSetup() {
+void Appliance::setupSave() {
   DataStore::addVariable(idString + "_supplied");
   DataStore::addVariable(idString + "_suppliedCost");
   DataStore::addVariable(idString + "_recieved");
   DataStore::addVariable(idString + "_requested");
   DataStore::addVariable(idString + "_cost");
+}
+
+void Appliance::setupPriority() {
+  int days = Utility::calculateNumberOfDays(SimulationConfig::info.startDay,
+                                            SimulationConfig::info.startMonth,
+                                            SimulationConfig::info.endDay,
+                                            SimulationConfig::info.endMonth);
+  int totoaltimesteps = days * 24 * SimulationConfig::info.timeStepsPerHour;
+  int leninsec = SimulationConfig::lengthOfTimestep();
+  for (int timeStep = 0; timeStep < totoaltimesteps; timeStep++) {
+    int numberOfSeconds = timeStep * leninsec;
+    int hour = numberOfSeconds / 3600;
+    int hourOfDay = hour % 24;
+    priority.push_back(hourlyPriority[hourOfDay]);
+  }
 }
 
 void Appliance::save() {
@@ -71,6 +82,10 @@ void Appliance::setGlobal(bool global) {
   this->global = global;
 }
 
-void Appliance::setHourlyCost(const std::vector<double> cost) {
+void Appliance::setHourlyCost(const std::vector<double> & cost) {
   hourlyCost = cost;
+}
+
+void Appliance::setHoulyPriority(const std::vector<double> & priority) {
+  this->hourlyPriority = priority;
 }

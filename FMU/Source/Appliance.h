@@ -14,20 +14,22 @@
 class Appliance : public Agent {
  public:
     Appliance();
+    void save();
+    void setupSave();
+    void setupPriority();
+    void setGlobal(bool global);
+    void setRecieved(const double r);
+    void setRecievedCost(const double c);
+    void setHourlyCost(const std::vector<double> & cost);
+    void setHoulyPriority(const std::vector<double> & priority);
+    bool isGlobal() const;
     double powerAt(const int timestep) const;
     double supplyAt(const int timestep) const;
     double supplyCostAt(const int timestep) const;
+    double getPriorityAt(const int timestep) const;
     double powerBack() const;
     double supplyBack() const;
-    double getPriority() const;
-    void setPriority(double priority);
-    void setRecieved(const double r);
-    void setHourlyCost(const std::vector<double> cost);
-    void setRecievedCost(const double c);
-    void save();
-    void saveSetup();
-    bool isGlobal() const;
-    void setGlobal(bool global);
+
 
  protected:
     std::vector<double> power;
@@ -36,8 +38,9 @@ class Appliance : public Agent {
     std::vector<double> recieved;
     std::vector<double> recievedCost;
     std::vector<double> hourlyCost;
+    std::vector<double> priority;
+    std::vector<double> hourlyPriority;
     bool global;
-    double priority;
 };
 
 #endif  // APPLIANCE_H_

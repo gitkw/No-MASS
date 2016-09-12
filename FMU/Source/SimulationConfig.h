@@ -120,7 +120,7 @@ struct windowStruct {
 struct appLargeStruct {
     std::string name;
     int id;
-    double priority;
+    std::vector<double> priority;
     double cost;
     double epsilon = 0.1;   // probability of a random action selection
     double alpha = 0.1;     // learning rate
@@ -133,7 +133,7 @@ struct appPVStruct {
     std::string file;
     int id;
     std::vector<double> cost;
-    double priority;
+    std::vector<double> priority;
 };
 
 struct appSmallStruct {
@@ -142,13 +142,13 @@ struct appSmallStruct {
   std::string Fractions;
   std::string SumRatedPowers;
   int id;
-  double priority;
+  std::vector<double> priority;
 };
 
 struct appFMIStruct {
   std::string variableName;
   int id;
-  double priority;
+  std::vector<double> priority;
 };
 
 struct buildingStruct {
@@ -222,6 +222,8 @@ class SimulationConfig {
     static bool nodeNameIs(const rapidxml::xml_node<> *node, const char * str2);
     static bool nodeNameIs(const std::string & name, const char * str2);
     static std::vector<double> csvToDouble(const std::string & s);
+    static std::vector<double> prioritiesToVector(
+                                        const std::string & priorities);
     static std::vector<int> activityNamesToIds(
                                   const std::vector<std::string> & activities);
     static const std::string nameToLower(const rapidxml::xml_node<> *node);
