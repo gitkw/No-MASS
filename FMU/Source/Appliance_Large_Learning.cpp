@@ -63,7 +63,7 @@ void Appliance_Large_Learning::startLearningPeriod(const int hourOfTheDay) {
   if (hourOfTheDay == powerProfile.front().startTime &&
       powerProfile.front().isLearningPeriod == false) {
     powerProfile.front().isLearningPeriod = true;
-    powerProfile.front().startTime = powerProfile.front().startTime -1;
+    //powerProfile.front().startTime = -1;
   }
 }
 
@@ -86,7 +86,8 @@ void Appliance_Large_Learning::stopLearningPeriod(const int hourOfTheDay) {
     qLearning.setReward(reward);
     qLearning.setState(hourOfTheDay);
     qLearning.learn();
-    powerProfile.erase(powerProfile.begin());
+      powerProfile.erase(powerProfile.begin());
+      //std::cout << "stop: " << hourOfTheDay << std::endl;
   }
 }
 
@@ -96,6 +97,10 @@ void Appliance_Large_Learning::step() {
   if (powerProfile.empty() == false) {
     int hourOfTheDay = calculateHourOfDay();
     if (powerProfile.front().startTime < 0) {
+        //if(hourOfTheDay == 0){
+        //    std::cout << "**************************" << std::endl;
+        //}
+        //std::cout << "start: " << hourOfTheDay << std::endl;
       calculateLearntStartTime(hourOfTheDay);
     }
     int stepCount = SimulationConfig::getStepCount();
@@ -138,6 +143,7 @@ void Appliance_Large_Learning::saveActualProfile() {
  */
 void Appliance_Large_Learning::stepApplianceOffAndNotLearning() {
   if (isOn() || match) {
+      std::cout << "match" << std::endl;
     calculateProfile();
   }
 }
@@ -147,7 +153,7 @@ void Appliance_Large_Learning::stepApplianceOffAndNotLearning() {
  * @param cost cost of using the appliance
  */
 void Appliance_Large_Learning::addToCost(const double cost) {
-  if (!powerProfile.empty()) {
+  if (!powerProfile.empty() && powerProfile.front().isLearningPeriod) {
     powerProfile.front().cost += cost;
   }
 }
@@ -163,6 +169,7 @@ void Appliance_Large_Learning::postprocess() {
 int Appliance_Large_Learning::calculateHourOfDay() const {
   int stepCount = SimulationConfig::getStepCount();
   int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
+
   return hour % 24;
 }
 
