@@ -23,7 +23,6 @@
 
 #include <iterator>
 #include <vector>
-#include <iostream>
 #include <string>
 #include <cstring>
 #include <cstddef>
@@ -54,6 +53,7 @@ static fmiValueReference vrStates[NUMBER_OF_STATES] = STATES;
 static fmiComponent instantiateModel(const char* fname, fmiString instanceName,
     fmiString GUID, fmiCallbackFunctions functions, fmiBoolean loggingOn) {
     DataStore::clear();
+    SimulationConfig::setStepCount(-1);
     if (valToRefs.empty()) {
         modelInstance->sim.preprocess();
         loadVariables();
@@ -108,7 +108,6 @@ fmiStatus fmiSetReal(fmiComponent c, const fmiValueReference vr[],
         DataStore::addValue(valToRefs.at(vr[i]), value[i]);
         // std::cout << valToRefs.at(vr[i]) << " " <<  value[i] << std::endl;
     }
-    modelInstance->sim.preTimeStep();
     if (LOG.getError()) {
       return fmiError;
     }
@@ -132,7 +131,6 @@ fmiStatus fmiSetString(fmiComponent c, const fmiValueReference vr[],
 
 fmiStatus fmiGetReal(fmiComponent c, const fmiValueReference vr[],
     size_t nvr, fmiReal value[]) {
-    modelInstance->sim.postTimeStep();
     for (unsigned int i = 0; i < nvr; i++) {
         value[i] = DataStore::getValue(valToRefs.at(vr[i]));
     }
@@ -222,7 +220,9 @@ fmiStatus fmiCancelStep(fmiComponent c) {
  */
 fmiStatus fmiDoStep(fmiComponent c, fmiReal currentCommunicationPoint,
     fmiReal communicationStepSize, fmiBoolean newStep) {
+    modelInstance->sim.preTimeStep();
     modelInstance->sim.timeStep();
+    modelInstance->sim.postTimeStep();
     if (LOG.getError()) {
       return fmiError;
     }

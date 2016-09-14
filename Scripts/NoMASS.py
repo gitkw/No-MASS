@@ -4,8 +4,9 @@ from shutil import copyfile, copytree, rmtree
 import glob
 import subprocess
 import random
-
+import pandas as pd
 import xml.etree.ElementTree as ET
+import time
 
 class NoMASS(object):
 
@@ -24,18 +25,24 @@ class NoMASS(object):
         self.outFile = "NoMASS.out"
         self.appLearningFile = '*.dat'
         self.numberOfSimulations = 1
-        self.learnUpToSimulation = 0
+        self.learn = False
+        self.learntData = ""
         self.clean = True
+        self.pandasFiles = False
+        self.outFiles = False
+        self.xmlFiles = False
         self.seed = -1
         self.printInput = False
         self.epsilon = 0.1
         self.alpha = 0.1
         self.gamma = 0.1
+        self.start = time.time()
 
     def deleteLearningData(self):
-        ll = self.learnLoc()
+        ll = self.learntDataLocation()
         if os.path.exists(ll):
             rmtree(ll)
+            self.resultsLocation + 'NoMASS.out.hdf'
 
     def printConfiguration(self):
         print "Run location: {}".format(self.runLocation)
@@ -44,7 +51,7 @@ class NoMASS(object):
         print "resultsLocation: {}".format(self.resultsLocation)
         print "printInput: {}".format(self.printInput)
         print "numberOfSimulations: {}".format(self.numberOfSimulations)
-        print "learnUpToSimulation: {}".format(self.learnUpToSimulation)
+        print "Learning: {}".format(self.learn)
         con = self.configurationDirectory
         tree = ET.parse(con + self.simulationFile)
         root = tree.getroot()
@@ -63,10 +70,16 @@ class NoMASS(object):
                         print "Grid enabled"
 
     def simulate(self):
+        self.start = time.time()
+        ll = self.resultsLocation + 'NoMASS.out.hdf'
+        if os.path.exists(ll):
+            os.remove(ll)
         if self.printInput:
             self.printConfiguration()
         for x in range(0, self.numberOfSimulations):
-            print "Simulation: " + str(x)
+            if x % 25 == 1:
+                elapsed = time.time() - self.start
+                print "Simulation: %i Time: %02d seconds"  % (x, elapsed)
             self.copyToRunLocation(x)
             self.makeExecutable(x)
             self.configuration(x)
@@ -74,9 +87,12 @@ class NoMASS(object):
             self.copyToResultsLocation(x)
             if self.clean:
                 rmtree(self.runLoc(x))
+        elapsed = time.time() - self.start
+        print "Total Simulation Time: %02d seconds"  % elapsed
 
-    def learning(self, x):
-        return x < self.learnUpToSimulation
+
+    def learning(self):
+        return self.learn
 
     def configuration(self, x):
         rl = self.runLoc(x)
@@ -94,7 +110,7 @@ class NoMASS(object):
                 for apps in building.findall('Appliances'):
                     for ll in apps.findall('LargeLearning'):
                         if ll.find('updateQTable') is not None :
-                            if self.learning(x):
+                            if self.learning():
                                 ll.find('updateQTable').text = str(1)
                             else:
                                 ll.find('updateQTable').text = str(0)
@@ -127,23 +143,30 @@ class NoMASS(object):
         rl = self.resultsLocation
         if not os.path.exists(rl):
             os.makedirs(rl)
-        outfileStr = "NoMASS-" + str(x).zfill(5) + ".out"
-        copyfile(self.runLoc(x)+self.outFile, rl+outfileStr)
-        outfileStr = "SimulationConfig-" + str(x).zfill(5) + ".xml"
-        copyfile(self.runLoc(x)+self.simulationFile, rl+outfileStr)
-        if self.learning(x):
+        if self.outFiles:
+            outfileStr = "NoMASS-" + str(x).zfill(5) + ".out"
+            copyfile(self.runLoc(x)+self.outFile, rl+outfileStr)
+        self.createPandasFiles(x, self.runLoc(x)+self.outFile)
+        if self.xmlFiles:
+            outfileStr = "SimulationConfig-" + str(x).zfill(5) + ".xml"
+            copyfile(self.runLoc(x)+self.simulationFile, rl+outfileStr)
+        if self.learning():
             for f in glob.glob(self.runLoc(x) + self.appLearningFile):
                 path = os.path.dirname(f)
                 filename = os.path.basename(f)
                 copyfile(f, rl + filename + "." + str(x).zfill(5))
-                ll = self.learnLoc()
+                ll = self.learntDataLocation()
                 copyfile(f, ll + filename)
 
     def runLoc(self, x):
         return self.runLocation + self.simulationLocation + str(x) +  "/"
 
-    def learnLoc(self):
-        return self.runLocation +  "learningdata/"
+    def learntDataLocation(self):
+        if self.learntData == "":
+            self.learntData = self.resultsLocation + "learningdata/"
+            if not os.path.exists(self.learntData):
+                os.makedirs(self.learntData)
+        return self.learntData
 
     def copyToRunLocation(self, x):
         rl = self.runLoc(x)
@@ -158,16 +181,14 @@ class NoMASS(object):
         if os.path.isdir(rl + self.smallApplianceFolder):
             rmtree(rl + self.smallApplianceFolder)
         copytree(con + self.smallApplianceFolder, rl + self.smallApplianceFolder)
-        ll = self.learnLoc()
-        if self.learning(x):
+        ll = self.learntDataLocation()
+        if self.learning():
             if not os.path.exists(ll):
                 os.makedirs(ll)
         for f in glob.glob(ll + self.appLearningFile):
             path = os.path.dirname(f)
             filename = os.path.basename(f)
             copyfile(f, rl + filename)
-
-
 
     def makeExecutable(self, x):
         rl = self.runLoc(x)
@@ -179,3 +200,17 @@ class NoMASS(object):
         rl = self.runLoc(x)
         p = subprocess.Popen('./' + self.NoMASSstr, cwd=rl)
         p.communicate()
+
+    def createPandasFiles(self, x, filename):
+        if self.pandasFiles:
+            a = pd.read_csv(filename)
+            a['nsim'] = x
+            a.to_hdf(self.resultsLocation + 'NoMASS.out.hdf','file%i'%x, mode='a')
+
+    def getPandasDF(self):
+        ad = pd.DataFrame()
+        store = pd.HDFStore(self.resultsLocation + 'NoMASS.out.hdf')
+        for j in range(0,self.numberOfSimulations):
+            a = store.get('file%i'%j)
+            ad = ad.append(a, ignore_index=True)
+        return ad

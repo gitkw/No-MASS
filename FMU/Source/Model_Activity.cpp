@@ -175,8 +175,8 @@ std::vector<double> Model_Activity::multinominal() {
                 }
             }
         }
-        activities.push_back(
-                    multinominalActivity(p[season][dayOfWeek], hourCount));
+        double act = multinominalActivity(p[season][dayOfWeek], hourCount);
+        activities.push_back(act);
     }
     return activities;
 }

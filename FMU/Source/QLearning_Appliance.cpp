@@ -5,10 +5,10 @@
 
 void QLearning_Appliance::setId(const int id) {
     this->id = id;
-    reward_name = filename + "_reward"+ std::to_string(id);
-    action_name = filename + "_action"+ std::to_string(id);
-    state_name = filename + "_state"+ std::to_string(id);
-    previous_state_name = filename + "_previous_state"+ std::to_string(id);
+    reward_name = filename + "reward";
+    action_name = filename + "action";
+    state_name = filename + "state";
+    previous_state_name = filename + "previous_state";
     DataStore::addVariable(reward_name);
     DataStore::addVariable(action_name);
     DataStore::addVariable(state_name);
