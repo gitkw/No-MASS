@@ -62,6 +62,58 @@
           <priority>0</priority>
           <variablename>HVACPower</variablename>
         </FMIx>
+        <Large>
+          <id>0</id>
+          <priority>0</priority>
+        </Large>
+        <Large>
+          <id>2</id>
+          <priority>2</priority>
+        </Large>
+        <Large>
+          <id>3</id>
+          <priority>3</priority>
+        </Large>
+        <Large>
+          <id>4</id>
+          <priority>4</priority>
+        </Large>
+        <Large>
+          <id>5</id>
+          <priority>5</priority>
+        </Large>
+        <Small>
+          <id>6</id>
+          <priority>6</priority>
+          <WeibullParameters>weibull_parameters_audiovisual.csv</WeibullParameters>
+          <StateProbabilities>state_probability_audiovisual.csv</StateProbabilities>
+          <Fractions>mean_fractional_audiovisual.csv</Fractions>
+          <SumRatedPowers>sum_rated_av.txt</SumRatedPowers>
+        </Small>
+        <Small>
+          <id>7</id>
+          <priority>7</priority>
+          <WeibullParameters>weibull_parameters_other.csv</WeibullParameters>
+          <StateProbabilities>state_probability_other.csv</StateProbabilities>
+          <Fractions>mean_fractional_other.csv</Fractions>
+          <SumRatedPowers>sum_rated_oth.txt</SumRatedPowers>
+        </Small>
+        <Small>
+          <id>8</id>
+          <priority>8</priority>
+          <WeibullParameters>weibull_parameters_computing.csv</WeibullParameters>
+          <StateProbabilities>state_probability_computing.csv</StateProbabilities>
+          <Fractions>mean_fractional_computing.csv</Fractions>
+          <SumRatedPowers>sum_rated_comp.txt</SumRatedPowers>
+        </Small>
+        <Small>
+          <id>9</id>
+          <priority>9</priority>
+          <WeibullParameters>weibull_parameters_kitchen.csv</WeibullParameters>
+          <StateProbabilities>state_probability_kitchen.csv</StateProbabilities>
+          <Fractions>mean_fractional_kitchen.csv</Fractions>
+          <SumRatedPowers>sum_rated_kit.txt</SumRatedPowers>
+        </Small>
       </Appliances>
       <agents>
         <agent>

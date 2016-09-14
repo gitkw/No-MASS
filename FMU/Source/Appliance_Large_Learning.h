@@ -8,6 +8,18 @@
 #include "QLearning_Appliance.h"
 #include "Appliance_Large.h"
 
+
+struct profileStruct {
+    std::vector<double> power;
+    int startTime = -1;
+    double maxPriority = 0;
+    double cost = 0;
+    bool isLearningPeriod = false;
+    int nonLearningStep = 0;
+    unsigned int learningStep = 0;
+};
+
+
 /**
  * @brief Large appliances learning class
  * @details This will handle the appliance learning model for profile shifting
@@ -26,21 +38,13 @@ class Appliance_Large_Learning : public Appliance_Large {
   void setUpdate(bool update);
 
  private:
-  bool isLearningPeriod;
-  bool isWaitingForApplianceToStart;
-  int startTime;
-  int hoursWaited;
-  double maxPriority;
-  unsigned int learningStep;
-  unsigned int nonLearningStep;
-  double cost;
   std::string s_fullname_actual;
-  std::vector<std::vector<double>> powerProfile;
+  std::vector<profileStruct> powerProfile;
   QLearning_Appliance qLearning;
 
   void stepApplianceOffAndNotLearning();
-  bool calculateProfile();
-  void calculateLearntStartTime();
+  void calculateProfile();
+  void calculateLearntStartTime(const int hourOfTheDay);
   void startLearningPeriod(const int hourOfTheDay);
   void stopLearningPeriod(const int hourOfTheDay);
   void saveActualProfile();

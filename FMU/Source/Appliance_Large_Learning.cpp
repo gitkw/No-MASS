@@ -10,10 +10,6 @@
 Appliance_Large_Learning::Appliance_Large_Learning() {}
 
 void Appliance_Large_Learning::setup() {
-  isLearningPeriod = false;
-  isWaitingForApplianceToStart = false;
-  startTime = -1;
-  nonLearningStep = 0;
   std::string buildingString = "Building" + std::to_string(buildingID);
   std::string s_fullname = buildingString + "_Appliance";
   s_fullname = s_fullname + std::to_string(id) + "_";
@@ -35,17 +31,10 @@ void Appliance_Large_Learning::setup() {
  * @details set the current state for Q-learning
  * get the corresponding best action (start time)
  */
-void Appliance_Large_Learning::calculateLearntStartTime() {
-  int hourOfTheDay = calculateHourOfDay();
+void Appliance_Large_Learning::calculateLearntStartTime(
+                                              const int hourOfTheDay) {
   qLearning.setState(hourOfTheDay);
-  startTime = qLearning.getAction();
-  hoursWaited = startTime - hourOfTheDay;
-  if (hoursWaited < 0) {
-    hoursWaited = (24 - startTime) + hourOfTheDay;
-  }
-  maxPriority = 0;
-  learningStep = 0;
-  isWaitingForApplianceToStart = true;
+  powerProfile.front().startTime = qLearning.getAction();
 }
 
 /**
@@ -53,31 +42,28 @@ void Appliance_Large_Learning::calculateLearntStartTime() {
  * @details Calculate if the applaince is predicted a turn on
  * if so increment model and save teh power demand until turn off
  */
-bool Appliance_Large_Learning::calculateProfile() {
+void Appliance_Large_Learning::calculateProfile() {
   int stepCount = SimulationConfig::getStepCount();
   double p = model.consumption(stepCount);
-  std::vector<double> newPowerProfile;
+  profileStruct profile;
   while (isOn()) {
-    newPowerProfile.push_back(p);
-    model.decreaseDuration();
+    profile.power.push_back(p);
     stepCount++;
-    nonLearningStep++;
+    profile.nonLearningStep++;
+    model.decreaseDuration();
     p = model.consumption(stepCount);
   }
-  bool newProfile = newPowerProfile.size() > 0;
-  if (newProfile) {
-    powerProfile.push_back(newPowerProfile);
+  if (profile.power.size()) {
+    powerProfile.push_back(profile);
   }
-  return newProfile;
 }
 
 
 void Appliance_Large_Learning::startLearningPeriod(const int hourOfTheDay) {
-  if (hourOfTheDay == startTime && isWaitingForApplianceToStart) {
-    isWaitingForApplianceToStart = false;
-    isLearningPeriod = true;
-    startTime = startTime -1;
-    cost = 0.0;
+  if (hourOfTheDay == powerProfile.front().startTime &&
+      powerProfile.front().isLearningPeriod == false) {
+    powerProfile.front().isLearningPeriod = true;
+    powerProfile.front().startTime = powerProfile.front().startTime -1;
   }
 }
 
@@ -88,40 +74,46 @@ void Appliance_Large_Learning::startLearningPeriod(const int hourOfTheDay) {
  */
 double Appliance_Large_Learning::calculateReward() {
   // return -(cost / powerProfile.size() * hoursWaited * 0.1);
-  return -(cost / powerProfile.front().size() * maxPriority);
+  double costOfProfile = powerProfile.front().cost;
+  double sizeOfProfile = powerProfile.front().power.size();
+  double highestPriority = powerProfile.front().maxPriority;
+  return -(costOfProfile / sizeOfProfile * highestPriority);
 }
 
 void Appliance_Large_Learning::stopLearningPeriod(const int hourOfTheDay) {
-  if (learningStep >= powerProfile.front().size()) {
+  if (powerProfile.front().learningStep >= powerProfile.front().power.size()) {
     double reward = calculateReward();
     qLearning.setReward(reward);
     qLearning.setState(hourOfTheDay);
     qLearning.learn();
     powerProfile.erase(powerProfile.begin());
-    isLearningPeriod = false;
-    startTime = -1;
-    if (!powerProfile.empty()) {
-     calculateLearntStartTime();
-    }
   }
 }
 
 void Appliance_Large_Learning::step() {
   double p = 0.0;
-  int hourOfTheDay = calculateHourOfDay();
-  startLearningPeriod(hourOfTheDay);
-  if (isLearningPeriod) {
-    p = powerProfile.front()[learningStep];
-    learningStep++;
-    stopLearningPeriod(hourOfTheDay);
-  } else if (isWaitingForApplianceToStart == false) {
-    stepApplianceOffAndNotLearning();
+
+  if (powerProfile.empty() == false) {
+    int hourOfTheDay = calculateHourOfDay();
+    if (powerProfile.front().startTime < 0) {
+      calculateLearntStartTime(hourOfTheDay);
+    }
+    int stepCount = SimulationConfig::getStepCount();
+    if (powerProfile.front().maxPriority < priority[stepCount]) {
+      powerProfile.front().maxPriority = priority[stepCount];
+    }
+    startLearningPeriod(hourOfTheDay);
+    if (powerProfile.front().isLearningPeriod) {
+      p = powerProfile.front().power[powerProfile.front().learningStep];
+      powerProfile.front().learningStep++;
+      stopLearningPeriod(hourOfTheDay);
+    }
   }
+
+
+  stepApplianceOffAndNotLearning();
   saveActualProfile();
-  int stepCount = SimulationConfig::getStepCount();
-  if (maxPriority < priority[stepCount]) {
-    maxPriority = priority[stepCount];
-  }
+
   power.push_back(p);
   supply.push_back(0.0);
   supplyCost.push_back(0.0);
@@ -129,10 +121,11 @@ void Appliance_Large_Learning::step() {
 
 void Appliance_Large_Learning::saveActualProfile() {
   double p = 0.0;
-  if (nonLearningStep > 0) {
-    int i = powerProfile.front().size() - nonLearningStep;
-    p = powerProfile.front()[i];
-    nonLearningStep--;
+  if (powerProfile.empty() == false &&
+              powerProfile.front().nonLearningStep > 0) {
+    int i = powerProfile.front().power.size() - powerProfile.front().nonLearningStep;
+    p = powerProfile.front().power[i];
+    powerProfile.front().nonLearningStep--;
   }
   DataStore::addValue(s_fullname_actual, p);
 }
@@ -145,9 +138,7 @@ void Appliance_Large_Learning::saveActualProfile() {
  */
 void Appliance_Large_Learning::stepApplianceOffAndNotLearning() {
   if (isOn() || match) {
-    if (calculateProfile()) {
-     calculateLearntStartTime();
-    }
+    calculateProfile();
   }
 }
 
@@ -156,7 +147,9 @@ void Appliance_Large_Learning::stepApplianceOffAndNotLearning() {
  * @param cost cost of using the appliance
  */
 void Appliance_Large_Learning::addToCost(const double cost) {
-  this->cost += cost;
+  if (!powerProfile.empty()) {
+    powerProfile.front().cost += cost;
+  }
 }
 
 /**

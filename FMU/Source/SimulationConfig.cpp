@@ -213,7 +213,6 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
       if (nodeNameIs(cnode, "large")) {
         b->AppliancesLarge.push_back(s);
       } else if (nodeNameIs(cnode, "largelearning")) {
-
         b->AppliancesLargeLearning.push_back(s);
       } else if (nodeNameIs(cnode, "grid")) {
         b->AppliancesGrid.push_back(s);
@@ -572,6 +571,8 @@ void SimulationConfig::parseConfiguration(const std::string & filename) {
         SimulationConfig::info.startDay = std::stoi(node->value());
     } else if (nodeNameIs(name, "learn")) {
         SimulationConfig::info.learn = std::stoi(node->value());
+    } else if (nodeNameIs(name, "startdayofweek")) {
+        SimulationConfig::info.startDayOfWeek = std::stoi(node->value());
     } else if (nodeNameIs(name, "learnupdate")) {
         SimulationConfig::info.learnupdate = std::stoi(node->value());
     } else if (nodeNameIs(name, "learnep")) {

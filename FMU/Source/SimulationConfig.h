@@ -180,7 +180,7 @@ struct simulationStruct {
     int timeSteps;
     int startDay;
     int startMonth;
-    int startDayOfWeek;
+    int startDayOfWeek = 1;
     int endDay;
     int endMonth;
     int caseOrder;

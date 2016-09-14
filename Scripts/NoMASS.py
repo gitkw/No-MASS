@@ -28,19 +28,21 @@ class NoMASS(object):
         self.learn = False
         self.learntData = ""
         self.clean = True
-        self.PandasFiles = False
+        self.pandasFiles = False
+        self.outFiles = False
+        self.xmlFiles = False
         self.seed = -1
         self.printInput = False
         self.epsilon = 0.1
         self.alpha = 0.1
         self.gamma = 0.1
-        self.pddf = pd.DataFrame()
         self.start = time.time()
 
     def deleteLearningData(self):
         ll = self.learntDataLocation()
         if os.path.exists(ll):
             rmtree(ll)
+            self.resultsLocation + 'NoMASS.out.hdf'
 
     def printConfiguration(self):
         print "Run location: {}".format(self.runLocation)
@@ -69,6 +71,9 @@ class NoMASS(object):
 
     def simulate(self):
         self.start = time.time()
+        ll = self.resultsLocation + 'NoMASS.out.hdf'
+        if os.path.exists(ll):
+            os.remove(ll)
         if self.printInput:
             self.printConfiguration()
         for x in range(0, self.numberOfSimulations):
@@ -82,8 +87,9 @@ class NoMASS(object):
             self.copyToResultsLocation(x)
             if self.clean:
                 rmtree(self.runLoc(x))
-        if self.PandasFiles:
-            self.pddf.to_hdf(self.resultsLocation + 'NoMASS.out.hdf','NoMass',mode='w')
+        elapsed = time.time() - self.start
+        print "Total Simulation Time: %02d seconds"  % elapsed
+
 
     def learning(self):
         return self.learn
@@ -137,11 +143,13 @@ class NoMASS(object):
         rl = self.resultsLocation
         if not os.path.exists(rl):
             os.makedirs(rl)
-        outfileStr = "NoMASS-" + str(x).zfill(5) + ".out"
-        copyfile(self.runLoc(x)+self.outFile, rl+outfileStr)
+        if self.outFiles:
+            outfileStr = "NoMASS-" + str(x).zfill(5) + ".out"
+            copyfile(self.runLoc(x)+self.outFile, rl+outfileStr)
         self.createPandasFiles(x, self.runLoc(x)+self.outFile)
-        outfileStr = "SimulationConfig-" + str(x).zfill(5) + ".xml"
-        copyfile(self.runLoc(x)+self.simulationFile, rl+outfileStr)
+        if self.xmlFiles:
+            outfileStr = "SimulationConfig-" + str(x).zfill(5) + ".xml"
+            copyfile(self.runLoc(x)+self.simulationFile, rl+outfileStr)
         if self.learning():
             for f in glob.glob(self.runLoc(x) + self.appLearningFile):
                 path = os.path.dirname(f)
@@ -182,8 +190,6 @@ class NoMASS(object):
             filename = os.path.basename(f)
             copyfile(f, rl + filename)
 
-
-
     def makeExecutable(self, x):
         rl = self.runLoc(x)
         nomassexe = rl+self.NoMASSstr
@@ -196,7 +202,15 @@ class NoMASS(object):
         p.communicate()
 
     def createPandasFiles(self, x, filename):
-        if self.PandasFiles:
+        if self.pandasFiles:
             a = pd.read_csv(filename)
             a['nsim'] = x
-            self.pddf = self.pddf.append(a, ignore_index=True)
+            a.to_hdf(self.resultsLocation + 'NoMASS.out.hdf','file%i'%x, mode='a')
+
+    def getPandasDF(self):
+        ad = pd.DataFrame()
+        store = pd.HDFStore(self.resultsLocation + 'NoMASS.out.hdf')
+        for j in range(0,self.numberOfSimulations):
+            a = store.get('file%i'%j)
+            ad = ad.append(a, ignore_index=True)
+        return ad

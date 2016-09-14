@@ -3,10 +3,10 @@
   <seedx>0</seedx>
   <timeStepsPerHour>60</timeStepsPerHour>
   <beginMonth>1</beginMonth>
-  <endMonth>1</endMonth>
+  <endMonth>12</endMonth>
   <beginDay>1</beginDay>
-  <endDay>7</endDay>
-  <save>1</save>
+  <endDay>31</endDay>
+  <save>0</save>
   <learnupdate>1</learnupdate>
   <learnep>0.01</learnep>
   <GridCost>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</GridCost>
@@ -49,7 +49,12 @@
       </Large>
       <LargeLearning>
         <id>1</id>
-        <priority>1</priority>
+        <priority>0.1,0.1,0.1,0.1,0.1,0.1,0.1,1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1</priority>
+        <epsilon>0.1</epsilon>
+        <alpha>0.1</alpha>
+        <gamma>0.1</gamma>
+        <updateQTable>1</updateQTable>
+        <activities>WashingAppliance</activities>
       </LargeLearning>
       <Large>
         <id>2</id>
