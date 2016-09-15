@@ -20,21 +20,20 @@ void Building_Appliances::setup(const buildingStruct & b) {
   DataStore::addVariable(buildingString + "_Sum_Large");
   DataStore::addVariable(buildingString + "_Sum_Cost");
 
-  std::vector<appPVStruct> appPV =
-                  b.AppliancesPV;
-  for (const appPVStruct s : appPV) {
-    pv.push_back(Appliance_PV());
-    pv.back().setID(s.id);
-    pv.back().setHoulyPriority(s.priority);
-    pv.back().setHourlyCost(s.cost);
-    pv.back().setBuildingID(buildingID);
-    pv.back().setFileName(s.file);
-    pv.back().setup();
-    pv.back().setIDString(buildingString + std::to_string(s.id));
-    pv.back().setupSave();
-    pv.back().setupPriority();
-
-    //  addAppToDataStrore(s.id);
+  std::vector<appCSVStruct> appCSV =
+                  b.AppliancesCSV;
+  for (const appCSVStruct s : appCSV) {
+    csv.push_back(Appliance_Generic_CSV());
+    csv.back().setID(s.id);
+    csv.back().setHoulyPriority(s.priority);
+    csv.back().setHourlyCost(s.cost);
+    csv.back().setBuildingID(buildingID);
+    csv.back().setFileDemand(s.fileDemand);
+    csv.back().setFileSupply(s.fileSupply);
+    csv.back().setup();
+    csv.back().setIDString(buildingString + std::to_string(s.id));
+    csv.back().setupSave();
+    csv.back().setupPriority();
   }
 
   std::vector<appLargeStruct> app =
@@ -49,7 +48,6 @@ void Building_Appliances::setup(const buildingStruct & b) {
     large.back().setIDString(buildingString + std::to_string(s.id));
     large.back().setupSave();
     large.back().setupPriority();
-    //  addAppToDataStrore(s.id);
   }
 
   app = b.AppliancesLargeLearning;
@@ -67,7 +65,6 @@ void Building_Appliances::setup(const buildingStruct & b) {
     largeLearning.back().setIDString(buildingString + std::to_string(s.id));
     largeLearning.back().setupSave();
     largeLearning.back().setupPriority();
-    //  addAppToDataStrore(s.id);
   }
 
   std::vector<appSmallStruct> appSmall =
@@ -84,7 +81,6 @@ void Building_Appliances::setup(const buildingStruct & b) {
     small.back().setIDString(buildingString + std::to_string(s.id));
     small.back().setupSave();
     small.back().setupPriority();
-    //  addAppToDataStrore(s.id);
   }
 
   std::vector<appFMIStruct> appFMI =
@@ -98,7 +94,6 @@ void Building_Appliances::setup(const buildingStruct & b) {
     fmi.back().setIDString(buildingString + std::to_string(s.id));
     fmi.back().setupSave();
     fmi.back().setupPriority();
-    //  addAppToDataStrore(s.id);
   }
 }
 
@@ -107,9 +102,9 @@ void Building_Appliances::preprocess() {
   for (int a : pop) {
       small[a].preprocess();
   }
-  pop = Utility::randomIntVect(pv.size());
+  pop = Utility::randomIntVect(csv.size());
   for (int a : pop) {
-      pv[a].preprocess();
+      csv[a].preprocess();
   }
 }
 
@@ -170,10 +165,10 @@ void Building_Appliances::stepLocalSmall() {
   }
 }
 
-void Building_Appliances::stepLocalPV() {
-  std::vector<int> pop = Utility::randomIntVect(pv.size());
+void Building_Appliances::stepLocalCSV() {
+  std::vector<int> pop = Utility::randomIntVect(csv.size());
   for (int a : pop) {
-    sendContractLocal(pv[a]);
+    sendContractLocal(csv[a]);
   }
 }
 
@@ -188,7 +183,7 @@ void Building_Appliances::stepLocalFMI() {
 void Building_Appliances::stepLocal() {
   PowerRequested = 0;
   PowerGenerated = 0;
-  stepLocalPV();
+  stepLocalCSV();
   stepLocalLarge();
   stepLocalSmall();
   stepLocalFMI();
@@ -206,7 +201,7 @@ void Building_Appliances::stepLocalNegotiation() {
   localNegotiationLarge();
   localNegotiationLargeLearning();
   localNegotiationFMI();
-  localNegotiationPV();
+  localNegotiationCSV();
   app_negotiation.clear();
 }
 
@@ -319,34 +314,34 @@ void Building_Appliances::localNegotiationLargeLearning() {
   }
 }
 
-void Building_Appliances::globalNegotiationPV(
+void Building_Appliances::globalNegotiationCSV(
                                 const LVN_Negotiation & building_negotiation) {
-  std::vector<int> pop = Utility::randomIntVect(pv.size());
+  std::vector<int> pop = Utility::randomIntVect(csv.size());
   for (int a : pop) {
-    if (pv[a].isGlobal()) {
-    int appid = pv[a].getID();
+    if (csv[a].isGlobal()) {
+    int appid = csv[a].getID();
     contract c = building_negotiation.getContract(buildingID, appid);
     double power = c.recieved;
     double cost = c.recievedCost;
-    pv[a].setRecieved(power);
-    pv[a].setRecievedCost(cost);
-    pv[a].save();
+    csv[a].setRecieved(power);
+    csv[a].setRecievedCost(cost);
+    csv[a].save();
     }
   }
 }
 
-void Building_Appliances::localNegotiationPV() {
-  std::vector<int> pop = Utility::randomIntVect(pv.size());
+void Building_Appliances::localNegotiationCSV() {
+  std::vector<int> pop = Utility::randomIntVect(csv.size());
   for (int a : pop) {
-    int appid = pv[a].getID();
+    int appid = csv[a].getID();
     contract c = app_negotiation.getContract(buildingID, appid);
-    pv[a].setGlobal(sendContractGlobal(c));
-    if (!pv[a].isGlobal()) {
+    csv[a].setGlobal(sendContractGlobal(c));
+    if (!csv[a].isGlobal()) {
       double power = c.recieved;
       double cost = c.recievedCost;
-      pv[a].setRecieved(power);
-      pv[a].setRecievedCost(cost);
-      pv[a].save();
+      csv[a].setRecieved(power);
+      csv[a].setRecievedCost(cost);
+      csv[a].save();
     }
   }
 }
@@ -393,7 +388,7 @@ void Building_Appliances::stepGlobalNegotiation(
   globalNegotiationLargeLearning(building_negotiation);
   globalNegotiationSmall(building_negotiation);
   globalNegotiationFMI(building_negotiation);
-  globalNegotiationPV(building_negotiation);
+  globalNegotiationCSV(building_negotiation);
   globalContracts.clear();
   double totalPowerRecieved = sum_small + sum_large + sum_fmi;
   DataStore::addValue(buildingString + "_Sum_Small", sum_small);

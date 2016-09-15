@@ -19,6 +19,7 @@ class NoMASS(object):
         self.simulationFile = "SimulationConfig.xml"
         self.activityFile = "Activity.xml"
         self.largeApplianceFile = "AppliancesLarge.xml"
+        self.HeatingPowerFile = "HeatingPower.csv"
         self.PVFile = "PVBowler2013_365.csv"
         self.smallApplianceFolder = "SmallAppliances"
         self.resultsLocation = "Results"
@@ -177,6 +178,7 @@ class NoMASS(object):
         copyfile(con + self.simulationFile, rl + self.simulationFile)
         copyfile(con + self.activityFile, rl + self.activityFile)
         copyfile(con + self.largeApplianceFile, rl + self.largeApplianceFile)
+        copyfile(con + self.HeatingPowerFile, rl + self.HeatingPowerFile)
         copyfile(con + self.PVFile, rl + self.PVFile)
         if os.path.isdir(rl + self.smallApplianceFolder):
             rmtree(rl + self.smallApplianceFolder)

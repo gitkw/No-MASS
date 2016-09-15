@@ -4,21 +4,30 @@
 #include "DataStore.h"
 #include "SimulationConfig.h"
 #include "Utility.h"
-#include "Appliance_PV.h"
+#include "Appliance_Generic_CSV.h"
 
-Appliance_PV::Appliance_PV() {}
+Appliance_Generic_CSV::Appliance_Generic_CSV() {}
 
 /**
  * @brief read in the csv file containing the power values
  */
-void Appliance_PV::setup() {
-  model.parseConfiguration(SimulationConfig::RunLocation + filename);
+void Appliance_Generic_CSV::setup() {
+  enableSupply = false;
+  enableDemand = false;
+  if (fileSupply != "") {
+    enableSupply = true;
+    modelSupply.parseConfiguration(SimulationConfig::RunLocation + fileSupply);
+  }
+  if (fileDemand != "") {
+    enableDemand = true;
+    modelDemand.parseConfiguration(SimulationConfig::RunLocation + fileDemand);
+  }
 }
 
 /**
  * @brief retrieves power values for each timestep
  */
-void Appliance_PV::preprocess() {
+void Appliance_Generic_CSV::preprocess() {
   int days = Utility::calculateNumberOfDays(SimulationConfig::info.startDay,
                                             SimulationConfig::info.startMonth,
                                             SimulationConfig::info.endDay,
@@ -34,9 +43,15 @@ void Appliance_PV::preprocess() {
     int day = hour / 24;
     int now = numberOfSeconds;
     int end = numberOfSeconds + leninsec;
-    double p = 0;
+    double s = 0;
+    double d = 0;
     while (now < end) {
-      p += model.supply(day, minuteOfDay);
+      if (enableSupply) {
+        s += modelSupply.power(day, minuteOfDay);
+      }
+      if (enableDemand) {
+        d += modelDemand.power(day, minuteOfDay);
+      }
       minuteOfDay += 1;
       if (minuteOfDay >= 1440) {
         minuteOfDay = 0;
@@ -45,15 +60,13 @@ void Appliance_PV::preprocess() {
       now += 60;
     }
     // watt hour per timeperhour
-    supply.push_back(p);
+    supply.push_back(s);
     if (hourlyCost.size() == 24) {
       supplyCost.push_back(hourlyCost[hourOfDay]);
     } else {
       supplyCost.push_back(hourlyCost[0]);
     }
-    power.push_back(0);
-    recieved.push_back(0);
-    recievedCost.push_back(0);
+    power.push_back(d);
   }
 }
 
@@ -61,6 +74,14 @@ void Appliance_PV::preprocess() {
  * @brief Sets the csv file to be read in.
  * @param filename: the file name
  */
-void Appliance_PV::setFileName(std::string filename) {
-  this->filename = filename;
+void Appliance_Generic_CSV::setFileSupply(const std::string & filename) {
+  this->fileSupply = filename;
+}
+
+/**
+ * @brief Sets the csv file to be read in.
+ * @param filename: the file name
+ */
+void Appliance_Generic_CSV::setFileDemand(const std::string & filename) {
+  this->fileDemand = filename;
 }

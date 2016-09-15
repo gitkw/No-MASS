@@ -57,6 +57,12 @@
           <filename>PV_single_profile.csv</filename>
           <cost>0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002,0.002</cost>
         </pv>
+        <csv>
+          <id>11</id>
+          <priority>100</priority>
+          <demand>HeatingPower.csv</demand>
+          <cost>0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.0,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2</cost>
+        </csv>
         <FMIx>
           <id>11</id>
           <priority>0</priority>
@@ -121,13 +127,13 @@
           <window>1</window>
           <office>Block1:Zone1</office>
           <power>0.5</power>
-          <age>age2</age>
-          <computer>computer0</computer>
+          <age>age3</age>
+          <computer>computer1</computer>
           <civstat>civstat1</civstat>
           <unemp>unemp0</unemp>
-          <retired>retired1</retired>
-          <edtry>edtry1</edtry>
-          <famstat>famstat3</famstat>
+          <retired>retired0</retired>
+          <edtry>edtry3</edtry>
+          <famstat>famstat0</famstat>
           <sex>sex2</sex>
           <bedroom>Block2:MasterBedroom</bedroom>
           <profile>
@@ -139,14 +145,14 @@
           <window>1</window>
           <power>0.5</power>
           <office>Block1:Zone1</office>
-          <age>age2</age>
-          <computer>computer0</computer>
+          <age>age3</age>
+          <computer>computer1</computer>
           <civstat>civstat1</civstat>
           <unemp>unemp0</unemp>
-          <retired>retired1</retired>
-          <edtry>edtry1</edtry>
-          <famstat>famstat3</famstat>
-          <sex>sex2</sex>
+          <retired>retired0</retired>
+          <edtry>edtry3</edtry>
+          <famstat>famstat0</famstat>
+          <sex>sex1</sex>
           <bedroom>Block2:MasterBedroom</bedroom>
           <profile>
             <file>Activity.xml</file>

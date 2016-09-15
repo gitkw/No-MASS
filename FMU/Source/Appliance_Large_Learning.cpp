@@ -61,9 +61,8 @@ void Appliance_Large_Learning::calculateProfile() {
 
 void Appliance_Large_Learning::startLearningPeriod(const int hourOfTheDay) {
   if (hourOfTheDay == powerProfile.front().startTime &&
-      powerProfile.front().isLearningPeriod == false) {
+    powerProfile.front().isLearningPeriod == false) {
     powerProfile.front().isLearningPeriod = true;
-    //powerProfile.front().startTime = -1;
   }
 }
 
@@ -87,7 +86,6 @@ void Appliance_Large_Learning::stopLearningPeriod(const int hourOfTheDay) {
     qLearning.setState(hourOfTheDay);
     qLearning.learn();
       powerProfile.erase(powerProfile.begin());
-      //std::cout << "stop: " << hourOfTheDay << std::endl;
   }
 }
 
@@ -97,10 +95,6 @@ void Appliance_Large_Learning::step() {
   if (powerProfile.empty() == false) {
     int hourOfTheDay = calculateHourOfDay();
     if (powerProfile.front().startTime < 0) {
-        //if(hourOfTheDay == 0){
-        //    std::cout << "**************************" << std::endl;
-        //}
-        //std::cout << "start: " << hourOfTheDay << std::endl;
       calculateLearntStartTime(hourOfTheDay);
     }
     int stepCount = SimulationConfig::getStepCount();
@@ -143,7 +137,6 @@ void Appliance_Large_Learning::saveActualProfile() {
  */
 void Appliance_Large_Learning::stepApplianceOffAndNotLearning() {
   if (isOn() || match) {
-      std::cout << "match" << std::endl;
     calculateProfile();
   }
 }
