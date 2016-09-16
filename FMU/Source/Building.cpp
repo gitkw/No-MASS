@@ -72,8 +72,9 @@ void Building::step() {
     for (int a : pop) {
         population[a].step();
         appliances.addCurrentStates(population[a].getStateID());
+        // std::cout << population[a].getStateID() << " ";
     }
-
+    //  std::cout << std::endl;
 
     for (std::shared_ptr<Building_Zone> &zone : zones) {
         if (!zone->isActive()) {

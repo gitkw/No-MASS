@@ -52,6 +52,7 @@ void Simulation::setupSimulationModel() {
     DataStore::addVariable("month");
     DataStore::addVariable("hour");
     DataStore::addVariable("hourOfDay");
+    DataStore::addVariable("minuteOfDay");
     DataStore::addVariable("TimeStep");
     for (buildingStruct b : SimulationConfig::buildings) {
       buildings.push_back(Building());
@@ -78,7 +79,8 @@ void Simulation::postprocess() {
  */
 void Simulation::preTimeStep() {
   int stepCount = SimulationConfig::getStepCount();
-  int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
+  int minute = (stepCount * SimulationConfig::lengthOfTimestep()) / 60;
+  int hour = minute / 60;
   int day = hour / 24;
 
   int month = 1;
@@ -90,10 +92,12 @@ void Simulation::preTimeStep() {
   }
 
   int hourOfDay = hour % 24;
+  int minuteOfDay = minute % 1440;
   DataStore::addValue("TimeStep", stepCount);
   DataStore::addValue("day", day);
   DataStore::addValue("hour", hour);
   DataStore::addValue("hourOfDay", hourOfDay);
+  DataStore::addValue("minuteOfDay", minuteOfDay);
   DataStore::addValue("month", month);
   Environment::calculateDailyMeanTemperature();
 }

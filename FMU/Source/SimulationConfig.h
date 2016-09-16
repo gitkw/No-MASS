@@ -129,8 +129,9 @@ struct appLargeStruct {
     std::vector<int> activities;
 };
 
-struct appPVStruct {
-    std::string file;
+struct appCSVStruct {
+    std::string fileSupply;
+    std::string fileDemand;
     int id;
     std::vector<double> cost;
     std::vector<double> priority;
@@ -157,7 +158,7 @@ struct buildingStruct {
     std::vector<appLargeStruct> AppliancesGrid;
     std::vector<appLargeStruct> AppliancesLargeLearning;
     std::vector<appSmallStruct> AppliancesSmall;
-    std::vector<appPVStruct> AppliancesPV;
+    std::vector<appCSVStruct> AppliancesCSV;
     std::vector<appFMIStruct> AppliancesFMI;
     std::vector<agentStruct> agents;
     std::string name;

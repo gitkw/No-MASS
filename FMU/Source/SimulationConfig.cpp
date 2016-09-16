@@ -251,12 +251,14 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         anode = anode->next_sibling();
       }
       b->AppliancesFMI.push_back(s);
-    } else if (nodeNameIs(cnode, "pv")) {
+    } else if (nodeNameIs(cnode, "pv") || nodeNameIs(cnode, "csv")) {
         rapidxml::xml_node<> *anode = cnode->first_node();
-        appPVStruct s;
+        appCSVStruct s;
         while (anode) {
-          if (nodeNameIs(anode, "filename")) {
-            s.file = anode->value();
+          if (nodeNameIs(anode, "filename") || nodeNameIs(anode, "supply")) {
+            s.fileSupply = anode->value();
+          } else if (nodeNameIs(anode, "demand")) {
+            s.fileDemand = anode->value();
           } else if (nodeNameIs(anode, "id")) {
             s.id = std::stoi(anode->value());
           } else if (nodeNameIs(anode, "priority")) {
@@ -266,7 +268,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
           }
           anode = anode->next_sibling();
         }
-        b->AppliancesPV.push_back(s);
+        b->AppliancesCSV.push_back(s);
       }
     cnode = cnode->next_sibling();
   }

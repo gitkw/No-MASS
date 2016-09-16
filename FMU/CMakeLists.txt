@@ -69,7 +69,7 @@ Source/Model_Appliance_Ownership.cpp
 Source/Model_Appliance_Large_Usage.cpp
 Source/Model_Appliance_Large_Usage_Survival.cpp
 Source/Model_Appliance_Small_Usage.cpp
-Source/Model_Appliance_PV_CSV.cpp
+Source/Model_Appliance_Power_CSV.cpp
 Source/Simulation.cpp
 Source/SimulationConfig.cpp
 Source/State.cpp
@@ -98,7 +98,7 @@ Source/QLearning_Appliance.cpp
 Source/Appliance.cpp
 Source/Appliance_Large.cpp
 Source/Appliance_Small.cpp
-Source/Appliance_PV.cpp
+Source/Appliance_Generic_CSV.cpp
 Source/Appliance_FMI.cpp
 Source/Appliance_Large_Learning.cpp
 Source/LVN.cpp
@@ -224,6 +224,8 @@ configure_file(tests/Files/AppliancesLarge.xml
                 ${CMAKE_CURRENT_BINARY_DIR}/AppliancesLarge.xml)
 configure_file(tests/Files/PVBowler2013_365.csv
                 ${CMAKE_CURRENT_BINARY_DIR}/PVBowler2013_365.csv)
+configure_file(tests/Files/HeatingPower.csv
+                ${CMAKE_CURRENT_BINARY_DIR}/HeatingPower.csv)
 
 
 file(COPY tests/Files/SmallAppliances DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)

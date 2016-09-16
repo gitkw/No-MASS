@@ -9,7 +9,7 @@
 #include "Appliance_Large_Learning.h"
 #include "Appliance_Small.h"
 #include "Appliance_FMI.h"
-#include "Appliance_PV.h"
+#include "Appliance_Generic_CSV.h"
 #include "Appliance.h"
 #include "LVN_Negotiation.h"
 #include "SimulationConfig.h"
@@ -43,7 +43,7 @@ class Building_Appliances {
     std::vector<Appliance_Large_Learning> largeLearning;
     std::vector<Appliance_Small> small;
     std::vector<Appliance_FMI> fmi;
-    std::vector<Appliance_PV> pv;
+    std::vector<Appliance_Generic_CSV> csv;
     std::vector<int> currentStates;
     std::string buildingString;
 
@@ -58,18 +58,18 @@ class Building_Appliances {
     void stepLocalSmall();
     void stepLocalLarge();
     void stepLocalLargeLearning();
-    void stepLocalPV();
+    void stepLocalCSV();
     void stepLocalFMI();
     void localNegotiationSmall();
     void localNegotiationLarge();
     void localNegotiationLargeLearning();
-    void localNegotiationPV();
+    void localNegotiationCSV();
     void localNegotiationFMI();
     void globalNegotiationLarge(const LVN_Negotiation & building_negotiation);
     void globalNegotiationLargeLearning(const LVN_Negotiation & building_negotiation);
     void globalNegotiationFMI(const LVN_Negotiation & building_negotiation);
     void globalNegotiationSmall(const LVN_Negotiation & building_negotiation);
-    void globalNegotiationPV(const LVN_Negotiation & building_negotiation);
+    void globalNegotiationCSV(const LVN_Negotiation & building_negotiation);
     void sendContractLocal(const Appliance & a);
     bool sendContractGlobal(const contract & c);
 };
