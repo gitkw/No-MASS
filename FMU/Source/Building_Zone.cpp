@@ -24,28 +24,33 @@ void Building_Zone::setup(const ZoneStruct & zoneStruct) {
       int windowCount = zoneStruct.windowCount;
       setGroundFloor(SimulationConfig::isZoneGroundFloor(&name));
       for (int i = 0; i < windowCount; i ++) {
-        std::string windowName = name + "WindowState" + std::to_string(i);
-        variableNameWindow.push_back(windowName);
-        DataStore::addVariable(windowName);
+        int windowid =
+              DataStore::addVariable(name + "WindowState" + std::to_string(i));
+        variableNameWindow.push_back(windowid);
       }
 
-      variableNameAppFraction = name + "AppFraction";
-      DataStore::addVariable(variableNameAppFraction);
-      variableNameBlindFraction = name + "BlindFraction";
-      DataStore::addVariable(variableNameBlindFraction);
-      variableNameLight = name + "LightState";
-      DataStore::addVariable(variableNameLight);
-      variableNameHeating = name + "Heating";
-      DataStore::addVariable(variableNameHeating);
-      variableNameNumberOfOccupants = name + "NumberOfOccupants";
-      DataStore::addVariable(variableNameNumberOfOccupants);
-      variableNameAverageGains = name + "AverageGains";
-      DataStore::addVariable(variableNameAverageGains);
-      variableNameZoneMeanAirTemperature = name + "ZoneMeanAirTemperature";
-      variableNameZoneAirRelativeHumidity = name + "ZoneAirRelativeHumidity";
-      variableNameZoneMeanRadiantTemp = name + "ZoneMeanRadiantTemperature";
-      variableNameDaylighting = name + "DaylightingReferencePoint1Illuminance";
-      variableNameZoneAirHeating = name + "ZoneAirSystemSensibleHeatingRate";
+      variableNameAppFraction =
+              DataStore::addVariable(name + "AppFraction");
+      variableNameBlindFraction =
+              DataStore::addVariable(name + "BlindFraction");
+      variableNameLight =
+              DataStore::addVariable(name + "LightState");
+      variableNameHeating =
+              DataStore::addVariable(name + "Heating");
+      variableNameNumberOfOccupants =
+              DataStore::addVariable(name + "NumberOfOccupants");
+      variableNameAverageGains =
+              DataStore::addVariable(name + "AverageGains");
+      variableNameZoneMeanAirTemperature =
+              DataStore::addVariable(name + "ZoneMeanAirTemperature");
+      variableNameZoneAirRelativeHumidity =
+              DataStore::addVariable(name + "ZoneAirRelativeHumidity");
+      variableNameZoneMeanRadiantTemp =
+              DataStore::addVariable(name + "ZoneMeanRadiantTemperature");
+      variableNameDaylighting =
+              DataStore::addVariable(name + "DaylightingReferencePoint1Illuminance");
+      variableNameZoneAirHeating =
+              DataStore::addVariable(name + "ZoneAirSystemSensibleHeatingRate");
   }
 }
 
@@ -53,12 +58,12 @@ void Building_Zone::step() {
     if (active) {
         DataStore::addValue(variableNameNumberOfOccupants, occupantFraction);
         DataStore::addValue(variableNameAverageGains, currentOccupantGains);
-        for (std::string & wname : variableNameWindow) {
+        for (int wname : variableNameWindow) {
           DataStore::addValue(wname, windowState);
         }
         DataStore::addValue(variableNameLight, lightState);
         // Shade in EP is
-        // 1 is close
+        // 1 is closed
         // 0 is open
         // Shade in No-mass unshaded fraction
         // 1 is open

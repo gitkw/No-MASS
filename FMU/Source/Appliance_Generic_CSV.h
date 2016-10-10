@@ -17,7 +17,7 @@ class Appliance_Generic_CSV : public Appliance {
  public:
     Appliance_Generic_CSV();
     void setup();
-    void preprocess();
+    void step();
     void setFileSupply(const std::string & filename);
     void setFileDemand(const std::string & filename);
 
@@ -28,6 +28,7 @@ class Appliance_Generic_CSV : public Appliance {
     std::string fileDemand;
     bool enableSupply;
     bool enableDemand;
+    std::vector<double> powers;
 };
 
 #endif  // APPLIANCE_GENERIC_CSV_H_

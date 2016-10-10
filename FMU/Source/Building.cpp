@@ -5,6 +5,7 @@
 #include <list>
 #include <iostream>
 #include <utility>
+#include "SimulationTime.h"
 #include "SimulationConfig.h"
 #include "DataStore.h"
 #include "Occupant.h"
@@ -58,7 +59,7 @@ void Building::stepAppliancesUse() {
 
 
 void Building::stepAppliancesNegotiation(
-                                const LVN_Negotiation & building_negotiation) {
+                          const Contract_Negotiation & building_negotiation) {
       appliances.stepGlobalNegotiation(building_negotiation);
 }
 
@@ -72,9 +73,7 @@ void Building::step() {
     for (int a : pop) {
         population[a].step();
         appliances.addCurrentStates(population[a].getStateID());
-        // std::cout << population[a].getStateID() << " ";
     }
-    //  std::cout << std::endl;
 
     for (std::shared_ptr<Building_Zone> &zone : zones) {
         if (!zone->isActive()) {
@@ -107,7 +106,7 @@ void Building::step() {
 
 void Building::buildingInteractions() {
   if (SimulationConfig::info.ShadeClosedDuringNight) {
-    int hourOfDay = DataStore::getValue("hourOfDay");
+    int hourOfDay = SimulationTime::hourOfDay;
     if (hourOfDay > 19 || hourOfDay < 6) {
       for (std::shared_ptr<Building_Zone> &zone : zones) {
         if (zone->isActive()) {
@@ -389,6 +388,6 @@ int Building::getID() const {
     return id;
 }
 
-void Building::addContactsTo(LVN_Negotiation * building_negotiation) {
+void Building::addContactsTo(Contract_Negotiation * building_negotiation) {
   appliances.addContactsTo(building_negotiation);
 }

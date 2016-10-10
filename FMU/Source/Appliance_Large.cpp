@@ -39,14 +39,11 @@ void Appliance_Large::setupModel() {
  */
 void Appliance_Large::step() {
   model.decreaseDuration();
-  double p = 0.0;
+  power = 0.0;
   if (isOn() || match) {
     int stepCount = SimulationConfig::getStepCount();
-    p = model.consumption(stepCount);
+    power = model.consumption(stepCount);
   }
-  power.push_back(p);
-  supply.push_back(0.0);
-  supplyCost.push_back(0.0);
 }
 
 /**

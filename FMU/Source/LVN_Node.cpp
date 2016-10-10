@@ -19,24 +19,15 @@ LVN_Node::LVN_Node() {
 
 void LVN_Node::setup() {
   std::string idStr = std::to_string(id);
-  complexPowerStr = "LVN_complexPower_" + idStr;
-  voltageStr = "LVN_voltage_" + idStr;
-  iterationStr = "LVN_iteration_" + idStr;
-  slackVoltageStr = "LVN_slackVoltage_" + idStr;
-  currentLineStr = "LVN_currentLine_" + idStr;
-  currentLoadStr = "LVN_currentLoad_" + idStr;
-  impedanceStr = "LVN_impedance_" + idStr;
-  nominalVoltageStr = "LVN_nominalVoltage_" + idStr;
-  nodeLoadStr = "LVN_nodeLoad_" + idStr;
-  DataStore::addVariable(complexPowerStr);
-  DataStore::addVariable(voltageStr);
-  DataStore::addVariable(iterationStr);
-  DataStore::addVariable(slackVoltageStr);
-  DataStore::addVariable(currentLineStr);
-  DataStore::addVariable(currentLoadStr);
-  DataStore::addVariable(impedanceStr);
-  DataStore::addVariable(nominalVoltageStr);
-  DataStore::addVariable(nodeLoadStr);
+  complexPowerStr = DataStore::addVariable("LVN_complexPower_" + idStr);
+  voltageStr = DataStore::addVariable("LVN_voltage_" + idStr);
+  iterationStr = DataStore::addVariable("LVN_iteration_" + idStr);
+  slackVoltageStr = DataStore::addVariable("LVN_slackVoltage_" + idStr);
+  currentLineStr = DataStore::addVariable("LVN_currentLine_" + idStr);
+  currentLoadStr = DataStore::addVariable("LVN_currentLoad_" + idStr);
+  impedanceStr = DataStore::addVariable("LVN_impedance_" + idStr);
+  nominalVoltageStr = DataStore::addVariable("LVN_nominalVoltage_" + idStr);
+  nodeLoadStr = DataStore::addVariable("LVN_nodeLoad_" + idStr);
 }
 
 /**
@@ -224,6 +215,7 @@ void LVN_Node::addChildren(const std::vector<int> & ids) {
       if (i == l.id) {
         joinedNodes.push_back(LVN_Node());
         joinedNodes.back().setID(l.id);
+        joinedNodes.back().setImpedance(l.impedance);
         joinedNodes.back().addChildren(l.children);
         joinedNodes.back().setup();
         break;

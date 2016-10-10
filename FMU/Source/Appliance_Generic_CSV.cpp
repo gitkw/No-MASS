@@ -24,49 +24,41 @@ void Appliance_Generic_CSV::setup() {
   }
 }
 
-/**
- * @brief retrieves power values for each timestep
- */
-void Appliance_Generic_CSV::preprocess() {
-  int days = Utility::calculateNumberOfDays(SimulationConfig::info.startDay,
-                                            SimulationConfig::info.startMonth,
-                                            SimulationConfig::info.endDay,
-                                            SimulationConfig::info.endMonth);
-  int totoaltimesteps = days * 24 * SimulationConfig::info.timeStepsPerHour;
+void Appliance_Generic_CSV::step() {
+  int timeStep = SimulationConfig::getStepCount();
   int leninsec = SimulationConfig::lengthOfTimestep();
-  for (int timeStep = 0; timeStep < totoaltimesteps; timeStep++) {
-    int numberOfSeconds = timeStep * leninsec;
-    int minute = numberOfSeconds / 60;
-    int minuteOfDay = minute % 1440;
-    int hour = numberOfSeconds / 3600;
+  int numberOfSeconds = timeStep * leninsec;
+  int minute = numberOfSeconds / 60;
+  int minuteOfDay = minute % 1440;
+  int hour = numberOfSeconds / 3600;
+  int day = hour / 24;
+  int now = numberOfSeconds;
+  int end = numberOfSeconds + leninsec;
+  supply = 0.0;
+  power = 0.0;
+  while (now < end) {
+    if (enableSupply) {
+      supply += modelSupply.power(day, minuteOfDay);
+    }
+    if (enableDemand) {
+      power += modelDemand.power(day, minuteOfDay);
+    }
+    minuteOfDay += 1;
+    if (minuteOfDay >= 1440) {
+      minuteOfDay = 0;
+      day +=1;
+    }
+    now += 60;
+  }
+
+  if (hourlyCost.size() == 24) {
     int hourOfDay = hour % 24;
-    int day = hour / 24;
-    int now = numberOfSeconds;
-    int end = numberOfSeconds + leninsec;
-    double s = 0;
-    double d = 0;
-    while (now < end) {
-      if (enableSupply) {
-        s += modelSupply.power(day, minuteOfDay);
-      }
-      if (enableDemand) {
-        d += modelDemand.power(day, minuteOfDay);
-      }
-      minuteOfDay += 1;
-      if (minuteOfDay >= 1440) {
-        minuteOfDay = 0;
-        day +=1;
-      }
-      now += 60;
-    }
-    // watt hour per timeperhour
-    supply.push_back(s);
-    if (hourlyCost.size() == 24) {
-      supplyCost.push_back(hourlyCost[hourOfDay]);
-    } else {
-      supplyCost.push_back(hourlyCost[0]);
-    }
-    power.push_back(d);
+    supplyCost = hourlyCost[hourOfDay];
+  } else if (hourlyCost.size() == 48) {
+    int halfHourOfDay = (numberOfSeconds / 1800) % 48;
+    supplyCost = hourlyCost[halfHourOfDay];
+  } else {
+    supplyCost = hourlyCost[0];
   }
 }
 

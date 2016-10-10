@@ -5,6 +5,7 @@
 
 #include "Gen.h"
 #include "DataStore.h"
+#include "SimulationTime.h"
 #include "Occupant_Action_HeatingSetPoints_Learning.h"
 #include "gtest/gtest.h"
 
@@ -24,15 +25,12 @@ void Test_Occupant_Action_HeatingSetPoints_Learning::SetUp() {
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
   SimulationConfig::info.learnep = 0.8;
-  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
-  DataStore::addVariable("hour");
-  DataStore::addVariable("month");
-  DataStore::addVariable("hourOfDay");
-  DataStore::addVariable("day");
-  DataStore::addValue("hour", 1);
-  DataStore::addValue("month", 1);
-  DataStore::addValue("hourOfDay", 1);
-  DataStore::addValue("day", 1);
+  DataStore::addVariable("Block1:KitchenZoneMeanAirTemperature");
+  DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 18);
+  SimulationTime::hour = 1;
+  SimulationTime::month = 1;
+  SimulationTime::hourOfDay = 1;
+  SimulationTime::day = 1;
 }
 
 TEST_F(Test_Occupant_Action_HeatingSetPoints_Learning, Learn) {
@@ -50,7 +48,7 @@ TEST_F(Test_Occupant_Action_HeatingSetPoints_Learning, Learn) {
   for (int i =0; i < 100000; i++) {
      aal.step(z_Kitchen, true);
      heating = aal.getResult();
-     DataStore::addValue("Block1:KitchenZoneMeanAirTemperature",
+     DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature",
                         heating);
   }
 

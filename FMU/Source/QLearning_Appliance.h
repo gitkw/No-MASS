@@ -14,10 +14,10 @@ class QLearning_Appliance : public QLearning {
   void setId(const int id);
 
  private:
-  std::string reward_name;
-  std::string action_name;
-  std::string state_name;
-  std::string previous_state_name;
+  int reward_name;
+  int action_name;
+  int state_name;
+  int previous_state_name;
 };
 
 #endif  // QLEARNING_APPLIANCE_H_

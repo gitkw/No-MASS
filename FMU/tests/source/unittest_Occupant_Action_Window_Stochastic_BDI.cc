@@ -31,10 +31,10 @@ void Test_Occupant_Action_Window_Stochastic_BDI::SetUp() {
   DataStore::addVariable("Block1:KitchenZoneMeanRadiantTemperature");
   DataStore::addVariable("EnvironmentSiteOutdoorAirDrybulbTemperature");
 
-  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 0);
-  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
-  DataStore::addValue("Block1:KitchenZoneAirRelativeHumidity", 18);
-  DataStore::addValue("Block1:KitchenZoneMeanRadiantTemperature", 18);
+  DataStore::addValueS("EnvironmentSiteOutdoorAirDrybulbTemperature", 0);
+  DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 18);
+  DataStore::addValueS("Block1:KitchenZoneAirRelativeHumidity", 18);
+  DataStore::addValueS("Block1:KitchenZoneMeanRadiantTemperature", 18);
   activities.clear();
 }
 
@@ -49,8 +49,8 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, Arrival) {
   z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   z_Kitchen.setWindowState(0);
-  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);
-  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 35);
+  DataStore::addValueS("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);
+  DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 35);
 
   aaw.setOpenDuringCooking(false);
   aaw.setOpenDuringWashing(false);
@@ -132,9 +132,9 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowAfterShower2) {
   DataStore::addVariable("Block2:BathroomZoneAirRelativeHumidity");
   DataStore::addVariable("Block2:BathroomZoneMeanRadiantTemperature");
 
-  DataStore::addValue("Block2:BathroomZoneMeanAirTemperature", 18);
-  DataStore::addValue("Block2:BathroomZoneAirRelativeHumidity", 18);
-  DataStore::addValue("Block2:BathroomZoneMeanRadiantTemperature", 18);
+  DataStore::addValueS("Block2:BathroomZoneMeanAirTemperature", 18);
+  DataStore::addValueS("Block2:BathroomZoneAirRelativeHumidity", 18);
+  DataStore::addValueS("Block2:BathroomZoneMeanRadiantTemperature", 18);
 
 
   ZoneStruct zs;
@@ -223,10 +223,10 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, OpenWindowAfterShower2) {
 }
 
 TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, multiZone) {
-  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 23);
-  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 26);
-  DataStore::addValue("Block1:KitchenZoneAirRelativeHumidity", 50);
-  DataStore::addValue("Block1:KitchenZoneMeanRadiantTemperature", 23);
+  DataStore::addValueS("EnvironmentSiteOutdoorAirDrybulbTemperature", 23);
+  DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 26);
+  DataStore::addValueS("Block1:KitchenZoneAirRelativeHumidity", 50);
+  DataStore::addValueS("Block1:KitchenZoneMeanRadiantTemperature", 23);
 
   ZoneStruct zs;
   zs.name = "Block1:Kitchen";

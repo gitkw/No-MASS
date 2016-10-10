@@ -18,7 +18,7 @@ class Appliance_Small : public Appliance {
     Appliance_Small();
 
     void setup();
-    void preprocess();
+    void step();
     void setWeibullParameters(const std::string & WeibullParameters);
     void setStateProbabilities(const std::string & StateProbabilities);
     void setFractions(const std::string & Fractions);

@@ -58,6 +58,8 @@ void SimulationConfig::parseLVNNode(rapidxml::xml_node<> *node,
           children = true;
         } else if (nodeNameIs(cnode, "id")) {
           l.id = std::stoi(cnode->value());
+        } else if (nodeNameIs(cnode, "impedance")) {
+          l.impedance = std::stod(cnode->value());
         }
         cnode = cnode->next_sibling();
     }
@@ -195,6 +197,8 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
           s.id = std::stoi(anode->value());
         } else if (nodeNameIs(anode, "priority")) {
           s.priority = prioritiesToVector(anode->value());
+        } else if (nodeNameIs(anode, "timerequired")) {
+          s.timeRequired = prioritiesToVector(anode->value());
         } else if (nodeNameIs(anode, "activities")) {
           s.activities = activityNamesToIds(Utility::splitCSV(anode->value()));
         } else if (nodeNameIs(anode, "cost")) {
@@ -251,6 +255,26 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         anode = anode->next_sibling();
       }
       b->AppliancesFMI.push_back(s);
+    }  else if (nodeNameIs(cnode, "battery")) {
+      rapidxml::xml_node<> *anode = cnode->first_node();
+      appBatteryStruct s;
+      while (anode) {
+        if (nodeNameIs(anode, "id")) {
+          s.id = std::stoi(anode->value());
+        } else if (nodeNameIs(anode, "priority")) {
+          s.priority = prioritiesToVector(anode->value());
+        } else if (nodeNameIs(anode, "epsilon")) {
+          s.epsilon = std::stod(anode->value());
+        } else if (nodeNameIs(anode, "alpha")) {
+          s.alpha = std::stod(anode->value());
+        } else if (nodeNameIs(anode, "gamma")) {
+          s.gamma = std::stod(anode->value());
+        } else if (nodeNameIs(anode, "updateqtable")) {
+          s.update = std::stod(anode->value());
+        }
+        anode = anode->next_sibling();
+      }
+      b->AppliancesBattery.push_back(s);
     } else if (nodeNameIs(cnode, "pv") || nodeNameIs(cnode, "csv")) {
         rapidxml::xml_node<> *anode = cnode->first_node();
         appCSVStruct s;

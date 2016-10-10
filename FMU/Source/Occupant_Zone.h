@@ -36,7 +36,7 @@ class Occupant_Zone {
   void postprocess();
   void setClo(double clo);
   void setMetabolicRate(double metabolicRate);
-  void setup(const Building_Zone & buldingZone, int agentid,
+  void setup(int buildingID, const Building_Zone & buldingZone, int agentid,
             const agentStruct &agent);
   void step(const Building_Zone& zone, const Building_Zone& zonePrevious,
             const std::vector<double> &activities);
@@ -71,6 +71,7 @@ class Occupant_Zone {
   bool isInBuilding() const;
 
   int id;
+  int buildingID;
   bool ActionWindow;
   bool ActionLights;
   bool ActionShades;

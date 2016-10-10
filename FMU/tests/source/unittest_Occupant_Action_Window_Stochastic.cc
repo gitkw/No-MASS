@@ -31,10 +31,10 @@ void Test_Occupant_Action_Window_Stochastic::SetUp() {
   DataStore::addVariable("Block1:KitchenZoneMeanRadiantTemperature");
   DataStore::addVariable("EnvironmentSiteOutdoorAirDrybulbTemperature");
 
-  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 0);
-  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
-  DataStore::addValue("Block1:KitchenZoneAirRelativeHumidity", 18);
-  DataStore::addValue("Block1:KitchenZoneMeanRadiantTemperature", 18);
+  DataStore::addValueS("EnvironmentSiteOutdoorAirDrybulbTemperature", 0);
+  DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 18);
+  DataStore::addValueS("Block1:KitchenZoneAirRelativeHumidity", 18);
+  DataStore::addValueS("Block1:KitchenZoneMeanRadiantTemperature", 18);
   activities.clear();
 }
 
@@ -49,8 +49,8 @@ TEST_F(Test_Occupant_Action_Window_Stochastic, Arrival) {
   z_Kitchen.setActive(true);
   z_Kitchen.setup(zs);
   z_Kitchen.setWindowState(0);
-  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);
-  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 35);
+  DataStore::addValueS("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);
+  DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 35);
 
   double previousDuration = 5*12*10*60;
   int timeStepLengthInMinutes = 5;

@@ -25,15 +25,16 @@ void Test_Occupant_Action_Window_Learning::SetUp() {
   SimulationConfig::info.lights = false;
   SimulationConfig::info.learnep = 0.0;
   SimulationConfig::info.learn = 1;
-  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
+  DataStore::addVariable("Block1:KitchenZoneMeanAirTemperature");
+  DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 18);
   DataStore::addVariable("hour");
   DataStore::addVariable("month");
   DataStore::addVariable("hourOfDay");
   DataStore::addVariable("day");
-  DataStore::addValue("hour", 1);
-  DataStore::addValue("month", 1);
-  DataStore::addValue("hourOfDay", 1);
-  DataStore::addValue("day", 1);
+  DataStore::addValueS("hour", 1);
+  DataStore::addValueS("month", 1);
+  DataStore::addValueS("hourOfDay", 1);
+  DataStore::addValueS("day", 1);
 }
 
 TEST_F(Test_Occupant_Action_Window_Learning, Learn) {
@@ -59,7 +60,7 @@ TEST_F(Test_Occupant_Action_Window_Learning, Learn) {
      aal.step(z_Kitchen, true, true);
      result = aal.getResult();
      z_Kitchen.setWindowState(result);
-     DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 21);
+     DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 21);
   }
 
   aal.step(z_Kitchen, true, true);
@@ -75,7 +76,7 @@ TEST_F(Test_Occupant_Action_Window_Learning, Learn) {
      aal.step(z_Kitchen, true, true);
      result = aal.getResult();
      z_Kitchen.setWindowState(result);
-     DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 21);
+     DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 21);
   }
 
   aal.step(z_Kitchen, true, true);

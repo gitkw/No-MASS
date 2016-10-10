@@ -15,32 +15,39 @@ class Appliance : public Agent {
  public:
     Appliance();
     void save();
+    void clear();
     void setupSave();
-    void setupPriority();
     void setGlobal(bool global);
+    void setLocal(bool local);
     void setRecieved(const double r);
     void setRecievedCost(const double c);
     void setHourlyCost(const std::vector<double> & cost);
     void setHoulyPriority(const std::vector<double> & priority);
     bool isGlobal() const;
-    double powerAt(const int timestep) const;
-    double supplyAt(const int timestep) const;
-    double supplyCostAt(const int timestep) const;
-    double getPriorityAt(const int timestep) const;
-    double powerBack() const;
-    double supplyBack() const;
+    bool isLocal() const;
+    double getSupply() const;
+    double getSupplyCost() const;
+    double getPriority() const;
+    double getPower() const;
+
 
 
  protected:
-    std::vector<double> power;
-    std::vector<double> supply;
-    std::vector<double> supplyCost;
-    std::vector<double> recieved;
-    std::vector<double> recievedCost;
+    double power = 0.0;
+    double supply = 0.0;
+    double supplyCost = 0.0;
+    double recieved = 0.0;
+    double recievedCost = 0.0;
     std::vector<double> hourlyCost;
-    std::vector<double> priority;
     std::vector<double> hourlyPriority;
     bool global;
+    bool local;
+
+    int datastoreIDSupplied;
+    int datastoreIDSuppliedCost;
+    int datastoreIDRecieved;
+    int datastoreIDRequested;
+    int datastoreIDCost;
 };
 
 #endif  // APPLIANCE_H_

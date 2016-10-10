@@ -13,6 +13,7 @@
   <LVN>
     <node>
       <id>1</id>
+      <impedance>0.0047</impedance>
       <children>
         <node>
           <id>2</id>

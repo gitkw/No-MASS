@@ -18,7 +18,7 @@ class Occupant_Action_Window_Learning : public Occupant_Action_Window {
     private:
 
         QLearning_Window learn;
-        std::string window_name;
+        int window_name;
 };
 
 #endif // Occupant_ACTION_WINDOW_LEARNING_H

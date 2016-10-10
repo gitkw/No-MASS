@@ -18,7 +18,7 @@ class Appliance_FMI : public Appliance {
     void step();
     void setFMIVariableName(const std::string & FMIVariableName);
  private:
-    std::string FMIVariableName;
+    int FMIVariableName;
 };
 
 #endif  // APPLIANCE_FMI_H_

@@ -12,7 +12,7 @@
 struct profileStruct {
     std::vector<double> power;
     int startTime = -1;
-    double maxPriority = 0;
+    double maxTimeRequired = 0;
     double cost = 0;
     bool isLearningPeriod = false;
     int nonLearningStep = 0;
@@ -31,15 +31,18 @@ class Appliance_Large_Learning : public Appliance_Large {
   void setup();
   void step();
   void postprocess();
+  double getRequiredTime() const;
   void addToCost(const double cost);
   void setEpsilon(double epsilon);
   void setAlpha(double alpha);
   void setGamma(double gamma);
   void setUpdate(bool update);
+  void setHoulyTimeRequired(const std::vector<double> & houlyTimeRequired);
 
  private:
-  std::string s_fullname_actual;
+  int databaseIDactual;
   std::vector<profileStruct> powerProfile;
+  std::vector<double> houlyTimeRequired;
   QLearning_Appliance qLearning;
 
   void stepApplianceOffAndNotLearning();

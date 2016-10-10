@@ -5,6 +5,7 @@
 #include "SimulationConfig.h"
 #include "Utility.h"
 #include "DataStore.h"
+#include "Environment.h"
 #include "Occupant_Action_Window_Stochastic.h"
 
 Occupant_Action_Window_Stochastic::Occupant_Action_Window_Stochastic() {
@@ -21,15 +22,15 @@ void Occupant_Action_Window_Stochastic::setup(int windowID, int id) {
       ws.b01gddep, ws.a10dep, ws.b10indep, ws.b10outdep, ws.b10absdep,
       ws.b10gddep);
 
-  variableNameWindowDesire = "Occupant_Window_Desire" + std::to_string(id);
-  DataStore::addVariable(variableNameWindowDesire);
+  variableNameWindowDesire = DataStore::addVariable("Occupant_Window_Desire_"
+                           + std::to_string(id) + "_"
+                           + std::to_string(windowID));
 }
 
 void Occupant_Action_Window_Stochastic::step(const Building_Zone& zone,
     const bool inZone,
     const bool previouslyInZone, const std::vector<double> &activities) {
-  double outdoorTemperature =
-    DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
+  double outdoorTemperature = Environment::getOutdoorAirDrybulbTemperature();
 
   // double rain = DataStore::getValue("EnvironmentSiteRainStatus");
   double rain = 0;

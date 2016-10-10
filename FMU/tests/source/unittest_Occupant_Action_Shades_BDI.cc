@@ -24,11 +24,17 @@ void Test_Occupant_Action_Shades_BDI::SetUp() {
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
 
-  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 0);
-  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
-  DataStore::addValue("Block1:KitchenZoneAirRelativeHumidity", 18);
-  DataStore::addValue("Block1:KitchenDaylightingReferencePoint1Illuminance", 2);
-  DataStore::addValue("EnvironmentSiteExteriorHorizontalSkyIlluminance", 200);
+
+  DataStore::addVariable("EnvironmentSiteOutdoorAirDrybulbTemperature");
+  DataStore::addVariable("Block1:KitchenZoneMeanAirTemperature");
+  DataStore::addVariable("Block1:KitchenZoneAirRelativeHumidity");
+  DataStore::addVariable("Block1:KitchenDaylightingReferencePoint1Illuminance");
+  DataStore::addVariable("EnvironmentSiteExteriorHorizontalSkyIlluminance");
+  DataStore::addValueS("EnvironmentSiteOutdoorAirDrybulbTemperature", 0);
+  DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 18);
+  DataStore::addValueS("Block1:KitchenZoneAirRelativeHumidity", 18);
+  DataStore::addValueS("Block1:KitchenDaylightingReferencePoint1Illuminance", 2);
+  DataStore::addValueS("EnvironmentSiteExteriorHorizontalSkyIlluminance", 200);
 }
 
 TEST_F(Test_Occupant_Action_Shades_BDI, ClosedDuringSleep) {

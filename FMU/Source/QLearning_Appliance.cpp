@@ -5,14 +5,10 @@
 
 void QLearning_Appliance::setId(const int id) {
     this->id = id;
-    reward_name = filename + "reward";
-    action_name = filename + "action";
-    state_name = filename + "state";
-    previous_state_name = filename + "previous_state";
-    DataStore::addVariable(reward_name);
-    DataStore::addVariable(action_name);
-    DataStore::addVariable(state_name);
-    DataStore::addVariable(previous_state_name);
+    reward_name = DataStore::addVariable(filename + "reward");
+    action_name = DataStore::addVariable(filename + "action");
+    state_name = DataStore::addVariable(filename + "state");
+    previous_state_name = DataStore::addVariable(filename + "previous_state");
 }
 
 QLearning_Appliance::QLearning_Appliance() {

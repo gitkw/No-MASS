@@ -24,9 +24,9 @@ void Test_QLearning_Window::SetUp() {
   DataStore::addVariable("hour");
   DataStore::addVariable("month");
   DataStore::addVariable("hourOfDay");
-  DataStore::addValue("hour", 1);
-  DataStore::addValue("month", 1);
-  DataStore::addValue("hourOfDay", 1);
+  DataStore::addValueS("hour", 1);
+  DataStore::addValueS("month", 1);
+  DataStore::addValueS("hourOfDay", 1);
 }
 
 TEST_F(Test_QLearning_Window, learn) {

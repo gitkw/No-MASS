@@ -42,7 +42,7 @@ class Simulation {
     /**
     * Manages the building power negotiation
     */
-    LVN_Negotiation building_negotiation;
+    Contract_Negotiation building_negotiation;
 };
 
 #endif  // SIMULATION_H_

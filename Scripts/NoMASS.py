@@ -109,6 +109,34 @@ class NoMASS(object):
         for buildings in root.findall('buildings'):
             for building in buildings.findall('building'):
                 for apps in building.findall('Appliances'):
+                    for ll in apps.findall('battery'):
+                        if ll.find('updateQTable') is not None :
+                            if self.learning():
+                                ll.find('updateQTable').text = str(1)
+                            else:
+                                ll.find('updateQTable').text = str(0)
+                        else:
+                            newNode = ET.Element('updateQTable')
+                            newNode.text = '1'
+                            ll.append(newNode)
+                        if ll.find('epsilon') is not None :
+                            ll.find('epsilon').text = str(self.epsilon)
+                        else:
+                            newNode = ET.Element('epsilon')
+                            newNode.text = str(self.epsilon)
+                            ll.append(newNode)
+                        if ll.find('alpha') is not None :
+                            ll.find('alpha').text = str(self.alpha)
+                        else:
+                            newNode = ET.Element('alpha')
+                            newNode.text = str(self.alpha)
+                            ll.append(newNode)
+                        if ll.find('gamma') is not None :
+                            ll.find('gamma').text = str(self.gamma)
+                        else:
+                            newNode = ET.Element('gamma')
+                            newNode.text = str(self.gamma)
+                            ll.append(newNode)                        
                     for ll in apps.findall('LargeLearning'):
                         if ll.find('updateQTable') is not None :
                             if self.learning():

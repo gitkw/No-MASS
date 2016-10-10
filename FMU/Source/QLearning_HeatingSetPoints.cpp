@@ -1,18 +1,19 @@
 // Copyright 2015 Jacob Chapman
 
 #include "DataStore.h"
+#include "SimulationTime.h"
 #include "QLearning_HeatingSetPoints.h"
 
 void QLearning_HeatingSetPoints::setId(const int id) {
     this->id = id;
-    reward_name = filename + "_reward"+ std::to_string(id);
-    action_name = filename + "_action"+ std::to_string(id);
-    state_name = filename + "_state"+ std::to_string(id);
-    previous_state_name = filename + "_previous_state"+ std::to_string(id);
-    DataStore::addVariable(reward_name);
-    DataStore::addVariable(action_name);
-    DataStore::addVariable(state_name);
-    DataStore::addVariable(previous_state_name);
+    reward_name =
+      DataStore::addVariable(filename + "_reward"+ std::to_string(id));
+    action_name =
+      DataStore::addVariable(filename + "_action"+ std::to_string(id));
+    state_name =
+      DataStore::addVariable(filename + "_state"+ std::to_string(id));
+    previous_state_name =
+      DataStore::addVariable(filename + "_previous_state"+ std::to_string(id));
 }
 
 QLearning_HeatingSetPoints::QLearning_HeatingSetPoints() {
@@ -24,8 +25,8 @@ QLearning_HeatingSetPoints::QLearning_HeatingSetPoints() {
 void QLearning_HeatingSetPoints::reset() {}
 
 double QLearning_HeatingSetPoints::learn() {
-    int month = DataStore::getValue("month") - 1;
-    int hourOfDay = DataStore::getValue("hourOfDay");
+    int month = SimulationTime::month - 1;
+    int hourOfDay = SimulationTime::hourOfDay;
     state = (month * 24) + hourOfDay;
 
     DataStore::addValue(reward_name, reward);

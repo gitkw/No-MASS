@@ -8,22 +8,10 @@
 #include "DataStore.h"
 #include "Building.h"
 #include "LVN_Node.h"
+#include "SimulationTime.h"
 #include "Simulation.h"
 
 Simulation::Simulation() {
-        monthCount.push_back(31);
-        monthCount.push_back(59);
-        monthCount.push_back(90);
-        monthCount.push_back(120);
-        monthCount.push_back(151);
-        monthCount.push_back(181);
-        monthCount.push_back(212);
-        monthCount.push_back(243);
-        monthCount.push_back(273);
-        monthCount.push_back(304);
-        monthCount.push_back(334);
-        monthCount.push_back(365);
-
         simulationConfigurationFile = "SimulationConfig.xml";
 }
 
@@ -36,6 +24,7 @@ void Simulation::setSimulationConfigurationFile(const std::string & filename) {
  * Sets up the EnergyPlus processor, the AgentModel and the ZoneManager.
  */
 void Simulation::preprocess() {
+  SimulationTime::preprocess();
   parseConfiguration(SimulationConfig::RunLocation
     + simulationConfigurationFile);
   if (!LOG.getError()) {
@@ -48,12 +37,6 @@ void Simulation::parseConfiguration(const std::string & file) {
 }
 
 void Simulation::setupSimulationModel() {
-    DataStore::addVariable("day");
-    DataStore::addVariable("month");
-    DataStore::addVariable("hour");
-    DataStore::addVariable("hourOfDay");
-    DataStore::addVariable("minuteOfDay");
-    DataStore::addVariable("TimeStep");
     for (buildingStruct b : SimulationConfig::buildings) {
       buildings.push_back(Building());
       buildings.back().setup(b);
@@ -72,33 +55,14 @@ void Simulation::postprocess() {
   }
   DataStore::print();
   DataStore::clear();
+  SimulationTime::reset();
 }
 
 /**
  * @brief processes before timestep
  */
 void Simulation::preTimeStep() {
-  int stepCount = SimulationConfig::getStepCount();
-  int minute = (stepCount * SimulationConfig::lengthOfTimestep()) / 60;
-  int hour = minute / 60;
-  int day = hour / 24;
-
-  int month = 1;
-  for (int mc : monthCount) {
-    if (mc > day || month + 1 > 12) {
-      break;
-    }
-    month = month + 1;
-  }
-
-  int hourOfDay = hour % 24;
-  int minuteOfDay = minute % 1440;
-  DataStore::addValue("TimeStep", stepCount);
-  DataStore::addValue("day", day);
-  DataStore::addValue("hour", hour);
-  DataStore::addValue("hourOfDay", hourOfDay);
-  DataStore::addValue("minuteOfDay", minuteOfDay);
-  DataStore::addValue("month", month);
+  SimulationTime::trackTime();
   Environment::calculateDailyMeanTemperature();
 }
 
@@ -109,20 +73,29 @@ void Simulation::preTimeStep() {
  * Also we send any effects the agent have to the zones they are located in.
  */
 void Simulation::timeStep() {
-  SimulationConfig::step();
+
   for (Building &b : buildings) {
       b.step();
       b.stepAppliancesUse();
       b.addContactsTo(&building_negotiation);
   }
-  if (building_negotiation.getDifference() < 0) {
-    contract m;
-    m.supplied = std::abs(building_negotiation.getDifference());
-    int stepCount = SimulationConfig::getStepCount();
-    int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
-    int hourOfDay = hour % 24;
+  double diff = building_negotiation.getDifference();
+  if (diff < 0.0) {
+    Contract m;
+    m.id = -1;
+    m.buildingID = -1;
+    m.supplied = std::abs(diff);
+
     if (SimulationConfig::info.GridCost.size() == 24) {
+      int stepCount = SimulationConfig::getStepCount();
+      int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
+      int hourOfDay = hour % 24;
       m.suppliedCost = SimulationConfig::info.GridCost[hourOfDay];
+    } else if (SimulationConfig::info.GridCost.size() == 48) {
+      int stepCount = SimulationConfig::getStepCount();
+      int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 1800;
+      int halfHourOfDay = hour % 48;
+      m.suppliedCost = SimulationConfig::info.GridCost[halfHourOfDay];
     } else {
       m.suppliedCost = SimulationConfig::info.GridCost[0];
     }

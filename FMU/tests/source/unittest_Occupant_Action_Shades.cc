@@ -24,9 +24,9 @@ void Test_Occupant_Action_Shades::SetUp() {
   SimulationConfig::info.shading = false;
   SimulationConfig::info.lights = false;
 
-  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 0);
-  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
-  DataStore::addValue("Block1:KitchenZoneAirRelativeHumidity", 18);
-  DataStore::addValue("Block1:KitchenDaylightingReferencePoint1Illuminance", 2);
-  DataStore::addValue("EnvironmentSiteExteriorHorizontalSkyIlluminance", 200);
+  DataStore::addValueS("EnvironmentSiteOutdoorAirDrybulbTemperature", 0);
+  DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 18);
+  DataStore::addValueS("Block1:KitchenZoneAirRelativeHumidity", 18);
+  DataStore::addValueS("Block1:KitchenDaylightingReferencePoint1Illuminance", 2);
+  DataStore::addValueS("EnvironmentSiteExteriorHorizontalSkyIlluminance", 200);
 }

@@ -3,6 +3,7 @@
 #include <string>
 #include "SimulationConfig.h"
 #include "DataStore.h"
+#include "Environment.h"
 #include "QLearning_Window.h"
 #include "Occupant_Action_Window_Learning.h"
 
@@ -14,8 +15,9 @@ void Occupant_Action_Window_Learning::reset() {
 }
 
 void Occupant_Action_Window_Learning::setup(const int id) {
-  variableNameWindowDesire = "Occupant_Window_Desire" + std::to_string(id);
-  DataStore::addVariable(variableNameWindowDesire);
+  variableNameWindowDesire = DataStore::addVariable("Occupant_Window_Desire_"
+                           + std::to_string(id));
+
   std::string zoneIdStr = std::to_string(zoneId);
   learn.setFilename("window-" + zoneIdStr + "-");
   learn.setStates(400);
@@ -23,8 +25,8 @@ void Occupant_Action_Window_Learning::setup(const int id) {
   learn.setUpdate(SimulationConfig::info.learn);
   learn.setEpsilon(SimulationConfig::info.learnep);
   learn.setup();
-  window_name = "Weekday-" + zoneIdStr + "-_pmv" + std::to_string(id);
-  DataStore::addVariable(window_name);
+  window_name =
+  DataStore::addVariable("Weekday-" + zoneIdStr + "-_pmv" + std::to_string(id));
   result = 0;
 }
 
@@ -33,8 +35,7 @@ void Occupant_Action_Window_Learning::step(const Building_Zone& zone,
   if (inZone || previouslyInZone) {
     double pmv = reward;
     int temp = zone.getMeanAirTemperature();
-    int outdoorTemperature =
-      DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
+    int outdoorTemperature = Environment::getOutdoorAirDrybulbTemperature();
     if (temp > 29) temp = 29;
     if (temp < 10) temp = 10;
     temp = temp -10;
