@@ -44,9 +44,10 @@
       <Appliances>
         <LargeLearning>
           <id>1</id>
-          <priority>0.1,0.1,0.1,0.1,0.1,0.1,0.1,1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1</priority>
+          <priority>0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1</priority>
+          <timeRequired>0.1,0.1,0.1,0.1,0.1,0.1,0.1,1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1</timeRequired>
           <epsilon>0.1</epsilon>
-          <alpha>0.1</alpha>
+          <alpha>0.3</alpha>
           <gamma>0.1</gamma>
           <updateQTable>1</updateQTable>
           <activities>WashingAppliance</activities>
@@ -63,6 +64,14 @@
           <demand>HeatingPower.csv</demand>
           <cost>0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.0,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2</cost>
         </csv>
+        <battery>
+          <id>12</id>
+          <priority>0</priority>
+          <epsilon>0.1</epsilon>
+          <alpha>0.3</alpha>
+          <gamma>0.1</gamma>
+          <updateQTable>1</updateQTable>
+        </battery>
         <FMIx>
           <id>11</id>
           <priority>0</priority>

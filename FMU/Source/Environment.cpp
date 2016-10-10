@@ -16,8 +16,7 @@ double Environment::getDailyMeanTemperature() {
 
 void Environment::calculateDailyMeanTemperature() {
   if (SimulationConfig::info.windows) {
-    double outdoorTemperature =
-            DataStore::getValue("EnvironmentSiteOutdoorAirDrybulbTemperature");
+    double outdoorTemperature = getOutdoorAirDrybulbTemperature();
     outDoorTemperatures.push_back(outdoorTemperature);
     if (outDoorTemperatures.size() >
           (SimulationConfig::info.timeStepsPerHour * 24)) {
@@ -31,4 +30,14 @@ void Environment::calculateDailyMeanTemperature() {
       dailyMeanTemperature /
         static_cast<double>(outDoorTemperatures.size());
   }
+}
+
+
+double Environment::getEVG() {
+  return DataStore::getValueS("EnvironmentSiteExteriorHorizontalSkyIlluminance");
+}
+
+
+double Environment::getOutdoorAirDrybulbTemperature() {
+  return DataStore::getValueS("EnvironmentSiteOutdoorAirDrybulbTemperature");
 }

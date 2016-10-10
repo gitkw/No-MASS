@@ -51,16 +51,15 @@ class LVN_Node {
   std::complex<double> nominalVoltage;
   std::complex<double> nodeLoad;
 
-  std::string complexPowerStr;
-  std::string voltageStr;
-  std::string iterationStr;
-  //! Used for error calculations and decisive to start backward sweep.
-  std::string slackVoltageStr;
-  std::string currentLineStr;
-  std::string currentLoadStr;
-  std::string impedanceStr;
-  std::string nominalVoltageStr;
-  std::string nodeLoadStr;
+  int complexPowerStr;
+  int voltageStr;
+  int iterationStr;
+  int slackVoltageStr;
+  int currentLineStr;
+  int currentLoadStr;
+  int impedanceStr;
+  int nominalVoltageStr;
+  int nodeLoadStr;
 
   std::vector<LVN_Node> joinedNodes;
 };

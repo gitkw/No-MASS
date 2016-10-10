@@ -64,8 +64,8 @@ class Occupant : public Agent {
     State state; /** Occupants current state */
     std::shared_ptr<Building_Zone> zonePtrPrevious;
 
-    std::string idStringActivity;
-    std::string idStringHeatGains;
+    int datastoreIdActivity;
+    int datastoreIdHeatGains;
 
     void model_presenceFromPage(const agentStruct &agent);
     void model_pastAndFutureDurations();

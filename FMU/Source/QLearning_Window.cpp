@@ -4,15 +4,15 @@
 #include "QLearning_Window.h"
 
 void QLearning_Window::setId(const int id) {
-    this->id = id;
-    reward_name = filename + "_reward"+ std::to_string(id);
-    action_name = filename + "_action"+ std::to_string(id);
-    state_name = filename + "_state"+ std::to_string(id);
-    previous_state_name = filename + "_previous_state"+ std::to_string(id);
-    DataStore::addVariable(reward_name);
-    DataStore::addVariable(action_name);
-    DataStore::addVariable(state_name);
-    DataStore::addVariable(previous_state_name);
+  this->id = id;
+  reward_name =
+    DataStore::addVariable(filename + "_reward"+ std::to_string(id));
+  action_name =
+    DataStore::addVariable(filename + "_action"+ std::to_string(id));
+  state_name =
+    DataStore::addVariable(filename + "_state"+ std::to_string(id));
+  previous_state_name =
+    DataStore::addVariable(filename + "_previous_state"+ std::to_string(id));
 }
 
 QLearning_Window::QLearning_Window() {

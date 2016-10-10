@@ -33,10 +33,8 @@ Occupant::Occupant() {}
 void Occupant::setup(int id, const agentStruct &agent,
       const std::vector<std::shared_ptr<Building_Zone>> &zones) {
     this->id = id;
-    idStringActivity = idString + "Activity";
-    idStringHeatGains = idString + "HeatGains";
-    DataStore::addVariable(idStringActivity);
-    DataStore::addVariable(idStringHeatGains);
+    datastoreIdActivity = DataStore::addVariable(idString + "Activity");
+    datastoreIdHeatGains = DataStore::addVariable(idString + "HeatGains");
     bedroom = buildingName + agent.bedroom;
     office = buildingName + agent.office;
     power = agent.power;
@@ -59,7 +57,7 @@ void Occupant::setup(int id, const agentStruct &agent,
           continue;
         }
         agentZones.push_back(Occupant_Zone());
-        agentZones.back().setup(*buldingZone, id, agent);
+        agentZones.back().setup(buildingID, *buldingZone, id, agent);
     }
     if (SimulationConfig::info.presencePage) {
       model_presenceFromPage(agent);
@@ -148,9 +146,9 @@ void Occupant::step() {
       agentZone.setMetabolicRate(metabolicRate);
       agentZone.step(*zonePtr, *zonePtrPrevious, activities);
     }
-    DataStore::addValue(idStringHeatGains,
+    DataStore::addValue(datastoreIdHeatGains,
                                 getCurrentRadientGains(*zonePtr));
-    DataStore::addValue(idStringActivity, newStateID);
+    DataStore::addValue(datastoreIdActivity, newStateID);
 }
 
 void Occupant::model_activity(const agentStruct &agent) {

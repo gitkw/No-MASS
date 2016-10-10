@@ -13,8 +13,7 @@ void Appliance_Large_Learning::setup() {
   std::string buildingString = "Building" + std::to_string(buildingID);
   std::string s_fullname = buildingString + "_Appliance";
   s_fullname = s_fullname + std::to_string(id) + "_";
-  s_fullname_actual = s_fullname + "actual";
-  DataStore::addVariable(s_fullname_actual);
+  databaseIDactual = DataStore::addVariable(s_fullname + "actual");
   qLearning.setEpsilon(epsilon);
   qLearning.setAlpha(alpha);
   qLearning.setGamma(gamma);
@@ -75,8 +74,8 @@ double Appliance_Large_Learning::calculateReward() {
   // return -(cost / powerProfile.size() * hoursWaited * 0.1);
   double costOfProfile = powerProfile.front().cost;
   double sizeOfProfile = powerProfile.front().power.size();
-  double highestPriority = powerProfile.front().maxPriority;
-  return -(costOfProfile / sizeOfProfile * highestPriority);
+  double highestTimeRequired = powerProfile.front().maxTimeRequired;
+  return -(costOfProfile / sizeOfProfile * highestTimeRequired);
 }
 
 void Appliance_Large_Learning::stopLearningPeriod(const int hourOfTheDay) {
@@ -89,44 +88,49 @@ void Appliance_Large_Learning::stopLearningPeriod(const int hourOfTheDay) {
   }
 }
 
+double Appliance_Large_Learning::getRequiredTime() const {
+  int timeStep = SimulationConfig::getStepCount();
+  int leninsec = SimulationConfig::lengthOfTimestep();
+  int numberOfSeconds = timeStep * leninsec;
+  int hour = numberOfSeconds / 3600;
+  int hourOfDay = hour % 24;
+  return houlyTimeRequired[hourOfDay];
+}
+
 void Appliance_Large_Learning::step() {
-  double p = 0.0;
+  power = 0.0;
 
   if (powerProfile.empty() == false) {
     int hourOfTheDay = calculateHourOfDay();
     if (powerProfile.front().startTime < 0) {
       calculateLearntStartTime(hourOfTheDay);
     }
-    int stepCount = SimulationConfig::getStepCount();
-    if (powerProfile.front().maxPriority < priority[stepCount]) {
-      powerProfile.front().maxPriority = priority[stepCount];
+    double requiredTime = getRequiredTime();
+    if (powerProfile.front().maxTimeRequired < requiredTime) {
+      powerProfile.front().maxTimeRequired = requiredTime;
     }
     startLearningPeriod(hourOfTheDay);
     if (powerProfile.front().isLearningPeriod) {
-      p = powerProfile.front().power[powerProfile.front().learningStep];
+      power = powerProfile.front().power[powerProfile.front().learningStep];
       powerProfile.front().learningStep++;
       stopLearningPeriod(hourOfTheDay);
     }
   }
 
-
   stepApplianceOffAndNotLearning();
   saveActualProfile();
-
-  power.push_back(p);
-  supply.push_back(0.0);
-  supplyCost.push_back(0.0);
 }
 
 void Appliance_Large_Learning::saveActualProfile() {
   double p = 0.0;
   if (powerProfile.empty() == false &&
               powerProfile.front().nonLearningStep > 0) {
-    int i = powerProfile.front().power.size() - powerProfile.front().nonLearningStep;
+    int i = powerProfile.front().power.size() -
+                                  powerProfile.front().nonLearningStep;
     p = powerProfile.front().power[i];
     powerProfile.front().nonLearningStep--;
   }
-  DataStore::addValue(s_fullname_actual, p);
+  DataStore::addValue(databaseIDactual, p);
 }
 
 /**
@@ -177,4 +181,9 @@ void Appliance_Large_Learning::setGamma(double gamma) {
 }
 void Appliance_Large_Learning::setUpdate(bool update) {
   this->update = update;
+}
+
+void Appliance_Large_Learning::setHoulyTimeRequired(
+              const std::vector<double> & houlyTimeRequired) {
+  this->houlyTimeRequired = houlyTimeRequired;
 }

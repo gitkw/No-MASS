@@ -15,7 +15,8 @@ class Test_Building_Appliances : public ::testing::Test {
 
 void Test_Building_Appliances::SetUp() {
   SimulationConfig::reset();
-  SimulationConfig::parseConfiguration("SimulationConfig.xml");
+  SimulationConfig::parseConfiguration(SimulationConfig::RunLocation +
+                                                  "SimulationConfig.xml");
   SimulationConfig::setStepCount(-1);
   buildingStruct b = SimulationConfig::buildings[0];
   appliances.setup(b);

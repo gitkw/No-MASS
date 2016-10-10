@@ -11,7 +11,7 @@ Appliance_FMI::Appliance_FMI() {
  * @brief Set the variable name of the variable we want to retrieve at run time
  */
 void Appliance_FMI::setFMIVariableName(const std::string & FMIVariableName) {
-  this->FMIVariableName = FMIVariableName;
+  this->FMIVariableName = DataStore::addVariable(FMIVariableName);
 }
 
 /**
@@ -20,8 +20,5 @@ void Appliance_FMI::setFMIVariableName(const std::string & FMIVariableName) {
  * to the data store, this simply returns the variable
  */
 void Appliance_FMI::step() {
-  double p = DataStore::getValue(FMIVariableName);
-  power.push_back(p);
-  supply.push_back(0.0);
-  supplyCost.push_back(0.0);
+  power = DataStore::getValue(FMIVariableName);
 }

@@ -105,7 +105,7 @@ fmiStatus fmiSetDebugLogging(fmiComponent c, fmiBoolean loggingOn) {
 fmiStatus fmiSetReal(fmiComponent c, const fmiValueReference vr[],
       size_t nvr, const fmiReal value[]) {
     for (unsigned int i = 0; i < nvr; i++) {
-        DataStore::addValue(valToRefs.at(vr[i]), value[i]);
+        DataStore::addValueS(valToRefs.at(vr[i]), value[i]);
         // std::cout << valToRefs.at(vr[i]) << " " <<  value[i] << std::endl;
     }
     if (LOG.getError()) {
@@ -132,7 +132,7 @@ fmiStatus fmiSetString(fmiComponent c, const fmiValueReference vr[],
 fmiStatus fmiGetReal(fmiComponent c, const fmiValueReference vr[],
     size_t nvr, fmiReal value[]) {
     for (unsigned int i = 0; i < nvr; i++) {
-        value[i] = DataStore::getValue(valToRefs.at(vr[i]));
+        value[i] = DataStore::getValueS(valToRefs.at(vr[i]));
     }
     if (LOG.getError()) {
       return fmiError;
@@ -295,7 +295,7 @@ void loadVariables() {
           pAttr = cnode->first_attribute("start");
           starValue = std::stod(pAttr->value());
         }
-        DataStore::addValue(name, starValue);
+        DataStore::addValueS(name, starValue);
     }
     valToRefs[valueReference] = name;
     node = node->next_sibling();

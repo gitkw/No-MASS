@@ -26,11 +26,12 @@ bool Occupant_Zone::isActionLearning() const {
   return ActionLearning;
 }
 
-void Occupant_Zone::setup(const Building_Zone & buldingZone, int agentid,
-                        const agentStruct &agent) {
+void Occupant_Zone::setup(int buildingID, const Building_Zone & buldingZone,
+                        int agentid, const agentStruct &agent) {
   id = buldingZone.getId();
+  this->buildingID = buildingID;
   if (SimulationConfig::info.agentHeatGains) {
-      aahg.setup(agentid);
+      aahg.setup(buildingID, agentid);
       availableActions.push_back(0);
   }
   disableBDI();
@@ -140,7 +141,9 @@ void Occupant_Zone::step(const Building_Zone& zone,
     bool inZone = zone.getId() == id;
     bool previouslyInZone = zonePrevious.getId() == id;
     if (inZone || previouslyInZone) {
-      aaw.saveResult();
+        if (SimulationConfig::info.windows){
+            aaw.saveResult();
+        }
     }
 
     if (isInBuilding()) {

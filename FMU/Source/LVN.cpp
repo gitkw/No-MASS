@@ -4,7 +4,9 @@
 #include "SimulationConfig.h"
 #include "LVN.h"
 
-LVN::LVN() {}
+LVN::LVN() {
+  enabled = false;
+}
 
 void LVN::setup() {
   if (SimulationConfig::lvn.size() > 0) {

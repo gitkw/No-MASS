@@ -2,6 +2,7 @@
 
 #include <string>
 #include "DataStore.h"
+#include "SimulationTime.h"
 #include "QLearning_HeatingSetPoints.h"
 #include "Occupant_Action_HeatingSetPoints_Learning.h"
 
@@ -34,15 +35,16 @@ void Occupant_Action_HeatingSetPoints_Learning::setup(const int id,
   qlWeekDay.setup();
   qlWeekEnd.setId(id);
   qlWeekEnd.setup();
-  pmv_name = "Weekday-" + zoneIdStr + "-_pmv" + std::to_string(id);
-  DataStore::addVariable(pmv_name);
-  step_name = "Weekday-" + zoneIdStr + "-_steps" + std::to_string(id);
-  DataStore::addVariable(step_name);
+  pmv_name =
+  DataStore::addVariable("Weekday-" + zoneIdStr + "-_pmv" + std::to_string(id));
+  step_name =
+  DataStore::addVariable("Weekday-" + zoneIdStr
+    + "-_steps" + std::to_string(id));
 }
 
 void Occupant_Action_HeatingSetPoints_Learning::step(const Building_Zone& zone,
                                                       const bool inZone) {
-    int hour = DataStore::getValue("hour");
+    int hour = SimulationTime::hour;
 
     if (inZone) {
       hasBeenInZone = true;
@@ -66,7 +68,7 @@ void Occupant_Action_HeatingSetPoints_Learning::step(const Building_Zone& zone,
       reward = hasBeenInZone * (1 * z + 0.1 * x - 0.1 * y - 0.1 * w) +
                 (1-hasBeenInZone) * (a * 0.1 + (1-a) * -0.1);
 
-      int day = DataStore::getValue("day")+1;
+      int day = SimulationTime::day + 1;
       int dayOfTheWeek = (day - 1) % 7;
 
       if (dayOfTheWeek < 5) {

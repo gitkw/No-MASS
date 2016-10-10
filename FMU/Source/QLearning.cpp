@@ -99,6 +99,10 @@ void QLearning::setStates(const int states) {
     this->states = states;
 }
 
+void QLearning::setActions(const int actions) {
+    this->actions = actions;
+}
+
 void QLearning::setReward(const double reward) {
     this->reward = reward;
 }

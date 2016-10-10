@@ -10,6 +10,8 @@ class Environment {
   static double dailyMeanTemperature;
   static void calculateDailyMeanTemperature();
   static double getDailyMeanTemperature();
+  static double getEVG();
+  static double getOutdoorAirDrybulbTemperature();
 
  private:
   static std::deque<double> outDoorTemperatures;

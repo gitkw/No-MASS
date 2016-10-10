@@ -15,19 +15,26 @@ class Test_Building : public ::testing::Test {
 void Test_Building::SetUp() {
     SimulationConfig::reset();
     SimulationConfig::RunLocation  = testFiles;
-    SimulationConfig::parseConfiguration(SimulationConfig::RunLocation 
+    SimulationConfig::parseConfiguration(SimulationConfig::RunLocation
       + "/SimulationConfig3.xml");
     SimulationConfig::info.windows = false;
     SimulationConfig::info.shading = false;
     SimulationConfig::info.lights = false;
 
     SimulationConfig::setStepCount(-1);
-    DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature", 21);
-    DataStore::addValue("Block1:Zone1ZoneAirRelativeHumidity", 21);
-    DataStore::addValue("Block1:Zone1ZoneMeanRadiantTemperature", 21);
-    DataStore::addValue("Block2:Zone1ZoneMeanAirTemperature", 21);
-    DataStore::addValue("Block2:Zone1ZoneAirRelativeHumidity", 21);
-    DataStore::addValue("Block2:Zone1ZoneMeanRadiantTemperature", 21);
+    DataStore::addVariable("Block1:Zone1ZoneMeanAirTemperature");
+    DataStore::addVariable("Block1:Zone1ZoneAirRelativeHumidity");
+    DataStore::addVariable("Block1:Zone1ZoneMeanRadiantTemperature");
+    DataStore::addVariable("Block2:Zone1ZoneMeanAirTemperature");
+    DataStore::addVariable("Block2:Zone1ZoneAirRelativeHumidity");
+    DataStore::addVariable("Block2:Zone1ZoneMeanRadiantTemperature");
+
+    DataStore::addValueS("Block1:Zone1ZoneMeanAirTemperature", 21);
+    DataStore::addValueS("Block1:Zone1ZoneAirRelativeHumidity", 21);
+    DataStore::addValueS("Block1:Zone1ZoneMeanRadiantTemperature", 21);
+    DataStore::addValueS("Block2:Zone1ZoneMeanAirTemperature", 21);
+    DataStore::addValueS("Block2:Zone1ZoneAirRelativeHumidity", 21);
+    DataStore::addValueS("Block2:Zone1ZoneMeanRadiantTemperature", 21);
     SimulationConfig::step();
 }
 

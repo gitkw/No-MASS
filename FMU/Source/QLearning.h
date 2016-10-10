@@ -16,6 +16,7 @@ class QLearning {
     void setFilename(const std::string filename);
     void setState(const int state);
     void setStates(const int states);
+    void setActions(const int actions);
     void setReward(const double reward);
     void setEpsilon(const double epsilon);
     void setAlpha(double alpha);

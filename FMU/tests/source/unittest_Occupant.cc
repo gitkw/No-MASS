@@ -52,27 +52,49 @@ void Test_Occupant::SetUpSim2() {
 
   z_OutPtr = std::make_shared<Building_Zone>(z_Out);
 
-  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 21);
+  DataStore::addVariable("EnvironmentSiteOutdoorAirDrybulbTemperature");
 
-  DataStore::addValue("Block2:MasterBedroomZoneMeanAirTemperature", 21);
-  DataStore::addValue("Block2:MasterBedroomZoneAirRelativeHumidity", 21);
-  DataStore::addValue("Block2:MasterBedroomZoneMeanRadiantTemperature", 21);
+  DataStore::addVariable("Block2:MasterBedroomZoneMeanAirTemperature");
+  DataStore::addVariable("Block2:MasterBedroomZoneAirRelativeHumidity");
+  DataStore::addVariable("Block2:MasterBedroomZoneMeanRadiantTemperature");
 
-  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 21);
-  DataStore::addValue("Block1:KitchenZoneAirRelativeHumidity", 21);
-  DataStore::addValue("Block1:KitchenZoneMeanRadiantTemperature", 21);
+  DataStore::addVariable("Block1:KitchenZoneMeanAirTemperature");
+  DataStore::addVariable("Block1:KitchenZoneAirRelativeHumidity");
+  DataStore::addVariable("Block1:KitchenZoneMeanRadiantTemperature");
 
-  DataStore::addValue("Block1:LivingRoomZoneMeanAirTemperature", 21);
-  DataStore::addValue("Block1:LivingRoomZoneAirRelativeHumidity", 21);
-  DataStore::addValue("Block1:LivingRoomZoneMeanRadiantTemperature", 21);
+  DataStore::addVariable("Block1:LivingRoomZoneMeanAirTemperature");
+  DataStore::addVariable("Block1:LivingRoomZoneAirRelativeHumidity");
+  DataStore::addVariable("Block1:LivingRoomZoneMeanRadiantTemperature");
 
-  DataStore::addValue("Block2:BathroomZoneMeanAirTemperature", 21);
-  DataStore::addValue("Block2:BathroomZoneAirRelativeHumidity", 21);
-  DataStore::addValue("Block2:BathroomZoneMeanRadiantTemperature", 21);
+  DataStore::addVariable("Block2:BathroomZoneMeanAirTemperature");
+  DataStore::addVariable("Block2:BathroomZoneAirRelativeHumidity");
+  DataStore::addVariable("Block2:BathroomZoneMeanRadiantTemperature");
 
-  DataStore::addValue("Block2:OfficeZoneMeanAirTemperature", 21);
-  DataStore::addValue("Block2:OfficeZoneAirRelativeHumidity", 21);
-  DataStore::addValue("Block2:OfficeZoneMeanRadiantTemperature", 21);
+  DataStore::addVariable("Block2:OfficeZoneMeanAirTemperature");
+  DataStore::addVariable("Block2:OfficeZoneAirRelativeHumidity");
+  DataStore::addVariable("Block2:OfficeZoneMeanRadiantTemperature");
+
+  DataStore::addValueS("EnvironmentSiteOutdoorAirDrybulbTemperature", 21);
+
+  DataStore::addValueS("Block2:MasterBedroomZoneMeanAirTemperature", 21);
+  DataStore::addValueS("Block2:MasterBedroomZoneAirRelativeHumidity", 21);
+  DataStore::addValueS("Block2:MasterBedroomZoneMeanRadiantTemperature", 21);
+
+  DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 21);
+  DataStore::addValueS("Block1:KitchenZoneAirRelativeHumidity", 21);
+  DataStore::addValueS("Block1:KitchenZoneMeanRadiantTemperature", 21);
+
+  DataStore::addValueS("Block1:LivingRoomZoneMeanAirTemperature", 21);
+  DataStore::addValueS("Block1:LivingRoomZoneAirRelativeHumidity", 21);
+  DataStore::addValueS("Block1:LivingRoomZoneMeanRadiantTemperature", 21);
+
+  DataStore::addValueS("Block2:BathroomZoneMeanAirTemperature", 21);
+  DataStore::addValueS("Block2:BathroomZoneAirRelativeHumidity", 21);
+  DataStore::addValueS("Block2:BathroomZoneMeanRadiantTemperature", 21);
+
+  DataStore::addValueS("Block2:OfficeZoneMeanAirTemperature", 21);
+  DataStore::addValueS("Block2:OfficeZoneAirRelativeHumidity", 21);
+  DataStore::addValueS("Block2:OfficeZoneMeanRadiantTemperature", 21);
 
   zs.name = "Block1:Kitchen";
   zs.id = 1;
@@ -158,14 +180,22 @@ void Test_Occupant::SetUpSim4() {
 
   z_OutPtr = std::make_shared<Building_Zone>(z_Out);
 
-  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 21);
+  DataStore::addVariable("EnvironmentSiteOutdoorAirDrybulbTemperature");
 
-  DataStore::addValue("Block1:OfficeZoneMeanAirTemperature", 21);
-  DataStore::addValue("Block1:OfficeZoneAirRelativeHumidity", 21);
-  DataStore::addValue("Block1:OfficeZoneMeanRadiantTemperature", 21);
-  DataStore::addValue("Block2:OfficeZoneMeanAirTemperature", 21);
-  DataStore::addValue("Block2:OfficeZoneAirRelativeHumidity", 21);
-  DataStore::addValue("Block2:OfficeZoneMeanRadiantTemperature", 21);
+  DataStore::addVariable("Block1:OfficeZoneMeanAirTemperature");
+  DataStore::addVariable("Block1:OfficeZoneAirRelativeHumidity");
+  DataStore::addVariable("Block1:OfficeZoneMeanRadiantTemperature");
+  DataStore::addVariable("Block2:OfficeZoneMeanAirTemperature");
+  DataStore::addVariable("Block2:OfficeZoneAirRelativeHumidity");
+  DataStore::addVariable("Block2:OfficeZoneMeanRadiantTemperature");
+  DataStore::addValueS("EnvironmentSiteOutdoorAirDrybulbTemperature", 21);
+
+  DataStore::addValueS("Block1:OfficeZoneMeanAirTemperature", 21);
+  DataStore::addValueS("Block1:OfficeZoneAirRelativeHumidity", 21);
+  DataStore::addValueS("Block1:OfficeZoneMeanRadiantTemperature", 21);
+  DataStore::addValueS("Block2:OfficeZoneMeanAirTemperature", 21);
+  DataStore::addValueS("Block2:OfficeZoneAirRelativeHumidity", 21);
+  DataStore::addValueS("Block2:OfficeZoneMeanRadiantTemperature", 21);
 
 
   zs.name = "Block1:Office";

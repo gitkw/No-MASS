@@ -4,6 +4,7 @@
 #include <vector>
 #include "Utility.h"
 #include "DataStore.h"
+#include "Environment.h"
 #include "Occupant_Action_Shades.h"
 #include "SimulationConfig.h"
 
@@ -25,8 +26,7 @@ void Occupant_Action_Shades::step(const Building_Zone& zone, const bool inZone,
   double shadingFraction = zone.getBlindState();
   // we take the previous timestep shading state to compute Lumint
   // Evg: Outdoor illuminance in the horizontal plane without obstructions (lux)
-  float Evg =
-    DataStore::getValue("EnvironmentSiteExteriorHorizontalSkyIlluminance");
+  float Evg = Environment::getEVG();
 
   if (inZone && !previouslyInZone) {
     shadingFraction = m_blindUsage.arrival(shadingFraction, Lumint, Evg);

@@ -17,18 +17,9 @@ void Appliance_Small::setup() {
   model.setRatedPowerAt(Utility::randomInt(0, 24));
 }
 
-void Appliance_Small::preprocess() {
-  int days = Utility::calculateNumberOfDays(SimulationConfig::info.startDay,
-                                            SimulationConfig::info.startMonth,
-                                            SimulationConfig::info.endDay,
-                                            SimulationConfig::info.endMonth);
-  int totoaltimesteps = days * 24 * SimulationConfig::info.timeStepsPerHour;
-
-  for (int timeStep = 0; timeStep < totoaltimesteps; timeStep++) {
-    power.push_back(model.consumption(timeStep));
-    supply.push_back(0.0);
-    supplyCost.push_back(0.0);
-  }
+void Appliance_Small::step() {
+  int stepcount = SimulationConfig::getStepCount();
+  power = model.consumption(stepcount);
 }
 
 void Appliance_Small::setWeibullParameters(

@@ -43,6 +43,10 @@
             <windowCount>1</windowCount>
         </zone>
     <Appliances>
+      <battery>
+        <id>12</id>
+        <priority>0</priority>
+      </battery>
       <Large>
         <id>0</id>
         <priority>0</priority>

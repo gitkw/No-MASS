@@ -9,25 +9,22 @@
 
 Occupant_Action_Heat_Gains::Occupant_Action_Heat_Gains() {}
 
-void Occupant_Action_Heat_Gains::setup(int agentid) {
+void Occupant_Action_Heat_Gains::setup(int buildingID, int agentid) {
+  this->buildingID = buildingID;
   this->id = agentid;
-  std::string idAsString = std::to_string(id);
-  stringIdMetabolicRate = "Occupant_Metabolic_Rate_" + idAsString;
-  DataStore::addVariable(stringIdMetabolicRate);
-  stringIdClo = "Occupant_clo_" + idAsString;
-  DataStore::addVariable(stringIdClo);
-  stringIdPpd = "Occupant_ppd_" + idAsString;
-  DataStore::addVariable(stringIdPpd);
-  stringIdPmv = "Occupant_pmv_" + idAsString;
-  DataStore::addVariable(stringIdPmv);
-  stringIdPmvAirTemp = "Occupant_PMV_airTemp" + idAsString;
-  DataStore::addVariable(stringIdPmvAirTemp);
-  stringIdPmvAirHumid = "Occupant_PMV_airHumid" + idAsString;
-  DataStore::addVariable(stringIdPmvAirHumid);
-  stringIdPmvMeanRadient = "Occupant_PMV_meanRadient" + idAsString;
-  DataStore::addVariable(stringIdPmvMeanRadient);
-  stringIdPmvSetpoint = "Occupant_PMV_setpoint" + idAsString;
-  DataStore::addVariable(stringIdPmvSetpoint);
+  std::string idAsString = "Building" + std::to_string(buildingID)
+                          + "_Occupant"+ std::to_string(id);
+
+  datastoreIdMetabolicRate =
+                DataStore::addVariable(idAsString + "_Metabolic_Rate");
+  datastoreIdClo = DataStore::addVariable(idAsString + "_CLO");
+  datastoreIdPpd = DataStore::addVariable(idAsString + "_PPD");
+  datastoreIdPmv = DataStore::addVariable(idAsString + "_PMV");
+  datastoreIdPmvAirTemp = DataStore::addVariable(idAsString + "_PMV_airTemp");
+  datastoreIdPmvAirHumid = DataStore::addVariable(idAsString + "_PMV_airHumid");
+  datastoreIdPmvMeanRadient =
+                DataStore::addVariable(idAsString + "_PMV_meanRadient");
+  datastoreIdPmvSetpoint = DataStore::addVariable(idAsString + "_PMV_setpoint");
 }
 
 void Occupant_Action_Heat_Gains::prestep(double clo, double metabolicRate) {
@@ -62,14 +59,14 @@ void Occupant_Action_Heat_Gains::step(const Building_Zone& zone,
     ppd = h.getPpd();
     pmv = h.getPmv();
   }
-  DataStore::addValue(stringIdMetabolicRate, metabolicRate);
-  DataStore::addValue(stringIdClo, clo);
-  DataStore::addValue(stringIdPpd, ppd);
-  DataStore::addValue(stringIdPmv, pmv);
-  DataStore::addValue(stringIdPmvAirTemp, airTemp);
-  DataStore::addValue(stringIdPmvAirHumid, airHumid);
-  DataStore::addValue(stringIdPmvMeanRadient, meanRadient);
-  DataStore::addValue(stringIdPmvSetpoint, zone.getHeatingState());
+  DataStore::addValue(datastoreIdMetabolicRate, metabolicRate);
+  DataStore::addValue(datastoreIdClo, clo);
+  DataStore::addValue(datastoreIdPpd, ppd);
+  DataStore::addValue(datastoreIdPmv, pmv);
+  DataStore::addValue(datastoreIdPmvAirTemp, airTemp);
+  DataStore::addValue(datastoreIdPmvAirHumid, airHumid);
+  DataStore::addValue(datastoreIdPmvMeanRadient, meanRadient);
+  DataStore::addValue(datastoreIdPmvSetpoint, zone.getHeatingState());
 }
 
 double Occupant_Action_Heat_Gains::getPMV() const {

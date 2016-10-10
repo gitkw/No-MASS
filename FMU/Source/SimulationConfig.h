@@ -12,6 +12,7 @@
 
 struct LVNNodeStruct {
     int id;
+    double impedance = 0.0047;
     int parent;
     std::vector<int> children;
 };
@@ -121,9 +122,10 @@ struct appLargeStruct {
     std::string name;
     int id;
     std::vector<double> priority;
+    std::vector<double> timeRequired;
     double cost;
     double epsilon = 0.1;   // probability of a random action selection
-    double alpha = 0.1;     // learning rate
+    double alpha = 0.3;     // learning rate
     double gamma = 0.1;     // discount factor (how soon do you care)
     bool update = false;
     std::vector<int> activities;
@@ -152,6 +154,15 @@ struct appFMIStruct {
   std::vector<double> priority;
 };
 
+struct appBatteryStruct {
+  int id;
+  std::vector<double> priority;
+  double epsilon = 0.1;   // probability of a random action selection
+  double alpha = 0.3;     // learning rate
+  double gamma = 0.1;     // discount factor (how soon do you care)
+  bool update = false;
+};
+
 struct buildingStruct {
     std::map<std::string, ZoneStruct> zones;
     std::vector<appLargeStruct> AppliancesLarge;
@@ -160,6 +171,7 @@ struct buildingStruct {
     std::vector<appSmallStruct> AppliancesSmall;
     std::vector<appCSVStruct> AppliancesCSV;
     std::vector<appFMIStruct> AppliancesFMI;
+    std::vector<appBatteryStruct> AppliancesBattery;
     std::vector<agentStruct> agents;
     std::string name;
     int id;

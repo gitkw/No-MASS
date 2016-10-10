@@ -24,8 +24,8 @@ class Occupant_Action_HeatingSetPoints_Learning : public Occupant_Action
     double steps;
     bool hasBeenInZone;
     double pmv;
-    std::string pmv_name;
-    std::string step_name;
+    int pmv_name;
+    int step_name;
   //  QLearning ql;
 };
 

@@ -29,11 +29,12 @@ void Test_Occupant_Action_Heat_Gains::SetUp() {
   DataStore::addVariable("EnvironmentSiteOutdoorAirDrybulbTemperature");
   DataStore::addVariable("Block1:KitchenDaylightingReferencePoint1Illuminance");
 
-  DataStore::addValue("EnvironmentSiteOutdoorAirDrybulbTemperature", 0);
-  DataStore::addValue("Block1:KitchenZoneMeanAirTemperature", 18);
-  DataStore::addValue("Block1:KitchenZoneAirRelativeHumidity", 18);
-  DataStore::addValue("Block1:KitchenZoneMeanRadiantTemperature", 18);
-  DataStore::addValue("Block1:KitchenDaylightingReferencePoint1Illuminance", 1);
+  DataStore::addValueS("EnvironmentSiteOutdoorAirDrybulbTemperature", 0);
+  DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 18);
+  DataStore::addValueS("Block1:KitchenZoneAirRelativeHumidity", 18);
+  DataStore::addValueS("Block1:KitchenZoneMeanRadiantTemperature", 18);
+  DataStore::addValueS("Block1:KitchenDaylightingReferencePoint1Illuminance", 1);
+  aahg.setup(0,0);
 }
 
 TEST_F(Test_Occupant_Action_Heat_Gains, HeatGains) {

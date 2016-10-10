@@ -9,6 +9,8 @@
 
 #include "Building_Zone.h"
 #include "SimulationConfig.h"
+
+#include "SimulationTime.h"
 #include "QLearning.h"
 #include "gtest/gtest.h"
 
@@ -21,12 +23,11 @@ class Test_QLearning_HeatingSetPoints : public ::testing::Test {
 void Test_QLearning_HeatingSetPoints::SetUp() {
   ql.setStates(288);
   SimulationConfig::info.learnep = 0.8;
-  DataStore::addVariable("hour");
-  DataStore::addVariable("month");
-  DataStore::addVariable("hourOfDay");
-  DataStore::addValue("hour", 1);
-  DataStore::addValue("month", 1);
-  DataStore::addValue("hourOfDay", 1);
+
+  DataStore::addVariable("Block1:Zone1ZoneMeanAirTemperature");
+  SimulationTime::hour = 1;
+  SimulationTime::month = 1;
+  SimulationTime::hourOfDay = 1;
 }
 
 TEST_F(Test_QLearning_HeatingSetPoints, learn) {
@@ -41,7 +42,7 @@ TEST_F(Test_QLearning_HeatingSetPoints, learn) {
     z_Kitchen.setActive(true);
     z_Kitchen.setup(zs);
 
-    DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature", 1);
+    DataStore::addValueS("Block1:Zone1ZoneMeanAirTemperature", 1);
 
     double reward = -0.1;
     double heating;
@@ -58,7 +59,7 @@ TEST_F(Test_QLearning_HeatingSetPoints, learn) {
       }
       ql.setReward(reward);
       heating = ql.learn();
-      DataStore::addValue("Block1:Zone1ZoneMeanAirTemperature",
+      DataStore::addValueS("Block1:Zone1ZoneMeanAirTemperature",
                           heating);
     }
     // ql.printQ();
