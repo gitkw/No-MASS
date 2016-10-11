@@ -21,6 +21,7 @@ class NoMASS(object):
         self.largeApplianceFile = "AppliancesLarge.xml"
         self.HeatingPowerFile = "HeatingPower.csv"
         self.PVFile = "PVBowler2013_365.csv"
+        self.appFiles = []
         self.smallApplianceFolder = "SmallAppliances"
         self.resultsLocation = "Results"
         self.outFile = "NoMASS.out"
@@ -208,6 +209,8 @@ class NoMASS(object):
         copyfile(con + self.largeApplianceFile, rl + self.largeApplianceFile)
         copyfile(con + self.HeatingPowerFile, rl + self.HeatingPowerFile)
         copyfile(con + self.PVFile, rl + self.PVFile)
+        for x in self.appFiles:
+            copyfile(con + x, rl + x)
         if os.path.isdir(rl + self.smallApplianceFolder):
             rmtree(rl + self.smallApplianceFolder)
         copytree(con + self.smallApplianceFolder, rl + self.smallApplianceFolder)
