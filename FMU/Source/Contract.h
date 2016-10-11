@@ -2,6 +2,7 @@
 
 #ifndef CONTRACT_H_
 #define CONTRACT_H_
+#include <memory>
 
 struct Contract {
     int id;

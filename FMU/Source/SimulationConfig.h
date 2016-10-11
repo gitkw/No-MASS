@@ -122,7 +122,7 @@ struct appLargeStruct {
     std::string name;
     int id;
     std::vector<double> priority;
-    std::vector<double> timeRequired;
+    std::vector<double> timeRequired = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     double cost;
     double epsilon = 0.1;   // probability of a random action selection
     double alpha = 0.3;     // learning rate

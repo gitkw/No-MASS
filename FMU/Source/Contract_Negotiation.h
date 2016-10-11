@@ -5,6 +5,7 @@
 
 #include <unordered_map>
 #include <vector>
+#include <memory>
 #include "Contract.h"
 #include "Contract_Priority_Node.h"
 #include "Contract_Supply_Node.h"

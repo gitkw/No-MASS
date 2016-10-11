@@ -72,6 +72,7 @@ Source/Model_Appliance_Small_Usage.cpp
 Source/Model_Appliance_Power_CSV.cpp
 Source/Simulation.cpp
 Source/SimulationConfig.cpp
+Source/SimulationTime.cpp
 Source/State.cpp
 Source/StateMachine.cpp
 Source/State_Audio_Visual.cpp
@@ -101,9 +102,12 @@ Source/Appliance_Small.cpp
 Source/Appliance_Generic_CSV.cpp
 Source/Appliance_FMI.cpp
 Source/Appliance_Large_Learning.cpp
+Source/Appliance_Battery.cpp
 Source/LVN.cpp
 Source/LVN_Node.cpp
-Source/LVN_Negotiation.cpp
+Source/Contract_Priority_Node.cpp
+Source/Contract_Supply_Node.cpp
+Source/Contract_Negotiation.cpp
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/../rapidxml)
@@ -197,6 +201,7 @@ if (Tests)
     tests/source/unittest_QLearning_Window.cc
     tests/source/unittest_Appliance_Large.cc
     tests/source/unittest_Building_Appliances.cc
+    tests/source/unittest_Contract_Negotiation.cc
   )
 
   add_executable(runUnitTests ${TESTSRC})
