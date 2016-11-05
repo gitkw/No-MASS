@@ -43,6 +43,9 @@ class Simulation {
     * Manages the building power negotiation
     */
     Contract_Negotiation building_negotiation;
+
+    int GridPowerDataId;
+    int GridCostDataId;
 };
 
 #endif  // SIMULATION_H_

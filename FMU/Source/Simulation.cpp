@@ -30,6 +30,8 @@ void Simulation::preprocess() {
   if (!LOG.getError()) {
     setupSimulationModel();
   }
+  GridPowerDataId = DataStore::addVariable("grid_power");
+  GridCostDataId = DataStore::addVariable("grid_cost");
 }
 
 void Simulation::parseConfiguration(const std::string & file) {
@@ -54,7 +56,7 @@ void Simulation::postprocess() {
     b.postprocess();
   }
   DataStore::print();
-  DataStore::clear();
+  DataStore::clearValues();
   SimulationTime::reset();
 }
 
@@ -101,6 +103,11 @@ void Simulation::timeStep() {
     }
     m.requested = 0;
     building_negotiation.submit(m);
+    DataStore::addValue(GridPowerDataId, m.supplied);
+    DataStore::addValue(GridCostDataId, m.suppliedCost);
+  } else {
+    DataStore::addValue(GridPowerDataId, 0);
+    DataStore::addValue(GridCostDataId, 0);
   }
   building_negotiation.process();
   for (Building &b : buildings) {

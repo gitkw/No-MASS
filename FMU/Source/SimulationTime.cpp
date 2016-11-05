@@ -23,7 +23,7 @@ int SimulationTime::databaseIdMinuteOfDay;
 SimulationTime::SimulationTime() {}
 
 void SimulationTime::reset() {
-  SimulationTime::stepCount = 0;
+  SimulationTime::stepCount = 0;//-1;
   SimulationTime::minute = 0;
   SimulationTime::hour = 0;
   SimulationTime::day = 0;

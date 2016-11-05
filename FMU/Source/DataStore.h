@@ -18,6 +18,7 @@ class DataStore {
     static double getValueForZone(const std::string &name, const std::string &zoneName);
     static void print();
     static void clear();
+    static void clearValues();
  private:
     DataStore();
     static std::unordered_map<std::string, int> variableMap;
