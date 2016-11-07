@@ -84,7 +84,16 @@ double DataStore::getValue(const int & id) {
   return ret;
 }
 
+void DataStore::clearValues() {
+  //std::cout << "clear values" << std::endl;
+  std::unordered_map<int, std::vector<float>>::iterator it;
+  for (it=intMap.begin(); it != intMap.end(); ++it) {
+    it->second.clear();
+  }
+}
+
 void DataStore::clear() {
+  //std::cout << "clear" << std::endl;
     variableMap.clear();
     intMap.clear();
 }

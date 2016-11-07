@@ -357,7 +357,8 @@ void Building::setOccupantCountForZone(std::shared_ptr<Building_Zone> zone) {
             numberOfOccupants++;
         }
     }
-    zone->setOccupantFraction(numberOfOccupants / population.size());
+    // zone->setOccupantFraction(numberOfOccupants / population.size());
+    zone->setOccupantFraction(numberOfOccupants);
 }
 
 void Building::postTimeStep() {

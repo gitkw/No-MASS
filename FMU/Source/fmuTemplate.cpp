@@ -52,7 +52,8 @@ static fmiValueReference vrStates[NUMBER_OF_STATES] = STATES;
 // fname is fmiInstantiateModel or fmiInstantiateSlave
 static fmiComponent instantiateModel(const char* fname, fmiString instanceName,
     fmiString GUID, fmiCallbackFunctions functions, fmiBoolean loggingOn) {
-    DataStore::clear();
+    DataStore::clearValues();
+
     SimulationConfig::setStepCount(-1);
     if (valToRefs.empty()) {
         modelInstance->sim.preprocess();
@@ -287,6 +288,7 @@ void loadVariables() {
     int valueReference = std::stoi(pAttr->value());
 
     if (causality.compare("input") == 0) {
+        //std::cout << "added: " << name << std::endl;
         DataStore::addVariable(name);
     } else {
         rx::xml_node<> *cnode = node->first_node();
