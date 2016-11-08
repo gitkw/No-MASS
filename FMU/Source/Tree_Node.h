@@ -15,13 +15,21 @@ class Tree_Node {
                                                                   const = 0;
   virtual bool isRemoveable() const = 0;
 
+  bool isLeftNull() {
+    return pLeft == nullptr;
+  }
+
+  bool isRightNull() {
+    return pRight == nullptr;
+  }
 
   T findRightEdge() {
+    T ret = nodeObject;
     if (pRight) {
       if (isNodeRemoveable(pRight)) {
         pRight  = nullptr;
       } else {
-        return pRight->findLeftEdge();
+        ret = pRight->findRightEdge();
       }
     }
     if (isAssigned && isRemoveable()) {
@@ -30,12 +38,15 @@ class Tree_Node {
     }
     if (pLeft && isAssigned == false) {
       if (isNodeRemoveable(pLeft)) {
-        pLeft  = nullptr;
+        pLeft = nullptr;
       } else {
-        return pLeft->findLeftEdge();
+        ret = pLeft->findRightEdge();
       }
     }
-    return nodeObject;
+    if (ret == nullptr && (pRight != nullptr || pLeft != nullptr)) {
+      ret = findRightEdge();
+    }
+    return ret;
   }
 
   T findLeftEdge() {

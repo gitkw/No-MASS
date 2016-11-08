@@ -6,7 +6,9 @@
 #include "Utility.h"
 #include "Appliance_Battery.h"
 
-Appliance_Battery::Appliance_Battery() {}
+Appliance_Battery::Appliance_Battery() {
+  stateOfCharge = 0;
+}
 
 /**
  * @brief Set up the large appliance model, reading in the large applaince
@@ -123,4 +125,37 @@ void Appliance_Battery::setUpdate(bool update) {
 
 void Appliance_Battery::AddCost(double cost) {
   this->cost += cost;
+}
+
+double Appliance_Battery::Voc(double SOC) {
+    double a3 = 8.752e-5;
+    double a2 = -0.022;
+    double a1 = 2.668;
+    double a0 = 254.7;
+    return a0 + a1*SOC +a2*SOC*SOC + a3*SOC*SOC*SOC;
+}
+
+double Appliance_Battery::Rbatt(double SOC) {
+    double b4 = -2.7923e-8;
+    double b3 = 7.0533e-6;
+    double b2 = -6.4879e-4;
+    double b1 = 0.0239;
+    double b0 = 0.0418;
+    return b0 + b1*SOC + b2*SOC*SOC + b3*SOC*SOC*SOC + b4*SOC*SOC*SOC*SOC;
+}
+
+double Appliance_Battery::Vter_disch(double SOC) {
+    return Voc(SOC)-2*Rbatt(SOC);
+}
+
+double Appliance_Battery::Vter_ch(double SOC) {
+    return 2*Voc(SOC) - Vter_disch(SOC);
+}
+
+double Appliance_Battery::P_ch(double SOC, double I) {
+    return Vter_ch(SOC)*I;
+}
+
+double Appliance_Battery::P_dis(double SOC, double I) {
+    return Vter_disch(SOC)*I;
 }

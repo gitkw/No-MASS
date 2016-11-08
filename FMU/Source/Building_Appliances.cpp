@@ -114,7 +114,7 @@ bool Building_Appliances::sendContractGlobal(const Contract & c) {
     x.id = c.id;
     x.buildingID = buildingID;
     x.recievedCost = c.recievedCost;
-    x.requested = c.requested - c.recieved;
+    x.requested = c.requested;
     x.recieved = c.recieved;
     x.supplied = c.suppliedLeft;
     x.priority = c.priority;
