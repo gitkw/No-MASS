@@ -20,7 +20,7 @@ void Contract_Negotiation::submit(const Contract & c) {
   if (contract->supplied > 0) {
     nodeSupply.insert(contract, contract->suppliedCost);
   }
-  difference += contract->supplied - contract->requested;
+  difference += contract->supplied - contract->requested + contract->recieved;
 }
 
 double Contract_Negotiation::getDifference() const {
@@ -46,7 +46,7 @@ void Contract_Negotiation::process() {
 void Contract_Negotiation::processContracts() {
   ContractPtr c = nodePriority.findRightEdge();
   std::vector<ContractPtr>::iterator cs = contractsSupplied.begin();
-  while (c && cs!= contractsSupplied.end()) {
+  while (c && cs != contractsSupplied.end()) {
       double fractionalPower = c->requested - c->recieved;
       while (fractionalPower > 0 && cs != contractsSupplied.end()) {
           if (sameContract((*cs), c)) {
@@ -59,6 +59,7 @@ void Contract_Negotiation::processContracts() {
             supplied = fractionalPower;
             (*cs)->suppliedLeft -= supplied;
           } else {
+            (*cs)->suppliedLeft = 0;
             contractsSupplied.erase(cs);
           }
           c->recievedCost += suppliedCost * supplied;

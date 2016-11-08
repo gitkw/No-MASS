@@ -46,6 +46,15 @@ class Appliance_Battery : public Appliance {
   double binShortage;
   double mostShortage;
   double cost;
+
+  double stateOfCharge;
+
+  double Voc(double SOC);
+  double Rbatt(double SOC);
+  double Vter_disch(double SOC);
+  double Vter_ch(double SOC);
+  double P_ch(double SOC, double I);
+  double P_dis(double SOC, double I);
 };
 
 #endif  // APPLIANCE_BATTERY_H_

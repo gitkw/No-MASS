@@ -175,6 +175,7 @@ if (Tests)
     ${gen_file}
     tests/source/unittest_Simulation.cc
     tests/source/unittest_SimulationConfig.cc
+    tests/source/unittest_SimulationTime.cc
     tests/source/unittest_Model_Activity.cc
     tests/source/unittest_Model_Windows.cc
     tests/source/unittest_Occupant_Action_HeatingSetPoints_Learning.cc

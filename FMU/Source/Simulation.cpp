@@ -30,12 +30,12 @@ void Simulation::preprocess() {
   if (!LOG.getError()) {
     setupSimulationModel();
   }
-  GridPowerDataId = DataStore::addVariable("grid_power");
-  GridCostDataId = DataStore::addVariable("grid_cost");
 }
 
 void Simulation::parseConfiguration(const std::string & file) {
     SimulationConfig::parseConfiguration(file);
+    GridPowerDataId = DataStore::addVariable("grid_power");
+    GridCostDataId = DataStore::addVariable("grid_cost");
 }
 
 void Simulation::setupSimulationModel() {
