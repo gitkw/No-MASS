@@ -30,6 +30,8 @@ class Appliance_Battery : public Appliance {
   void AddCost(double cost);
 
  private:
+   int datastoreIDstateOfCharge;
+
   double batteryPower;
   double batteryCost;
   double MaxPower;
@@ -46,6 +48,10 @@ class Appliance_Battery : public Appliance {
   double binShortage;
   double mostShortage;
   double cost;
+  double delta_E;
+  double energy;
+  double I = 30.0;
+  double capacity = 3000;
 
   double stateOfCharge;
 
@@ -53,8 +59,13 @@ class Appliance_Battery : public Appliance {
   double Rbatt(double SOC);
   double Vter_disch(double SOC);
   double Vter_ch(double SOC);
-  double P_ch(double SOC, double I);
-  double P_dis(double SOC, double I);
+  double P_ch(double SOC);
+  double P_dis(double SOC);
+
+  void get_new_SOC_charge(double delta_E);
+  void get_new_SOC_discharge(double delta_t);
+  double energy_calc(double SOC, double capacity);
+  double get_charge_delta(double delta_t);
 };
 
 #endif  // APPLIANCE_BATTERY_H_
