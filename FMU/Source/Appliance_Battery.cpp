@@ -30,8 +30,6 @@ void Appliance_Battery::setup() {
   qLearning.setup();
   batteryPower = 0;
   MaxPower = 0;
-  chargeRate = 500;
-  dischargeRate = 600;
   binShortage = 0;
   stateOfCharge = 0;
   datastoreIDstateOfCharge = DataStore::addVariable(s_fullname + "stateOfCharge");
@@ -50,15 +48,17 @@ void Appliance_Battery::setupModel() {}
  * @details
  */
 void Appliance_Battery::step() {
-  get_new_SOC_charge(recieved);
+
+  double leninsec = SimulationConfig::lengthOfTimestep();
+  double delta_t = leninsec / 60.0 / 60.0;
+  get_new_SOC_charge(delta_t, recieved);
     if(recieved > 0){
         std::cout << "rec " << recieved << std::endl;
     }
-  double leninsec = SimulationConfig::lengthOfTimestep();
-  double delta_t = leninsec / 60.0 / 60.0;
+
   power = 0;
   if(stateOfCharge < 100) {
-    power = get_charge_delta(delta_t);
+    power = get_charge_delta();
   }
 
 
@@ -88,12 +88,10 @@ void Appliance_Battery::step() {
   supplyCost = 0.0;
   supply = 0.0;
 
-
-
   if (action) {
     if (powerShortage > 0 && stateOfCharge > 0) {
-      get_new_SOC_discharge(delta_t);
-      supply = delta_E;
+
+      supply = get_new_SOC_discharge(delta_t, powerShortage);
     }
   }
   recieved = 0;
@@ -139,7 +137,7 @@ void Appliance_Battery::setUpdate(bool update) {
 void Appliance_Battery::AddCost(double cost) {
   this->cost += cost;
 }
-
+/*
 double Appliance_Battery::Voc(double SOC) {
     double a3 = 8.752e-5;
     double a2 = -0.022;
@@ -172,13 +170,20 @@ double Appliance_Battery::P_ch(double SOC) {
 double Appliance_Battery::P_dis(double SOC) {
     return Vter_disch(SOC)*I;
 }
+*/
+double Appliance_Battery::get_charge_delta() {
 
-double Appliance_Battery::get_charge_delta(double delta_t) {
-    double delta_E = delta_t * P_ch(stateOfCharge); // variation of energy that you will be able to charge in the duration of a time step
-    return delta_E;
+    double P_request = chargeRate;
+    double charge_left = capacity - energy_calc(stateOfCharge, capacity);
+
+    if (charge_left < P_request){
+      P_request = charge_left;
+    }
+    return P_request;
 }
 
-void Appliance_Battery::get_new_SOC_charge(double delta_E) {
+void Appliance_Battery::get_new_SOC_charge(double delta_t, double P_request) {
+    double delta_E = delta_t * P_request * efficiency; // variation of energy that you will be able to charge in the duration of a time step
     energy = energy_calc(stateOfCharge, capacity) + delta_E; // new capacity iswhat you had plus what you charge
     stateOfCharge = energy / capacity * 100.0 ; // SOC is fraction of capacities
     if (stateOfCharge > 100){
@@ -186,13 +191,18 @@ void Appliance_Battery::get_new_SOC_charge(double delta_E) {
     }
 }
 
-void Appliance_Battery::get_new_SOC_discharge(double delta_t) {
-    delta_E = delta_t * P_dis(stateOfCharge); // variation of energy that you will get in the duration of a time step
+double Appliance_Battery::get_new_SOC_discharge(double delta_t, double P_request) {
+    if (P_request > dischargeRate){
+      P_request = dischargeRate;
+    }
+
+    delta_E = delta_t * P_request * efficiency; // variation of energy that you will get in the duration of a time step
     energy = energy_calc(stateOfCharge, capacity) - delta_E; // new capacity, after removing what you discharged
     stateOfCharge = energy / capacity * 100.0;
     if (stateOfCharge < 0){
       stateOfCharge = 0;
     }
+    return P_request;
 }
 
 double Appliance_Battery::energy_calc(double SOC, double capacity) {
