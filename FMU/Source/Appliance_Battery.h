@@ -35,8 +35,8 @@ class Appliance_Battery : public Appliance {
   double batteryPower;
   double batteryCost;
   double MaxPower;
-  double chargeRate;
-  double dischargeRate;
+  double chargeRate = 1000;
+  double dischargeRate = 1000;
   double powerShortage;
   QLearning_Appliance qLearning;
   double epsilon;   // probability of a random action selection
@@ -50,22 +50,23 @@ class Appliance_Battery : public Appliance {
   double cost;
   double delta_E;
   double energy;
-  double I = 30.0;
-  double capacity = 3000;
+  //double I = 30.0;
+  double capacity = 2000;
+  double efficiency = 0.98;
 
   double stateOfCharge;
 
-  double Voc(double SOC);
-  double Rbatt(double SOC);
-  double Vter_disch(double SOC);
-  double Vter_ch(double SOC);
-  double P_ch(double SOC);
-  double P_dis(double SOC);
+  //double Voc(double SOC);
+  //double Rbatt(double SOC);
+  //double Vter_disch(double SOC);
+  //double Vter_ch(double SOC);
+  //double P_ch(double SOC);
+  //double P_dis(double SOC);
 
-  void get_new_SOC_charge(double delta_E);
-  void get_new_SOC_discharge(double delta_t);
+  void get_new_SOC_charge(double delta_E, double P_request);
+  double get_new_SOC_discharge(double delta_t, double P_request);
   double energy_calc(double SOC, double capacity);
-  double get_charge_delta(double delta_t);
+  double get_charge_delta();
 };
 
 #endif  // APPLIANCE_BATTERY_H_
