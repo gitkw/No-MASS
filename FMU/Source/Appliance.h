@@ -29,6 +29,7 @@ class Appliance : public Agent {
     double getSupplyCost() const;
     double getPriority() const;
     double getPower() const;
+    int calculateHourOfDay() const;
 
 
 

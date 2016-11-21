@@ -87,3 +87,9 @@ void Appliance::setHourlyCost(const std::vector<double> & cost) {
 void Appliance::setHoulyPriority(const std::vector<double> & priority) {
   this->hourlyPriority = priority;
 }
+
+int Appliance::calculateHourOfDay() const {
+  int stepCount = SimulationConfig::getStepCount();
+  int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
+  return hour % 24;
+}

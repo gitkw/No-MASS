@@ -51,7 +51,6 @@ class Appliance_Large_Learning : public Appliance_Large {
   void startLearningPeriod(const int hourOfTheDay);
   void stopLearningPeriod(const int hourOfTheDay);
   void saveActualProfile();
-  int calculateHourOfDay() const;
   double calculateReward();
 
   double epsilon;   // probability of a random action selection

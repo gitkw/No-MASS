@@ -33,7 +33,7 @@ class Appliance_Battery : public Appliance {
    int datastoreIDstateOfCharge;
 
   double batteryPower;
-  double batteryCost;
+  //double batteryCost;
   double MaxPower;
   double chargeRate = 1000;
   double dischargeRate = 1000;
@@ -43,7 +43,9 @@ class Appliance_Battery : public Appliance {
   double alpha;     // learning rate
   double gamma;     // discount factor (how soon do you care)
   bool update;
-
+  int previousHourOfDay;
+  double sumSupply = 0.0000001;
+  double sumShort =0.0000001;
   bool action;
   double binShortage;
   double mostShortage;
