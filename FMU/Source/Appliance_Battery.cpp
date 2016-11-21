@@ -52,51 +52,52 @@ void Appliance_Battery::step() {
   double leninsec = SimulationConfig::lengthOfTimestep();
   double delta_t = leninsec / 60.0 / 60.0;
   get_new_SOC_charge(delta_t, recieved);
-    if(recieved > 0){
-        std::cout << "rec " << recieved << std::endl;
-    }
 
   power = 0;
   if(stateOfCharge < 100) {
     power = get_charge_delta();
   }
 
-
-
-
-  batteryPower += recieved;
-
-  batteryCost += recievedCost;
-
-  recievedCost = 0.0;
-  int stepCount = SimulationConfig::getStepCount() % 1440;
-
-  if (stepCount % 24) {
-    binShortage = cost;
+  int hourOfTheDay = calculateHourOfDay();
+  if (hourOfTheDay != previousHourOfDay) {
+    previousHourOfDay = hourOfTheDay;
+    binShortage = sumShort - sumSupply;
+    if (binShortage <= 0 ) {
+      binShortage = 0.0000001;
+    }
     if (binShortage > mostShortage) {
       mostShortage = binShortage;
     }
     double reward = 100.0 / mostShortage * binShortage;
+    reward = reward / 100;
+    if(action == 0 && reward > 0.7){
+      reward = -reward;
+    } else if (action == 1 && reward < 0.7){
+      reward = -reward;
+    }
     qLearning.setReward(reward);
-    qLearning.setState(stepCount % 24);
+    qLearning.setState(hourOfTheDay);
     qLearning.learn();
     action = qLearning.getAction();
-    binShortage = 0;
-    cost = 0;
+    sumSupply = 0.0000001;
+    sumShort = 0.0000001;
   }
 
-  supplyCost = 0.0;
   supply = 0.0;
-
   if (action) {
     if (powerShortage > 0 && stateOfCharge > 0) {
-
       supply = get_new_SOC_discharge(delta_t, powerShortage);
+      power = 0.0;
+      sumSupply += supply;
     }
+  }
+  if (powerShortage > 0){
+    sumShort += powerShortage;
   }
   recieved = 0;
   DataStore::addValue(datastoreIDstateOfCharge, stateOfCharge);
 }
+
 void Appliance_Battery::clear() {
   local = false;
   global = false;

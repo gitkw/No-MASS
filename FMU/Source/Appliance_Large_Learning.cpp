@@ -162,14 +162,6 @@ void Appliance_Large_Learning::postprocess() {
   qLearning.printQ();
 }
 
-
-int Appliance_Large_Learning::calculateHourOfDay() const {
-  int stepCount = SimulationConfig::getStepCount();
-  int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
-
-  return hour % 24;
-}
-
 void Appliance_Large_Learning::setEpsilon(double epsilon) {
   this->epsilon = epsilon;
 }
