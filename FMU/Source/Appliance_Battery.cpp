@@ -8,7 +8,6 @@
 #include "Appliance_Battery.h"
 
 Appliance_Battery::Appliance_Battery() {
-  stateOfCharge = 0;
 }
 
 /**
@@ -28,9 +27,10 @@ void Appliance_Battery::setup() {
   qLearning.setActions(2);
   qLearning.setId(id);
   qLearning.setup();
-  batteryPower = 0;
-  MaxPower = 0;
-  binShortage = 0;
+  double lengthOfTimestep = SimulationConfig::lengthOfTimestep();
+  BatteryDeltaT = lengthOfTimestep / 60.0 / 60.0;
+  sumSupply = 0;
+  sumShort = 0;
   stateOfCharge = 0;
   datastoreIDstateOfCharge = DataStore::addVariable(s_fullname + "stateOfCharge");
 }
@@ -43,58 +43,88 @@ void Appliance_Battery::setup() {
  */
 void Appliance_Battery::setupModel() {}
 
+void Appliance_Battery::doAction(){
+
+  // qlearning calculate every hour the reward for turning battery on
+  // for that hour
+  int hourOfTheDay = calculateHourOfDay();
+  if (hourOfTheDay != previousHourOfDay) {
+    previousHourOfDay = hourOfTheDay;
+    // Get the energy needed over the last hour,
+    // less what has been supplied by the battery
+    double binShortage = sumShort - sumSupply;
+    // make sure it is positive and greater than 0
+    if (binShortage <= 0 ) {
+      binShortage = std::numeric_limits<double>::epsilon();
+    }
+    // Save the largest ammount of energy needed for comparison
+    if (binShortage > mostShortage) {
+      mostShortage = binShortage;
+    }
+    // calculate the percentage of power over the last
+    // against the maximum seen
+    double reward = 100.0 / mostShortage * binShortage;
+    // make the percentage a fraction
+    reward = reward / 100;
+    if(action == 0 && reward > 0.7){
+      // if an action did not take place and our reward is above 0.7
+      // punish
+      reward = -reward;
+    } else if (action == 1 && reward < 0.7){
+      // if an action did take place and our reward is below 0.7
+      // punish
+      reward = -reward;
+    }
+    // save reward for state
+    qLearning.setReward(reward);
+    qLearning.setState(hourOfTheDay);
+    // learn
+    qLearning.learn();
+    // get new reward
+    action = qLearning.getAction();
+    // reset the hourly sums
+    sumSupply = 0.0;
+    sumShort = 0.0;
+  }
+}
+
 /**
  * @brief The timestep call of the battery appliance
  * @details
  */
 void Appliance_Battery::step() {
+  doAction();
 
-  double leninsec = SimulationConfig::lengthOfTimestep();
-  double delta_t = leninsec / 60.0 / 60.0;
-  get_new_SOC_charge(delta_t, recieved);
+  // get the recieved power and add it to the battery
+  get_new_SOC_charge(received);
 
+  // if the battery is not full calculate how much power is needed
   power = 0;
   if(stateOfCharge < 100) {
     power = get_charge_delta();
   }
 
-  int hourOfTheDay = calculateHourOfDay();
-  if (hourOfTheDay != previousHourOfDay) {
-    previousHourOfDay = hourOfTheDay;
-    binShortage = sumShort - sumSupply;
-    if (binShortage <= 0 ) {
-      binShortage = 0.0000001;
-    }
-    if (binShortage > mostShortage) {
-      mostShortage = binShortage;
-    }
-    double reward = 100.0 / mostShortage * binShortage;
-    reward = reward / 100;
-    if(action == 0 && reward > 0.7){
-      reward = -reward;
-    } else if (action == 1 && reward < 0.7){
-      reward = -reward;
-    }
-    qLearning.setReward(reward);
-    qLearning.setState(hourOfTheDay);
-    qLearning.learn();
-    action = qLearning.getAction();
-    sumSupply = 0.0000001;
-    sumShort = 0.0000001;
-  }
-
   supply = 0.0;
-  if (action) {
-    if (powerShortage > 0 && stateOfCharge > 0) {
-      supply = get_new_SOC_discharge(delta_t, powerShortage);
+  // If there is a power shortage
+  if (powerShortage > 0){
+    // Check battery is not empty and there is an action
+    // actions are calculated from the learning
+    if (action && stateOfCharge > 0) {
+      // get power from battery as supply
+      supply = get_new_SOC_discharge(powerShortage);
+      // we cant supply and request power
+      // ie charge and discharge at the same time
       power = 0.0;
+      // add the power to the sum for the hour
+      // used to learn
       sumSupply += supply;
     }
-  }
-  if (powerShortage > 0){
+    // add the power shortage to the hourly sum used for learning
     sumShort += powerShortage;
   }
-  recieved = 0;
+  // reset the recieved power
+  received = 0;
+  // save the new state of charge to the datastore
   DataStore::addValue(datastoreIDstateOfCharge, stateOfCharge);
 }
 
@@ -104,7 +134,7 @@ void Appliance_Battery::clear() {
   power = 0.0;
   supply = 0.0;
   supplyCost = 0.0;
-  recievedCost = 0.0;
+  receivedCost = 0.0;
 
 }
 
@@ -138,74 +168,45 @@ void Appliance_Battery::setUpdate(bool update) {
 void Appliance_Battery::AddCost(double cost) {
   this->cost += cost;
 }
-/*
-double Appliance_Battery::Voc(double SOC) {
-    double a3 = 8.752e-5;
-    double a2 = -0.022;
-    double a1 = 2.668;
-    double a0 = 254.7;
-    return a0 + a1*SOC +a2*SOC*SOC + a3*SOC*SOC*SOC;
-}
 
-double Appliance_Battery::Rbatt(double SOC) {
-    double b4 = -2.7923e-8;
-    double b3 = 7.0533e-6;
-    double b2 = -6.4879e-4;
-    double b1 = 0.0239;
-    double b0 = 0.0418;
-    return b0 + b1*SOC + b2*SOC*SOC + b3*SOC*SOC*SOC + b4*SOC*SOC*SOC*SOC;
-}
-
-double Appliance_Battery::Vter_disch(double SOC) {
-    return Voc(SOC)-2*Rbatt(SOC);
-}
-
-double Appliance_Battery::Vter_ch(double SOC) {
-    return 2*Voc(SOC) - Vter_disch(SOC);
-}
-
-double Appliance_Battery::P_ch(double SOC) {
-    return Vter_ch(SOC)*I;
-}
-
-double Appliance_Battery::P_dis(double SOC) {
-    return Vter_disch(SOC)*I;
-}
-*/
-double Appliance_Battery::get_charge_delta() {
-
+double Appliance_Battery::get_charge_delta() const {
     double P_request = chargeRate;
-    double charge_left = capacity - energy_calc(stateOfCharge, capacity);
-
+    double charge_left = capacity - energy_calc();
     if (charge_left < P_request){
       P_request = charge_left;
     }
     return P_request;
 }
 
-void Appliance_Battery::get_new_SOC_charge(double delta_t, double P_request) {
-    double delta_E = delta_t * P_request * efficiency; // variation of energy that you will be able to charge in the duration of a time step
-    energy = energy_calc(stateOfCharge, capacity) + delta_E; // new capacity iswhat you had plus what you charge
-    stateOfCharge = energy / capacity * 100.0 ; // SOC is fraction of capacities
-    if (stateOfCharge > 100){
-      stateOfCharge = 100;
-    }
+double Appliance_Battery::calculateDeltaE(double P_request) const {
+  // variation of energy that you will get in the duration of a time step
+  return BatteryDeltaT * P_request * efficiency;
 }
 
-double Appliance_Battery::get_new_SOC_discharge(double delta_t, double P_request) {
-    if (P_request > dischargeRate){
-      P_request = dischargeRate;
-    }
-
-    delta_E = delta_t * P_request * efficiency; // variation of energy that you will get in the duration of a time step
-    energy = energy_calc(stateOfCharge, capacity) - delta_E; // new capacity, after removing what you discharged
-    stateOfCharge = energy / capacity * 100.0;
-    if (stateOfCharge < 0){
-      stateOfCharge = 0;
-    }
-    return P_request;
+void Appliance_Battery::calculateStateOfCharge(double energy) {
+  stateOfCharge = energy / capacity * 100.0 ; // SOC is fraction of capacities
+  if (stateOfCharge > 100){
+    stateOfCharge = 100;
+  } else if (stateOfCharge < 0){
+    stateOfCharge = 0;
+  }
 }
 
-double Appliance_Battery::energy_calc(double SOC, double capacity) {
-    return SOC * capacity / 100; // this is the capacity at the correspondent SOC.
+void Appliance_Battery::get_new_SOC_charge(double P_request) {
+    double energy = energy_calc() + calculateDeltaE(P_request); // new capacity iswhat you had plus what you charge
+    calculateStateOfCharge(energy);
+}
+
+double Appliance_Battery::get_new_SOC_discharge(double P_request) {
+    double requestedPower = P_request;
+    if (requestedPower > dischargeRate){
+      requestedPower = dischargeRate;
+    }
+    double energy = energy_calc() - calculateDeltaE(requestedPower);; // new capacity, after removing what you discharged
+    calculateStateOfCharge(energy);
+    return requestedPower;
+}
+
+double Appliance_Battery::energy_calc() const{
+    return stateOfCharge * capacity / 100; // this is the capacity at the correspondent SOC.
 }

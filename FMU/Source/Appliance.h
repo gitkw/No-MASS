@@ -19,8 +19,8 @@ class Appliance : public Agent {
     void setupSave();
     void setGlobal(bool global);
     void setLocal(bool local);
-    void setRecieved(const double r);
-    void setRecievedCost(const double c);
+    void setReceived(const double r);
+    void setReceivedCost(const double c);
     void setHourlyCost(const std::vector<double> & cost);
     void setHoulyPriority(const std::vector<double> & priority);
     bool isGlobal() const;
@@ -37,8 +37,8 @@ class Appliance : public Agent {
     double power = 0.0;
     double supply = 0.0;
     double supplyCost = 0.0;
-    double recieved = 0.0;
-    double recievedCost = 0.0;
+    double received = 0.0;
+    double receivedCost = 0.0;
     std::vector<double> hourlyCost;
     std::vector<double> hourlyPriority;
     bool global;
@@ -46,7 +46,7 @@ class Appliance : public Agent {
 
     int datastoreIDSupplied;
     int datastoreIDSuppliedCost;
-    int datastoreIDRecieved;
+    int datastoreIDReceived;
     int datastoreIDRequested;
     int datastoreIDCost;
 };

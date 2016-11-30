@@ -41,7 +41,7 @@ void Occupant::setup(int id, const agentStruct &agent,
     if (power == 0) {
       // no power causes problems with agent not present allso having no power
       // so set smallest possible
-      power = DBL_EPSILON;
+      power = std::numeric_limits<double>::epsilon();
     }
 
     for (const std::shared_ptr<Building_Zone> & buldingZone : zones) {

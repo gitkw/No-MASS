@@ -16,7 +16,7 @@ class Contract_Negotiation {
     void submit(const Contract & c);
     void process();
     const Contract getContract(const int buildingID, const int id) const;
-    double getRecievedPowerForContract(const int buildingID, const int id);
+    double getReceivedPowerForContract(const int buildingID, const int id);
     double getCostOfPowerForContract(const int buildingID, const int id);
     void clear();
     double getDifference() const;

@@ -30,18 +30,18 @@ double Appliance::getPriority() const {
   return hourlyPriority[hourOfDay];
 }
 
-void Appliance::setRecieved(const double r) {
-  recieved = r;
+void Appliance::setReceived(const double r) {
+  received = r;
 }
 
-void Appliance::setRecievedCost(const double c) {
-  recievedCost = c;
+void Appliance::setReceivedCost(const double c) {
+  receivedCost = c;
 }
 
 void Appliance::setupSave() {
   datastoreIDSupplied = DataStore::addVariable(idString + "_supplied");
   datastoreIDSuppliedCost = DataStore::addVariable(idString + "_suppliedCost");
-  datastoreIDRecieved = DataStore::addVariable(idString + "_recieved");
+  datastoreIDReceived = DataStore::addVariable(idString + "_received");
   datastoreIDRequested = DataStore::addVariable(idString + "_requested");
   datastoreIDCost = DataStore::addVariable(idString + "_cost");
 }
@@ -49,9 +49,9 @@ void Appliance::setupSave() {
 void Appliance::save() {
   DataStore::addValue(datastoreIDSupplied, supply);
   DataStore::addValue(datastoreIDSuppliedCost, supplyCost);
-  DataStore::addValue(datastoreIDRecieved, recieved);
+  DataStore::addValue(datastoreIDReceived, received);
   DataStore::addValue(datastoreIDRequested, power);
-  DataStore::addValue(datastoreIDCost, recievedCost);
+  DataStore::addValue(datastoreIDCost, receivedCost);
 }
 
 void Appliance::clear() {
@@ -60,8 +60,8 @@ void Appliance::clear() {
   power = 0.0;
   supply = 0.0;
   supplyCost = 0.0;
-  recieved = 0.0;
-  recievedCost = 0.0;
+  received = 0.0;
+  receivedCost = 0.0;
 }
 
 bool Appliance::isLocal() const {

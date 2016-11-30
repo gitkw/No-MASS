@@ -52,11 +52,11 @@ class Utility {
         static uTable<T> csvToTable(const std::string & filename) {
           return csvToTable<T>(filename, false);
         }
-
+    static std::mt19937_64 engine;
  private:
     Utility();
     static std::random_device r;
-    static std::mt19937_64 engine;
+
 };
 
 #endif  // UTILITY_H_

@@ -6,6 +6,7 @@
 
 #include "Environment.h"
 #include "DataStore.h"
+#include "Utility.h"
 #include "Occupant_Zone.h"
 
 Occupant_Zone::Occupant_Zone() {}
@@ -148,7 +149,7 @@ void Occupant_Zone::step(const Building_Zone& zone,
 
     if (isInBuilding()) {
       if (inZone || previouslyInZone) {
-        std::random_shuffle(availableActions.begin(), availableActions.end());
+        std::shuffle(availableActions.begin(), availableActions.end(), Utility::engine);
         for (int a : availableActions) {
           if (inZone) {
             actionStep(a, zone, inZone, previouslyInZone, activities);
