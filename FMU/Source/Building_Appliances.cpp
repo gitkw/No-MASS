@@ -108,14 +108,14 @@ void Building_Appliances::setup(const buildingStruct & b) {
 void Building_Appliances::preprocess() {}
 
 bool Building_Appliances::sendContractGlobal(const Contract & c) {
-  bool send = (c.requested > c.recieved || c.suppliedLeft > 0);
+  bool send = (c.requested > c.received || c.suppliedLeft > 0);
   if (send) {
     Contract x;
     x.id = c.id;
     x.buildingID = buildingID;
-    x.recievedCost = c.recievedCost;
+    x.receivedCost = c.receivedCost;
     x.requested = c.requested;
-    x.recieved = c.recieved;
+    x.received = c.received;
     x.supplied = c.suppliedLeft;
     x.priority = c.priority;
     x.suppliedCost = c.suppliedCost;
@@ -134,8 +134,8 @@ bool Building_Appliances::sendContractLocal(const Appliance & a) {
     c.priority = a.getPriority();
     c.supplied = a.getSupply();
     c.suppliedCost = a.getSupplyCost();
-    c.recievedCost = 0;
-    c.recieved = 0;
+    c.receivedCost = 0;
+    c.received = 0;
     app_negotiation.submit(c);
     PowerRequested += c.requested;
     PowerGenerated += c.supplied;
@@ -240,10 +240,10 @@ void Building_Appliances::localNegotiationBatteries() {
     if (b.isLocal()) {
       int appid = b.getID();
       Contract c = app_negotiation.getContract(buildingID, appid);
-      double power = c.recieved;
-      double cost = c.recievedCost;
-      b.setRecieved(power);
-      b.setRecievedCost(cost);
+      double power = c.received;
+      double cost = c.receivedCost;
+      b.setReceived(power);
+      b.setReceivedCost(cost);
       sum_small += power;
       sum_cost += cost;
     }
@@ -258,10 +258,10 @@ void Building_Appliances::globalNegotiationSmall(
     if (s.isGlobal()) {
       int appid = s.getID();
       Contract c = building_negotiation.getContract(buildingID, appid);
-      double power = c.recieved;
-      double cost = c.recievedCost;
-      s.setRecieved(power);
-      s.setRecievedCost(cost);
+      double power = c.received;
+      double cost = c.receivedCost;
+      s.setReceived(power);
+      s.setReceivedCost(cost);
       sum_small += power;
       sum_cost += cost;
       sum_global_cost += cost;
@@ -278,10 +278,10 @@ void Building_Appliances::localNegotiationSmall() {
       Contract c = app_negotiation.getContract(buildingID, appid);
       s.setGlobal(sendContractGlobal(c));
       if (!s.isGlobal()) {
-        double power = c.recieved;
-        double cost = c.recievedCost;
-        s.setRecieved(power);
-        s.setRecievedCost(cost);
+        double power = c.received;
+        double cost = c.receivedCost;
+        s.setReceived(power);
+        s.setReceivedCost(cost);
         sum_small += power;
         sum_cost += cost;
       }
@@ -295,10 +295,10 @@ void Building_Appliances::globalNegotiationLarge(
     if (l.isGlobal()) {
       int appid = l.getID();
       Contract c = building_negotiation.getContract(buildingID, appid);
-      double power = c.recieved;
-      double cost = c.recievedCost;
-      l.setRecieved(power);
-      l.setRecievedCost(cost);
+      double power = c.received;
+      double cost = c.receivedCost;
+      l.setReceived(power);
+      l.setReceivedCost(cost);
       sum_large += power;
       sum_cost += cost;
       sum_global_cost += cost;
@@ -315,10 +315,10 @@ void Building_Appliances::localNegotiationLarge() {
       Contract c = app_negotiation.getContract(buildingID, appid);
       l.setGlobal(sendContractGlobal(c));
       if (!l.isGlobal()) {
-        double power = c.recieved;
-        double cost = c.recievedCost;
-        l.setRecieved(power);
-        l.setRecievedCost(cost);
+        double power = c.received;
+        double cost = c.receivedCost;
+        l.setReceived(power);
+        l.setReceivedCost(cost);
         sum_large += power;
         sum_cost += cost;
       }
@@ -332,11 +332,11 @@ void Building_Appliances::globalNegotiationLargeLearning(
     if (l.isGlobal()) {
       int appid = l.getID();
       Contract c = building_negotiation.getContract(buildingID, appid);
-      double power = c.recieved;
-      double cost = c.recievedCost;
+      double power = c.received;
+      double cost = c.receivedCost;
       l.addToCost(cost);
-      l.setRecieved(power);
-      l.setRecievedCost(cost);
+      l.setReceived(power);
+      l.setReceivedCost(cost);
       sum_large += power;
       sum_cost += cost;
       sum_global_cost += cost;
@@ -353,11 +353,11 @@ void Building_Appliances::localNegotiationLargeLearning() {
       Contract c = app_negotiation.getContract(buildingID, appid);
       l.setGlobal(sendContractGlobal(c));
       if (!l.isGlobal()) {
-        double power = c.recieved;
-        double cost = c.recievedCost;
+        double power = c.received;
+        double cost = c.receivedCost;
         l.addToCost(cost);
-        l.setRecieved(power);
-        l.setRecievedCost(cost);
+        l.setReceived(power);
+        l.setReceivedCost(cost);
         sum_large += power;
         sum_cost += cost;
       } else {
@@ -372,10 +372,10 @@ void Building_Appliances::globalNegotiationCSV(
     if (g.isGlobal()) {
       int appid = g.getID();
       Contract c = building_negotiation.getContract(buildingID, appid);
-      double power = c.recieved;
-      double cost = c.recievedCost;
-      g.setRecieved(power);
-      g.setRecievedCost(cost);
+      double power = c.received;
+      double cost = c.receivedCost;
+      g.setReceived(power);
+      g.setReceivedCost(cost);
       sum_fmi += power;
       sum_cost += cost;
       sum_global_cost += cost;
@@ -392,10 +392,10 @@ void Building_Appliances::localNegotiationCSV() {
       Contract c = app_negotiation.getContract(buildingID, appid);
       g.setGlobal(sendContractGlobal(c));
       if (!g.isGlobal()) {
-        double power = c.recieved;
-        double cost = c.recievedCost;
-        g.setRecieved(power);
-        g.setRecievedCost(cost);
+        double power = c.received;
+        double cost = c.receivedCost;
+        g.setReceived(power);
+        g.setReceivedCost(cost);
         sum_fmi += power;
         sum_cost += cost;
       }
@@ -409,10 +409,10 @@ void Building_Appliances::globalNegotiationFMI(
     if (f.isGlobal()) {
       int appid = f.getID();
       Contract c = building_negotiation.getContract(buildingID, appid);
-      double power = c.recieved;
-      double cost = c.recievedCost;
-      f.setRecieved(power);
-      f.setRecievedCost(cost);
+      double power = c.received;
+      double cost = c.receivedCost;
+      f.setReceived(power);
+      f.setReceivedCost(cost);
       sum_fmi += power;
       sum_cost += cost;
       sum_global_cost += cost;
@@ -429,10 +429,10 @@ void Building_Appliances::localNegotiationFMI() {
       Contract c = app_negotiation.getContract(buildingID, appid);
       f.setGlobal(sendContractGlobal(c));
       if (!f.isGlobal()) {
-        double power = c.recieved;
-        double cost = c.recievedCost;
-        f.setRecieved(power);
-        f.setRecievedCost(cost);
+        double power = c.received;
+        double cost = c.receivedCost;
+        f.setReceived(power);
+        f.setReceivedCost(cost);
         sum_fmi += power;
         sum_cost += cost;
       }

@@ -40,7 +40,7 @@ std::vector<int> Utility::randomIntVect(int number) {
     for (int i =0; i < number; i++) {
         numbers.push_back(i);
     }
-    std::random_shuffle(numbers.begin(), numbers.end());
+    std::shuffle(numbers.begin(), numbers.end(), Utility::engine);
     return numbers;
 }
 

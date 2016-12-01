@@ -8,8 +8,8 @@ struct Contract {
     int id;
     int buildingID;
     double requested = 0.0;
-    double recieved = 0.0;
-    double recievedCost = 0.0;
+    double received = 0.0;
+    double receivedCost = 0.0;
     double supplied = 0.0;
     double suppliedCost = 0.0;
     double suppliedLeft = 0.0;

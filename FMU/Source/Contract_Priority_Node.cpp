@@ -14,7 +14,7 @@ bool Contract_Priority_Node::isNodeRemoveable(
     bool retValue = ptr->isLeftNull() && ptr->isRightNull();
     
     if (ptr->getNodeObject() != nullptr){
-        retValue = ptr->getNodeObject()->recieved >= ptr->getNodeObject()->requested && ptr->isLeftNull() && ptr->isRightNull();
+        retValue = ptr->getNodeObject()->received >= ptr->getNodeObject()->requested && ptr->isLeftNull() && ptr->isRightNull();
     }
     return retValue;
 }
@@ -28,5 +28,5 @@ void Contract_Priority_Node::makeRight() {
 }
 
 bool Contract_Priority_Node::isRemoveable() const {
-  return getNodeObject()->recieved >= getNodeObject()->requested;
+  return getNodeObject()->received >= getNodeObject()->requested;
 }

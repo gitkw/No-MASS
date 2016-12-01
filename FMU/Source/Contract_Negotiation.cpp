@@ -20,7 +20,7 @@ void Contract_Negotiation::submit(const Contract & c) {
   if (contract->supplied > 0) {
     nodeSupply.insert(contract, contract->suppliedCost);
   }
-  difference += contract->supplied - contract->requested + contract->recieved;
+  difference += contract->supplied - contract->requested + contract->received;
 }
 
 double Contract_Negotiation::getDifference() const {
@@ -47,7 +47,7 @@ void Contract_Negotiation::processContracts() {
   ContractPtr c = nodePriority.findRightEdge();
   std::vector<ContractPtr>::iterator cs = contractsSupplied.begin();
   while (c && cs != contractsSupplied.end()) {
-      double fractionalPower = c->requested - c->recieved;
+      double fractionalPower = c->requested - c->received;
       while (fractionalPower > 0 && cs != contractsSupplied.end()) {
           if (sameContract((*cs), c)) {
             cs++;
@@ -62,8 +62,8 @@ void Contract_Negotiation::processContracts() {
             (*cs)->suppliedLeft = 0;
             contractsSupplied.erase(cs);
           }
-          c->recievedCost += suppliedCost * supplied;
-          c->recieved += supplied;
+          c->receivedCost += suppliedCost * supplied;
+          c->received += supplied;
           fractionalPower -= supplied;
           cs = contractsSupplied.begin();
       }
@@ -81,14 +81,14 @@ const Contract Contract_Negotiation::getContract(
   return *contracts.at(buildingID).at(id).get();
 }
 
-double Contract_Negotiation::getRecievedPowerForContract(const int buildingID,
+double Contract_Negotiation::getReceivedPowerForContract(const int buildingID,
                                                       const int id) {
-  return getContract(buildingID, id).recieved;
+  return getContract(buildingID, id).received;
 }
 
 double Contract_Negotiation::getCostOfPowerForContract(const int buildingID,
                                                   const int id) {
-  return getContract(buildingID, id).recievedCost;
+  return getContract(buildingID, id).receivedCost;
 }
 
 void Contract_Negotiation::clear() {

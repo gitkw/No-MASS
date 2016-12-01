@@ -4,13 +4,12 @@
 #define APPLIANCE_BATTERY_H_
 
 #include <vector>
-
 #include "QLearning_Appliance.h"
 #include "Appliance.h"
 
 /**
- * @brief Large appliances class
- * @details The large appliance agent, handles the model survival/ markov hybrid model
+ * @brief Battery Appliance class
+ * @details The Battery appliance agent
  */
 
 class Appliance_Battery : public Appliance {
@@ -30,11 +29,7 @@ class Appliance_Battery : public Appliance {
   void AddCost(double cost);
 
  private:
-   int datastoreIDstateOfCharge;
-
-  double batteryPower;
-  //double batteryCost;
-  double MaxPower;
+  int datastoreIDstateOfCharge;
   double chargeRate = 1000;
   double dischargeRate = 1000;
   double powerShortage;
@@ -44,31 +39,24 @@ class Appliance_Battery : public Appliance {
   double gamma;     // discount factor (how soon do you care)
   bool update;
   int previousHourOfDay;
-  double sumSupply = 0.0000001;
-  double sumShort =0.0000001;
+  double sumSupply;
+  double sumShort;
   bool action;
-  double binShortage;
+  
   double mostShortage;
   double cost;
-  double delta_E;
-  double energy;
-  //double I = 30.0;
   double capacity = 2000;
   double efficiency = 0.98;
-
   double stateOfCharge;
+  double BatteryDeltaT;
 
-  //double Voc(double SOC);
-  //double Rbatt(double SOC);
-  //double Vter_disch(double SOC);
-  //double Vter_ch(double SOC);
-  //double P_ch(double SOC);
-  //double P_dis(double SOC);
-
-  void get_new_SOC_charge(double delta_E, double P_request);
-  double get_new_SOC_discharge(double delta_t, double P_request);
-  double energy_calc(double SOC, double capacity);
-  double get_charge_delta();
+  void get_new_SOC_charge(double P_request);
+  double get_new_SOC_discharge(double P_request);
+  double energy_calc() const;
+  double get_charge_delta() const;
+  double calculateDeltaE(double P_request) const;
+  void calculateStateOfCharge(double energy);
+  void doAction();
 };
 
 #endif  // APPLIANCE_BATTERY_H_
