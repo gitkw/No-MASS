@@ -218,6 +218,7 @@ class SimulationConfig {
     static std::string ActivityFile;
     static std::string RunLocation;
     static std::vector<buildingStruct> buildings;
+    static std::vector<std::string> outputRegexs;
 
  private:
     SimulationConfig();

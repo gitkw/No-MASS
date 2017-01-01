@@ -203,6 +203,7 @@ if (Tests)
     tests/source/unittest_Appliance_Large.cc
     tests/source/unittest_Building_Appliances.cc
     tests/source/unittest_Contract_Negotiation.cc
+    tests/source/unittest_DataStore.cc
   )
 
   add_executable(runUnitTests ${TESTSRC})
