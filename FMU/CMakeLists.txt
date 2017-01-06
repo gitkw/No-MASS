@@ -121,7 +121,7 @@ target_link_libraries(FMI NoMASSstatic)
 add_executable(NoMASS Source/main.cpp)
 target_link_libraries(NoMASS NoMASSstatic)
 
-if(UNIX)
+if(UNIX OR APPLE)
   set_source_files_properties(${SRC} PROPERTIES COMPILE_FLAGS "-Werror -Wall -Wextra")
 endif()
 

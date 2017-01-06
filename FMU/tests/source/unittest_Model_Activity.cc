@@ -21,7 +21,7 @@ class Test_Activity : public ::testing::Test {
 };
 
 void Test_Activity::SetUp() {
-    SimulationConfig::buildings[buildingID].agents.clear();
+	SimulationConfig::reset();
 }
 void Test_Activity::AfterConfiguration() {
   SimulationConfig::info.timeSteps = 105182;
