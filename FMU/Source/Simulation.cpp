@@ -24,9 +24,9 @@ void Simulation::setSimulationConfigurationFile(const std::string & filename) {
  * Sets up the EnergyPlus processor, the AgentModel and the ZoneManager.
  */
 void Simulation::preprocess() {
-  SimulationTime::preprocess();
   parseConfiguration(SimulationConfig::RunLocation
     + simulationConfigurationFile);
+  SimulationTime::preprocess();
   if (!LOG.getError()) {
     setupSimulationModel();
   }

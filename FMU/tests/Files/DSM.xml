@@ -6,7 +6,11 @@
   <endMonth>12</endMonth>
   <beginDay>1</beginDay>
   <endDay>31</endDay>
-  <save>0</save>
+  <save>1</save>
+  <output>
+    <regex>Building0_Appliance6_.*</regex>
+    <regex>TimeStep</regex>
+  </output>
   <learnupdate>1</learnupdate>
   <learnep>0.01</learnep>
   <GridCost>1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1</GridCost>
@@ -43,15 +47,11 @@
             <windowCount>1</windowCount>
         </zone>
     <Appliances>
-      <battery>
-        <id>12</id>
-        <priority>0</priority>
-      </battery>
-      <Large>
+      <Largex>
         <id>0</id>
         <priority>0</priority>
-      </Large>
-      <LargeLearning>
+      </Largex>
+      <LargeLearningx>
         <id>1</id>
         <priority>0.1,0.1,0.1,0.1,0.1,0.1,0.1,1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1</priority>
         <epsilon>0.1</epsilon>
@@ -59,23 +59,23 @@
         <gamma>0.1</gamma>
         <updateQTable>1</updateQTable>
         <activities>WashingAppliance</activities>
-      </LargeLearning>
-      <Large>
+      </LargeLearningx>
+      <Largex>
         <id>2</id>
         <priority>2</priority>
-      </Large>
-      <Large>
+      </Largex>
+      <Largex>
         <id>3</id>
         <priority>3</priority>
-      </Large>
-      <Large>
+      </Largex>
+      <Largex>
         <id>4</id>
         <priority>4</priority>
-      </Large>
-      <Large>
+      </Largex>
+      <Largex>
         <id>5</id>
         <priority>5</priority>
-      </Large>
+      </Largex>
       <Small>
         <id>6</id>
         <priority>6</priority>
@@ -114,17 +114,25 @@
         <filename>PVBowler2013_365.csv</filename>
         <cost>0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.0,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2</cost>
       </pv>
-      <csv>
+      <csvx>
         <id>11</id>
         <priority>100</priority>
         <demand>HeatingPower.csv</demand>
         <cost>0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.0,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2</cost>
-      </csv>
+      </csvx>
       <FMIx>
         <id>11</id>
         <priority>0</priority>
         <variablename>HVACPower</variablename>
       </FMIx>
+      <battery>
+        <id>12</id>
+        <priority>0</priority>
+        <epsilon>0.1</epsilon>
+        <alpha>0.3</alpha>
+        <gamma>0.1</gamma>
+        <updateQTable>1</updateQTable>
+      </battery>
     </Appliances>
     <agents>
       <agent>

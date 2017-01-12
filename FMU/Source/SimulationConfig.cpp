@@ -19,6 +19,7 @@
 #include "SimulationConfig.h"
 
 std::vector<buildingStruct> SimulationConfig::buildings;
+std::vector<std::string> SimulationConfig::outputRegexs;
 std::vector<LVNNodeStruct> SimulationConfig::lvn;
 std::map<int, windowStruct> SimulationConfig::windows;
 std::map<int, shadeStruct> SimulationConfig::shades;
@@ -33,6 +34,7 @@ void SimulationConfig::reset() {
   buildings.clear();
   windows.clear();
   shades.clear();
+  outputRegexs.clear();
   info = simulationStruct();
   stepCount = -1;
   ActivityFile = "";
@@ -607,6 +609,14 @@ void SimulationConfig::parseConfiguration(const std::string & filename) {
         SimulationConfig::info.GridCost = csvToDouble(node->value());
     } else if (nodeNameIs(name, "case")) {
         SimulationConfig::info.caseOrder = std::stoi(node->value());
+    } else if (nodeNameIs(name, "output")) {
+      rapidxml::xml_node<> *cnode = node->first_node();
+      while (cnode) {
+          if (nodeNameIs(cnode, "regex")) {
+            outputRegexs.push_back(cnode->value());
+          }
+          cnode = cnode->next_sibling();
+      }
     } else if (nodeNameIs(name, "shadeclosedduringnight")) {
        SimulationConfig::info.ShadeClosedDuringNight
            = std::stoi(node->value());
@@ -621,6 +631,9 @@ void SimulationConfig::parseConfiguration(const std::string & filename) {
     node = node->next_sibling();
   }
   timeSteps();
+  if(outputRegexs.empty()) {
+    outputRegexs.push_back(".*");
+  }
 }
 
 ZoneStruct SimulationConfig::getZone(std::string* zoneName) {

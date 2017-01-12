@@ -11,11 +11,11 @@ class DataStore {
  public:
     static int addVariable(const std::string &name);
     static int getID(const std::string &name);
-    static void addValueS(const std::string &name, const double val);
-    static void addValue(const int & id, const double val);
-    static double getValueS(const std::string &name);
-    static double getValue(const int & id);
-    static double getValueForZone(const std::string &name, const std::string &zoneName);
+    static void addValueS(const std::string &name, const float val);
+    static void addValue(const int & id, const float val);
+    static float getValueS(const std::string &name);
+    static float getValue(const int & id);
+    static float getValueForZone(const std::string &name, const std::string &zoneName);
     static void print();
     static void clear();
     static void clearValues();
