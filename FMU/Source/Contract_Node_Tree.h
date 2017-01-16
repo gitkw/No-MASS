@@ -1,18 +1,19 @@
 // Copyright 2016 Jacob Chapman
 
-#ifndef TREE_NODE_H_
-#define TREE_NODE_H_
+#ifndef CONTRACT_NODE_TREE_H_
+#define CONTRACT_NODE_TREE_H_
 
 #include <memory>
+#include <iostream>
 
 template <class T>
-class Tree_Node {
+class Contract_Node_Tree {
  public:
   virtual bool compare(const T insert) const = 0;
   virtual void makeLeft() = 0;
   virtual void makeRight() = 0;
-  virtual bool isNodeRemoveable(const std::shared_ptr<Tree_Node<T>> & ptr)
-                                                                  const = 0;
+  virtual bool isNodeRemoveable(
+            const std::shared_ptr<Contract_Node_Tree<T>> & ptr) const = 0;
   virtual bool isRemoveable() const = 0;
 
   bool isLeftNull() {
@@ -24,8 +25,10 @@ class Tree_Node {
   }
 
   T findRightEdge() {
+    std::cout << " val: " << value << std::endl;
     T ret = nodeObject;
     if (pRight) {
+      std::cout << "right" << std::endl;
       if (isNodeRemoveable(pRight)) {
         pRight  = nullptr;
       } else {
@@ -33,10 +36,12 @@ class Tree_Node {
       }
     }
     if (isAssigned && isRemoveable()) {
+      std::cout << "cent" << std::endl;
       isAssigned = false;
       nodeObject = NULL;
     }
     if (pLeft && isAssigned == false) {
+      std::cout << "left" << std::endl;
       if (isNodeRemoveable(pLeft)) {
         pLeft = nullptr;
       } else {
@@ -86,6 +91,7 @@ class Tree_Node {
   }
 
   void insert(const T & insert, double value) {
+    std::cout << "insert";
     if (nodeObject == NULL) {
       nodeObject = insert;
       this->value = value;
@@ -118,15 +124,13 @@ class Tree_Node {
 
  protected:
   T nodeObject;
-  Tree_Node() {}
-  std::shared_ptr<Tree_Node<T>> pLeft;
-  std::shared_ptr<Tree_Node<T>> pRight;
+  Contract_Node_Tree() {}
+  std::shared_ptr<Contract_Node_Tree<T>> pLeft;
+  std::shared_ptr<Contract_Node_Tree<T>> pRight;
 
  private:
   bool isAssigned = false;
-  int key;
   double value;
-
 };
 
-#endif  // TREE_NODE_H_
+#endif  // CONTRACT_NODE_TREE_H_

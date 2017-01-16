@@ -105,8 +105,8 @@ Source/Appliance_Large_Learning.cpp
 Source/Appliance_Battery.cpp
 Source/LVN.cpp
 Source/LVN_Node.cpp
-Source/Contract_Priority_Node.cpp
-Source/Contract_Supply_Node.cpp
+Source/Contract_Node_Priority.cpp
+Source/Contract_Node_Supply.cpp
 Source/Contract_Negotiation.cpp
 )
 

@@ -16,7 +16,6 @@ addons:
     packages:
     - g++-4.9
     - gcc-4.9
-    - cmake
     - gcc-mingw-w64-i686
     - g++-mingw-w64-i686
     - binutils-mingw-w64-i686

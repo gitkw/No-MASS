@@ -53,6 +53,8 @@ SET( TESTSRC
   source/unittest_Appliance_Large.cc
   source/unittest_Building_Appliances.cc
   source/unittest_Contract_Negotiation.cc
+  source/unittest_Contract_Node_Supply.cc
+  source/unittest_Contract_Node_Priority.cc
   source/unittest_DataStore.cc
 )
 
