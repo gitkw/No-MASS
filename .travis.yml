@@ -6,8 +6,6 @@ sudo: false
 compiler:
   - gcc
 
-cache: apt
-
 addons:
   apt:
     sources:
@@ -28,7 +26,7 @@ before_install:
   - export CC="gcc-4.9"
   - export LD="g++-4.9"
   # download submodules
-  - git submodule update --init --recursive
+  - git submodule update --depth --init --recursive
 
 before_script:
   - mkdir FMU/build
