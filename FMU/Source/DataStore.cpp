@@ -5,6 +5,7 @@
 #include <fstream>
 #include <utility>
 #include <string>
+#include <regex>
 #include "Log.h"
 #include "SimulationConfig.h"
 #include "DataStore.h"
@@ -24,21 +25,28 @@ int DataStore::getID(const std::string &name) {
 int DataStore::addVariable(const std::string &name) {
   int ret = -1;
   if (name != "") {
-    if (variableMap.find(name) == variableMap.end()) {
-      //  std::cout << "addVariable: " << ret << ": " << name << std::endl;
-      ret = DataStore::variableCount;
-      //  std::cout << "addVariable: " << ret << ": " << name << std::endl;
-      variableMap.insert(std::make_pair(name, ret));
-      intMap.insert(std::make_pair(ret, std::vector<float>()));
-      DataStore::variableCount++;
-    } else {
-      ret = getID(name);
+    for (std::string reg : SimulationConfig::outputRegexs) {
+      std::regex rgx(reg);
+      std::smatch match;
+      if (std::regex_match(name, match, rgx)) {
+        if (variableMap.find(name) == variableMap.end()) {
+          //  std::cout << "addVariable: " << ret << ": " << name << std::endl;
+          ret = DataStore::variableCount;
+          //  std::cout << "addVariable: " << ret << ": " << name << std::endl;
+          variableMap.insert(std::make_pair(name, ret));
+          intMap.insert(std::make_pair(ret, std::vector<float>()));
+          DataStore::variableCount++;
+        } else {
+          ret = getID(name);
+        }
+        break;
+      }
     }
   }
   return ret;
 }
 
-void DataStore::addValueS(const std::string &name, const double value) {
+void DataStore::addValueS(const std::string &name, const float value) {
     if (name != "") {
         //  std::cout << "addValueS: " << name << ": " << value << std::endl;
         int val = variableMap.at(name);
@@ -48,17 +56,19 @@ void DataStore::addValueS(const std::string &name, const double value) {
     }
 }
 
-void DataStore::addValue(const int & id, const double val) {
-  intMap.at(id).push_back(val);
+void DataStore::addValue(const int & id, const float val) {
+  if (id > -1) {
+    intMap.at(id).push_back(val);
+  }
 }
 
 
-double DataStore::getValueForZone(const std::string &name,
+float DataStore::getValueForZone(const std::string &name,
                                         const std::string &zoneName) {
     return getValueS(zoneName + name);
 }
 
-double DataStore::getValueS(const std::string & name) {
+float DataStore::getValueS(const std::string & name) {
   //  std::cout << "get: " << name << std::endl;
   if (variableMap.find(name) == variableMap.end()) {
     LOG << "Cannot find the variable: " << name;
@@ -76,9 +86,9 @@ double DataStore::getValueS(const std::string & name) {
   return getValue(id);
 }
 
-double DataStore::getValue(const int & id) {
+float DataStore::getValue(const int & id) {
   //  std::cout << "getValue: " << id << ": ";
-  double ret = intMap.at(id).back();
+  float ret = intMap.at(id).back();
   //  std::cout << ret << std::endl;
 
   return ret;
@@ -96,6 +106,7 @@ void DataStore::clear() {
   //std::cout << "clear" << std::endl;
     variableMap.clear();
     intMap.clear();
+    DataStore::variableCount = 0;
 }
 
 void DataStore::print() {
