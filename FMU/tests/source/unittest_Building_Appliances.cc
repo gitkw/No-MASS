@@ -1,7 +1,7 @@
 // Copyright 2015 Jacob Chapman
 
 #include <limits.h>
-#include "Gen.h"
+#include "tests/Gen.h"
 #include "SimulationConfig.h"
 #include "Building_Appliances.h"
 #include "gtest/gtest.h"

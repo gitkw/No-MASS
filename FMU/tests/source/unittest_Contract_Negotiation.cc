@@ -1,7 +1,7 @@
 // Copyright 2015 Jacob Chapman
 #include <limits.h>
 #include <vector>
-#include "Gen.h"
+#include "tests/Gen.h"
 
 #include "Contract.h"
 #include "Contract_Negotiation.h"

@@ -3,7 +3,7 @@
 #include <limits.h>
 #include <vector>
 
-#include "Gen.h"
+#include "tests/Gen.h"
 #include "DataStore.h"
 #include "Occupant_Action_Window_Stochastic.h"
 #include "Utility.h"

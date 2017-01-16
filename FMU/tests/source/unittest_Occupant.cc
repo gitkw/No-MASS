@@ -3,7 +3,7 @@
 #include <limits.h>
 #include <memory>
 
-#include "Gen.h"
+#include "tests/Gen.h"
 #include "DataStore.h"
 
 #include "Occupant.h"

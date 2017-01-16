@@ -3,7 +3,7 @@
 #include <limits.h>
 #include <fstream>
 #include "Model_Appliance_Small_Usage.h"
-#include "Gen.h"
+#include "tests/Gen.h"
 #include "Utility.h"
 #include "gtest/gtest.h"
 

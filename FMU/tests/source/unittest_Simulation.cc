@@ -2,7 +2,7 @@
 
 #include <limits.h>
 
-#include "Gen.h"
+#include "tests/Gen.h"
 #include "Simulation.h"
 #include "SimulationConfig.h"
 #include "SimulationTime.h"

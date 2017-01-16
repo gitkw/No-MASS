@@ -2,7 +2,7 @@
 
 #include <limits.h>
 
-#include "Gen.h"
+#include "tests/Gen.h"
 #include "Occupant_Zone.h"
 #include "DataStore.h"
 #include "gtest/gtest.h"

@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "Gen.h"
+#include "tests/Gen.h"
 #include "Model_Activity.h"
 #include "SimulationConfig.h"
 #include "Utility.h"

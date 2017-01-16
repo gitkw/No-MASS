@@ -3,7 +3,7 @@
 #include <limits.h>
 #include <vector>
 
-#include "Gen.h"
+#include "tests/Gen.h"
 #include "DataStore.h"
 #include "Occupant_Action_Shades_BDI.h"
 #include "gtest/gtest.h"
