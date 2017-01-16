@@ -161,14 +161,7 @@ if (Tests)
 
   configure_file(tests/source/Gen.h.in
                   ${CMAKE_CURRENT_BINARY_DIR}/Gen.h)
-
-  if(CMAKE_GENERATOR STREQUAL Xcode)
-    configure_file(tests/Files/SimulationConfig1.xml.in
-                    ${CMAKE_CURRENT_BINARY_DIR}/Debug/SimulationConfig1.xml)
-  endif()
-
-  configure_file(tests/Files/SimulationConfig1.xml.in
-                  ${CMAKE_CURRENT_BINARY_DIR}/SimulationConfig1.xml)
+                  
   set(gen_file "${CMAKE_CURRENT_BINARY_DIR}/Gen.h")
 
   SET( TESTSRC
@@ -216,23 +209,3 @@ if (Tests)
 
   add_test(runUnitTests runUnitTests)
 endif()
-
-configure_file(tests/Files/DSM.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/SimulationConfig.xml)
-configure_file(tests/Files/DSM1house.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/DSM1house.xml)
-configure_file(tests/Files/DSM2houses.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/DSM2houses.xml)
-configure_file(tests/Files/DSM10houses.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/DSM10houses.xml)
-configure_file(tests/Files/Activity.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/Activity.xml)
-configure_file(tests/Files/AppliancesLarge.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/AppliancesLarge.xml)
-configure_file(tests/Files/PVBowler2013_365.csv
-                ${CMAKE_CURRENT_BINARY_DIR}/PVBowler2013_365.csv)
-configure_file(tests/Files/HeatingPower.csv
-                ${CMAKE_CURRENT_BINARY_DIR}/HeatingPower.csv)
-
-
-file(COPY tests/Files/SmallAppliances DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)

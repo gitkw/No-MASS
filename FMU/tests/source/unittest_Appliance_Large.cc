@@ -8,7 +8,7 @@
 
 #include "gtest/gtest.h"
 
-class Test_Appliance_Large_Usage : public ::testing::Test {
+class Test_Appliance_Large : public ::testing::Test {
  protected:
     Appliance_Large al;
 
@@ -16,17 +16,19 @@ class Test_Appliance_Large_Usage : public ::testing::Test {
     virtual void AfterConfiguration();
 };
 
-void Test_Appliance_Large_Usage::SetUp() {
-  SimulationConfig::parseConfiguration("SimulationConfig.xml");
+void Test_Appliance_Large::SetUp() {
+  SimulationConfig::reset();
+  SimulationConfig::parseConfiguration(testFiles + "SimulationConfig.xml");
   SimulationConfig::setStepCount(-1);
+  SimulationConfig::FileLargeAppliance = testFiles + "AppliancesLarge.xml";
   al.setID(1);
   al.setup();
 }
 
-void Test_Appliance_Large_Usage::AfterConfiguration() {
+void Test_Appliance_Large::AfterConfiguration() {
 }
 
-TEST_F(Test_Appliance_Large_Usage, power) {
+TEST_F(Test_Appliance_Large, power) {
   SimulationConfig::step();
   al.step();
   EXPECT_FALSE(al.isOn());

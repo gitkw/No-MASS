@@ -3,6 +3,7 @@
 #include <limits.h>
 #include <vector>
 #include <fstream>
+#include <cmath>
 
 #include "DataStore.h"
 #include "QLearning_HeatingSetPoints.h"
@@ -101,21 +102,13 @@ TEST_F(Test_QLearning_HeatingSetPoints, Learn1) {
       } else {
         x = 0;
       }
-/*
-      if (reward > 0.0) {
-        reward = reward * 6;
-      }
-*/
-      reward = - std::abs((reward * (1-x)) - (2 * x));
+
+      reward = reward * (1-x) - 2 * x;
+      reward = - std::abs(reward);
       if (reward > 0.5) {
         reward = 1;
       }
-/*
-      std::cout << previous_state << " "
-                << state << " "
-                << action << " "
-                << reward << " " << std::endl;
-*/
+
       ql.updateQ(previous_state, action, reward, state);
     }
 

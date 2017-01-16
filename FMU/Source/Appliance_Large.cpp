@@ -25,8 +25,7 @@ void Appliance_Large::setup() {
  */
 void Appliance_Large::setupModel() {
   model.setID(id);
-  model.parseConfiguration(SimulationConfig::RunLocation +
-                                                "AppliancesLarge.xml");
+  model.parseConfiguration(SimulationConfig::FileLargeAppliance);
 }
 
 /**
