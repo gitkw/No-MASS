@@ -3,7 +3,7 @@
 #include <limits.h>
 #include "Model_HeatGains.h"
 #include "SimulationConfig.h"
-#include "Gen.h"
+#include "tests/Gen.h"
 
 #include "gtest/gtest.h"
 

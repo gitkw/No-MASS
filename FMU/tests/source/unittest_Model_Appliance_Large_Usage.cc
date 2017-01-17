@@ -1,7 +1,7 @@
 // Copyright 2015 Jacob Chapman
 #include <limits.h>
 #include <fstream>
-#include "Gen.h"
+#include "tests/Gen.h"
 
 #include "Model_Appliance_Large_Usage.h"
 

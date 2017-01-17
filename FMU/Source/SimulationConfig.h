@@ -122,7 +122,8 @@ struct appLargeStruct {
     std::string name;
     int id;
     std::vector<double> priority;
-    std::vector<double> timeRequired = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    std::vector<double> timeRequired
+    = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     double cost;
     double epsilon = 0.1;   // probability of a random action selection
     double alpha = 0.3;     // learning rate
@@ -215,7 +216,9 @@ class SimulationConfig {
     static std::map<int, windowStruct> windows;
     static std::map<int, shadeStruct> shades;
     static simulationStruct info;
-    static std::string ActivityFile;
+    static std::string FileActivity;
+    static std::string FileLargeAppliance;
+    static std::string FolderSmallAppliance;
     static std::string RunLocation;
     static std::vector<buildingStruct> buildings;
     static std::vector<std::string> outputRegexs;

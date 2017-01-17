@@ -35,11 +35,10 @@
 Model_Activity::Model_Activity() {}
 
 std::vector<double> Model_Activity::preProcessActivities() {
-    if (SimulationConfig::ActivityFile == "") {
+    if (SimulationConfig::FileActivity == "") {
         return disaggregate();
     } else {
-        parseConfiguration(SimulationConfig::RunLocation
-                                  + SimulationConfig::ActivityFile);
+        parseConfiguration(SimulationConfig::FileActivity);
         return multinominal();
     }
 }

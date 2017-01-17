@@ -4,14 +4,14 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "Gen.h"
+#include "tests/Gen.h"
 #include "Model_Activity.h"
 #include "SimulationConfig.h"
 #include "Utility.h"
 
 #include "gtest/gtest.h"
 
-class Test_Activity : public ::testing::Test {
+class Test_Model_Activity : public ::testing::Test {
  protected:
     Model_Activity ma;
     std::vector<double> activities;
@@ -20,10 +20,11 @@ class Test_Activity : public ::testing::Test {
     virtual void AfterConfiguration();
 };
 
-void Test_Activity::SetUp() {
-	SimulationConfig::reset();
+void Test_Model_Activity::SetUp() {
+  SimulationConfig::reset();
 }
-void Test_Activity::AfterConfiguration() {
+
+void Test_Model_Activity::AfterConfiguration() {
   SimulationConfig::info.timeSteps = 105182;
   SimulationConfig::info.timeStepsPerHour = 6;
   SimulationConfig::info.startDayOfWeek = 2;
@@ -43,7 +44,7 @@ void Test_Activity::AfterConfiguration() {
   activities = ma.preProcessActivities();
 }
 
-TEST_F(Test_Activity, Dissagregate) {
+TEST_F(Test_Model_Activity, Dissagregate) {
     SimulationConfig::parseConfiguration
       (testFiles + "/SimulationConfig2.xml");
     AfterConfiguration();
@@ -80,7 +81,7 @@ int getActivity(double *p, double drand) {
   return activity;
 }
 
-TEST_F(Test_Activity, multinominalRandom) {
+TEST_F(Test_Model_Activity, multinominalRandom) {
   double p[10] = {0.036078751, 0.12437013, 0.082256370, 0.003995250,
     0.027476964, 0.030800, 0.114028071, 0.0102342340, 0.043672692, 0.52712584};
 
@@ -117,7 +118,7 @@ TEST_F(Test_Activity, multinominalRandom) {
   EXPECT_EQ(activity, 9);
 }
 
-TEST_F(Test_Activity, multinominalActivity) {
+TEST_F(Test_Model_Activity, multinominalActivity) {
   double p0[1][10] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   EXPECT_EQ(ma.multinominalActivity(p0, 0), 0);
   double p1[1][10] = {0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -180,9 +181,9 @@ TEST_F(Test_Activity, multinominalActivity) {
   EXPECT_NEAR(px[9] / top, 0.527, 0.05);
 }
 
-TEST_F(Test_Activity, multinominalP) {
-    SimulationConfig::parseConfiguration("SimulationConfig1.xml");
-
+TEST_F(Test_Model_Activity, multinominalP) {
+    SimulationConfig::parseConfiguration(testFiles + "SimulationConfig1.xml");
+    SimulationConfig::FileActivity = testFiles + "Activity.xml";
     AfterConfiguration();
 
     std::vector<double> activities = ma.preProcessActivities();
@@ -215,9 +216,10 @@ TEST_F(Test_Activity, multinominalP) {
     }
 }
 
-TEST_F(Test_Activity, multinominal) {
+TEST_F(Test_Model_Activity, multinominal) {
     Utility::setSeed(1);
-    SimulationConfig::parseConfiguration("SimulationConfig1.xml");
+    SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig1.xml");
+    SimulationConfig::FileActivity = testFiles + "Activity.xml";
     AfterConfiguration();
 
     EXPECT_EQ(activities.at(0), 7);

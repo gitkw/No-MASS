@@ -1,7 +1,7 @@
 // Copyright 2015 Jacob Chapman
 
 #include <limits.h>
-#include "Gen.h"
+#include "tests/Gen.h"
 #include "SimulationConfig.h"
 #include "Building_Appliances.h"
 #include "gtest/gtest.h"
@@ -15,7 +15,7 @@ class Test_Building_Appliances : public ::testing::Test {
 
 void Test_Building_Appliances::SetUp() {
   SimulationConfig::reset();
-  SimulationConfig::parseConfiguration(SimulationConfig::RunLocation +
+  SimulationConfig::parseConfiguration(testFiles +
                                                   "SimulationConfig.xml");
   SimulationConfig::setStepCount(-1);
   buildingStruct b = SimulationConfig::buildings[0];

@@ -9,7 +9,7 @@
 Appliance_Small::Appliance_Small() {}
 
 void Appliance_Small::setup() {
-  model.setFolderLocation(SimulationConfig::RunLocation + "SmallAppliances/");
+  model.setFolderLocation(SimulationConfig::FolderSmallAppliance);
   model.readWeibullParameters(WeibullParameters);
   model.readStateProbabilities(StateProbabilities);
   model.readFractions(Fractions);

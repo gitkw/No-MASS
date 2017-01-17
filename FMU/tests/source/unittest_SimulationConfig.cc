@@ -1,7 +1,7 @@
 // Copyright 2015 Jacob Chapman
 
 #include <limits.h>
-#include "Gen.h"
+#include "tests/Gen.h"
 #include "SimulationConfig.h"
 #include "gtest/gtest.h"
 
@@ -29,7 +29,7 @@ TEST_F(Test_SimulationConfig, SimulationConfig) {
 }
 
 TEST_F(Test_SimulationConfig, SimulationConfig1) {
-  SimulationConfig::parseConfiguration("SimulationConfig1.xml");
+  SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig1.xml");
   EXPECT_EQ(SimulationConfig::buildings[0].agents.at(0).age, "age2");
   EXPECT_EQ(SimulationConfig::buildings[0].agents.at(0).computer, "computer0");
   EXPECT_EQ(SimulationConfig::buildings[0].agents.at(0).civstat, "civstat1");

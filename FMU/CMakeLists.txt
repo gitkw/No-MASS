@@ -123,116 +123,18 @@ target_link_libraries(NoMASS NoMASSstatic)
 
 if(UNIX OR APPLE)
   set_source_files_properties(${SRC} PROPERTIES COMPILE_FLAGS "-Werror -Wall -Wextra")
-endif()
-
-if(WIN32)
+  SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -fPIC")
+elseif(WIN32)
   SET( CMAKE_CXX_CREATE_SHARED_LIBRARY  "${CMAKE_CXX_CREATE_SHARED_LIBRARY} -static -fPIC" )
 endif()
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
-
-
-SET(CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE} -O2")
-string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11")
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
-set(testLocationFiles "${PROJECT_SOURCE_DIR}/tests/Files/")
 
 ################################
 # Testing
 ################################
 if (Tests)
-
-
-  SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -pthread" )
-  # This adds another subdirectory, which has 'project(gtest)'.
-  add_subdirectory(tests/googletest/googletest/)
-
-  enable_testing()
-
-  # Include the gtest library. gtest_SOURCE_DIR is available due to
-  # 'project(gtest)' above.
-  include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-
-  ##############
-  # Unit Tests
-  ##############
-
-  configure_file(tests/source/Gen.h.in
-                  ${CMAKE_CURRENT_BINARY_DIR}/Gen.h)
-
-  if(CMAKE_GENERATOR STREQUAL Xcode)
-    configure_file(tests/Files/SimulationConfig1.xml.in
-                    ${CMAKE_CURRENT_BINARY_DIR}/Debug/SimulationConfig1.xml)
-  endif()
-
-  configure_file(tests/Files/SimulationConfig1.xml.in
-                  ${CMAKE_CURRENT_BINARY_DIR}/SimulationConfig1.xml)
-  set(gen_file "${CMAKE_CURRENT_BINARY_DIR}/Gen.h")
-
-  SET( TESTSRC
-    ${gen_file}
-    tests/source/unittest_Simulation.cc
-    tests/source/unittest_SimulationConfig.cc
-    tests/source/unittest_SimulationTime.cc
-    tests/source/unittest_Model_Activity.cc
-    tests/source/unittest_Model_Windows.cc
-    tests/source/unittest_Occupant_Action_HeatingSetPoints_Learning.cc
-    tests/source/unittest_Model_Appliance_Large_Usage.cc
-    tests/source/unittest_Model_Appliance_Ownership.cc
-    tests/source/unittest_Model_Appliance_Small_Usage.cc
-    tests/source/unittest_StateMachine.cc
-    tests/source/unittest_Log.cc
-    tests/source/unittest_Building_Zone.cc
-    tests/source/unittest_Utility.cc
-    tests/source/unittest_Building.cc
-    tests/source/unittest_Occupant.cc
-    tests/source/unittest_Occupant_Zone.cc
-    tests/source/unittest_Occupant_Action.cc
-    tests/source/unittest_Occupant_Action_Window_Stochastic.cc
-    tests/source/unittest_Occupant_Action_Window_Stochastic_BDI.cc
-    tests/source/unittest_Occupant_Action_Shades.cc
-    tests/source/unittest_Occupant_Action_Shades_BDI.cc
-    tests/source/unittest_Occupant_Action_Light.cc
-    tests/source/unittest_Occupant_Action_Light_BDI.cc
-    tests/source/unittest_Occupant_Action_Window_Learning.cc
-    tests/source/unittest_Occupant_Action_Heat_Gains.cc
-    tests/source/unittest_QLearning_HeatingSetPoints.cc
-    tests/source/unittest_QLearning_Window.cc
-    tests/source/unittest_Appliance_Large.cc
-    tests/source/unittest_Building_Appliances.cc
-    tests/source/unittest_Contract_Negotiation.cc
-    tests/source/unittest_DataStore.cc
-  )
-
-  add_executable(runUnitTests ${TESTSRC})
-
-  # Standard linking to gtest stuff.
-  target_link_libraries(runUnitTests gtest gtest_main)
-
-  # Extra linking for the project.
-  target_link_libraries(runUnitTests FMI)
-
-  add_test(runUnitTests runUnitTests)
+ add_subdirectory(tests)
 endif()
-
-configure_file(tests/Files/DSM.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/SimulationConfig.xml)
-configure_file(tests/Files/DSM1house.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/DSM1house.xml)
-configure_file(tests/Files/DSM2houses.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/DSM2houses.xml)
-configure_file(tests/Files/DSM10houses.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/DSM10houses.xml)
-configure_file(tests/Files/Activity.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/Activity.xml)
-configure_file(tests/Files/AppliancesLarge.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/AppliancesLarge.xml)
-configure_file(tests/Files/PVBowler2013_365.csv
-                ${CMAKE_CURRENT_BINARY_DIR}/PVBowler2013_365.csv)
-configure_file(tests/Files/HeatingPower.csv
-                ${CMAKE_CURRENT_BINARY_DIR}/HeatingPower.csv)
-
-
-file(COPY tests/Files/SmallAppliances DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)

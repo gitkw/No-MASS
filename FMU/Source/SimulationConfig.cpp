@@ -25,7 +25,9 @@ std::map<int, windowStruct> SimulationConfig::windows;
 std::map<int, shadeStruct> SimulationConfig::shades;
 simulationStruct SimulationConfig::info;
 int SimulationConfig::stepCount = -1;
-std::string SimulationConfig::ActivityFile;
+std::string SimulationConfig::FileActivity;
+std::string SimulationConfig::FileLargeAppliance;
+std::string SimulationConfig::FolderSmallAppliance;
 std::string SimulationConfig::RunLocation;
 
 SimulationConfig::SimulationConfig() {}
@@ -37,7 +39,9 @@ void SimulationConfig::reset() {
   outputRegexs.clear();
   info = simulationStruct();
   stepCount = -1;
-  ActivityFile = "";
+  FileActivity = "";
+  FileLargeAppliance = "";
+  FolderSmallAppliance = "";
   RunLocation = "";
 }
 
@@ -302,7 +306,6 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
 
 void SimulationConfig::parseOccupants(rapidxml::xml_node<> *node,
                                                             buildingStruct *b) {
-  SimulationConfig::ActivityFile = "";
   info.presencePage = false;
   rapidxml::xml_node<> *cnode = node->first_node();
   while (cnode) {
@@ -316,7 +319,8 @@ void SimulationConfig::parseOccupants(rapidxml::xml_node<> *node,
           while (pnode) {
             std::string text = pnode->name();
             if (text == "file") {
-              SimulationConfig::ActivityFile = pnode->value();
+              SimulationConfig::FileActivity = SimulationConfig::RunLocation
+                                                + pnode->value();
             } else {
               std::pair<int, std::string> a;
               if (text == "monday") {
@@ -403,7 +407,7 @@ void SimulationConfig::parseOccupants(rapidxml::xml_node<> *node,
         LOG.error();
       } else if (!SimulationConfig::info.presencePage
         && agent.profile.size() != 24
-        && SimulationConfig::ActivityFile == "") {
+        && SimulationConfig::FileActivity == "") {
         LOG << "The activity profile is not defined for each hour ";
         LOG << "using the Said method\nPlease add a activity profile ";
         LOG << "for hour in the No-MASS simulation configuration file";
@@ -630,8 +634,12 @@ void SimulationConfig::parseConfiguration(const std::string & filename) {
 
     node = node->next_sibling();
   }
+
+  FileLargeAppliance = RunLocation + "AppliancesLarge.xml";
+  FolderSmallAppliance = RunLocation + "SmallAppliances/";
+
   timeSteps();
-  if(outputRegexs.empty()) {
+  if (outputRegexs.empty()) {
     outputRegexs.push_back(".*");
   }
 }

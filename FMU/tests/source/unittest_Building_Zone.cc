@@ -3,7 +3,7 @@
 #include <limits.h>
 
 
-#include "Gen.h"
+#include "tests/Gen.h"
 #include "Building_Zone.h"
 #include "DataStore.h"
 #include "gtest/gtest.h"

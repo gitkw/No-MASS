@@ -3,7 +3,7 @@
 #include <limits.h>
 #include <vector>
 
-#include "Gen.h"
+#include "tests/Gen.h"
 #include "DataStore.h"
 #include "SimulationTime.h"
 #include "Occupant_Action_HeatingSetPoints_Learning.h"

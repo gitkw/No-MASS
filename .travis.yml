@@ -1,12 +1,13 @@
 language: cpp
 
-sudo: required
 dist: trusty
+sudo: false
 
 compiler:
   - gcc
 
-cache: apt
+git:
+  depth: 3
 
 addons:
   apt:
@@ -27,8 +28,6 @@ before_install:
   - export CXX="g++-4.9"
   - export CC="gcc-4.9"
   - export LD="g++-4.9"
-  # download submodules
-  - git submodule update --init --recursive
 
 before_script:
   - mkdir FMU/build
@@ -40,7 +39,7 @@ script:
   - cd FMU/buildDebug
   - cmake -DTests=on -DCMAKE_BUILD_TYPE=Debug ../
   - make
-  - ./runUnitTests
+  - ./tests/runUnitTests
   - cd ../build
   - cmake -DCMAKE_BUILD_TYPE=Release ../
   - make
