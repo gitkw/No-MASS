@@ -1,18 +1,19 @@
 // Copyright 2016 Jacob Chapman
 
-#ifndef TREE_NODE_H_
-#define TREE_NODE_H_
+#ifndef CONTRACT_NODE_TREE_H_
+#define CONTRACT_NODE_TREE_H_
 
 #include <memory>
+#include <iostream>
 
 template <class T>
-class Tree_Node {
+class Contract_Node_Tree {
  public:
   virtual bool compare(const T insert) const = 0;
   virtual void makeLeft() = 0;
   virtual void makeRight() = 0;
-  virtual bool isNodeRemoveable(const std::shared_ptr<Tree_Node<T>> & ptr)
-                                                                  const = 0;
+  virtual bool isNodeRemoveable(
+            const std::shared_ptr<Contract_Node_Tree<T>> & ptr) const = 0;
   virtual bool isRemoveable() const = 0;
 
   bool isLeftNull() {
@@ -27,7 +28,7 @@ class Tree_Node {
     T ret = nodeObject;
     if (pRight) {
       if (isNodeRemoveable(pRight)) {
-        pRight  = nullptr;
+        pRight = nullptr;
       } else {
         ret = pRight->findRightEdge();
       }
@@ -74,13 +75,21 @@ class Tree_Node {
   T popLeftEdge() {
     T ret;
     if (pLeft) {
-        return pLeft->popLeftEdge();
-    } else if (isAssigned) {
+      ret = pLeft->popLeftEdge();
+        if(ret == nullptr){
+            pLeft = nullptr;
+        }
+    }
+    if (ret == nullptr && isAssigned) {
       isAssigned = false;
       ret = nodeObject;
       nodeObject = NULL;
-    } else if (pRight) {
-      return pRight->popLeftEdge();
+    }
+    if (pRight && ret == nullptr) {
+      ret = pRight->popLeftEdge();
+        if(ret == nullptr){
+            pRight = nullptr;
+        }
     }
     return ret;
   }
@@ -118,15 +127,13 @@ class Tree_Node {
 
  protected:
   T nodeObject;
-  Tree_Node() {}
-  std::shared_ptr<Tree_Node<T>> pLeft;
-  std::shared_ptr<Tree_Node<T>> pRight;
+  Contract_Node_Tree() {}
+  std::shared_ptr<Contract_Node_Tree<T>> pLeft;
+  std::shared_ptr<Contract_Node_Tree<T>> pRight;
 
  private:
   bool isAssigned = false;
-  int key;
   double value;
-
 };
 
-#endif  // TREE_NODE_H_
+#endif  // CONTRACT_NODE_TREE_H_

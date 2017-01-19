@@ -109,7 +109,7 @@ TEST(Simulation, HeatGainsWindowsOnly) {
     s.preTimeStep();
     s.timeStep();
     EXPECT_EQ(SimulationConfig::getStepCount(), i);
-    WindowState = DataStore::getValueS("Block1:Zone1WindowState0");
+   // WindowState = DataStore::getValueS("Block1:Zone1WindowState0");
     // EXPECT_EQ(WindowState, 0);
     s.postTimeStep();
   }
@@ -124,7 +124,7 @@ TEST(Simulation, HeatGainsWindowsOnly) {
     s.preTimeStep();
     s.timeStep();
     EXPECT_EQ(SimulationConfig::getStepCount(), i);
-    WindowState = DataStore::getValueS("Block1:Zone1WindowState0");
+    //WindowState = DataStore::getValueS("Block1:Zone1WindowState0");
     int occs = DataStore::getValueS("Block1:Zone1NumberOfOccupants");
     if (occs > 0) {
       //  EXPECT_EQ(WindowState, 1);

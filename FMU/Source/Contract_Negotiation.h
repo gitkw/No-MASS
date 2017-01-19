@@ -7,8 +7,8 @@
 #include <vector>
 #include <memory>
 #include "Contract.h"
-#include "Contract_Priority_Node.h"
-#include "Contract_Supply_Node.h"
+#include "Contract_Node_Priority.h"
+#include "Contract_Node_Supply.h"
 
 class Contract_Negotiation {
  public:
@@ -29,8 +29,8 @@ class Contract_Negotiation {
 
     std::unordered_map<int, std::unordered_map<int, ContractPtr>> contracts;
     std::vector<ContractPtr> contractsSupplied;
-    Contract_Supply_Node nodeSupply;
-    Contract_Priority_Node nodePriority;
+    Contract_Node_Supply nodeSupply;
+    Contract_Node_Priority nodePriority;
 };
 
 #endif  // CONTRACT_NEGOTIATION_H_

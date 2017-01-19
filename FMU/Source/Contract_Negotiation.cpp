@@ -60,12 +60,11 @@ void Contract_Negotiation::processContracts() {
             (*cs)->suppliedLeft -= supplied;
           } else {
             (*cs)->suppliedLeft = 0;
-            contractsSupplied.erase(cs);
+            cs++;
           }
           c->receivedCost += suppliedCost * supplied;
           c->received += supplied;
           fractionalPower -= supplied;
-          cs = contractsSupplied.begin();
       }
       c = nodePriority.findRightEdge();
   }
