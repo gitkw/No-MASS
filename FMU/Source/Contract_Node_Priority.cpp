@@ -11,13 +11,10 @@ bool Contract_Node_Priority::compare(const ContractPtr insert) const {
 
 bool Contract_Node_Priority::isNodeRemoveable(
           const std::shared_ptr<Contract_Node_Tree<ContractPtr>> & ptr) const {
-    bool retValue = ptr->isLeftNull() && ptr->isRightNull();
 
+    bool retValue = ptr->isLeftNull() && ptr->isRightNull();
     if (ptr->getNodeObject() != nullptr) {
-        retValue =
-          ptr->getNodeObject()->received >= ptr->getNodeObject()->requested &&
-          ptr->isLeftNull() &&
-          ptr->isRightNull();
+        retValue = ptr->isRemoveable() && retValue;
     }
     return retValue;
 }

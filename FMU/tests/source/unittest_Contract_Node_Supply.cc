@@ -5,7 +5,7 @@
 #include "tests/Gen.h"
 
 #include "SimulationConfig.h"
-
+#include "Utility.h"
 #include "Contract.h"
 #include "Contract_Node_Supply.h"
 
@@ -98,6 +98,7 @@ TEST_F(Test_Contract_Node_Supply, twoEqual) {
     cp2->buildingID = 0;
     cp2->supplied = 100.0;
     cp2->suppliedCost = 0.0;
+    cp2->suppliedLeft = 100.0;
 
     nodeSupply.insert(cp, cp->suppliedCost);
     nodeSupply.insert(cp2, cp2->suppliedCost);
@@ -117,4 +118,37 @@ TEST_F(Test_Contract_Node_Supply, twoEqual) {
     EXPECT_NEAR(cp2->suppliedCost, 0.0, 0.1);
     EXPECT_EQ(op2->id, 1);
     EXPECT_EQ(cp2->id, 1);
+}
+
+
+TEST_F(Test_Contract_Node_Supply, Many) {
+    Utility::setSeed(0);
+    std::vector<ContractPtr> contractsSupplied;
+    for(int i = 0; i < 100000; i++){
+      Contract c;
+      contractsSupplied.push_back(std::make_shared<Contract>(c));
+      contractsSupplied.back()->id = i;
+      contractsSupplied.back()->buildingID = 0;
+      contractsSupplied.back()->supplied = 100.0;
+      contractsSupplied.back()->suppliedCost = Utility::randomDouble(0, 10000000);
+      contractsSupplied.back()->suppliedLeft = 100.0;
+      nodeSupply.insert(contractsSupplied.back(), contractsSupplied.back()->suppliedCost);
+    }
+
+    std::vector<ContractPtr> contractsSuppliedEmp;
+    ContractPtr op2 = nodeSupply.popLeftEdge();
+    while(op2){
+      contractsSuppliedEmp.push_back(op2);
+      op2 = nodeSupply.popLeftEdge();
+    }
+
+    std::vector<ContractPtr>::iterator cs = contractsSuppliedEmp.begin();
+    while (cs != contractsSuppliedEmp.end()) {
+        (*cs)->suppliedLeft = 0;
+        cs++;
+    }
+
+    for(const ContractPtr opx2 : contractsSupplied){
+      EXPECT_NEAR(opx2->suppliedLeft, 0.0, 0.1);
+    }
 }

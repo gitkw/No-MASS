@@ -3,6 +3,7 @@
 #include <vector>
 #include "tests/Gen.h"
 
+#include "Utility.h"
 #include "Contract.h"
 #include "Contract_Negotiation.h"
 
@@ -100,4 +101,30 @@ TEST_F(Test_Contract_Negotiation, power) {
   EXPECT_NEAR(d.received, 50.0, 0.1);
   EXPECT_NEAR(e.suppliedLeft, 50.0, 0.1);
   cn.clear();
+}
+
+TEST_F(Test_Contract_Negotiation, Many) {
+    Utility::setSeed(0);
+    std::vector<ContractPtr> contractsSupplied;
+    double requested = 1000;
+    int max = 1000000;
+    for(int i = 0; i < max; i++){
+      Contract c;
+      c.supplied = requested;
+      requested = Utility::randomDouble(0, 1000);
+      c.id = i;
+      c.buildingID = 0;
+      c.requested = requested;
+      c.received = 0;
+      c.suppliedCost = Utility::randomDouble(0, 10000);
+      c.priority = Utility::randomDouble(0, 100000);
+      cn.submit(c);
+    }
+    cn.process();
+
+    for(int i = 0; i < max; i++){
+      Contract c;
+      c = cn.getContract(0, i);
+      EXPECT_NEAR(c.received, c.requested, 0.1);
+    }
 }

@@ -25,23 +25,19 @@ class Contract_Node_Tree {
   }
 
   T findRightEdge() {
-    std::cout << " val: " << value << std::endl;
     T ret = nodeObject;
     if (pRight) {
-      std::cout << "right" << std::endl;
       if (isNodeRemoveable(pRight)) {
-        pRight  = nullptr;
+        pRight = nullptr;
       } else {
         ret = pRight->findRightEdge();
       }
     }
     if (isAssigned && isRemoveable()) {
-      std::cout << "cent" << std::endl;
       isAssigned = false;
       nodeObject = NULL;
     }
     if (pLeft && isAssigned == false) {
-      std::cout << "left" << std::endl;
       if (isNodeRemoveable(pLeft)) {
         pLeft = nullptr;
       } else {
@@ -79,19 +75,26 @@ class Contract_Node_Tree {
   T popLeftEdge() {
     T ret;
     if (pLeft) {
-        return pLeft->popLeftEdge();
-    } else if (isAssigned) {
+      ret = pLeft->popLeftEdge();
+        if(ret == nullptr){
+            pLeft = nullptr;
+        }
+    }
+    if (ret == nullptr && isAssigned) {
       isAssigned = false;
       ret = nodeObject;
       nodeObject = NULL;
-    } else if (pRight) {
-      return pRight->popLeftEdge();
+    }
+    if (pRight && ret == nullptr) {
+      ret = pRight->popLeftEdge();
+        if(ret == nullptr){
+            pRight = nullptr;
+        }
     }
     return ret;
   }
 
   void insert(const T & insert, double value) {
-    std::cout << "insert";
     if (nodeObject == NULL) {
       nodeObject = insert;
       this->value = value;

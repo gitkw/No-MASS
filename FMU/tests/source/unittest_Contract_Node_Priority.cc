@@ -5,6 +5,7 @@
 #include "tests/Gen.h"
 
 #include "SimulationConfig.h"
+#include "Utility.h"
 
 #include "Contract.h"
 #include "Contract_Node_Priority.h"
@@ -113,4 +114,34 @@ TEST_F(Test_Contract_Node_Priority, twoEqual) {
     op2 = nodePriority.findRightEdge();
     EXPECT_NEAR(op2->received, 100.0, 0.1);
     EXPECT_EQ(op2->id, 0);
+}
+
+TEST_F(Test_Contract_Node_Priority, Many) {
+    Utility::setSeed(0);
+    std::vector<ContractPtr> contractsSupplied;
+    for(int i = 0; i < 1000000; i++){
+      Contract c;
+
+      contractsSupplied.push_back(std::make_shared<Contract>(c));
+      contractsSupplied.back()->id = i;
+      contractsSupplied.back()->buildingID = 0;
+      contractsSupplied.back()->requested = 1000.0;
+      contractsSupplied.back()->received = 100.0;
+      contractsSupplied.back()->priority = Utility::randomDouble(0, 100000000);
+      nodePriority.insert(contractsSupplied.back(), contractsSupplied.back()->priority);
+    }
+
+    while(true){
+      ContractPtr op2;
+      op2 = nodePriority.findRightEdge();
+      if(op2 == nullptr) break;
+      op2->received = 1000;
+    }
+
+    for(const ContractPtr op2 : contractsSupplied){
+
+      EXPECT_NEAR(op2->received, 1000.0, 0.1);
+
+
+    }
 }

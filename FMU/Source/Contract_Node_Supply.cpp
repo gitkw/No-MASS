@@ -10,7 +10,7 @@ bool Contract_Node_Supply::compare(const ContractPtr insert) const {
 
 bool Contract_Node_Supply::isNodeRemoveable(
           const std::shared_ptr<Contract_Node_Tree<ContractPtr>> & ptr) const {
-  return ptr->getNodeObject()->suppliedLeft <= 0;
+  return ptr->isRemoveable();
 }
 
 void Contract_Node_Supply::makeLeft() {
