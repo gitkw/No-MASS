@@ -61,7 +61,7 @@ TEST_F(Test_Contract_Node_Priority, twoDifferent) {
     ContractPtr cp2 = std::make_shared<Contract>(c2);
     cp2->id = 1;
     cp2->buildingID = 0;
-    cp->requested = 1000.0;
+    cp2->requested = 1000.0;
     cp2->received = 100.0;
     cp2->priority = 1.0;
 
@@ -77,7 +77,7 @@ TEST_F(Test_Contract_Node_Priority, twoDifferent) {
 
     ContractPtr op2;
     op2 = nodePriority.findRightEdge();
-    EXPECT_NEAR(op2->received, 1.0, 0.1);
+    EXPECT_NEAR(op2->received, 100.0, 0.1);
     EXPECT_EQ(op2->id, 0);
 }
 
@@ -95,7 +95,7 @@ TEST_F(Test_Contract_Node_Priority, twoEqual) {
     ContractPtr cp2 = std::make_shared<Contract>(c2);
     cp2->id = 1;
     cp2->buildingID = 0;
-    cp->requested = 1000.0;
+    cp2->requested = 1000.0;
     cp2->received = 100.0;
     cp2->priority = 0.0;
 
@@ -105,12 +105,12 @@ TEST_F(Test_Contract_Node_Priority, twoEqual) {
     ContractPtr op1;
     op1 = nodePriority.findRightEdge();
     EXPECT_NEAR(op1->received, 100.0, 0.1);
-    EXPECT_EQ(op1->id, 0);
+    EXPECT_EQ(op1->id, 1);
 
     op1->received = 1000.0;
 
     ContractPtr op2;
     op2 = nodePriority.findRightEdge();
     EXPECT_NEAR(op2->received, 100.0, 0.1);
-    EXPECT_EQ(op2->id, 1);
+    EXPECT_EQ(op2->id, 0);
 }
