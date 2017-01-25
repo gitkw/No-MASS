@@ -261,7 +261,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         anode = anode->next_sibling();
       }
       b->AppliancesFMI.push_back(s);
-    }  else if (nodeNameIs(cnode, "battery") && nodeNameIs(cnode, "batteryGridCostReward")) {
+    }  else if (nodeNameIs(cnode, "battery") || nodeNameIs(cnode, "batterygridcostreward")) {
       rapidxml::xml_node<> *anode = cnode->first_node();
       appBatteryStruct s;
       while (anode) {

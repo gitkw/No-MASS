@@ -3,8 +3,6 @@
 #ifndef APPLIANCE_BATTERY_GRIDCOST_REWARD_H_
 #define APPLIANCE_BATTERY_GRIDCOST_REWARD_H_
 
-#include <vector>
-#include "QLearning_Appliance.h"
 #include "Appliance_Battery.h"
 
 /**
@@ -15,10 +13,12 @@
 class Appliance_Battery_GridCost_Reward : public Appliance_Battery {
  public:
   Appliance_Battery_GridCost_Reward();
-
+  void doAction();
+  void step();
 
   double rewardFunction(double mostShortage, double binShortage) const;
-  void setGridCost(double gridCost);
+  //void setGridCost(double gridCost);
+  double hello = 0;
  private:
   // double gridCost;
 

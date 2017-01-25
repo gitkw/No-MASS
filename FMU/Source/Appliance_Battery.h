@@ -31,7 +31,15 @@ class Appliance_Battery : public Appliance {
 
  protected:
   bool action;
- private:
+  void doAction();
+  void get_new_SOC_charge(double P_request);
+  double get_new_SOC_discharge(double P_request);
+  double energy_calc() const;
+  double get_charge_delta() const;
+  double calculateDeltaE(double P_request) const;
+  void calculateStateOfCharge(double energy);
+
+ 
   int datastoreIDstateOfCharge;
   double chargeRate = 1000;
   double dischargeRate = 1000;
@@ -53,13 +61,7 @@ class Appliance_Battery : public Appliance {
   double stateOfCharge;
   double BatteryDeltaT;
 
-  void get_new_SOC_charge(double P_request);
-  double get_new_SOC_discharge(double P_request);
-  double energy_calc() const;
-  double get_charge_delta() const;
-  double calculateDeltaE(double P_request) const;
-  void calculateStateOfCharge(double energy);
-  void doAction();
+
 };
 
 #endif  // APPLIANCE_BATTERY_H_
