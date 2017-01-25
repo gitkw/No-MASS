@@ -32,6 +32,22 @@ void Building_Appliances::setup(const buildingStruct & b) {
       batteries.back().setupSave();
     }
 
+    std::vector<appBatteryStruct> appBatteryGrid =
+                    b.AppliancesBatteryGrid;
+    for (const appBatteryStruct s : appBatteryGrid) {
+      batteriesGrid.push_back(Appliance_Battery_GridCost_Reward());
+      batteriesGrid.back().setID(s.id);
+      batteriesGrid.back().setEpsilon(s.epsilon);
+      batteriesGrid.back().setAlpha(s.alpha);
+      batteriesGrid.back().setGamma(s.gamma);
+      batteriesGrid.back().setUpdate(s.update);
+      batteriesGrid.back().setHoulyPriority(s.priority);
+      batteriesGrid.back().setBuildingID(buildingID);
+      batteriesGrid.back().setup();
+      batteriesGrid.back().setIDString(buildingString + std::to_string(s.id));
+      batteriesGrid.back().setupSave();
+    }
+
     std::vector<appCSVStruct> appCSV =
                     b.AppliancesCSV;
     for (const appCSVStruct s : appCSV) {
@@ -206,6 +222,18 @@ void Building_Appliances::stepLocalBatteries() {
     batteries[a].setLocal(local);
     batteries[a].setGlobal(false);
   }
+  pop = Utility::randomIntVect(batteriesGrid.size());
+  for (int a : pop) {
+    batteriesGrid[a].setPowerShortage(power);
+    batteriesGrid[a].step();
+    power -= batteriesGrid[a].getSupply();
+    bool local = sendContractLocal(batteriesGrid[a]);
+    batteriesGrid[a].setLocal(local);
+    batteriesGrid[a].setGlobal(false);
+  }
+
+
+
 }
 
 void Building_Appliances::stepLocal() {
@@ -237,6 +265,20 @@ void Building_Appliances::stepLocalNegotiation() {
 
 void Building_Appliances::localNegotiationBatteries() {
   for (Appliance_Battery & b : batteries) {
+    if (b.isLocal()) {
+      int appid = b.getID();
+      Contract c = app_negotiation.getContract(buildingID, appid);
+      double power = c.received;
+      double cost = c.receivedCost;
+      b.setReceived(power);
+      b.setReceivedCost(cost);
+      sum_small += power;
+      sum_cost += cost;
+    }
+    b.save();
+    b.clear();
+  }
+  for (Appliance_Battery_GridCost_Reward & b : batteriesGrid) {
     if (b.isLocal()) {
       int appid = b.getID();
       Contract c = app_negotiation.getContract(buildingID, appid);
@@ -450,6 +492,9 @@ void Building_Appliances::stepGlobalNegotiation(
   for (Appliance_Battery & b : batteries) {
     b.AddCost(sum_global_cost);
   }
+  for (Appliance_Battery_GridCost_Reward & b : batteriesGrid) {
+    b.AddCost(sum_global_cost);
+  }
   globalContracts.clear();
   totalPower = PowerRequested - PowerGenerated;
   currentStates.clear();
@@ -462,6 +507,9 @@ void Building_Appliances::postprocess() {
     l.postprocess();
   }
   for (Appliance_Battery & b : batteries) {
+    b.postprocess();
+  }
+  for (Appliance_Battery_GridCost_Reward & b : batteriesGrid) {
     b.postprocess();
   }
 }

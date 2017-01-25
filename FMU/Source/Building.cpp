@@ -117,6 +117,67 @@ void Building::buildingInteractions() {
   }
 }
 
+double Building::decisionDoubleVec( const std::vector<double> & val,
+                                    const std::vector<double> & power,
+                                    const double currentState) const {
+  double totalIncrease = 0;
+  double totalDecrease = 0;
+  double increase = 0;
+  double decrease = 0;
+  double same = 0;
+  double increasePower = 0;
+  double decreasePower = 0;
+  double samePower = 0;
+  for (unsigned int i = 0; i < val.size(); i++) {
+    double d = val[i];
+    double powerValue = power[i];
+
+    if (d < currentState) {
+      decrease++;
+      totalDecrease = totalDecrease + d;
+      decreasePower = decreasePower + powerValue;
+
+    } else if (d > currentState) {
+      increase++;
+      totalIncrease = totalIncrease + d;
+      increasePower = increasePower + powerValue;
+    } else {
+      same++;
+      samePower = samePower + powerValue;
+    }
+  }
+  double state = currentState;
+  if ((samePower == increasePower) == decreasePower) {
+      double i = Utility::randomInt(0, 2);
+      if (i == 0) {
+          state = totalIncrease / increase;
+      } else if (i == 1) {
+          state = totalDecrease / decrease;
+      }
+  } else if (samePower < increasePower && increasePower > decreasePower) {
+      state = totalIncrease / increase;
+  } else if (samePower < decreasePower && increasePower < decreasePower) {
+      state = totalDecrease / decrease;
+  } else if (samePower == increasePower && samePower > decreasePower) {
+      if (Utility::tossACoin()) {
+          state = totalIncrease / increase;
+      }
+  } else if (samePower > increasePower && samePower == decreasePower) {
+      if (Utility::tossACoin()) {
+          state = totalDecrease / decrease;
+      }
+  } else if (samePower < increasePower
+      && samePower < decreasePower
+      && increasePower == decreasePower) {
+      if (Utility::tossACoin()) {
+          state = totalIncrease / increase;
+      } else {
+          state = totalDecrease / decrease;
+      }
+  }
+  return state;
+}
+
 void Building::setOccupantHeatDecisionsForZone(
       std::shared_ptr<Building_Zone> zone) {
   double currentState = zone->getHeatingState();
@@ -229,10 +290,9 @@ void Building::setOccupantWindowDecisionForZone(
     double close = 0;
     int numberOfActiveOccupants = 0;
 
-    for (Occupant &agent : population) {
+    for (const Occupant &agent : population) {
         if (agent.isActionWindow(*zone)) {
             double power = agent.getPower();
-          //  if ( power < 2 ) continue;
             numberOfActiveOccupants++;
             if (agent.getDesiredWindowState(*zone)) {
                 open = open + power;
@@ -242,14 +302,7 @@ void Building::setOccupantWindowDecisionForZone(
         }
     }
     if (numberOfActiveOccupants > 0) {
-        if (open < close) {
-            zone->setWindowState(false);
-        } else if (open > close) {
-            zone->setWindowState(true);
-        } else {
-            zone->setWindowState(Utility::tossACoin());
-                zone->setWindowState(true);
-        }
+        zone->setWindowState(decisionBoolean(close, open));
     }
 }
 
@@ -265,7 +318,7 @@ void Building::setOccupantBlindDecisionForZone(
     double decreasePower = 0;
     double samePower = 0;
 
-    for (Occupant &agent : population) {
+    for (const Occupant &agent : population) {
         if (agent.isActionShades(*zone)) {
             double d = agent.getDesiredShadeState(*zone);
             double power = agent.getPower();
@@ -323,12 +376,21 @@ void Building::setOccupantBlindDecisionForZone(
     }
     zone->setBlindState(state);
 }
+
+bool Building::decisionBoolean(const double val1, const double val2) const {
+  bool ret = val1 < val2;
+  if (val1 == val2) {
+      ret = Utility::tossACoin();
+  }
+  return ret;
+}
+
 void Building::setOccupantLightDecisionForZone(
         std::shared_ptr<Building_Zone> zone) {
     double open = 0;
     double close = 0;
     double numberOfActiveOccupants = 0;
-    for (Occupant &agent : population) {
+    for (const Occupant &agent : population) {
         if (agent.isActionLights(*zone)) {
             numberOfActiveOccupants++;
             double power = agent.getPower();
@@ -340,24 +402,17 @@ void Building::setOccupantLightDecisionForZone(
         }
     }
     if (numberOfActiveOccupants > 0.0) {
-        if (open < close) {
-            zone->setLightState(false);
-        } else if (open > close) {
-            zone->setLightState(true);
-        } else {
-            zone->setLightState(Utility::tossACoin());
-        }
+        zone->setLightState(decisionBoolean(close, open));
     }
 }
 
 void Building::setOccupantCountForZone(std::shared_ptr<Building_Zone> zone) {
     double numberOfOccupants = 0;
-    for (Occupant &agent : population) {
+    for (const Occupant &agent : population) {
         if (agent.currentlyInZone(*zone)) {
             numberOfOccupants++;
         }
     }
-    // zone->setOccupantFraction(numberOfOccupants / population.size());
     zone->setOccupantFraction(numberOfOccupants);
 }
 

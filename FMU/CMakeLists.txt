@@ -108,6 +108,7 @@ Source/LVN_Node.cpp
 Source/Contract_Node_Priority.cpp
 Source/Contract_Node_Supply.cpp
 Source/Contract_Negotiation.cpp
+Source/Appliance_Battery_GridCost_Reward.cpp
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/../rapidxml)

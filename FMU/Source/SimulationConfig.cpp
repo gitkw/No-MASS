@@ -261,7 +261,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         anode = anode->next_sibling();
       }
       b->AppliancesFMI.push_back(s);
-    }  else if (nodeNameIs(cnode, "battery")) {
+    }  else if (nodeNameIs(cnode, "battery") && nodeNameIs(cnode, "batteryGridCostReward")) {
       rapidxml::xml_node<> *anode = cnode->first_node();
       appBatteryStruct s;
       while (anode) {
@@ -280,7 +280,11 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         }
         anode = anode->next_sibling();
       }
-      b->AppliancesBattery.push_back(s);
+      if (nodeNameIs(cnode, "battery")) {
+        b->AppliancesBattery.push_back(s);
+      } else {
+        b->AppliancesBatteryGrid.push_back(s);
+      }
     } else if (nodeNameIs(cnode, "pv") || nodeNameIs(cnode, "csv")) {
         rapidxml::xml_node<> *anode = cnode->first_node();
         appCSVStruct s;

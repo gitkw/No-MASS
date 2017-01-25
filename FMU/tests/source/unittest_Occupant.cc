@@ -145,7 +145,7 @@ void Test_Occupant::SetUpSim2() {
   v.push_back(z_OutPtr);
 
 
-    agentStruct agentS = SimulationConfig::buildings[0].agents[0];
+  agentStruct agentS = SimulationConfig::buildings[0].agents[0];
   Occupant agent;
   agent.setBuildingID(0);
   agent.setup(0, agentS, v);

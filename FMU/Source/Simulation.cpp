@@ -11,6 +11,12 @@
 #include "SimulationTime.h"
 #include "Simulation.h"
 
+double Simulation::gridCost;
+
+double Simulation::getGridCost() {
+  return Simulation::gridCost;
+}
+
 Simulation::Simulation() {
         simulationConfigurationFile = "SimulationConfig.xml";
 }
@@ -76,31 +82,36 @@ void Simulation::preTimeStep() {
  */
 void Simulation::timeStep() {
 
+  gridCost = 0;
+  if (!SimulationConfig::info.GridCost.empty()){
+    if (SimulationConfig::info.GridCost.size() == 24) {
+      int stepCount = SimulationConfig::getStepCount();
+      int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
+      int hourOfDay = hour % 24;
+      gridCost = SimulationConfig::info.GridCost[hourOfDay];
+    } else if (SimulationConfig::info.GridCost.size() == 48) {
+      int stepCount = SimulationConfig::getStepCount();
+      int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 1800;
+      int halfHourOfDay = hour % 48;
+      gridCost = SimulationConfig::info.GridCost[halfHourOfDay];
+    } else {
+      gridCost = SimulationConfig::info.GridCost[0];
+    }
+  }
+
   for (Building &b : buildings) {
       b.step();
       b.stepAppliancesUse();
       b.addContactsTo(&building_negotiation);
   }
+
   double diff = building_negotiation.getDifference();
   if (diff < 0.0) {
     Contract m;
     m.id = -1;
     m.buildingID = -1;
     m.supplied = std::abs(diff);
-
-    if (SimulationConfig::info.GridCost.size() == 24) {
-      int stepCount = SimulationConfig::getStepCount();
-      int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
-      int hourOfDay = hour % 24;
-      m.suppliedCost = SimulationConfig::info.GridCost[hourOfDay];
-    } else if (SimulationConfig::info.GridCost.size() == 48) {
-      int stepCount = SimulationConfig::getStepCount();
-      int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 1800;
-      int halfHourOfDay = hour % 48;
-      m.suppliedCost = SimulationConfig::info.GridCost[halfHourOfDay];
-    } else {
-      m.suppliedCost = SimulationConfig::info.GridCost[0];
-    }
+    m.suppliedCost = gridCost;
     m.requested = 0;
     building_negotiation.submit(m);
     DataStore::addValue(GridPowerDataId, m.supplied);

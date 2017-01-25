@@ -173,6 +173,7 @@ struct buildingStruct {
     std::vector<appCSVStruct> AppliancesCSV;
     std::vector<appFMIStruct> AppliancesFMI;
     std::vector<appBatteryStruct> AppliancesBattery;
+    std::vector<appBatteryStruct> AppliancesBatteryGrid;
     std::vector<agentStruct> agents;
     std::string name;
     int id;

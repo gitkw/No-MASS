@@ -26,6 +26,11 @@ class Building{
                           const Contract_Negotiation & building_negotiation);
   void addContactsTo(Contract_Negotiation * building_negotiation);
 
+  bool decisionBoolean(const double val1, const double val2) const;
+  double decisionDoubleVec(const std::vector<double> & val,
+                            const std::vector<double> & power,
+                            const double currentState) const;
+
  private:
   void setOccupantGainsForZone(std::shared_ptr<Building_Zone> zone);
   void setOccupantWindowDecisionForZone(std::shared_ptr<Building_Zone> zone);

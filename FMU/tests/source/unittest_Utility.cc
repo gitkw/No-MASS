@@ -14,6 +14,16 @@ TEST(Utility, ran) {
   EXPECT_TRUE(Utility::tossACoin());
   EXPECT_FALSE(Utility::tossACoin());
   EXPECT_NEAR(Utility::randomDouble(0, 1), 0.4707521, 0.001);
+  bool loop = true;
+  while (loop){
+    int x = Utility::randomInt(0, 2);
+    if (x == 2) loop = false;
+  }
+  loop = true;
+  while (loop){
+    int x = Utility::randomInt(0, 2);
+    if (x == 0) loop = false;
+  }
   //EXPECT_EQ(Utility::randomInt(0, 1000), 777);
 }
 

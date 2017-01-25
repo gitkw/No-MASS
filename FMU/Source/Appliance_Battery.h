@@ -27,7 +27,10 @@ class Appliance_Battery : public Appliance {
   void setGamma(double gamma);
   void setUpdate(bool update);
   void AddCost(double cost);
+  double rewardFunction(double mostShortage, double binShortage) const;
 
+ protected:
+  bool action;
  private:
   int datastoreIDstateOfCharge;
   double chargeRate = 1000;
@@ -41,8 +44,8 @@ class Appliance_Battery : public Appliance {
   int previousHourOfDay;
   double sumSupply;
   double sumShort;
-  bool action;
-  
+
+
   double mostShortage;
   double cost;
   double capacity = 2000;

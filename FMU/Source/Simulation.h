@@ -26,11 +26,12 @@ class Simulation {
     void postTimeStep();
 
     void setSimulationConfigurationFile(const std::string & filename);
+    static double getGridCost();
 
  private:
     std::vector<int> monthCount;
     std::string simulationConfigurationFile;
-
+    static double gridCost;
     /**
     * The Buildings
     */
