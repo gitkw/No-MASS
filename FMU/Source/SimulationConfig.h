@@ -246,6 +246,28 @@ class SimulationConfig {
                                   const std::vector<std::string> & activities);
     static const std::string nameToLower(const rapidxml::xml_node<> *node);
 
+    static void setValFromNodeIfName(bool * val,
+                                  const std::string & value,
+                                  const std::string & name,
+                                  const char * expected);
+    static void setValFromNodeIfName(int * val,
+                                  const std::string & value,
+                                  const std::string & name,
+                                  const char * expected);
+    static void setValFromNodeIfName(double * val,
+                                  const std::string & value,
+                                  const std::string & name,
+                                  const char * expected);
+    static void setValFromNodeIfName(float * val,
+                                  const std::string & value,
+                                  const std::string & name,
+                                  const char * expected);
+
+    static void setValFromNodeIfName(std::string * val,
+                                  const std::string & value,
+                                  const std::string & name,
+                                  const char * expected);
+
     static int stepCount;
 };
 
