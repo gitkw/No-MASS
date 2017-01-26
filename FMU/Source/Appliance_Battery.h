@@ -27,7 +27,7 @@ class Appliance_Battery : public Appliance {
   void setGamma(double gamma);
   void setUpdate(bool update);
   void AddCost(double cost);
-  double rewardFunction(double mostShortage, double binShortage) const;
+  virtual double rewardFunction(double mostShortage, double binShortage) const;
 
  protected:
   bool action;
@@ -39,7 +39,7 @@ class Appliance_Battery : public Appliance {
   double calculateDeltaE(double P_request) const;
   void calculateStateOfCharge(double energy);
 
- 
+
   int datastoreIDstateOfCharge;
   double chargeRate = 1000;
   double dischargeRate = 1000;

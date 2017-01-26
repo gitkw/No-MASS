@@ -13,12 +13,10 @@
 class Appliance_Battery_GridCost_Reward : public Appliance_Battery {
  public:
   Appliance_Battery_GridCost_Reward();
-  void doAction();
-  void step();
 
   double rewardFunction(double mostShortage, double binShortage) const;
   //void setGridCost(double gridCost);
-  double hello = 0;
+
  private:
   // double gridCost;
 
