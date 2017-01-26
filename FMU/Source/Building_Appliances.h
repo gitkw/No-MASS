@@ -10,6 +10,7 @@
 #include "Appliance_Small.h"
 #include "Appliance_FMI.h"
 #include "Appliance_Battery.h"
+#include "Appliance_Battery_GridCost_Reward.h"
 #include "Appliance_Generic_CSV.h"
 #include "Appliance.h"
 #include "Contract_Negotiation.h"
@@ -46,6 +47,7 @@ class Building_Appliances {
     std::vector<Appliance_Small> small;
     std::vector<Appliance_FMI> fmi;
     std::vector<Appliance_Battery> batteries;
+    std::vector<Appliance_Battery_GridCost_Reward> batteriesGrid;
     std::vector<Appliance_Generic_CSV> csv;
     std::vector<int> currentStates;
     std::string buildingString;

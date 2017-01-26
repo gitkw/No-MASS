@@ -199,24 +199,20 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
       rapidxml::xml_node<> *anode = cnode->first_node();
       appLargeStruct s;
       while (anode) {
-        if (nodeNameIs(anode, "id")) {
-          s.id = std::stoi(anode->value());
-        } else if (nodeNameIs(anode, "priority")) {
+        const std::string name = nameToLower(anode);
+        const std::string value = anode->value();
+        setValFromNodeIfName(&s.id, value, name, "id");
+        setValFromNodeIfName(&s.cost, value, name, "cost");
+        setValFromNodeIfName(&s.epsilon, value, name, "epsilon");
+        setValFromNodeIfName(&s.alpha, value, name, "alpha");
+        setValFromNodeIfName(&s.gamma, value, name, "gamma");
+        setValFromNodeIfName(&s.update, value, name, "updateqtable");
+        if (nodeNameIs(anode, "priority")) {
           s.priority = prioritiesToVector(anode->value());
         } else if (nodeNameIs(anode, "timerequired")) {
           s.timeRequired = prioritiesToVector(anode->value());
         } else if (nodeNameIs(anode, "activities")) {
           s.activities = activityNamesToIds(Utility::splitCSV(anode->value()));
-        } else if (nodeNameIs(anode, "cost")) {
-          s.cost = std::stod(anode->value());
-        } else if (nodeNameIs(anode, "epsilon")) {
-          s.epsilon = std::stod(anode->value());
-        } else if (nodeNameIs(anode, "alpha")) {
-          s.alpha = std::stod(anode->value());
-        } else if (nodeNameIs(anode, "gamma")) {
-          s.gamma = std::stod(anode->value());
-        } else if (nodeNameIs(anode, "updateqtable")) {
-          s.update = std::stod(anode->value());
         }
         anode = anode->next_sibling();
       }
@@ -231,17 +227,14 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
       rapidxml::xml_node<> *anode = cnode->first_node();
       appSmallStruct s;
       while (anode) {
-        if (nodeNameIs(anode, "weibullparameters")) {
-          s.WeibullParameters = anode->value();
-        } else if (nodeNameIs(anode, "stateprobabilities")) {
-          s.StateProbabilities = anode->value();
-        } else if (nodeNameIs(anode, "fractions")) {
-          s.Fractions = anode->value();
-        } else if (nodeNameIs(anode, "sumratedpowers")) {
-          s.SumRatedPowers = anode->value();
-        } else if (nodeNameIs(anode, "id")) {
-          s.id = std::stoi(anode->value());
-        } else if (nodeNameIs(anode, "priority")) {
+        const std::string name = nameToLower(anode);
+        const std::string value = anode->value();
+        setValFromNodeIfName(&s.id, value, name, "id");
+        setValFromNodeIfName(&s.WeibullParameters, value, name, "weibullparameters");
+        setValFromNodeIfName(&s.StateProbabilities, value, name, "stateprobabilities");
+        setValFromNodeIfName(&s.Fractions, value, name, "fractions");
+        setValFromNodeIfName(&s.SumRatedPowers, value, name, "sumratedpowers");
+        if (nodeNameIs(anode, "priority")) {
           s.priority = prioritiesToVector(anode->value());
         }
         anode = anode->next_sibling();
@@ -251,47 +244,48 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
       rapidxml::xml_node<> *anode = cnode->first_node();
       appFMIStruct s;
       while (anode) {
-        if (nodeNameIs(anode, "variablename")) {
-          s.variableName = anode->value();
-        } else if (nodeNameIs(anode, "id")) {
-          s.id = std::stoi(anode->value());
-        } else if (nodeNameIs(anode, "priority")) {
+        const std::string name = nameToLower(anode);
+        const std::string value = anode->value();
+        setValFromNodeIfName(&s.id, value, name, "id");
+        setValFromNodeIfName(&s.variableName, value, name, "variablename");
+        if (nodeNameIs(anode, "priority")) {
           s.priority = prioritiesToVector(anode->value());
         }
         anode = anode->next_sibling();
       }
       b->AppliancesFMI.push_back(s);
-    }  else if (nodeNameIs(cnode, "battery")) {
+    }  else if (nodeNameIs(cnode, "battery") || nodeNameIs(cnode, "batterygridcostreward")) {
       rapidxml::xml_node<> *anode = cnode->first_node();
       appBatteryStruct s;
       while (anode) {
-        if (nodeNameIs(anode, "id")) {
-          s.id = std::stoi(anode->value());
-        } else if (nodeNameIs(anode, "priority")) {
+        const std::string name = nameToLower(anode);
+        const std::string value = anode->value();
+        setValFromNodeIfName(&s.id, value, name, "id");
+        setValFromNodeIfName(&s.epsilon, value, name, "epsilon");
+        setValFromNodeIfName(&s.alpha, value, name, "alpha");
+        setValFromNodeIfName(&s.gamma, value, name, "gamma");
+        setValFromNodeIfName(&s.update, value, name, "updateqtable");
+        if (nodeNameIs(anode, "priority")) {
           s.priority = prioritiesToVector(anode->value());
-        } else if (nodeNameIs(anode, "epsilon")) {
-          s.epsilon = std::stod(anode->value());
-        } else if (nodeNameIs(anode, "alpha")) {
-          s.alpha = std::stod(anode->value());
-        } else if (nodeNameIs(anode, "gamma")) {
-          s.gamma = std::stod(anode->value());
-        } else if (nodeNameIs(anode, "updateqtable")) {
-          s.update = std::stod(anode->value());
         }
         anode = anode->next_sibling();
       }
-      b->AppliancesBattery.push_back(s);
+      if (nodeNameIs(cnode, "battery")) {
+        b->AppliancesBattery.push_back(s);
+      } else {
+        b->AppliancesBatteryGrid.push_back(s);
+      }
     } else if (nodeNameIs(cnode, "pv") || nodeNameIs(cnode, "csv")) {
         rapidxml::xml_node<> *anode = cnode->first_node();
         appCSVStruct s;
         while (anode) {
-          if (nodeNameIs(anode, "filename") || nodeNameIs(anode, "supply")) {
-            s.fileSupply = anode->value();
-          } else if (nodeNameIs(anode, "demand")) {
-            s.fileDemand = anode->value();
-          } else if (nodeNameIs(anode, "id")) {
-            s.id = std::stoi(anode->value());
-          } else if (nodeNameIs(anode, "priority")) {
+          const std::string name = nameToLower(anode);
+          const std::string value = anode->value();
+          setValFromNodeIfName(&s.fileSupply, value, name, "filename");
+          setValFromNodeIfName(&s.fileSupply, value, name, "supply");
+          setValFromNodeIfName(&s.fileDemand, value, name, "demand");
+          setValFromNodeIfName(&s.id, value, name, "id");
+          if (nodeNameIs(anode, "priority")) {
             s.priority = prioritiesToVector(anode->value());
           } else if (nodeNameIs(anode, "cost")) {
             s.cost = csvToDouble(anode->value());
@@ -313,8 +307,9 @@ void SimulationConfig::parseOccupants(rapidxml::xml_node<> *node,
       agentStruct agent;
       rapidxml::xml_node<> *anode = cnode->first_node();
       while (anode) {
-        const std::string aname = nameToLower(anode);
-        if (nodeNameIs(aname, "profile")) {
+        const std::string name = nameToLower(anode);
+        const std::string value = anode->value();
+        if (nodeNameIs(name, "profile")) {
           rapidxml::xml_node<> *pnode = anode->first_node();
           while (pnode) {
             std::string text = pnode->name();
@@ -347,53 +342,30 @@ void SimulationConfig::parseOccupants(rapidxml::xml_node<> *node,
             }
             pnode = pnode->next_sibling();
           }
-        } else if (nodeNameIs(aname, "bedroom")) {
-          agent.bedroom = anode->value();
-        } else if (nodeNameIs(aname, "office")) {
-          agent.office = anode->value();
-        } else if (nodeNameIs(aname, "power")) {
-          agent.power = std::stod(anode->value());
-        } else if (nodeNameIs(aname, "window")) {
-          agent.windowId = std::stoi(anode->value());
-        } else if (nodeNameIs(aname, "shade")) {
-          agent.shadeId = std::stoi(anode->value());
-        } else if (nodeNameIs(aname, "edtry")) {
-          agent.edtry = anode->value();
-        } else if (nodeNameIs(aname, "age")) {
-          agent.age = anode->value();
-        } else if (nodeNameIs(aname, "computer")) {
-          agent.computer = anode->value();
-        } else if (nodeNameIs(aname, "civstat")) {
-          agent.civstat = anode->value();
-        } else if (nodeNameIs(aname, "unemp")) {
-          agent.unemp = anode->value();
-        } else if (nodeNameIs(aname, "retired")) {
-          agent.retired = anode->value();
-        } else if (nodeNameIs(aname, "sex")) {
-          agent.sex = anode->value();
-        } else if (nodeNameIs(aname, "famstat")) {
-          agent.famstat = anode->value();
-        } else if (nodeNameIs(aname, "shadeclosedduringsleep")) {
-          agent.ShadeClosedDuringSleep = std::stod(anode->value());
-        } else if (nodeNameIs(aname, "shadeclosedduringwashing")) {
-          agent.ShadeClosedDuringWashing = std::stod(anode->value());
-        } else if (nodeNameIs(aname, "shadeduringnight")) {
-          agent.ShadeDuringNight = std::stod(anode->value());
-        } else if (nodeNameIs(aname, "shadeduringaudiovisual")) {
-          agent.ShadeDuringAudioVisual = std::stod(anode->value());
-        } else if (nodeNameIs(aname, "lightoffduringaudiovisual")) {
-          agent.LightOffDuringAudioVisual = std::stod(anode->value());
-        } else if (nodeNameIs(aname, "lightoffduringsleep")) {
-          agent.LightOffDuringSleep = std::stod(anode->value());
-        } else if (nodeNameIs(aname, "windowopenduringcooking")) {
-          agent.WindowOpenDuringCooking = std::stod(anode->value());
-        } else if (nodeNameIs(aname, "windowopenduringwashing")) {
-          agent.WindowOpenDuringWashing = std::stod(anode->value());
-        } else if (nodeNameIs(aname, "windowopenduringsleeping")) {
-          agent.WindowOpenDuringSleeping = std::stod(anode->value());
-        } else if (nodeNameIs(aname, "applianceduringday")) {
-          agent.ApplianceDuringDay = std::stod(anode->value());
         }
+        setValFromNodeIfName(&agent.bedroom, value, name, "bedroom");
+        setValFromNodeIfName(&agent.office, value, name, "office");
+        setValFromNodeIfName(&agent.power, value, name, "power");
+        setValFromNodeIfName(&agent.windowId, value, name, "window");
+        setValFromNodeIfName(&agent.shadeId, value, name, "shade");
+        setValFromNodeIfName(&agent.edtry, value, name, "edtry");
+        setValFromNodeIfName(&agent.age, value, name, "age");
+        setValFromNodeIfName(&agent.computer, value, name, "computer");
+        setValFromNodeIfName(&agent.civstat, value, name, "civstat");
+        setValFromNodeIfName(&agent.unemp, value, name, "unemp");
+        setValFromNodeIfName(&agent.retired, value, name, "retired");
+        setValFromNodeIfName(&agent.sex, value, name, "sex");
+        setValFromNodeIfName(&agent.famstat, value, name, "famstat");
+        setValFromNodeIfName(&agent.ShadeClosedDuringSleep, value, name, "shadeclosedduringsleep");
+        setValFromNodeIfName(&agent.ShadeClosedDuringWashing, value, name, "shadeclosedduringwashing");
+        setValFromNodeIfName(&agent.ShadeDuringNight, value, name, "shadeduringnight");
+        setValFromNodeIfName(&agent.ShadeDuringAudioVisual, value, name, "shadeduringaudiovisual");
+        setValFromNodeIfName(&agent.LightOffDuringAudioVisual, value, name, "lightoffduringaudiovisual");
+        setValFromNodeIfName(&agent.LightOffDuringSleep, value, name, "lightoffduringsleep");
+        setValFromNodeIfName(&agent.WindowOpenDuringCooking, value, name, "windowopenduringcooking");
+        setValFromNodeIfName(&agent.WindowOpenDuringWashing, value, name, "windowopenduringwashing");
+        setValFromNodeIfName(&agent.WindowOpenDuringSleeping, value, name, "windowopenduringsleeping");
+        setValFromNodeIfName(&agent.ApplianceDuringDay, value, name, "applianceduringday");
         anode = anode->next_sibling();
       }
 
@@ -449,54 +421,31 @@ void SimulationConfig::parseWindows(rapidxml::xml_node<> *node) {
         rapidxml::xml_node<> *snode = cnode->first_node();
         std::pair<int, windowStruct> ws;
         while (snode) {
-          const std::string sname = nameToLower(snode);
-          if (nodeNameIs(sname, "id")) {
-            ws.first = std::stoi(snode->value());
-          } else if (nodeNameIs(sname, "aop")) {
-              ws.second.aop = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "bopout")) {
-              ws.second.bopout = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "shapeop")) {
-              ws.second.shapeop = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "a01arr")) {
-              ws.second.a01arr = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01inarr")) {
-              ws.second.b01inarr = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01outarr")) {
-              ws.second.b01outarr = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01absprevarr")) {
-              ws.second.b01absprevarr = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01rnarr")) {
-              ws.second.b01rnarr = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "a01int")) {
-              ws.second.a01int = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01inint")) {
-              ws.second.b01inint = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01outint")) {
-              ws.second.b01outint = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01presint")) {
-              ws.second.b01presint = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01rnint")) {
-              ws.second.b01rnint = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "a01dep")) {
-              ws.second.a01dep = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01outdep")) {
-              ws.second.b01outdep = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01absdep")) {
-              ws.second.b01absdep = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01gddep")) {
-              ws.second.b01gddep = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "a10dep")) {
-              ws.second.a10dep = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b10indep")) {
-              ws.second.b10indep = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b10outdep")) {
-              ws.second.b10outdep = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b10absdep")) {
-              ws.second.b10absdep = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b10gddep")) {
-              ws.second.b10gddep = std::stod(snode->value());
-          }
+          const std::string name = nameToLower(snode);
+          const std::string value = snode->value();
+          setValFromNodeIfName(&ws.first, value, name, "id");
+          setValFromNodeIfName(&ws.second.aop, value, name, "aop");
+          setValFromNodeIfName(&ws.second.bopout, value, name, "bopout");
+          setValFromNodeIfName(&ws.second.shapeop, value, name, "shapeop");
+          setValFromNodeIfName(&ws.second.a01arr, value, name, "a01arr");
+          setValFromNodeIfName(&ws.second.b01inarr, value, name, "b01inarr");
+          setValFromNodeIfName(&ws.second.b01outarr, value, name, "b01outarr");
+          setValFromNodeIfName(&ws.second.b01absprevarr, value, name, "b01absprevarr");
+          setValFromNodeIfName(&ws.second.b01rnarr, value, name, "b01rnarr");
+          setValFromNodeIfName(&ws.second.a01int, value, name, "a01int");
+          setValFromNodeIfName(&ws.second.b01inint, value, name, "b01inint");
+          setValFromNodeIfName(&ws.second.b01outint, value, name, "b01outint");
+          setValFromNodeIfName(&ws.second.b01presint, value, name, "b01presint");
+          setValFromNodeIfName(&ws.second.b01rnint, value, name, "b01rnint");
+          setValFromNodeIfName(&ws.second.a01dep, value, name, "a01dep");
+          setValFromNodeIfName(&ws.second.b01outdep, value, name, "b01outdep");
+          setValFromNodeIfName(&ws.second.b01absdep, value, name, "b01absdep");
+          setValFromNodeIfName(&ws.second.b01gddep, value, name, "b01gddep");
+          setValFromNodeIfName(&ws.second.a10dep, value, name, "a10dep");
+          setValFromNodeIfName(&ws.second.b10indep, value, name, "b10indep");
+          setValFromNodeIfName(&ws.second.b10outdep, value, name, "b10outdep");
+          setValFromNodeIfName(&ws.second.b10absdep, value, name, "b10absdep");
+          setValFromNodeIfName(&ws.second.b10gddep, value, name, "b10gddep");
           snode = snode->next_sibling();
         }
 
@@ -512,57 +461,35 @@ void SimulationConfig::parseShades(rapidxml::xml_node<> *node) {
   rapidxml::xml_node<> *cnode = node->first_node();
   while (cnode) {
       if (nodeNameIs(cnode, "enabled")) {
-            SimulationConfig::info.shading = std::stoi(cnode->value());
+        SimulationConfig::info.shading = std::stoi(cnode->value());
       } else if (nodeNameIs(cnode, "shade")) {
         rapidxml::xml_node<> *snode = cnode->first_node();
         std::pair<int, shadeStruct> ws;
         while (snode) {
-          const std::string sname = nameToLower(snode);
-          if (nodeNameIs(sname, "id")) {
-            ws.first = std::stoi(snode->value());
-          } else if (nodeNameIs(sname, "a01arr")) {
-              ws.second.a01arr = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01inarr")) {
-              ws.second.b01inarr = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01sarr")) {
-              ws.second.b01sarr = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "a10arr")) {
-              ws.second.a10arr = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b10inarr")) {
-              ws.second.b10inarr = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b10sarr")) {
-              ws.second.b10sarr = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "a01int")) {
-              ws.second.a01int = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01inint")) {
-              ws.second.b01inint = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b01sint")) {
-              ws.second.b01sint = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "a10int")) {
-              ws.second.a10int = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b10inint")) {
-              ws.second.b10inint = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "b10sint")) {
-              ws.second.b10sint = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "afullraise")) {
-              ws.second.afullraise = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "boutfullraise")) {
-              ws.second.boutfullraise = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "bsfullraise")) {
-              ws.second.bsfullraise = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "bsfulllower")) {
-              ws.second.bsfulllower = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "boutfulllower")) {
-              ws.second.boutfulllower = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "afulllower")) {
-              ws.second.afulllower = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "asflower")) {
-              ws.second.aSFlower = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "bsflower")) {
-              ws.second.bSFlower = std::stod(snode->value());
-          } else if (nodeNameIs(sname, "shapelower")) {
-              ws.second.shapelower = std::stod(snode->value());
-          }
+          const std::string name = nameToLower(snode);
+          const std::string value = snode->value();
+          setValFromNodeIfName(&ws.first, value, name, "id");
+          setValFromNodeIfName(&ws.second.a01arr, value, name, "a01arr");
+          setValFromNodeIfName(&ws.second.b01inarr, value, name, "b01inarr");
+          setValFromNodeIfName(&ws.second.b01sarr, value, name, "b01sarr");
+          setValFromNodeIfName(&ws.second.a10arr, value, name, "a10arr");
+          setValFromNodeIfName(&ws.second.b10inarr, value, name, "b10inarr");
+          setValFromNodeIfName(&ws.second.b10sarr, value, name, "b10sarr");
+          setValFromNodeIfName(&ws.second.a01int, value, name, "a01int");
+          setValFromNodeIfName(&ws.second.b01inint, value, name, "b01inint");
+          setValFromNodeIfName(&ws.second.b01sint, value, name, "b01sint");
+          setValFromNodeIfName(&ws.second.a10int, value, name, "a10int");
+          setValFromNodeIfName(&ws.second.b10inint, value, name, "b10inint");
+          setValFromNodeIfName(&ws.second.b10sint, value, name, "b10sint");
+          setValFromNodeIfName(&ws.second.afullraise, value, name, "afullraise");
+          setValFromNodeIfName(&ws.second.boutfullraise, value, name, "boutfullraise");
+          setValFromNodeIfName(&ws.second.bsfullraise, value, name, "bsfullraise");
+          setValFromNodeIfName(&ws.second.bsfulllower, value, name, "bsfulllower");
+          setValFromNodeIfName(&ws.second.boutfulllower, value, name, "boutfulllower");
+          setValFromNodeIfName(&ws.second.afulllower, value, name, "afulllower");
+          setValFromNodeIfName(&ws.second.aSFlower, value, name, "asflower");
+          setValFromNodeIfName(&ws.second.bSFlower, value, name, "bsflower");
+          setValFromNodeIfName(&ws.second.shapelower, value, name, "shapelower");
           snode = snode->next_sibling();
         }
         shades.insert(ws);
@@ -570,6 +497,8 @@ void SimulationConfig::parseShades(rapidxml::xml_node<> *node) {
       cnode = cnode->next_sibling();
   }
 }
+
+
 
 /**
  * @brief Parses the simulation configuration file
@@ -587,32 +516,24 @@ void SimulationConfig::parseConfiguration(const std::string & filename) {
   rx::xml_node<> *node = root_node->first_node();
   while (node) {
     const std::string name = nameToLower(node);
+    const std::string value = node->value();
+    setValFromNodeIfName(&info.save, value, name, "save");
+    setValFromNodeIfName(&info.timeStepsPerHour, value, name, "timestepsperhour");
+    setValFromNodeIfName(&info.startDay, value, name, "beginmonth");
+    setValFromNodeIfName(&info.endDay, value, name, "endday");
+    setValFromNodeIfName(&info.endMonth, value, name, "endmonth");
+    setValFromNodeIfName(&info.startMonth, value, name, "beginmonth");
+    setValFromNodeIfName(&info.learn, value, name, "learn");
+    setValFromNodeIfName(&info.startDayOfWeek, value, name, "startdayofweek");
+    setValFromNodeIfName(&info.learnupdate, value, name, "learnupdate");
+    setValFromNodeIfName(&info.learnep, value, name, "learnep");
+    setValFromNodeIfName(&info.caseOrder, value, name, "case");
+    setValFromNodeIfName(&info.ShadeClosedDuringNight, value, name, "shadeclosedduringnight");
+
     if (nodeNameIs(name, "seed")) {
         Utility::setSeed(std::stoi(node->value()));
-    } else if (nodeNameIs(name, "save")) {
-        SimulationConfig::info.save = std::stoi(node->value());
-    } else if (nodeNameIs(name, "endday")) {
-        SimulationConfig::info.endDay = std::stoi(node->value());
-    } else if (nodeNameIs(name, "timestepsperhour")) {
-        SimulationConfig::info.timeStepsPerHour = std::stoi(node->value());
-    } else if (nodeNameIs(name, "beginmonth")) {
-        SimulationConfig::info.startMonth = std::stoi(node->value());
-    } else if (nodeNameIs(name, "endmonth")) {
-        SimulationConfig::info.endMonth = std::stoi(node->value());
-    } else if (nodeNameIs(name, "beginday")) {
-        SimulationConfig::info.startDay = std::stoi(node->value());
-    } else if (nodeNameIs(name, "learn")) {
-        SimulationConfig::info.learn = std::stoi(node->value());
-    } else if (nodeNameIs(name, "startdayofweek")) {
-        SimulationConfig::info.startDayOfWeek = std::stoi(node->value());
-    } else if (nodeNameIs(name, "learnupdate")) {
-        SimulationConfig::info.learnupdate = std::stoi(node->value());
-    } else if (nodeNameIs(name, "learnep")) {
-        SimulationConfig::info.learnep = std::stod(node->value());
     } else if (nodeNameIs(name, "gridcost")) {
         SimulationConfig::info.GridCost = csvToDouble(node->value());
-    } else if (nodeNameIs(name, "case")) {
-        SimulationConfig::info.caseOrder = std::stoi(node->value());
     } else if (nodeNameIs(name, "output")) {
       rapidxml::xml_node<> *cnode = node->first_node();
       while (cnode) {
@@ -621,9 +542,6 @@ void SimulationConfig::parseConfiguration(const std::string & filename) {
           }
           cnode = cnode->next_sibling();
       }
-    } else if (nodeNameIs(name, "shadeclosedduringnight")) {
-       SimulationConfig::info.ShadeClosedDuringNight
-           = std::stoi(node->value());
     } else if (nodeNameIs(name, "models")) {
        parseModels(node);
     } else if (nodeNameIs(name, "buildings")) {
@@ -723,4 +641,50 @@ std::vector<double> SimulationConfig::csvToDouble(const std::string & s) {
       items.push_back(std::stod(item));
   }
   return items;
+}
+
+
+void SimulationConfig::setValFromNodeIfName(int * val,
+                              const std::string & value,
+                              const std::string & name,
+                              const char * expected) {
+    if (nodeNameIs(name, expected)) {
+        *val = std::stoi(value);
+    }
+}
+
+void SimulationConfig::setValFromNodeIfName(bool * val,
+                              const std::string & value,
+                              const std::string & name,
+                              const char * expected) {
+    if (nodeNameIs(name, expected)) {
+        *val = std::stoi(value);
+    }
+}
+
+void SimulationConfig::setValFromNodeIfName(double * val,
+                              const std::string & value,
+                              const std::string & name,
+                              const char * expected) {
+    if (nodeNameIs(name, expected)) {
+        *val = std::stod(value);
+    }
+}
+
+void SimulationConfig::setValFromNodeIfName(float * val,
+                              const std::string & value,
+                              const std::string & name,
+                              const char * expected) {
+    if (nodeNameIs(name, expected)) {
+        *val = std::stof(value);
+    }
+}
+
+void SimulationConfig::setValFromNodeIfName(std::string * val,
+                              const std::string & value,
+                              const std::string & name,
+                              const char * expected) {
+    if (nodeNameIs(name, expected)) {
+        *val = value;
+    }
 }

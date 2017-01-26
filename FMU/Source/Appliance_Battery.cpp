@@ -10,6 +10,10 @@
 Appliance_Battery::Appliance_Battery() {
 }
 
+double Appliance_Battery::rewardFunction(double mostShortage, double binShortage) const {
+  return binShortage / mostShortage;
+}
+
 /**
  * @brief Set up the large appliance model, reading in the large applaince
  * configuration file
@@ -63,9 +67,9 @@ void Appliance_Battery::doAction(){
     }
     // calculate the percentage of power over the last
     // against the maximum seen
-    double reward = 100.0 / mostShortage * binShortage;
+    double reward = rewardFunction(mostShortage, binShortage);
     // make the percentage a fraction
-    reward = reward / 100;
+
     if(action == 0 && reward > 0.7){
       // if an action did not take place and our reward is above 0.7
       // punish
