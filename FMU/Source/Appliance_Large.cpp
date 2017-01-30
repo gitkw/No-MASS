@@ -36,12 +36,22 @@ void Appliance_Large::setupModel() {
  * and retrieve power. \n
  * Otherwise set power to 0.
  */
-void Appliance_Large::step() {
+/*void Appliance_Large::step() {
   model.decreaseDuration();
-  power = 0.0;
+  setPower(0.0);
   if (isOn() || match) {
     int stepCount = SimulationConfig::getStepCount();
-    power = model.consumption(stepCount);
+    setPower(model.consumption(stepCount));
+  }
+}
+*/
+void Appliance_Large::step() {
+  model.decreaseDuration();
+  setPower(0.0);
+  int stepCount = SimulationConfig::getStepCount();
+  double p = model.consumption(stepCount);
+  if (isOn() || match) {
+    setPower(p);
   }
 }
 

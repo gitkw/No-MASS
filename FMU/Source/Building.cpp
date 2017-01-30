@@ -13,7 +13,6 @@
 #include "Model_Presence.h"
 #include "Building.h"
 
-
 Building::Building() {}
 
 void Building::setup(const buildingStruct &b) {

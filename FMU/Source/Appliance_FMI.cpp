@@ -20,5 +20,5 @@ void Appliance_FMI::setFMIVariableName(const std::string & FMIVariableName) {
  * to the data store, this simply returns the variable
  */
 void Appliance_FMI::step() {
-  power = DataStore::getValue(FMIVariableName);
+  setPower(DataStore::getValue(FMIVariableName));
 }

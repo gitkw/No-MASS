@@ -5,16 +5,18 @@
 
 #include <vector>
 #include <string>
-#include "Appliance_Large.h"
-#include "Appliance_Large_Learning.h"
-#include "Appliance_Small.h"
-#include "Appliance_FMI.h"
-#include "Appliance_Battery.h"
 #include "Appliance_Battery_GridCost_Reward.h"
-#include "Appliance_Generic_CSV.h"
-#include "Appliance.h"
+#include "Appliance_Battery.h"
+#include "Appliance_Group.h"
+#include "Appliance_Group_CSV.h"
+#include "Appliance_Group_Small.h"
+#include "Appliance_Group_Large.h"
+#include "Appliance_Group_Large_Learning.h"
+#include "Appliance_Group_FMI.h"
+#include "Appliance_Group_Battery.h"
 #include "Contract_Negotiation.h"
 #include "SimulationConfig.h"
+
 
 /**
  * @brief Manages the different building appliances agents
@@ -32,61 +34,33 @@ class Building_Appliances {
     void preprocess();
     void postTimeStep();
     void addCurrentStates(const int stateid);
-
+    void addContactsTo(Contract_Negotiation * building_negotiation) const;
     double getTotalPower() const;
-    void addContactsTo(Contract_Negotiation * building_negotiation);
 
  private:
-    double PowerRequested;
-    double PowerGenerated;
     double totalPower;
     int buildingID;
 
-    std::vector<Appliance_Large> large;
-    std::vector<Appliance_Large_Learning> largeLearning;
-    std::vector<Appliance_Small> small;
-    std::vector<Appliance_FMI> fmi;
-    std::vector<Appliance_Battery> batteries;
-    std::vector<Appliance_Battery_GridCost_Reward> batteriesGrid;
-    std::vector<Appliance_Generic_CSV> csv;
     std::vector<int> currentStates;
     std::string buildingString;
-
     Contract_Negotiation app_negotiation;
 
-    std::vector<Contract> globalContracts;
+    Appliance_Group_Large large;
+    Appliance_Group_Large_Learning largeLearning;
+    Appliance_Group_Small small;
+    Appliance_Group_FMI fmi;
+    Appliance_Group_Battery<Appliance_Battery> batteries;
+    Appliance_Group_Battery<Appliance_Battery_GridCost_Reward> batteriesGrid;
+    Appliance_Group_CSV csv;
 
-    double sum_large;
-    double sum_cost;
-    double sum_fmi;
-    double sum_small;
-    double sum_global_cost;
-    void stepLocalSmall();
-    void stepLocalLarge();
-    void stepLocalLargeLearning();
-    void stepLocalCSV();
-    void stepLocalFMI();
-    void stepLocalBatteries();
-    void localNegotiationSmall();
-    void localNegotiationLarge();
-    void localNegotiationLargeLearning();
-    void localNegotiationCSV();
-    void localNegotiationFMI();
-    void localNegotiationBatteries();
-    void globalNegotiationLarge(
-                          const Contract_Negotiation & building_negotiation);
-    void globalNegotiationLargeLearning(
-                          const Contract_Negotiation & building_negotiation);
-    void globalNegotiationFMI(
-                          const Contract_Negotiation & building_negotiation);
-    void globalNegotiationBatteries(
-                          const Contract_Negotiation & building_negotiation);
-    void globalNegotiationSmall(
-                          const Contract_Negotiation & building_negotiation);
-    void globalNegotiationCSV(
-                          const Contract_Negotiation & building_negotiation);
-    bool sendContractLocal(const Appliance & a);
-    bool sendContractGlobal(const Contract & c);
+    int datastoreIDNonShiftSupplied;
+    int datastoreIDNonShiftSuppliedCost;
+    int datastoreIDNonShiftReceived;
+    int datastoreIDNonShiftRequested;
+    int datastoreIDNonShiftCost;
+
+
+
 };
 
 #endif  // BUILDING_APPLIANCES_H_

@@ -19,7 +19,7 @@ void Appliance_Small::setup() {
 
 void Appliance_Small::step() {
   int stepcount = SimulationConfig::getStepCount();
-  power = model.consumption(stepcount);
+  setPower(model.consumption(stepcount));
 }
 
 void Appliance_Small::setWeibullParameters(

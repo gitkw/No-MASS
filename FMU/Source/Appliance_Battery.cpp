@@ -100,34 +100,34 @@ void Appliance_Battery::step() {
   doAction();
 
   // get the recieved power and add it to the battery
-  get_new_SOC_charge(received);
+  get_new_SOC_charge(getReceived());
 
   // if the battery is not full calculate how much power is needed
-  power = 0;
+  setPower(0.0);
   if(stateOfCharge < 100) {
-    power = get_charge_delta();
+    setPower(get_charge_delta());
   }
 
-  supply = 0.0;
+  setSupply(0.0);
   // If there is a power shortage
   if (powerShortage > 0){
     // Check battery is not empty and there is an action
     // actions are calculated from the learning
     if (action && stateOfCharge > 0) {
       // get power from battery as supply
-      supply = get_new_SOC_discharge(powerShortage);
+      setSupply(get_new_SOC_discharge(powerShortage));
       // we cant supply and request power
       // ie charge and discharge at the same time
-      power = 0.0;
+      setPower(0.0);
       // add the power to the sum for the hour
       // used to learn
-      sumSupply += supply;
+      sumSupply += getSupply();
     }
     // add the power shortage to the hourly sum used for learning
     sumShort += powerShortage;
   }
   // reset the recieved power
-  received = 0;
+  setReceived(0.0);
   // save the new state of charge to the datastore
   DataStore::addValue(datastoreIDstateOfCharge, stateOfCharge);
 }
@@ -135,11 +135,10 @@ void Appliance_Battery::step() {
 void Appliance_Battery::clear() {
   local = false;
   global = false;
-  power = 0.0;
-  supply = 0.0;
-  supplyCost = 0.0;
-  receivedCost = 0.0;
-
+  setPower(0.0);
+  setSupply(0.0);
+  setSupplyCost(0.0);
+  setReceivedCost(0.0);
 }
 
 /**

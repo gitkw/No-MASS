@@ -22,6 +22,7 @@ class Agent {
     void setIDString(const std::string & idString);
     void setID(const int id);
     int getID() const;
+    int getBuildingID() const;
  protected:
     int buildingID;
     int id;
