@@ -49,6 +49,24 @@ class Appliance_Group {
       return ret;
     }
 
+
+    virtual void neighbourhoodNegotiation(const Contract_Negotiation & building_negotiation) {
+      for (auto & g : appliances) {
+        if (g.isGlobal()) {
+          int appid = g.getID();
+          int buildingID = g.getBuildingID();
+          Contract c = building_negotiation.getContract(buildingID, appid);
+          g.setGlobal(sendContractGlobal(c));
+          if (!g.isGlobal()) {
+            double power = c.received;
+            double cost = c.receivedCost;
+            g.setReceived(power);
+            g.setReceivedCost(cost);
+          }
+        }
+      }
+    }
+
     virtual void globalNegotiation(const Contract_Negotiation & building_negotiation) {
       for (auto & g : appliances) {
         if (g.isGlobal()) {

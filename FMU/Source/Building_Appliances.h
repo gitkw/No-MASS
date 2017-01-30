@@ -30,11 +30,16 @@ class Building_Appliances {
     void stepLocalNegotiation();
     void stepGlobalNegotiation(
                         const Contract_Negotiation & building_negotiation);
+
+    void stepNeighbourhoodNegotiation(
+                        const Contract_Negotiation & building_negotiation);
+                        
     void postprocess();
     void preprocess();
     void postTimeStep();
     void addCurrentStates(const int stateid);
-    void addContactsTo(Contract_Negotiation * building_negotiation) const;
+    void addContactsTo(Contract_Negotiation * building_negotiation,
+                        const bool battery) const;
     double getTotalPower() const;
 
  private:

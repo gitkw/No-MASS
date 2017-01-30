@@ -102,7 +102,19 @@ void Simulation::timeStep() {
   for (Building &b : buildings) {
       b.step();
       b.stepAppliancesUse();
-      b.addContactsTo(&building_negotiation);
+      b.addContactsTo(&building_negotiation, true);
+  }
+
+  building_negotiation.process();
+
+  for (Building &b : buildings) {
+      b.stepAppliancesNegotiationNeighbourhood(building_negotiation);
+  }
+
+  building_negotiation.clear();
+
+  for (Building &b : buildings) {
+    b.addContactsTo(&building_negotiation, false);
   }
 
   double diff = building_negotiation.getDifference();

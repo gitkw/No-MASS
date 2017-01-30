@@ -67,8 +67,36 @@ void Building_Appliances::stepLocalNegotiation() {
   app_negotiation.clear();
 }
 
+void Building_Appliances::stepNeighbourhoodNegotiation(
+                          const Contract_Negotiation & building_negotiation) {
+
+                            large.clearGlobalContracts();
+                            largeLearning.clearGlobalContracts();
+                            small.clearGlobalContracts();
+                            csv.clearGlobalContracts();
+                            fmi.clearGlobalContracts();
+                            batteries.clearGlobalContracts();
+                            batteriesGrid.clearGlobalContracts();
+
+    large.neighbourhoodNegotiation(building_negotiation);
+    largeLearning.neighbourhoodNegotiation(building_negotiation);
+    small.neighbourhoodNegotiation(building_negotiation);
+    fmi.neighbourhoodNegotiation(building_negotiation);
+    csv.neighbourhoodNegotiation(building_negotiation);
+
+    batteries.neighbourhoodNegotiation(building_negotiation);
+    batteriesGrid.neighbourhoodNegotiation(building_negotiation);
+
+
+
+
+}
+
 void Building_Appliances::stepGlobalNegotiation(
                           const Contract_Negotiation & building_negotiation) {
+
+
+
 
   large.globalNegotiation(building_negotiation);
   largeLearning.globalNegotiation(building_negotiation);
@@ -123,10 +151,8 @@ void Building_Appliances::stepGlobalNegotiation(
   batteries.clearGlobalContracts();
   batteriesGrid.clearGlobalContracts();
 
-
   currentStates.clear();
   app_negotiation.clear();
-
 }
 
 void Building_Appliances::postprocess() {
@@ -147,10 +173,15 @@ void Building_Appliances::addCurrentStates(const int stateid) {
 }
 
 void Building_Appliances::addContactsTo(
-                                Contract_Negotiation * building_negotiation) const {
+                                Contract_Negotiation * building_negotiation,
+                              const bool battery) const {
   large.addGlobalContactsTo(building_negotiation);
   largeLearning.addGlobalContactsTo(building_negotiation);
   small.addGlobalContactsTo(building_negotiation);
   csv.addGlobalContactsTo(building_negotiation);
   fmi.addGlobalContactsTo(building_negotiation);
+  if (battery) {
+    batteries.addGlobalContactsTo(building_negotiation);
+    batteriesGrid.addGlobalContactsTo(building_negotiation);
+  }
 }

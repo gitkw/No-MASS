@@ -55,6 +55,11 @@ void Building::stepAppliancesUse() {
 }
 
 
+void Building::stepAppliancesNegotiationNeighbourhood(
+                          const Contract_Negotiation & building_negotiation) {
+      appliances.stepNeighbourhoodNegotiation(building_negotiation);
+}
+
 void Building::stepAppliancesNegotiation(
                           const Contract_Negotiation & building_negotiation) {
       appliances.stepGlobalNegotiation(building_negotiation);
@@ -332,6 +337,6 @@ int Building::getID() const {
     return id;
 }
 
-void Building::addContactsTo(Contract_Negotiation * building_negotiation) {
-  appliances.addContactsTo(building_negotiation);
+void Building::addContactsTo(Contract_Negotiation * building_negotiation,const bool battery) {
+  appliances.addContactsTo(building_negotiation, battery);
 }

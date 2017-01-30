@@ -49,12 +49,13 @@ class Appliance_Group_Battery : public Appliance_Group<T> {
       }
     }
 
-    void localNegotiation(const Contract_Negotiation & app_negotiation) {
-      for (T & g : this->appliances) {
-        if (g.isLocal()) {
+    virtual void neighbourhoodNegotiation(const Contract_Negotiation & building_negotiation) {
+      for (auto & g : this->appliances) {
+        if (g.isGlobal()) {
           int appid = g.getID();
           int buildingID = g.getBuildingID();
-          Contract c = app_negotiation.getContract(buildingID, appid);
+          Contract c = building_negotiation.getContract(buildingID, appid);
+          g.setGlobal(false);
           double power = c.received;
           double cost = c.receivedCost;
           g.setReceived(power);
