@@ -11,7 +11,18 @@ Appliance_Battery::Appliance_Battery() {
 }
 
 double Appliance_Battery::rewardFunction(double mostShortage, double binShortage) const {
-  return binShortage / mostShortage;
+  // make the percentage a fraction
+  double reward = binShortage / mostShortage;
+  if(action == 0 && reward > 0.7){
+    // if an action did not take place and our reward is above 0.7
+    // punish
+    reward = -reward;
+  } else if (action == 1 && reward < 0.7){
+    // if an action did take place and our reward is below 0.7
+    // punish
+    reward = -reward;
+  }
+  return reward;
 }
 
 /**
@@ -68,17 +79,9 @@ void Appliance_Battery::doAction(){
     // calculate the percentage of power over the last
     // against the maximum seen
     double reward = rewardFunction(mostShortage, binShortage);
-    // make the percentage a fraction
 
-    if(action == 0 && reward > 0.7){
-      // if an action did not take place and our reward is above 0.7
-      // punish
-      reward = -reward;
-    } else if (action == 1 && reward < 0.7){
-      // if an action did take place and our reward is below 0.7
-      // punish
-      reward = -reward;
-    }
+
+
     // save reward for state
     qLearning.setReward(reward);
     qLearning.setState(hourOfTheDay);
