@@ -11,6 +11,7 @@ struct ApplianceParameters {
   double power = 0.0;
   double supply = 0.0;
   double supplyCost = 0.0;
+  double suppliedLeft = 0.0;
   double received = 0.0;
   double receivedCost = 0.0;
 };
@@ -30,6 +31,7 @@ class Appliance : public Agent {
     void setLocal(bool local);
     void setReceived(const double r);
     void setReceivedCost(const double c);
+    void setSupplyLeft(const double supplyLeft);
     void setHourlyCost(const std::vector<double> & cost);
     void setHoulyPriority(const std::vector<double> & priority);
     bool isGlobal() const;
@@ -41,6 +43,10 @@ class Appliance : public Agent {
     double getPriority() const;
     double getPower() const;
     int calculateHourOfDay() const;
+
+    void saveLocal();
+    void saveNeighbourhood();
+    void saveGlobal();
 
  protected:
 
@@ -59,8 +65,27 @@ class Appliance : public Agent {
     int datastoreIDRequested;
     int datastoreIDCost;
 
+    int datastoreLocalIDSupplied;
+    int datastoreLocalIDSuppliedCost;
+    int datastoreLocalIDReceived;
+    int datastoreLocalIDRequested;
+    int datastoreLocalIDCost;
+    int datastoreNeighbourhoodIDSupplied;
+    int datastoreNeighbourhoodIDSuppliedCost;
+    int datastoreNeighbourhoodIDReceived;
+    int datastoreNeighbourhoodIDRequested;
+    int datastoreNeighbourhoodIDCost;
+    int datastoreGridIDSupplied;
+    int datastoreGridIDSuppliedCost;
+    int datastoreGridIDReceived;
+    int datastoreGridIDRequested;
+    int datastoreGridIDCost;
+
 private:
     ApplianceParameters parameters;
+    ApplianceParameters parametersLocal;
+    ApplianceParameters parametersNeighbourhood;
+    ApplianceParameters parametersGrid;
 };
 
 #endif  // APPLIANCE_H_

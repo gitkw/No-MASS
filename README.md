@@ -58,7 +58,7 @@ cmake -DCMAKE_BUILD_TYPE=Debug -Dtest=on ../
 make
 
 # Run the tests
-./runUnitTests
+./tests/runUnitTests
 ```
 
 
