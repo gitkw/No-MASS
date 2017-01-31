@@ -5,11 +5,11 @@
 
 ## Checkout
 
-Clone the repository using git, ensure you do a recursive clone to recieve all dependencies.
+Clone the repository using git, ensure you do a recursive clone to receive all dependencies.
 - Rapidxml for xml parsing
 - googletest for testing
 
-Use the following commands or alternativly use a GUI such as GitHub Desktop or SourceTree.
+Use the following commands or alternatively use a GUI such as GitHub Desktop or SourceTree.
 
 ```sh
 git clone https://github.com/jacoblchapman/No-MASS.git
@@ -64,9 +64,9 @@ make
 
 ## Guide to compiling on Windows
 
-No-MASS can be built on windows using mingw-w64 or alternativly visual studio. This differs for each windows version, but the general process is:
-- Ensure you know which EnergyPlus architecture you are targetting 32bit(i686) or 64bit(x86_64)
-- Install [mingw-w64](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/) or visual studio depending on prefered method of compiling. With mingw-w64 choose the correct architecture.
+No-MASS can be built on windows using mingw-w64 or alternatively visual studio. This differs for each windows version, but the general process is:
+- Ensure you know which EnergyPlus architecture you are targeting 32bit(i686) or 64bit(x86_64)
+- Install [mingw-w64](http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/) or visual studio depending on preferred method of compiling. With mingw-w64 choose the correct architecture.
 - Install [CMake](https://cmake.org/download/)
 - Use the CMake GUI to create the visual studio project or mingw-w64 make files from the FMU directory in the checked out source folder.
 - Open in visual studio to compile or use make command as in linux.
@@ -81,4 +81,4 @@ Take the compiled library (FMI.so or FML.dll) and place into the FMU zip file in
 - linux32
 
 Create model description file and the SimulationConfig file for your simulation.
-Place the fmu file in the EnergyPlus folder, define the variables in the IDF and run EnergyPlus.
+Place the FMU file in the EnergyPlus folder, define the variables in the IDF and run EnergyPlus.

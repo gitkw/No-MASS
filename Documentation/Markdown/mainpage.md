@@ -5,7 +5,7 @@
 ## Introduction {#Introduction}
 ## Introduction
 
-The No-MASS framework integrates existing models of occupant interaction and appliance usage into a tool that can be coupled with building or urban energy performance simulation tools, or run independantly.
+The No-MASS framework integrates existing models of occupant interaction and appliance usage into a tool that can be coupled with building or urban energy performance simulation tools, or run independently.
 
 ## Pages {#Pages}
 ## Pages
@@ -31,7 +31,7 @@ No-MASS using the generic FMI interface so that it can interface with any tool t
 * Stochastic occupant presence predictions
 * Stochastic large appliance use
 * Stochastic small appliance use
-* Machine learning applaince profile shifting
+* Machine learning appliance profile shifting
 * Machine learning heating/ cooling setpoint predictions
 * Beleif-Desire-Intent rules of occupant interactions
 

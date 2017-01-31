@@ -6,7 +6,7 @@ This is an XML document that is used to inform No-MASS how to run.
 
 It contains the information for the simulation period, buildings, zones, agents and appliances.
 
-The intial tag to define a number simulation
+The initial tag to define a number simulation
 ~~~~
 <simulation>
 ...
@@ -123,7 +123,7 @@ There are the following types of appliance:
 * Large
 * LargeLearning
 * Small
-* pv
+* PV
 * FMI
 * Grid
 
@@ -141,7 +141,7 @@ There are the following types of appliance:
 ### Appliance Priority {#Appliancespriority}
 ### Appliance Priority
 
-Each Appliance is given a priority, which is a value that defines the order in which the device will recieve its demanded energy, higher priority energy recieve there demand first.
+Each Appliance is given a priority, which is a value that defines the order in which the device will receive its demanded energy, higher priority energy receive there demand first.
 
 ## Large Appliances {#AppliancesLarge}
 ## Large Appliances
@@ -174,7 +174,13 @@ Define in the same way as a large appliance only now we use the tag LargeLearnin
 ~~~~
 <LargeLearning>
   <id>1</id>
-  <priority>1</priority>
+  <priority>0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1</priority>
+  <timeRequired>0.1,0.1,0.1,0.1,0.1,0.1,0.1,1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1</timeRequired>
+  <epsilon>0.1</epsilon>
+  <alpha>0.3</alpha>
+  <gamma>0.1</gamma>
+  <updateQTable>1</updateQTable>
+  <activities>WashingAppliance</activities>
 </LargeLearning>
 ~~~~
 
@@ -194,7 +200,7 @@ Define in the same way as a large appliance only now we use the tag LargeLearnin
 
 ## PV {#AppliancesPV}
 ## PV
-Filename is the csv profile used to generate the supply.
+Filename is the CSV profile used to generate the supply.
 Cost is the how much the supplied power is.
 
 ~~~~
@@ -242,7 +248,8 @@ The other parameters correspond to the activity model.
 
 ~~~~
 
-    <agents>
+<agents>
+    ...
       <agent>
         <shade>1</shade>
         <window>1</window>
