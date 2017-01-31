@@ -10,15 +10,23 @@
 Appliance::Appliance() {}
 
 double Appliance::getSupply() const {
-  return supply;
+  return parameters.supply;
 }
 
 double Appliance::getSupplyCost() const {
-  return supplyCost;
+  return parameters.supplyCost;
 }
 
 double Appliance::getPower() const {
-  return power;
+  return parameters.power;
+}
+
+double Appliance::getReceived() const {
+  return parameters.received;
+}
+
+double Appliance::getReceivedCost() const {
+  return parameters.receivedCost;
 }
 
 double Appliance::getPriority() const {
@@ -31,11 +39,11 @@ double Appliance::getPriority() const {
 }
 
 void Appliance::setReceived(const double r) {
-  received = r;
+  parameters.received = r;
 }
 
 void Appliance::setReceivedCost(const double c) {
-  receivedCost = c;
+  parameters.receivedCost = c;
 }
 
 void Appliance::setupSave() {
@@ -47,21 +55,21 @@ void Appliance::setupSave() {
 }
 
 void Appliance::save() {
-  DataStore::addValue(datastoreIDSupplied, supply);
-  DataStore::addValue(datastoreIDSuppliedCost, supplyCost);
-  DataStore::addValue(datastoreIDReceived, received);
-  DataStore::addValue(datastoreIDRequested, power);
-  DataStore::addValue(datastoreIDCost, receivedCost);
+  DataStore::addValue(datastoreIDSupplied, parameters.supply);
+  DataStore::addValue(datastoreIDSuppliedCost, parameters.supplyCost);
+  DataStore::addValue(datastoreIDReceived, parameters.received);
+  DataStore::addValue(datastoreIDRequested, parameters.power);
+  DataStore::addValue(datastoreIDCost, parameters.receivedCost);
 }
 
 void Appliance::clear() {
   local = false;
   global = false;
-  power = 0.0;
-  supply = 0.0;
-  supplyCost = 0.0;
-  received = 0.0;
-  receivedCost = 0.0;
+  parameters.power = 0.0;
+  parameters.supply = 0.0;
+  parameters.supplyCost = 0.0;
+  parameters.received = 0.0;
+  parameters.receivedCost = 0.0;
 }
 
 bool Appliance::isLocal() const {
@@ -78,6 +86,17 @@ bool Appliance::isGlobal() const {
 
 void Appliance::setGlobal(bool global) {
   this->global = global;
+}
+void Appliance::setPower(const double power) {
+  this->parameters.power = power;
+}
+
+void Appliance::setSupply(const double supply) {
+  this->parameters.supply = supply;
+}
+
+void Appliance::setSupplyCost(const double supplyCost) {
+  this->parameters.supplyCost = supplyCost;
 }
 
 void Appliance::setHourlyCost(const std::vector<double> & cost) {

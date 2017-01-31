@@ -34,14 +34,14 @@ void Appliance_Generic_CSV::step() {
   int day = hour / 24;
   int now = numberOfSeconds;
   int end = numberOfSeconds + leninsec;
-  supply = 0.0;
-  power = 0.0;
+  setSupply(0.0);
+  setPower(0.0);
   while (now < end) {
     if (enableSupply) {
-      supply += modelSupply.power(day, minuteOfDay);
+      setSupply(getSupply() + modelSupply.power(day, minuteOfDay));
     }
     if (enableDemand) {
-      power += modelDemand.power(day, minuteOfDay);
+      setPower(getPower() + modelDemand.power(day, minuteOfDay));
     }
     minuteOfDay += 1;
     if (minuteOfDay >= 1440) {
@@ -51,15 +51,13 @@ void Appliance_Generic_CSV::step() {
     now += 60;
   }
 
+  int p = 0;
   if (hourlyCost.size() == 24) {
-    int hourOfDay = hour % 24;
-    supplyCost = hourlyCost[hourOfDay];
+    p = hour % 24;
   } else if (hourlyCost.size() == 48) {
-    int halfHourOfDay = (numberOfSeconds / 1800) % 48;
-    supplyCost = hourlyCost[halfHourOfDay];
-  } else {
-    supplyCost = hourlyCost[0];
+    p = (numberOfSeconds / 1800) % 48;
   }
+  setSupplyCost(hourlyCost[p]);
 }
 
 /**

@@ -10,7 +10,7 @@
 
 class Test_Appliance_Large : public ::testing::Test {
  protected:
-    Appliance_Large al;
+
 
     virtual void SetUp();
     virtual void AfterConfiguration();
@@ -21,14 +21,16 @@ void Test_Appliance_Large::SetUp() {
   SimulationConfig::parseConfiguration(testFiles + "SimulationConfig.xml");
   SimulationConfig::setStepCount(-1);
   SimulationConfig::FileLargeAppliance = testFiles + "AppliancesLarge.xml";
-  al.setID(1);
-  al.setup();
+
 }
 
 void Test_Appliance_Large::AfterConfiguration() {
 }
 
 TEST_F(Test_Appliance_Large, power) {
+  Appliance_Large al;
+  al.setID(1);
+  al.setup();
   SimulationConfig::step();
   al.step();
   EXPECT_FALSE(al.isOn());
@@ -44,4 +46,31 @@ TEST_F(Test_Appliance_Large, power) {
       EXPECT_EQ(al.getPower(), 0);
     }
   }
+}
+
+
+
+TEST_F(Test_Appliance_Large, trueFalse) {
+  Appliance_Large al;
+  al.setID(3);
+  al.setup();
+  SimulationConfig::step();
+  al.step();
+  EXPECT_FALSE(al.isOn());
+  EXPECT_FALSE(al.getPower());
+  bool on = false;
+  bool off = false;
+  for (int i = 1; i < 100000; i++) {
+    SimulationConfig::step();
+    al.step();
+    if (al.isOn()) {
+      EXPECT_GT(al.getPower(), 0);
+      on = true;
+    } else {
+      EXPECT_EQ(al.getPower(), 0);
+      off = true;
+    }
+  }
+  EXPECT_TRUE(on);
+  EXPECT_TRUE(off);
 }

@@ -84,7 +84,7 @@ void Appliance_Large_Learning::stopLearningPeriod(const int hourOfTheDay) {
     qLearning.setReward(reward);
     qLearning.setState(hourOfTheDay);
     qLearning.learn();
-      powerProfile.erase(powerProfile.begin());
+    powerProfile.erase(powerProfile.begin());
   }
 }
 
@@ -98,7 +98,7 @@ double Appliance_Large_Learning::getRequiredTime() const {
 }
 
 void Appliance_Large_Learning::step() {
-  power = 0.0;
+  setPower(0.0);
 
   if (powerProfile.empty() == false) {
     int hourOfTheDay = calculateHourOfDay();
@@ -111,7 +111,7 @@ void Appliance_Large_Learning::step() {
     }
     startLearningPeriod(hourOfTheDay);
     if (powerProfile.front().isLearningPeriod) {
-      power = powerProfile.front().power[powerProfile.front().learningStep];
+      setPower(powerProfile.front().power[powerProfile.front().learningStep]);
       powerProfile.front().learningStep++;
       stopLearningPeriod(hourOfTheDay);
     }

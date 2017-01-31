@@ -26,6 +26,10 @@ int Agent::getID() const {
     return id;
 }
 
+int Agent::getBuildingID() const {
+    return buildingID;
+}
+
 void Agent::setIDString(const std::string & idString) {
   this->idString = idString;
 }

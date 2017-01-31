@@ -22,9 +22,14 @@ class Building{
   int getID() const;
 
   void stepAppliancesUse();
+
+  void stepAppliancesNegotiationNeighbourhood(
+                          const Contract_Negotiation & building_negotiation);
+
   void stepAppliancesNegotiation(
                           const Contract_Negotiation & building_negotiation);
-  void addContactsTo(Contract_Negotiation * building_negotiation);
+  void addContactsTo(Contract_Negotiation * building_negotiation,
+                    const bool battery);
 
   bool decisionBoolean(const double val1, const double val2) const;
   double decisionDoubleVec(const std::vector<double> & val,

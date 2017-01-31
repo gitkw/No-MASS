@@ -6,6 +6,15 @@
 #include <vector>
 #include "Agent.h"
 
+
+struct ApplianceParameters {
+  double power = 0.0;
+  double supply = 0.0;
+  double supplyCost = 0.0;
+  double received = 0.0;
+  double receivedCost = 0.0;
+};
+
 /**
  * @brief Super class of each appliance type
  * @details An agent appliance that is used to house helper methods used in the sub classes
@@ -27,18 +36,18 @@ class Appliance : public Agent {
     bool isLocal() const;
     double getSupply() const;
     double getSupplyCost() const;
+    double getReceived() const;
+    double getReceivedCost() const;
     double getPriority() const;
     double getPower() const;
     int calculateHourOfDay() const;
 
-
-
  protected:
-    double power = 0.0;
-    double supply = 0.0;
-    double supplyCost = 0.0;
-    double received = 0.0;
-    double receivedCost = 0.0;
+
+    void setPower(const double power);
+    void setSupply(const double supply);
+    void setSupplyCost(const double supplyCost);
+
     std::vector<double> hourlyCost;
     std::vector<double> hourlyPriority;
     bool global;
@@ -49,6 +58,9 @@ class Appliance : public Agent {
     int datastoreIDReceived;
     int datastoreIDRequested;
     int datastoreIDCost;
+
+private:
+    ApplianceParameters parameters;
 };
 
 #endif  // APPLIANCE_H_

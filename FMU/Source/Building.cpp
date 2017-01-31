@@ -13,7 +13,6 @@
 #include "Model_Presence.h"
 #include "Building.h"
 
-
 Building::Building() {}
 
 void Building::setup(const buildingStruct &b) {
@@ -55,6 +54,11 @@ void Building::stepAppliancesUse() {
   appliances.stepLocalNegotiation();
 }
 
+
+void Building::stepAppliancesNegotiationNeighbourhood(
+                          const Contract_Negotiation & building_negotiation) {
+      appliances.stepNeighbourhoodNegotiation(building_negotiation);
+}
 
 void Building::stepAppliancesNegotiation(
                           const Contract_Negotiation & building_negotiation) {
@@ -333,6 +337,6 @@ int Building::getID() const {
     return id;
 }
 
-void Building::addContactsTo(Contract_Negotiation * building_negotiation) {
-  appliances.addContactsTo(building_negotiation);
+void Building::addContactsTo(Contract_Negotiation * building_negotiation,const bool battery) {
+  appliances.addContactsTo(building_negotiation, battery);
 }
