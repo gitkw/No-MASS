@@ -29,6 +29,7 @@ class Appliance_Group {
         appliances[a].setGlobal(false);
         parameters.power += appliances[a].getPower();
         parameters.supply += appliances[a].getSupply();
+
       }
     }
 
@@ -49,21 +50,33 @@ class Appliance_Group {
       return ret;
     }
 
+    virtual void localNegotiation(const Contract_Negotiation & app_negotiation) {
+      for (T & g : appliances) {
+        if (g.isLocal()) {
+          int appid = g.getID();
+          int buildingID = g.getBuildingID();
+          Contract c = app_negotiation.getContract(buildingID, appid);
+          g.setGlobal(sendContractGlobal(c));
+          g.setReceived(c.received);
+          g.setReceivedCost(c.receivedCost);
+          g.setSupplyLeft(c.suppliedLeft);
+        }
+        g.saveLocal();
+      }
+    }
 
     virtual void neighbourhoodNegotiation(const Contract_Negotiation & building_negotiation) {
-      for (auto & g : appliances) {
+      for (T & g : appliances) {
         if (g.isGlobal()) {
           int appid = g.getID();
           int buildingID = g.getBuildingID();
           Contract c = building_negotiation.getContract(buildingID, appid);
           g.setGlobal(sendContractGlobal(c));
-          if (!g.isGlobal()) {
-            double power = c.received;
-            double cost = c.receivedCost;
-            g.setReceived(power);
-            g.setReceivedCost(cost);
-          }
+          g.setReceived(c.received);
+          g.setReceivedCost(c.receivedCost);
+          g.setSupplyLeft(c.suppliedLeft);
         }
+        g.saveNeighbourhood();
       }
     }
 
@@ -73,16 +86,15 @@ class Appliance_Group {
           int appid = g.getID();
           int buildingID = g.getBuildingID();
           Contract c = building_negotiation.getContract(buildingID, appid);
-          double power = c.received;
-          double cost = c.receivedCost;
-          g.setReceived(power);
-          g.setReceivedCost(cost);
-
+          g.setReceived(c.received);
+          g.setReceivedCost(c.receivedCost);
+          g.setSupplyLeft(c.suppliedLeft);
         }
 
         parameters.supplyCost += g.getSupplyCost();
         parameters.received += g.getReceived();
         parameters.receivedCost += g.getReceivedCost();
+        g.saveGlobal();
         g.save();
         g.clear();
       }
@@ -100,24 +112,7 @@ class Appliance_Group {
       parameters.receivedCost = 0.0;
     }
 
-    virtual void localNegotiation(const Contract_Negotiation & app_negotiation) {
-      for (T & g : appliances) {
-        if (g.isLocal()) {
-          int appid = g.getID();
-          int buildingID = g.getBuildingID();
-          Contract c = app_negotiation.getContract(buildingID, appid);
-          g.setGlobal(sendContractGlobal(c));
-          if (!g.isGlobal()) {
-            double power = c.received;
-            double cost = c.receivedCost;
-            g.setReceived(power);
-            g.setReceivedCost(cost);
-  //          sum_fmi += power;
-  //          sum_cost += cost;
-          }
-        }
-      }
-    }
+
 
     bool sendContractGlobal(const Contract & c) {
       bool send = (c.requested > c.received || c.suppliedLeft > 0);

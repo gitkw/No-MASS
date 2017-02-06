@@ -52,14 +52,67 @@ void Appliance::setupSave() {
   datastoreIDReceived = DataStore::addVariable(idString + "_received");
   datastoreIDRequested = DataStore::addVariable(idString + "_requested");
   datastoreIDCost = DataStore::addVariable(idString + "_cost");
+
+  datastoreLocalIDSupplied = DataStore::addVariable(idString + "_supplied_local");
+  datastoreLocalIDReceived = DataStore::addVariable(idString + "_received_local");
+  datastoreLocalIDRequested = DataStore::addVariable(idString + "_requested_local");
+  datastoreLocalIDCost = DataStore::addVariable(idString + "_cost_local");
+
+  datastoreNeighbourhoodIDSupplied = DataStore::addVariable(idString + "_supplied_neighbourhood");
+  datastoreNeighbourhoodIDReceived = DataStore::addVariable(idString + "_received_neighbourhood");
+  datastoreNeighbourhoodIDRequested = DataStore::addVariable(idString + "_requested_neighbourhood");
+  datastoreNeighbourhoodIDCost = DataStore::addVariable(idString + "_cost_neighbourhood");
+
+  datastoreGridIDSupplied = DataStore::addVariable(idString + "_supplied_grid");
+  datastoreGridIDReceived = DataStore::addVariable(idString + "_received_grid");
+  datastoreGridIDRequested = DataStore::addVariable(idString + "_requested_grid");
+  datastoreGridIDCost = DataStore::addVariable(idString + "_cost_grid");
+
+
 }
 
 void Appliance::save() {
   DataStore::addValue(datastoreIDSupplied, parameters.supply);
-  DataStore::addValue(datastoreIDSuppliedCost, parameters.supplyCost);
   DataStore::addValue(datastoreIDReceived, parameters.received);
   DataStore::addValue(datastoreIDRequested, parameters.power);
   DataStore::addValue(datastoreIDCost, parameters.receivedCost);
+}
+
+void Appliance::saveLocal() {
+  parametersLocal.supply = parameters.supply - parameters.suppliedLeft;
+  parametersLocal.received = parameters.received;
+  parametersLocal.power = parameters.power;
+  parametersLocal.receivedCost = parameters.receivedCost;
+
+  DataStore::addValue(datastoreLocalIDSupplied, parametersLocal.supply);
+  DataStore::addValue(datastoreLocalIDReceived, parametersLocal.received);
+  DataStore::addValue(datastoreLocalIDRequested, parametersLocal.power);
+  DataStore::addValue(datastoreLocalIDCost, parametersLocal.receivedCost);
+}
+
+void Appliance::saveNeighbourhood() {
+  parametersNeighbourhood.supply =  parametersLocal.supply - parameters.suppliedLeft;
+  parametersNeighbourhood.received = parameters.received - parametersLocal.received;
+  parametersNeighbourhood.power =  parameters.power - parametersLocal.received;
+  parametersNeighbourhood.receivedCost =  parameters.receivedCost - parametersLocal.receivedCost;
+
+  DataStore::addValue(datastoreNeighbourhoodIDSupplied, parametersNeighbourhood.supply);
+  DataStore::addValue(datastoreNeighbourhoodIDReceived, parametersNeighbourhood.received);
+  DataStore::addValue(datastoreNeighbourhoodIDRequested, parametersNeighbourhood.power);
+  DataStore::addValue(datastoreNeighbourhoodIDCost, parametersNeighbourhood.receivedCost);
+}
+
+void Appliance::saveGlobal() {
+
+  parametersGrid.supply =  parametersNeighbourhood.supply - parameters.suppliedLeft;
+  parametersGrid.received = parameters.received - parametersNeighbourhood.received - parametersLocal.received;
+  parametersGrid.power =  parameters.power - parametersNeighbourhood.received - parametersLocal.received;
+  parametersGrid.receivedCost =  parameters.receivedCost - parametersNeighbourhood.receivedCost  - parametersLocal.receivedCost;
+
+  DataStore::addValue(datastoreGridIDSupplied, parametersGrid.supply);
+  DataStore::addValue(datastoreGridIDReceived, parametersGrid.received);
+  DataStore::addValue(datastoreGridIDRequested, parametersGrid.power);
+  DataStore::addValue(datastoreGridIDCost, parametersGrid.receivedCost);
 }
 
 void Appliance::clear() {
@@ -105,6 +158,10 @@ void Appliance::setHourlyCost(const std::vector<double> & cost) {
 
 void Appliance::setHoulyPriority(const std::vector<double> & priority) {
   this->hourlyPriority = priority;
+}
+
+void Appliance::setSupplyLeft(const double supplyLeft) {
+  this->parameters.suppliedLeft = supplyLeft;
 }
 
 int Appliance::calculateHourOfDay() const {

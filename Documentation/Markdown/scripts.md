@@ -20,4 +20,4 @@ nomass.deleteLearningData()
 
 ## runLocation
 
-NoMASS runs stochastically and often runs over multiple relicates.
+NoMASS runs stochastically and often runs over multiple replicates.
