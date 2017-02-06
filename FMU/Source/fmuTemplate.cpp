@@ -286,7 +286,7 @@ void loadVariables() {
     std::string causality = pAttr->value();
     pAttr = node->first_attribute("valueReference");
     int valueReference = std::stoi(pAttr->value());
-
+    SimulationConfig::outputRegexs.push_back(name);
     if (causality.compare("input") == 0) {
         //std::cout << "added: " << name << std::endl;
         DataStore::addVariable(name);
