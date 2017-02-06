@@ -1,3 +1,0 @@
-/home/ezzas1/Documents/repos/No-MASS/FMU/build/CMakeFiles/FMI.dir
-/home/ezzas1/Documents/repos/No-MASS/FMU/build/CMakeFiles/NoMASS.dir
-/home/ezzas1/Documents/repos/No-MASS/FMU/build/CMakeFiles/NoMASSstatic.dir
