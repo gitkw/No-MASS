@@ -287,9 +287,10 @@ void loadVariables() {
     pAttr = node->first_attribute("valueReference");
     int valueReference = std::stoi(pAttr->value());
     SimulationConfig::outputRegexs.push_back(name);
+    DataStore::addVariable(name);
     if (causality.compare("input") == 0) {
         //std::cout << "added: " << name << std::endl;
-        DataStore::addVariable(name);
+
     } else {
         rx::xml_node<> *cnode = node->first_node();
         double starValue = 0;
