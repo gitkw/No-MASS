@@ -129,3 +129,11 @@ def runTest(resultsDF, configInfoDF):
     checkBatteryReceived_PVSupplied(resultsDF, configInfoDF)
     print('\n\n')
     checkBatteryReceived_PVSupplied_OthersRow(resultsDF, configInfoDF)
+
+def main():
+    # my code here
+    #runTest()
+    pass
+
+if __name__ == "__main__":
+    main()
