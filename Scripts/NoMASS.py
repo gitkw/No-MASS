@@ -167,7 +167,7 @@ class NoMASS(object):
                             newNode.text = str(self.gamma)
                             ll.append(newNode)
         tree.write(rl + self.simulationFile)
-
+        self.root = root
 
     def copyToResultsLocation(self, x):
         rl = self.resultsLocation
@@ -240,10 +240,54 @@ class NoMASS(object):
             a['nsim'] = x
             a.to_hdf(self.resultsLocation + 'NoMASS.out.hdf','file%i'%x, mode='a')
 
-    def getPandasDF(self):
+    def getPandasDF(self, nrows = None):
         ad = pd.DataFrame()
         store = pd.HDFStore(self.resultsLocation + 'NoMASS.out.hdf')
         for j in range(0,self.numberOfSimulations):
             a = store.get('file%i'%j)
             ad = ad.append(a, ignore_index=True)
         return ad
+
+    def simulationConfigInfoDF(self):
+        def getIDList(ApplianceElement, keyword):
+            theList = []
+            for element in ApplianceElement.iter(keyword):
+                theList.append(int(element.find('id').text))
+            return theList
+        self.simulationConfigInfo = pd.DataFrame(columns=['Building', 'LargeApplianceList', 'SmallApplianceList',
+                                                          'PVList', 'BatteryList', 'csvList'])
+        buildingNumber=0
+        for build in self.root.iter('building'):
+            for ap in build.iter('Appliances'):
+                largeApplianceList   = getIDList(ap, 'Large')
+                smallApplianceList   = getIDList(ap, 'Small')
+                pvList               = getIDList(ap, 'pv')
+                batteryList          = getIDList(ap, 'battery')
+                batteryList_cont     = getIDList(ap, 'batteryGridCostReward')
+                csvApplianceList     = getIDList(ap, 'csv')
+
+            self.simulationConfigInfo.loc[buildingNumber] = [buildingNumber, largeApplianceList, smallApplianceList,
+                                                             pvList, batteryList + batteryList_cont, csvApplianceList]
+            buildingNumber+=1
+        return self.simulationConfigInfo
+
+        #     i=0
+        # for b in root.iter('building'):
+        #     print b.tag , i
+        #     i+=1
+        #     for ap in b.iter('Appliances'):
+        #         for a in ap.getchildren():
+        #             print '\t'+ a.tag + " - id: " + a.find('id').text
+
+    def simulationConfigInfoDF_occupancy(self):
+        """
+        Only used for information on occupancy profiles. Gives a lit of buildings and the number of occupants in them.
+        :return:
+        """
+        self.simulationConfigInfo = pd.DataFrame(columns=['Building', 'numberOccupants'])
+        buildingNumber=0
+        for build in self.root.iter('building'):
+            number_agents = len(list(build.find('agents')))
+            self.simulationConfigInfo.loc[buildingNumber] = [buildingNumber, number_agents]
+            buildingNumber+=1
+        return self.simulationConfigInfo
