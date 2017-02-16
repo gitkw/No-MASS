@@ -56,8 +56,8 @@ static fmiComponent instantiateModel(const char* fname, fmiString instanceName,
 
     SimulationConfig::setStepCount(-1);
     if (valToRefs.empty()) {
-        modelInstance->sim.preprocess();
         loadVariables();
+	modelInstance->sim.preprocess();
     }
     return modelInstance.get();
 }
