@@ -56,14 +56,13 @@ class Appliance_Group_Battery : public Appliance_Group<T> {
           int buildingID = g.getBuildingID();
           Contract c = building_negotiation.getContract(buildingID, appid);
           g.setGlobal(false);
-          double power = c.received;
-          double cost = c.receivedCost;
-          g.setReceived(power);
-          g.setReceivedCost(cost);
+          g.setReceived(c.received);
+          g.setReceivedCost(c.receivedCost);
+          g.setSupplyLeft(c.suppliedLeft);
         }
+        g.saveNeighbourhood();
       }
     }
-
 
     void setPowerShortage(double powerShortage){
       this->powerShortage = powerShortage;

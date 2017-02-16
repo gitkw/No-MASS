@@ -50,8 +50,8 @@ void Building_Appliances::stepLocal() {
 
     batteries.setPowerShortage(powerShortage);
     batteries.step(&app_negotiation);
-  powerShortage = batteries.getPowerShortage();
-  batteriesGrid.setPowerShortage(powerShortage);
+    powerShortage = batteries.getPowerShortage();
+    batteriesGrid.setPowerShortage(powerShortage);
     batteriesGrid.step(&app_negotiation);
 }
 
@@ -70,13 +70,13 @@ void Building_Appliances::stepLocalNegotiation() {
 void Building_Appliances::stepNeighbourhoodNegotiation(
                           const Contract_Negotiation & building_negotiation) {
 
-                            large.clearGlobalContracts();
-                            largeLearning.clearGlobalContracts();
-                            small.clearGlobalContracts();
-                            csv.clearGlobalContracts();
-                            fmi.clearGlobalContracts();
-                            batteries.clearGlobalContracts();
-                            batteriesGrid.clearGlobalContracts();
+    large.clearGlobalContracts();
+    largeLearning.clearGlobalContracts();
+    small.clearGlobalContracts();
+    csv.clearGlobalContracts();
+    fmi.clearGlobalContracts();
+    batteries.clearGlobalContracts();
+    batteriesGrid.clearGlobalContracts();
 
     large.neighbourhoodNegotiation(building_negotiation);
     largeLearning.neighbourhoodNegotiation(building_negotiation);
@@ -87,16 +87,10 @@ void Building_Appliances::stepNeighbourhoodNegotiation(
     batteries.neighbourhoodNegotiation(building_negotiation);
     batteriesGrid.neighbourhoodNegotiation(building_negotiation);
 
-
-
-
 }
 
 void Building_Appliances::stepGlobalNegotiation(
                           const Contract_Negotiation & building_negotiation) {
-
-
-
 
   large.globalNegotiation(building_negotiation);
   largeLearning.globalNegotiation(building_negotiation);
