@@ -114,12 +114,12 @@ void DataStore::print() {
     //  std::cout << "print " << std::endl;
     std::ofstream myfile;
     myfile.open("NoMASS.out");
-    myfile << "stepCount,";
+    myfile << "stepCount";
     std::vector<int> ids;
     unsigned int maxSize = 0;
     std::unordered_map<std::string, int >::const_iterator it;
     for (it=variableMap.cbegin(); it != variableMap.cend(); ++it) {
-        myfile << it->first << ",";
+        myfile << "," << it->first;
         int val = it->second;
         ids.push_back(val);
         if (maxSize < intMap.at(val).size()) {
@@ -128,13 +128,12 @@ void DataStore::print() {
     }
     myfile << "\n";
 
-    for (unsigned int i =0; i < maxSize; i++) {
-        myfile << i << ",";
-        for (int j : ids) {
+    for (unsigned int i = 0; i < maxSize; i++) {
+        myfile << i;
+        for (unsigned int j : ids) {
             if (intMap.at(j).size() > i) {
-                myfile << intMap.at(j).at(i);
+                myfile << "," << intMap.at(j).at(i);
             }
-            myfile << ",";
         }
         myfile << "\n";
     }
