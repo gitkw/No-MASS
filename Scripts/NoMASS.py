@@ -47,13 +47,13 @@ class NoMASS(object):
             self.resultsLocation + 'NoMASS.out.hdf'
 
     def printConfiguration(self):
-        print "Run location: {}".format(self.runLocation)
-        print "locationOfNoMASS: {}".format(self.locationOfNoMASS)
-        print "configurationDirectory: {}".format(self.configurationDirectory)
-        print "resultsLocation: {}".format(self.resultsLocation)
-        print "printInput: {}".format(self.printInput)
-        print "numberOfSimulations: {}".format(self.numberOfSimulations)
-        print "Learning: {}".format(self.learn)
+        print("Run location: {}".format(self.runLocation))
+        print("locationOfNoMASS: {}".format(self.locationOfNoMASS))
+        print("configurationDirectory: {}".format(self.configurationDirectory))
+        print("resultsLocation: {}".format(self.resultsLocation))
+        print("printInput: {}".format(self.printInput))
+        print("numberOfSimulations: {}".format(self.numberOfSimulations))
+        print("Learning: {}".format(self.learn))
         con = self.configurationDirectory
         tree = ET.parse(con + self.simulationFile)
         root = tree.getroot()
@@ -63,13 +63,13 @@ class NoMASS(object):
                     agentcount = 0;
                     for agent in agents.findall('agent'):
                         agentcount = agentcount +1
-                    print "Number of agents {}".format(agentcount)
+                    print("Number of agents {}".format(agentcount))
                 for apps in building.findall('Appliances'):
-                    print "Number of large appliances {}".format(len(apps.findall('Large')))
-                    print "Number of small appliances {}".format(len(apps.findall('Small')))
-                    print "Number of pv appliances {}".format(len(apps.findall('pv')))
+                    print("Number of large appliances {}".format(len(apps.findall('Large'))))
+                    print("Number of small appliances {}".format(len(apps.findall('Small'))))
+                    print("Number of pv appliances {}".format(len(apps.findall('pv'))))
                     if apps.findall('Grid'):
-                        print "Grid enabled"
+                        print("Grid enabled")
 
     def simulate(self):
         self.start = time.time()
@@ -81,7 +81,7 @@ class NoMASS(object):
         for x in range(0, self.numberOfSimulations):
             if x % 25 == 1:
                 elapsed = time.time() - self.start
-                print "Simulation: %i Time: %02d seconds"  % (x, elapsed)
+                print("Simulation: %i Time: %02d seconds"  % (x, elapsed))
             self.copyToRunLocation(x)
             self.makeExecutable(x)
             self.configuration(x)
@@ -90,7 +90,7 @@ class NoMASS(object):
             if self.clean:
                 rmtree(self.runLoc(x))
         elapsed = time.time() - self.start
-        print "Total Simulation Time: %02d seconds"  % elapsed
+        print("Total Simulation Time: %02d seconds"  % elapsed)
 
 
     def learning(self):
@@ -137,7 +137,7 @@ class NoMASS(object):
                         else:
                             newNode = ET.Element('gamma')
                             newNode.text = str(self.gamma)
-                            ll.append(newNode)                        
+                            ll.append(newNode)
                     for ll in apps.findall('LargeLearning'):
                         if ll.find('updateQTable') is not None :
                             if self.learning():
@@ -273,11 +273,11 @@ class NoMASS(object):
 
         #     i=0
         # for b in root.iter('building'):
-        #     print b.tag , i
+        #     print(b.tag , i)
         #     i+=1
         #     for ap in b.iter('Appliances'):
         #         for a in ap.getchildren():
-        #             print '\t'+ a.tag + " - id: " + a.find('id').text
+        #             print('\t'+ a.tag + " - id: " + a.find('id').text)
 
     def simulationConfigInfoDF_occupancy(self):
         """
