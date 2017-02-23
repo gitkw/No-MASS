@@ -130,6 +130,7 @@ TEST_F(Test_Appliance_Group_Large, powerSupply) {
 
     Contract c;
     c.supplied = 10;
+    c.buildingID = 100;
 
     global_negotiation.submit(c);
 
@@ -150,7 +151,7 @@ TEST_F(Test_Appliance_Group_Large, powerSupply) {
     }else {
         EXPECT_NEAR(recieved, 0, 0.01);
     }
-      large.reset();
+    large.reset();
   }
 
 }
@@ -193,12 +194,20 @@ TEST_F(Test_Appliance_Group_Large, Appliances) {
     EXPECT_NEAR(supply, 0, 0);
     EXPECT_NEAR(recieved, 0, 0);
 
-    Contract c;
-    c.supplied = power;
 
-    global_negotiation.submit(c);
 
     large.addGlobalContactsTo(&global_negotiation);
+
+    double diff = global_negotiation.getDifference();
+    if (diff < 0.0) {
+      Contract m;
+      m.id = -1;
+      m.buildingID = -1;
+      m.supplied = std::abs(diff);
+      m.suppliedCost = 0;
+      m.requested = 0;
+      global_negotiation.submit(m);
+    }
     global_negotiation.process();
     large.globalNegotiation(global_negotiation);
     global_negotiation.clear();
@@ -209,7 +218,7 @@ TEST_F(Test_Appliance_Group_Large, Appliances) {
     EXPECT_TRUE(supply >= 0);
     EXPECT_NEAR(supply, 0, 0);
     if(power > 0){
-        EXPECT_NEAR(recieved, c.supplied, 0.01);
+        EXPECT_NEAR(recieved, diff, 0.01);
     }else {
         EXPECT_NEAR(recieved, 0, 0.01);
     }
