@@ -91,7 +91,7 @@ void Appliance::saveLocal() {
 }
 
 void Appliance::saveNeighbourhood() {
-  parametersNeighbourhood.supply =  parametersLocal.supply - parameters.suppliedLeft;
+  parametersNeighbourhood.supply = parameters.supply - parametersLocal.suppliedLeft;
   parametersNeighbourhood.received = parameters.received - parametersLocal.received;
   parametersNeighbourhood.power =  parameters.power - parametersLocal.received;
   parametersNeighbourhood.receivedCost =  parameters.receivedCost - parametersLocal.receivedCost;
@@ -104,7 +104,7 @@ void Appliance::saveNeighbourhood() {
 
 void Appliance::saveGlobal() {
 
-  parametersGrid.supply =  parametersNeighbourhood.supply - parameters.suppliedLeft;
+  parametersGrid.supply =  parameters.supply - parametersLocal.suppliedLeft - parametersNeighbourhood.suppliedLeft;
   parametersGrid.received = parameters.received - parametersNeighbourhood.received - parametersLocal.received;
   parametersGrid.power =  parameters.power - parametersNeighbourhood.received - parametersLocal.received;
   parametersGrid.receivedCost =  parameters.receivedCost - parametersNeighbourhood.receivedCost  - parametersLocal.receivedCost;
