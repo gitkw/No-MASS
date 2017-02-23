@@ -42,6 +42,7 @@ script:
   - cd ../build
   - cmake -DCMAKE_BUILD_TYPE=Release ../
   - make
+  - ./tests/runUnitTests
   - cd ../build64
   - cmake -DCrossCompile64=ON -DCMAKE_BUILD_TYPE=Release ../
   - make

@@ -20,7 +20,10 @@ void Contract_Negotiation::submit(const Contract & c) {
   if (contract->supplied > 0) {
     nodeSupply.insert(contract, contract->suppliedCost);
   }
-  difference += contract->supplied - contract->requested + contract->received;
+  double needed = contract->supplied - contract->requested + contract->received;
+  if(needed > 0) {
+      difference += needed;
+  }
 }
 
 double Contract_Negotiation::getDifference() const {

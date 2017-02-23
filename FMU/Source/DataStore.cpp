@@ -11,7 +11,7 @@
 #include "DataStore.h"
 
 std::unordered_map<std::string, int> DataStore::variableMap;
-std::unordered_map<int, std::vector<float>> DataStore::intMap;
+std::vector<std::vector<float>> DataStore::intMap;
 
 int DataStore::variableCount = 0;
 
@@ -34,7 +34,7 @@ int DataStore::addVariable(const std::string &name) {
           ret = DataStore::variableCount;
           //  std::cout << "addVariable: " << ret << ": " << name << std::endl;
           variableMap.insert(std::make_pair(name, ret));
-          intMap.insert(std::make_pair(ret, std::vector<float>()));
+          intMap.push_back(std::vector<float>());
           DataStore::variableCount++;
         } else {
           ret = getID(name);
@@ -96,9 +96,9 @@ float DataStore::getValue(const int & id) {
 
 void DataStore::clearValues() {
   //std::cout << "clear values" << std::endl;
-  std::unordered_map<int, std::vector<float>>::iterator it;
+  std::vector<std::vector<float>>::iterator it;
   for (it=intMap.begin(); it != intMap.end(); ++it) {
-    it->second.clear();
+    it->clear();
   }
 }
 
@@ -131,8 +131,11 @@ void DataStore::print() {
     for (unsigned int i = 0; i < maxSize; i++) {
         myfile << i;
         for (unsigned int j : ids) {
+            myfile << ",";
             if (intMap.at(j).size() > i) {
-                myfile << "," << intMap.at(j).at(i);
+                myfile << intMap.at(j).at(i);
+            }else{
+              myfile << "NAN";
             }
         }
         myfile << "\n";

@@ -52,8 +52,6 @@ TEST_F(Test_Occupant_Action_Window_Stochastic, Arrival) {
   DataStore::addValueS("EnvironmentSiteOutdoorAirDrybulbTemperature", 10);
   DataStore::addValueS("Block1:KitchenZoneMeanAirTemperature", 35);
 
-  double previousDuration = 5*12*10*60;
-  int timeStepLengthInMinutes = 5;
   for (int i =0; i < 7200; i++) {
     activities.push_back(4);
   }

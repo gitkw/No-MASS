@@ -89,3 +89,15 @@ int Utility::cumulativeProbability(const std::vector<double> &p) {
   }
   return activity;
 }
+
+std::vector<std::string> Utility::csvToTableHead(const std::string & filename) {
+  std::string line;
+  std::ifstream myfile(filename);
+  std::vector<std::string> t;
+  if (myfile.is_open()) {
+    getline(myfile, line);
+    t = Utility::splitCSV(line);
+    myfile.close();
+  }
+  return t;
+}

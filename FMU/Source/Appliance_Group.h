@@ -51,6 +51,7 @@ class Appliance_Group {
     }
 
     virtual void localNegotiation(const Contract_Negotiation & app_negotiation) {
+      clearGlobalContracts();
       for (T & g : appliances) {
         if (g.isLocal()) {
           int appid = g.getID();
@@ -66,6 +67,7 @@ class Appliance_Group {
     }
 
     virtual void neighbourhoodNegotiation(const Contract_Negotiation & building_negotiation) {
+      clearGlobalContracts();
       for (T & g : appliances) {
         if (g.isGlobal()) {
           int appid = g.getID();
@@ -105,11 +107,16 @@ class Appliance_Group {
         DataStore::addValue(datastoreIDRequested, parameters.power);
         DataStore::addValue(datastoreIDCost, parameters.receivedCost);
       }
+    }
+
+
+    virtual void reset() {
       parameters.power = 0.0;
       parameters.supply = 0.0;
       parameters.supplyCost = 0.0;
       parameters.received = 0.0;
       parameters.receivedCost = 0.0;
+      clearGlobalContracts();
     }
 
 

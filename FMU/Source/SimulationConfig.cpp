@@ -592,6 +592,7 @@ double SimulationConfig::lengthOfTimestep() {
 void SimulationConfig::step() {
     stepCount++;
 }
+
 int SimulationConfig::getStepCount() {
     return stepCount;
 }

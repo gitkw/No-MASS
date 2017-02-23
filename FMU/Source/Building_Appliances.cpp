@@ -70,14 +70,6 @@ void Building_Appliances::stepLocalNegotiation() {
 void Building_Appliances::stepNeighbourhoodNegotiation(
                           const Contract_Negotiation & building_negotiation) {
 
-    large.clearGlobalContracts();
-    largeLearning.clearGlobalContracts();
-    small.clearGlobalContracts();
-    csv.clearGlobalContracts();
-    fmi.clearGlobalContracts();
-    batteries.clearGlobalContracts();
-    batteriesGrid.clearGlobalContracts();
-
     large.neighbourhoodNegotiation(building_negotiation);
     largeLearning.neighbourhoodNegotiation(building_negotiation);
     small.neighbourhoodNegotiation(building_negotiation);
@@ -137,13 +129,13 @@ void Building_Appliances::stepGlobalNegotiation(
   DataStore::addValue(datastoreIDNonShiftRequested, power);
   DataStore::addValue(datastoreIDNonShiftCost, receivedCost);
 
-  large.clearGlobalContracts();
-  largeLearning.clearGlobalContracts();
-  small.clearGlobalContracts();
-  csv.clearGlobalContracts();
-  fmi.clearGlobalContracts();
-  batteries.clearGlobalContracts();
-  batteriesGrid.clearGlobalContracts();
+  large.reset();
+  largeLearning.reset();
+  small.reset();
+  csv.reset();
+  fmi.reset();
+  batteries.reset();
+  batteriesGrid.reset();
 
   currentStates.clear();
   app_negotiation.clear();

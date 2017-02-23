@@ -20,6 +20,7 @@ int SimulationTime::databaseIdDay;
 int SimulationTime::databaseIdMonth;
 int SimulationTime::databaseIdHourOfDay;
 int SimulationTime::databaseIdMinuteOfDay;
+
 SimulationTime::SimulationTime() {}
 
 void SimulationTime::reset() {

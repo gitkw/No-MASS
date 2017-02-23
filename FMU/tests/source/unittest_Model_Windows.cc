@@ -150,10 +150,6 @@ TEST_F(Test_Windows, depart) {
   Utility::setSeed(1);
   double indoorTemperature = 35;
   double dailyMeanTemperature = 34;
-  double futureDuration = 5*12*10*60;
-  bool rain = false;
-  int timeStepLengthInMinutes = 5;
-  int dur = 0;
 
   EXPECT_FALSE(mw.getWindowState());
   for (int i =0; i < 53; i++) {

@@ -69,7 +69,7 @@ TEST_F(Test_Model_Activity, Dissagregate) {
 }
 
 int getActivity(double *p, double drand) {
-  int activity;
+  int activity = -1;
   double sum = 0;
   for (int i =0; i < 10; i++) {
     sum += p[i];
@@ -119,28 +119,28 @@ TEST_F(Test_Model_Activity, multinominalRandom) {
 }
 
 TEST_F(Test_Model_Activity, multinominalActivity) {
-  double p0[1][10] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  double p0[1][10] = {{1, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
   EXPECT_EQ(ma.multinominalActivity(p0, 0), 0);
-  double p1[1][10] = {0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
+  double p1[1][10] = {{0, 1, 0, 0, 0, 0, 0, 0, 0, 0}};
   EXPECT_EQ(ma.multinominalActivity(p1, 0), 1);
-  double p2[1][10] = {0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
+  double p2[1][10] = {{0, 0, 1, 0, 0, 0, 0, 0, 0, 0}};
   EXPECT_EQ(ma.multinominalActivity(p2, 0), 2);
-  double p3[1][10] = {0, 0, 0, 1, 0, 0, 0, 0, 0, 0};
+  double p3[1][10] = {{0, 0, 0, 1, 0, 0, 0, 0, 0, 0}};
   EXPECT_EQ(ma.multinominalActivity(p3, 0), 3);
-  double p4[1][10] = {0, 0, 0, 0, 1, 0, 0, 0, 0, 0};
+  double p4[1][10] = {{0, 0, 0, 0, 1, 0, 0, 0, 0, 0}};
   EXPECT_EQ(ma.multinominalActivity(p4, 0), 4);
-  double p5[1][10] = {0, 0, 0, 0, 0, 1, 0, 0, 0, 0};
+  double p5[1][10] = {{0, 0, 0, 0, 0, 1, 0, 0, 0, 0}};
   EXPECT_EQ(ma.multinominalActivity(p5, 0), 5);
-  double p6[1][10] = {0, 0, 0, 0, 0, 0, 1, 0, 0, 0};
+  double p6[1][10] = {{0, 0, 0, 0, 0, 0, 1, 0, 0, 0}};
   EXPECT_EQ(ma.multinominalActivity(p6, 0), 6);
-  double p7[1][10] = {0, 0, 0, 0, 0, 0, 0, 1, 0, 0};
+  double p7[1][10] = {{0, 0, 0, 0, 0, 0, 0, 1, 0, 0}};
   EXPECT_EQ(ma.multinominalActivity(p7, 0), 7);
-  double p8[1][10] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 0};
+  double p8[1][10] = {{0, 0, 0, 0, 0, 0, 0, 0, 1, 0}};
   EXPECT_EQ(ma.multinominalActivity(p8, 0), 8);
-  double p9[1][10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+  double p9[1][10] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 1}};
   EXPECT_EQ(ma.multinominalActivity(p9, 0), 9);
 
-  double p[1][10] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
+  double p[1][10] = {{0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1}};
 
   double top = 10000;
 
@@ -155,8 +155,8 @@ TEST_F(Test_Model_Activity, multinominalActivity) {
     px[i] = 0;
   }
 
-  double pp[1][10] = {0.036078751, 0.12437013, 0.082256370, 0.003995250,
-    0.027476964, 0.030800, 0.114028071, 0.0102342340, 0.043672692, 0.52712584};
+    double pp[1][10] = {{0.036078751, 0.12437013, 0.082256370, 0.003995250,
+        0.027476964, 0.030800, 0.114028071, 0.0102342340, 0.043672692, 0.52712584}};
 
   double sum = 0;
   for (int i = 0; i < 10; i++) {
@@ -195,6 +195,43 @@ TEST_F(Test_Model_Activity, multinominalP) {
         std::string file2 = "season" + std::to_string(s) +
           "day" + std::to_string(d) +
           "sex2famstat3edtry1age2computer0civstat1unemp0retired1.csv";
+        std::ofstream myfile2;
+        myfile2.open(file2.c_str());
+
+        for (int h = 0; h < 24; h++) {
+          sum = 0;
+          for (int i = 0; i < 10; i++) {
+            sum += p[s][d][h][i];
+            myfile2 << p[s][d][h][i];
+            if (i < 9) {
+              myfile2 << ",";
+            }
+          }
+          myfile2 << std::endl;
+          EXPECT_NEAR(sum, 1, 0.000000001);
+        }
+
+        myfile2.close();
+      }
+    }
+}
+
+
+
+TEST_F(Test_Model_Activity, multinominalP2) {
+    SimulationConfig::parseConfiguration(testFiles + "SimulationConfig1a.xml");
+    SimulationConfig::FileActivity = testFiles + "Activity.xml";
+    AfterConfiguration();
+
+    std::vector<double> activities = ma.preProcessActivities();
+    double p[4][7][24][10];
+    ma.multinominalP(p);
+    double sum = 0;
+    for (int s = 0; s < 4; s++) {
+      for (int d = 0; d < 7; d++) {
+        std::string file2 = "season" + std::to_string(s) +
+          "day" + std::to_string(d) +
+          "sex2famstat3edtry1age2computer0civstat1unemp0retired0.csv";
         std::ofstream myfile2;
         myfile2.open(file2.c_str());
 

@@ -22,7 +22,7 @@ class DataStore {
  private:
     DataStore();
     static std::unordered_map<std::string, int> variableMap;
-    static std::unordered_map<int, std::vector<float>> intMap;
+    static std::vector<std::vector<float>> intMap;
     static int variableCount;
 };
 

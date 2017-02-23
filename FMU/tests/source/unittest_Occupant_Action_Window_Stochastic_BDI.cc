@@ -54,8 +54,8 @@ TEST_F(Test_Occupant_Action_Window_Stochastic_BDI, Arrival) {
 
   aaw.setOpenDuringCooking(false);
   aaw.setOpenDuringWashing(false);
-  double previousDuration = 5*12*10*60;
-  int timeStepLengthInMinutes = 5;
+
+    
   for (int i =0; i < 7200; i++) {
     activities.push_back(4);
   }

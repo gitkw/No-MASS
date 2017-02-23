@@ -48,6 +48,9 @@ class Utility {
           return t;
         }
 
+
+    static std::vector<std::string> csvToTableHead(const std::string & filename);
+
     template< typename T>
         static uTable<T> csvToTable(const std::string & filename) {
           return csvToTable<T>(filename, false);
