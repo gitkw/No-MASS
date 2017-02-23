@@ -14,8 +14,8 @@ addons:
     sources:
     - ubuntu-toolchain-r-test
     packages:
-    - g++-4.9
-    - gcc-4.9
+    - g++-6
+    - gcc-6
     - gcc-mingw-w64-i686
     - g++-mingw-w64-i686
     - binutils-mingw-w64-i686
@@ -24,9 +24,9 @@ addons:
     - binutils-mingw-w64-x86-64
 
 before_install:
-  - export CXX="g++-4.9"
-  - export CC="gcc-4.9"
-  - export LD="g++-4.9"
+  - export CXX="g++-6"
+  - export CC="gcc-6"
+  - export LD="g++-6"
 
 before_script:
   - mkdir FMU/build
