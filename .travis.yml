@@ -40,7 +40,7 @@ script:
   - make
   - ./tests/runUnitTests
   - cd ../build
-  - cmake -DCMAKE_BUILD_TYPE=Release ../
+  - cmake -DTests=on -DCMAKE_BUILD_TYPE=Release ../
   - make
   - ./tests/runUnitTests
   - cd ../build64
