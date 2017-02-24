@@ -50,6 +50,7 @@ class Appliance_Group_Battery : public Appliance_Group<T> {
     }
 
     virtual void neighbourhoodNegotiation(const Contract_Negotiation & building_negotiation) {
+      this->clearGlobalContracts();
       for (auto & g : this->appliances) {
         if (g.isGlobal()) {
           int appid = g.getID();

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <limits>
 
 #include "Environment.h"
 #include "SimulationConfig.h"
@@ -117,21 +118,22 @@ void Simulation::timeStep() {
     b.addContactsTo(&building_negotiation, false);
   }
 
+
+  Contract m;
+  m.id = -1;
+  m.buildingID = -1;
+  m.supplied = 0;
+  m.suppliedCost = 0;
+  m.requested = std::numeric_limits<double>::max();
   double diff = building_negotiation.getDifference();
   if (diff < 0.0) {
-    Contract m;
-    m.id = -1;
-    m.buildingID = -1;
     m.supplied = std::abs(diff);
     m.suppliedCost = gridCost;
     m.requested = 0;
-    building_negotiation.submit(m);
-    DataStore::addValue(GridPowerDataId, m.supplied);
-    DataStore::addValue(GridCostDataId, m.suppliedCost);
-  } else {
-    DataStore::addValue(GridPowerDataId, 0);
-    DataStore::addValue(GridCostDataId, 0);
   }
+  building_negotiation.submit(m);
+  DataStore::addValue(GridPowerDataId, m.supplied);
+  DataStore::addValue(GridCostDataId, m.suppliedCost);
   building_negotiation.process();
   for (Building &b : buildings) {
     b.stepAppliancesNegotiation(building_negotiation);

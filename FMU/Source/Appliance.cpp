@@ -67,8 +67,6 @@ void Appliance::setupSave() {
   datastoreGridIDReceived = DataStore::addVariable(idString + "_received_grid");
   datastoreGridIDRequested = DataStore::addVariable(idString + "_requested_grid");
   datastoreGridIDCost = DataStore::addVariable(idString + "_cost_grid");
-
-
 }
 
 void Appliance::save() {
@@ -80,6 +78,7 @@ void Appliance::save() {
 
 void Appliance::saveLocal() {
   parametersLocal.supply = parameters.supply - parameters.suppliedLeft;
+  parametersLocal.suppliedLeft = parameters.suppliedLeft;
   parametersLocal.received = parameters.received;
   parametersLocal.power = parameters.power;
   parametersLocal.receivedCost = parameters.receivedCost;
@@ -91,7 +90,8 @@ void Appliance::saveLocal() {
 }
 
 void Appliance::saveNeighbourhood() {
-  parametersNeighbourhood.supply = parameters.supply - parametersLocal.suppliedLeft;
+  parametersNeighbourhood.supply = parametersLocal.suppliedLeft - parameters.suppliedLeft;
+  parametersNeighbourhood.suppliedLeft = parameters.suppliedLeft;
   parametersNeighbourhood.received = parameters.received - parametersLocal.received;
   parametersNeighbourhood.power =  parameters.power - parametersLocal.received;
   parametersNeighbourhood.receivedCost =  parameters.receivedCost - parametersLocal.receivedCost;
@@ -103,8 +103,8 @@ void Appliance::saveNeighbourhood() {
 }
 
 void Appliance::saveGlobal() {
-
-  parametersGrid.supply =  parameters.supply - parametersLocal.suppliedLeft - parametersNeighbourhood.suppliedLeft;
+  parametersGrid.supply = parametersNeighbourhood.suppliedLeft - parameters.suppliedLeft;
+  parametersGrid.suppliedLeft = parameters.suppliedLeft;
   parametersGrid.received = parameters.received - parametersNeighbourhood.received - parametersLocal.received;
   parametersGrid.power =  parameters.power - parametersNeighbourhood.received - parametersLocal.received;
   parametersGrid.receivedCost =  parameters.receivedCost - parametersNeighbourhood.receivedCost  - parametersLocal.receivedCost;
