@@ -22,9 +22,9 @@ class Contract_Negotiation {
     double getDifference() const;
 
  private:
+   
     void processContracts();
     bool sameContract(const ContractPtr c1, const ContractPtr c2) const;
-    std::vector<int> suppliedIds;
     double difference;
 
     std::unordered_map<int, std::unordered_map<int, ContractPtr>> contracts;

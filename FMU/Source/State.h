@@ -4,7 +4,7 @@
 #define STATE_H_
 #include <string>
 #include <memory>
-#include <vector>
+#include <unordered_map>
 #include "Building_Zone.h"
 
 class State {
@@ -28,7 +28,7 @@ class State {
   double metabolicRate;
   double clo;
   std::string activity;
-  std::vector<State> states;
+  std::unordered_map<int, State> states;
   std::shared_ptr<Building_Zone> zone;
 };
 

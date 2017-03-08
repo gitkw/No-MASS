@@ -1,7 +1,7 @@
 #ifndef STATEMACHINE_H
 #define STATEMACHINE_H
 
-#include <vector>
+#include <unordered_map>
 #include "State.h"
 
 class StateMachine
@@ -9,11 +9,11 @@ class StateMachine
     public:
       StateMachine();
       void addState(const State & s);
-      State transistionTo(const int stateID);
+      State transistionTo(const int stateID) const;
       unsigned int numberOfStates() const;
-
+      bool hasState(const int stateID) const;
     private:
-      std::vector<State> states;
+      std::unordered_map<int, State> states;
 
 };
 

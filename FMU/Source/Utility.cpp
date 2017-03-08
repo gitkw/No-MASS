@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <numeric>
 
 #include "Utility.h"
 
@@ -36,12 +37,10 @@ int Utility::randomInt(int min, int max) {
 }
 
 std::vector<int> Utility::randomIntVect(int number) {
-    std::vector<int> numbers;
-    for (int i =0; i < number; i++) {
-        numbers.push_back(i);
-    }
-    std::shuffle(numbers.begin(), numbers.end(), Utility::engine);
-    return numbers;
+    std::vector<int> v(number);
+    std::iota (std::begin(v), std::end(v), 0);
+    std::shuffle(v.begin(), v.end(), Utility::engine);
+    return v;
 }
 
 std::vector<std::string> Utility::splitCSV(const std::string & typeString) {
