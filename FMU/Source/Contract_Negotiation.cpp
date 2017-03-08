@@ -13,17 +13,13 @@ Contract_Negotiation::Contract_Negotiation() {
 void Contract_Negotiation::submit(const Contract & c) {
   contracts[c.buildingID][c.id] = std::make_shared<Contract>(c);
   ContractPtr contract = contracts.at(c.buildingID).at(c.id);
-  contract->suppliedLeft = contract->supplied;
   if (contract->requested > 0) {
     nodePriority.insert(contract, contract->priority);
   }
   if (contract->supplied > 0) {
     nodeSupply.insert(contract, contract->suppliedCost);
   }
-  double needed = contract->supplied - contract->requested + contract->received;
-  if(needed > 0) {
-      difference += needed;
-  }
+  difference += (0.0 - (contract->requested - contract->received)) + contract->suppliedLeft;
 }
 
 double Contract_Negotiation::getDifference() const {
@@ -67,7 +63,7 @@ void Contract_Negotiation::processContracts() {
           }
           c->receivedCost += suppliedCost * supplied;
           c->received += supplied;
-          fractionalPower -= supplied;
+          fractionalPower = c->requested - c->received;
       }
       c = nodePriority.findRightEdge();
   }

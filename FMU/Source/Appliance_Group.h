@@ -18,7 +18,7 @@ template <class T>
 class Appliance_Group {
 
  public:
-    Appliance_Group(){}
+    Appliance_Group(){};
 
     virtual void step(Contract_Negotiation * app_negotiation){
       std::vector<int> pop = Utility::randomIntVect(appliances.size());
@@ -42,6 +42,7 @@ class Appliance_Group {
         c.requested = a.getPower();
         c.priority = a.getPriority();
         c.supplied = a.getSupply();
+        c.suppliedLeft = a.getSupply();
         c.suppliedCost = a.getSupplyCost();
         c.receivedCost = 0;
         c.received = 0;
@@ -124,15 +125,8 @@ class Appliance_Group {
     bool sendContractGlobal(const Contract & c) {
       bool send = (c.requested > c.received || c.suppliedLeft > 0);
       if (send) {
-        Contract x;
-        x.id = c.id;
-        x.buildingID = c.buildingID;
-        x.receivedCost = c.receivedCost;
-        x.requested = c.requested;
-        x.received = c.received;
+        Contract x = c;
         x.supplied = c.suppliedLeft;
-        x.priority = c.priority;
-        x.suppliedCost = c.suppliedCost;
         globalContracts.push_back(x);
       }
       return send;
@@ -172,6 +166,16 @@ class Appliance_Group {
 
     double getReceivedCost() const {
       return parameters.receivedCost;
+    }
+
+    T getApplianceAt(int BuildingID, int id){
+      T app;
+      for (T a : appliances) {
+        if (a.getID() == id && a.getBuildingID() == BuildingID){
+          app = a;
+        }
+      }
+      return app;
     }
 
  protected:

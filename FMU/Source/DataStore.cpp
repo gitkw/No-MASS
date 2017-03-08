@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <utility>
+#include <iomanip>
 #include <string>
 #include <regex>
 #include "Log.h"
@@ -114,6 +115,7 @@ void DataStore::print() {
     //  std::cout << "print " << std::endl;
     std::ofstream myfile;
     myfile.open("NoMASS.out");
+    myfile << std::fixed << std::setprecision(SimulationConfig::info.precision);
     myfile << "stepCount";
     std::vector<int> ids;
     unsigned int maxSize = 0;

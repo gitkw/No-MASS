@@ -103,12 +103,12 @@ Source/Appliance_Generic_CSV.cpp
 Source/Appliance_FMI.cpp
 Source/Appliance_Large_Learning.cpp
 Source/Appliance_Battery.cpp
+Source/Appliance_Battery_GridCost_Reward.cpp
 Source/LVN.cpp
 Source/LVN_Node.cpp
 Source/Contract_Node_Priority.cpp
 Source/Contract_Node_Supply.cpp
 Source/Contract_Negotiation.cpp
-Source/Appliance_Battery_GridCost_Reward.cpp
 Source/Appliance_Group_CSV.cpp
 Source/Appliance_Group_Small.cpp
 Source/Appliance_Group_Large.cpp

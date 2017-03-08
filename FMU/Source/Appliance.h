@@ -48,6 +48,24 @@ class Appliance : public Agent {
     void saveNeighbourhood();
     void saveGlobal();
 
+    double getLocalSupply() const;
+    double getLocalSupplyLeft() const;
+    double getLocalReceived() const;
+    double getLocalReceivedCost() const;
+    double getLocalPower() const;
+
+    double getNeighbourhoodSupply() const;
+    double getNeighbourhoodSupplyLeft() const;
+    double getNeighbourhoodReceived() const;
+    double getNeighbourhoodReceivedCost() const;
+    double getNeighbourhoodPower() const;
+
+    double getGridSupply() const;
+    double getGridSupplyLeft() const;
+    double getGridReceived() const;
+    double getGridReceivedCost() const;
+    double getGridPower() const;
+
  protected:
 
     void setPower(const double power);

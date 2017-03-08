@@ -47,6 +47,7 @@ class Simulation {
 
     int GridPowerDataId;
     int GridCostDataId;
+    int GridReceivedDataId;
 };
 
 #endif  // SIMULATION_H_

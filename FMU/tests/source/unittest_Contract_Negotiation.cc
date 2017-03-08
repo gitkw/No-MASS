@@ -43,7 +43,7 @@ TEST_F(Test_Contract_Negotiation, contract1) {
   d.receivedCost = 0.0;
   d.supplied = 100.0;
   d.suppliedCost = 0.0;
-  d.suppliedLeft = 0.0;
+  d.suppliedLeft = d.supplied;
   d.priority = 0.0;
   cn.submit(c);
   cn.submit(d);
@@ -87,7 +87,7 @@ TEST_F(Test_Contract_Negotiation, power) {
   e.receivedCost = 0.0;
   e.supplied = 200.0;
   e.suppliedCost = 0.0;
-  e.suppliedLeft = 0.0;
+  e.suppliedLeft = e.supplied;
   e.priority = 0.0;
   cn.submit(c);
   cn.submit(d);
@@ -111,6 +111,7 @@ TEST_F(Test_Contract_Negotiation, Many) {
     for(int i = 0; i < max; i++){
       Contract c;
       c.supplied = requested;
+      c.suppliedLeft = requested;
       requested = Utility::randomDouble(0, 1000);
       c.id = i;
       c.buildingID = 0;

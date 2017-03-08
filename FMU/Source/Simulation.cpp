@@ -43,6 +43,7 @@ void Simulation::parseConfiguration(const std::string & file) {
     SimulationConfig::parseConfiguration(file);
     GridPowerDataId = DataStore::addVariable("grid_power");
     GridCostDataId = DataStore::addVariable("grid_cost");
+    GridReceivedDataId = DataStore::addVariable("grid_received");
 }
 
 void Simulation::setupSimulationModel() {
@@ -118,26 +119,28 @@ void Simulation::timeStep() {
     b.addContactsTo(&building_negotiation, false);
   }
 
-
+  double diff = building_negotiation.getDifference();
   Contract m;
   m.id = -1;
   m.buildingID = -1;
-  m.supplied = 0;
-  m.suppliedCost = 0;
-  m.requested = std::numeric_limits<double>::max();
-  double diff = building_negotiation.getDifference();
-  if (diff < 0.0) {
-    m.supplied = std::abs(diff);
-    m.suppliedCost = gridCost;
-    m.requested = 0;
+  m.supplied = std::abs(diff);
+  m.suppliedCost = gridCost;
+  m.requested = 0;
+  if (diff > 0.0) {
+    m.supplied = 0;
+    m.suppliedCost = 0;
+    m.requested = std::numeric_limits<double>::max();
   }
+  m.suppliedLeft = m.supplied;
   building_negotiation.submit(m);
-  DataStore::addValue(GridPowerDataId, m.supplied);
-  DataStore::addValue(GridCostDataId, m.suppliedCost);
   building_negotiation.process();
   for (Building &b : buildings) {
     b.stepAppliancesNegotiation(building_negotiation);
   }
+  m = building_negotiation.getContract(m.buildingID, m.id);
+  DataStore::addValue(GridReceivedDataId, m.received);
+  DataStore::addValue(GridPowerDataId, m.supplied);
+  DataStore::addValue(GridCostDataId, m.suppliedCost);
   building_negotiation.clear();
 }
 

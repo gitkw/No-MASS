@@ -185,6 +185,7 @@ struct simulationStruct {
     bool windowsLearn = false;
     bool lights = false;
     bool shading = false;
+    bool heating = false;
     bool presencePage = false;
     bool agentHeatGains = true;
     double timeStepsPerHour;
@@ -200,6 +201,7 @@ struct simulationStruct {
     int endMonth;
     int caseOrder;
     bool ShadeClosedDuringNight;
+    int precision = 5;
 };
 
 class SimulationConfig {

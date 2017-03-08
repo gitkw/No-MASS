@@ -93,7 +93,9 @@ void Building::step() {
         if (SimulationConfig::info.lights) {
             setOccupantLightDecisionForZone(zone);
         }
-        setOccupantHeatDecisionsForZone(zone);
+        if (SimulationConfig::info.heating) {
+            setOccupantHeatDecisionsForZone(zone);
+        }
         setOccupantGainsForZone(zone);
         setAppGainsForZone(zone);
     }

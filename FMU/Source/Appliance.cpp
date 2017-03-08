@@ -9,26 +9,6 @@
 
 Appliance::Appliance() {}
 
-double Appliance::getSupply() const {
-  return parameters.supply;
-}
-
-double Appliance::getSupplyCost() const {
-  return parameters.supplyCost;
-}
-
-double Appliance::getPower() const {
-  return parameters.power;
-}
-
-double Appliance::getReceived() const {
-  return parameters.received;
-}
-
-double Appliance::getReceivedCost() const {
-  return parameters.receivedCost;
-}
-
 double Appliance::getPriority() const {
   int timeStep = SimulationConfig::getStepCount();
   int leninsec = SimulationConfig::lengthOfTimestep();
@@ -123,6 +103,7 @@ void Appliance::clear() {
   parameters.supplyCost = 0.0;
   parameters.received = 0.0;
   parameters.receivedCost = 0.0;
+  parameters.suppliedLeft = 0.0;
 }
 
 bool Appliance::isLocal() const {
@@ -168,4 +149,72 @@ int Appliance::calculateHourOfDay() const {
   int stepCount = SimulationConfig::getStepCount();
   int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
   return hour % 24;
+}
+
+double Appliance::getSupply() const {
+  return parameters.supply;
+}
+
+double Appliance::getSupplyCost() const {
+  return parameters.supplyCost;
+}
+
+double Appliance::getPower() const {
+  return parameters.power;
+}
+
+double Appliance::getReceived() const {
+  return parameters.received;
+}
+
+double Appliance::getReceivedCost() const {
+  return parameters.receivedCost;
+}
+
+double Appliance::getLocalSupply() const{
+  return parametersLocal.supply;
+}
+double Appliance::getLocalSupplyLeft() const{
+  return parametersLocal.suppliedLeft;
+}
+double Appliance::getLocalReceived() const{
+  return parametersLocal.received;
+}
+double Appliance::getLocalReceivedCost() const{
+  return parametersLocal.receivedCost;
+}
+double Appliance::getLocalPower() const{
+  return parametersLocal.power;
+}
+
+double Appliance::getNeighbourhoodSupply() const{
+  return parametersNeighbourhood.supply;
+}
+double Appliance::getNeighbourhoodSupplyLeft() const{
+  return parametersNeighbourhood.suppliedLeft;
+}
+double Appliance::getNeighbourhoodReceived() const{
+  return parametersNeighbourhood.received;
+}
+double Appliance::getNeighbourhoodReceivedCost() const{
+  return parametersNeighbourhood.receivedCost;
+}
+double Appliance::getNeighbourhoodPower() const{
+  return parametersNeighbourhood.power;
+}
+
+double Appliance::getGridSupply() const{
+  return parametersGrid.supply;
+}
+double Appliance::getGridSupplyLeft() const{
+  return parametersGrid.suppliedLeft;
+}
+double Appliance::getGridReceived() const{
+  return parametersGrid.received;
+}
+double Appliance::getGridReceivedCost() const{
+  return parametersGrid.receivedCost;
+}
+double Appliance::getGridPower() const{
+  return parametersGrid.power;
 }

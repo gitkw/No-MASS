@@ -400,6 +400,8 @@ void SimulationConfig::parseModels(rapidxml::xml_node<> *node) {
             SimulationConfig::info.agentHeatGains = std::stoi(cnode->value());
         } else if (nodeNameIs(cnode, "lights")) {
             SimulationConfig::info.lights = std::stoi(cnode->value());
+        } else if (nodeNameIs(cnode, "heating")) {
+            SimulationConfig::info.heating = std::stoi(cnode->value());
         } else if (nodeNameIs(cnode, "windows")) {
             parseWindows(cnode);
         } else if (nodeNameIs(cnode, "shades")) {
@@ -532,6 +534,8 @@ void SimulationConfig::parseConfiguration(const std::string & filename) {
 
     if (nodeNameIs(name, "seed")) {
         Utility::setSeed(std::stoi(node->value()));
+    } else if (nodeNameIs(name, "precision")) {
+        SimulationConfig::info.precision = std::stoi(node->value());
     } else if (nodeNameIs(name, "gridcost")) {
         SimulationConfig::info.GridCost = csvToDouble(node->value());
     } else if (nodeNameIs(name, "output")) {

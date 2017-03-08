@@ -158,7 +158,7 @@ void Occupant_Zone::step(const Building_Zone& zone,
           }
         }
       }
-      if (SimulationConfig::info.learn > 0) {
+      if (SimulationConfig::info.learn > 0 && SimulationConfig::info.heating) {
         actionStep(5, zone, inZone, previouslyInZone, activities);
       }
     }
