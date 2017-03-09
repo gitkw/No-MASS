@@ -145,6 +145,7 @@ void Occupant::step() {
       agentZone.setClo(clo);
       agentZone.setMetabolicRate(metabolicRate);
       agentZone.step(*zonePtr, *zonePtrPrevious, activities);
+      agentZone.stepPre(*zonePtr, *zonePtrPrevious, activities);
     }
     DataStore::addValue(datastoreIdHeatGains,
                                 getCurrentRadientGains(*zonePtr));

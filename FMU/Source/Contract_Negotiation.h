@@ -22,7 +22,9 @@ class Contract_Negotiation {
     double getDifference() const;
 
  private:
-   
+    void calcDifference(const Contract & c);
+    void insertSupply(const ContractPtr contract);
+    void insertPriority(const ContractPtr contract);
     void processContracts();
     bool sameContract(const ContractPtr c1, const ContractPtr c2) const;
     double difference;

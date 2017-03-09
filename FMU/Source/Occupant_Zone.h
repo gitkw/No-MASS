@@ -40,6 +40,8 @@ class Occupant_Zone {
             const agentStruct &agent);
   void step(const Building_Zone& zone, const Building_Zone& zonePrevious,
             const std::vector<double> &activities);
+  void stepPre(const Building_Zone& zone, const Building_Zone& zonePrevious,
+            const std::vector<double> &activities);
 
   void actionStep(int action, const Building_Zone &zone, bool inZone,
                   bool preZone, const std::vector<double> &activities);
@@ -69,6 +71,7 @@ class Occupant_Zone {
   void setupLights(const agentStruct &agent, const Building_Zone & buldingZone);
   void setupShades(const agentStruct &agent, const Building_Zone & buldingZone);
   bool isInBuilding() const;
+  void shuffleActions();
 
   int id;
   int buildingID;

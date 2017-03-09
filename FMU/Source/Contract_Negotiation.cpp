@@ -10,16 +10,28 @@ Contract_Negotiation::Contract_Negotiation() {
     difference = 0;
 }
 
-void Contract_Negotiation::submit(const Contract & c) {
-  contracts[c.buildingID][c.id] = std::make_shared<Contract>(c);
-  ContractPtr contract = contracts.at(c.buildingID).at(c.id);
+void Contract_Negotiation::calcDifference(const Contract & c) {
+  difference += (0.0 - (c.requested - c.received)) + c.suppliedLeft;
+}
+
+void Contract_Negotiation::insertSupply(const ContractPtr contract) {
+  if (contract->suppliedLeft > 0) {
+    nodeSupply.insert(contract, contract->suppliedCost);
+  }
+}
+
+void Contract_Negotiation::insertPriority(const ContractPtr contract) {
   if (contract->requested > 0) {
     nodePriority.insert(contract, contract->priority);
   }
-  if (contract->supplied > 0) {
-    nodeSupply.insert(contract, contract->suppliedCost);
-  }
-  difference += (0.0 - (contract->requested - contract->received)) + contract->suppliedLeft;
+}
+
+void Contract_Negotiation::submit(const Contract & c) {
+  calcDifference(c);
+  ContractPtr contract = std::make_shared<Contract>(c);
+  contracts[c.buildingID][c.id] = contract;
+  insertSupply(contract);
+  insertPriority(contract);
 }
 
 double Contract_Negotiation::getDifference() const {

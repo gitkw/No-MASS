@@ -136,33 +136,45 @@ void Occupant_Zone::setupWindows(int agentid, const agentStruct &agent,
   }
 }
 
+void Occupant_Zone::shuffleActions() {
+  std::shuffle(availableActions.begin(), availableActions.end(), Utility::engine);
+}
+
 void Occupant_Zone::step(const Building_Zone& zone,
                       const Building_Zone& zonePrevious,
                       const std::vector<double> &activities) {
     bool inZone = zone.getId() == id;
     bool previouslyInZone = zonePrevious.getId() == id;
+    if (isInBuilding()) {
+      if (inZone) {
+        shuffleActions();
+        for (int a : availableActions) {
+            actionStep(a, zone, inZone, previouslyInZone, activities);
+        }
+      }
+      if (SimulationConfig::info.heating && SimulationConfig::info.learn > 0) {
+        actionStep(5, zone, inZone, previouslyInZone, activities);
+      }
+    }
+    BDI(activities);
+}
+
+void Occupant_Zone::stepPre(const Building_Zone& zone,
+                      const Building_Zone& zonePrevious,
+                      const std::vector<double> &activities) {
+    bool inZone = zone.getId() == id;
+    bool previouslyInZone = zonePrevious.getId() == id;
+    if ( !inZone && previouslyInZone && isInBuilding()) {
+        shuffleActions();
+        for (int a : availableActions) {
+            actionStep(a, zonePrevious, inZone, previouslyInZone, activities);
+        }
+    }
     if (inZone || previouslyInZone) {
         if (SimulationConfig::info.windows){
             aaw.saveResult();
         }
     }
-
-    if (isInBuilding()) {
-      if (inZone || previouslyInZone) {
-        std::shuffle(availableActions.begin(), availableActions.end(), Utility::engine);
-        for (int a : availableActions) {
-          if (inZone) {
-            actionStep(a, zone, inZone, previouslyInZone, activities);
-          } else if (previouslyInZone) {
-            actionStep(a, zonePrevious, inZone, previouslyInZone, activities);
-          }
-        }
-      }
-      if (SimulationConfig::info.learn > 0 && SimulationConfig::info.heating) {
-        actionStep(5, zone, inZone, previouslyInZone, activities);
-      }
-    }
-    BDI(activities);
 }
 
 void Occupant_Zone::BDI(const std::vector<double> &activities) {
