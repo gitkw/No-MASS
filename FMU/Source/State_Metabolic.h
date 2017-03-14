@@ -4,7 +4,7 @@
 
 #include "./State.h"
 
-class State_Metabolic:public State
+class State_Metabolic: public State
 {
     public:
         State_Metabolic();

@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <string>
-#include <utility>
 #include "SimulationConfig.h"
 #include "State.h"
 
@@ -28,34 +27,30 @@ bool State::isInActivity(const std::string & activity) const {
 }
 
 void State::addState(State s) {
-  states.insert({s.getId(), s});
+  states.push_back(s);
 }
 
 bool State::hasState(const int stateID) const {
-  bool found = states.end() != states.find(stateID) ;
-  if (!found) {
-    for (const auto & s : states) {
-      found = s.second.hasState(stateID);
-      if (found) {
+  bool found = false;
+  for (const State & s : states) {
+      if (s.getId() == stateID || s.hasState(stateID)) {
+          found = true;
         break;
       }
-    }
   }
   return found;
 }
 
 State State::getState(const int stateID) const {
-  std::unordered_map<int, State>::const_iterator si = states.find(stateID) ;
   State x;
-  if (states.end() == si && hasState(stateID)) {
-    for (const auto & s : states) {
-      if (s.second.hasState(stateID)) {
-        x = s.second.getState(stateID);
-        break;
-      }
+  for (const State & s : states) {
+    if (s.getId() == stateID) {
+      x = s;
+      break;
+    } else if (s.hasState(stateID)) {
+      x = s.getState(stateID);
+      break;
     }
-  }else{
-    x = states.at(stateID);
   }
   return x;
 }

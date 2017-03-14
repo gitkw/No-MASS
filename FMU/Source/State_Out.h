@@ -1,7 +1,7 @@
 #ifndef STATE_OUT_H
 #define STATE_OUT_H
 
-#include "./State.h"
+#include "State.h"
 
 class State_Out: public State
 {
