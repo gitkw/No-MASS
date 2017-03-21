@@ -2,7 +2,7 @@
 #define Occupant_ACTION_WINDOW_LEARNING_H
 
 #include <memory>
-#include "QLearning_Window.h"
+#include "QLearning_Occupant.h"
 #include "Occupant_Action_Window.h"
 #include "Model_Windows.h"
 #include "Building_Zone.h"
@@ -17,7 +17,7 @@ class Occupant_Action_Window_Learning : public Occupant_Action_Window {
         void reset();
     private:
 
-        QLearning_Window learn;
+        QLearning_Occupant learn;
         int window_name;
 };
 

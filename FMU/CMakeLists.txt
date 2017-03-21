@@ -93,8 +93,7 @@ Source/Building_Zone.cpp
 Source/Building_Appliances.cpp
 Source/fmiFunctions.cpp
 Source/QLearning.cpp
-Source/QLearning_HeatingSetPoints.cpp
-Source/QLearning_Window.cpp
+Source/QLearning_Occupant.cpp
 Source/QLearning_Appliance.cpp
 Source/Appliance.cpp
 Source/Appliance_Large.cpp

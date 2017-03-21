@@ -5,7 +5,7 @@
 #include <fstream>
 
 #include "DataStore.h"
-#include "QLearning_Window.h"
+#include "QLearning_Occupant.h"
 
 #include "Building_Zone.h"
 #include "QLearning.h"
@@ -13,12 +13,13 @@
 
 class Test_QLearning_Window : public ::testing::Test {
  protected:
-    QLearning_Window ql;
+    QLearning_Occupant ql;
     virtual void SetUp();
 };
 
 void Test_QLearning_Window::SetUp() {
   ql.setStates(31);
+  ql.setActions(2);
   SimulationConfig::info.learnep = 0.8;
   SimulationConfig::info.learnupdate = true;
   DataStore::addVariable("hour");

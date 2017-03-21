@@ -182,7 +182,7 @@ std::vector<int> SimulationConfig::activityNamesToIds(
 
 std::vector<double> SimulationConfig::prioritiesToVector(
                             const std::string & priorities) {
-  std::vector<double> prior(csvToDouble(priorities));
+  std::vector<double> prior(Utility::csvToDouble(priorities));
   while (prior.size() < 24) {
     prior.push_back(prior.back());
   }
@@ -288,7 +288,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
           if (nodeNameIs(anode, "priority")) {
             s.priority = prioritiesToVector(anode->value());
           } else if (nodeNameIs(anode, "cost")) {
-            s.cost = csvToDouble(anode->value());
+            s.cost = Utility::csvToDouble(anode->value());
           }
           anode = anode->next_sibling();
         }
@@ -526,6 +526,7 @@ void SimulationConfig::parseConfiguration(const std::string & filename) {
     setValFromNodeIfName(&info.endMonth, value, name, "endmonth");
     setValFromNodeIfName(&info.startMonth, value, name, "beginmonth");
     setValFromNodeIfName(&info.learn, value, name, "learn");
+    setValFromNodeIfName(&info.heating, value, name, "heating");
     setValFromNodeIfName(&info.startDayOfWeek, value, name, "startdayofweek");
     setValFromNodeIfName(&info.learnupdate, value, name, "learnupdate");
     setValFromNodeIfName(&info.learnep, value, name, "learnep");
@@ -537,7 +538,7 @@ void SimulationConfig::parseConfiguration(const std::string & filename) {
     } else if (nodeNameIs(name, "precision")) {
         SimulationConfig::info.precision = std::stoi(node->value());
     } else if (nodeNameIs(name, "gridcost")) {
-        SimulationConfig::info.GridCost = csvToDouble(node->value());
+        SimulationConfig::info.GridCost = Utility::csvToDouble(node->value());
     } else if (nodeNameIs(name, "output")) {
       rapidxml::xml_node<> *cnode = node->first_node();
       while (cnode) {
@@ -639,15 +640,6 @@ bool SimulationConfig::nodeNameIs(const rapidxml::xml_node<> *node,
 bool SimulationConfig::strComp(const char * str1, const char * str2) {
   return std::strcmp(str1, str2) == 0;
 }
-
-std::vector<double> SimulationConfig::csvToDouble(const std::string & s) {
-  std::vector<double> items;
-  for (std::string &item : Utility::splitCSV(s)) {
-      items.push_back(std::stod(item));
-  }
-  return items;
-}
-
 
 void SimulationConfig::setValFromNodeIfName(int * val,
                               const std::string & value,

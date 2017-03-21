@@ -50,7 +50,8 @@ class Utility {
 
 
     static std::vector<std::string> csvToTableHead(const std::string & filename);
-
+    static std::vector<double> csvToDouble(const std::string & s);
+    static std::vector<int> csvToInt(const std::string & s);
     template< typename T>
         static uTable<T> csvToTable(const std::string & filename) {
           return csvToTable<T>(filename, false);

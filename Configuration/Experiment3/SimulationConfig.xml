@@ -9,6 +9,11 @@
   <learnupdate>1</learnupdate>
   <learnep>0.01</learnep>
   <GridCost>1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0</GridCost>
+  <output>
+    <regex>Building0_Appliance.*</regex>
+      <regex>grid.*</regex>
+    <regex>TimeStep</regex>
+  </output>
   <buildings>
     <building>
           <zone>

@@ -20,6 +20,7 @@ void Appliance_Large_Learning::setup() {
   qLearning.setUpdate(update);
   qLearning.setFilename(s_fullname);
   qLearning.setStates(24);
+  qLearning.setActions(24);
   qLearning.setId(id);
   qLearning.setup();
   setupModel();

@@ -1,15 +1,14 @@
 // Copyright 2015 Jacob Chapman
 
-#ifndef QLEARNING_WINDOW_H
-#define QLEARNING_WINDOW_H
+#ifndef QLEARNING_OCCUPANT_H_
+#define QLEARNING_OCCUPANT_H_
 
 #include <string>
 #include "QLearning.h"
 
-class QLearning_Window : public QLearning {
+class QLearning_Occupant : public QLearning {
  public:
-    QLearning_Window();
-
+    QLearning_Occupant();
     double learn();
     void reset();
     void setId(const int id);
@@ -21,4 +20,4 @@ class QLearning_Window : public QLearning {
     int previous_state_name;
 };
 
-#endif  // QLEARNING_WINDOW_H_
+#endif  // QLEARNING_OCCUPANT_H_

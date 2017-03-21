@@ -32,8 +32,8 @@ class QLearning {
     int states = 0;
     int actions = 0;
     int state;
-    int previous_state;
-    int action;
+    int previous_state = 0;
+    int action = 0;
     bool learnNext = false;
     double reward;
     double previous_reward;

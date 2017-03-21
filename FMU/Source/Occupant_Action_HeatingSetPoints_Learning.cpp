@@ -1,9 +1,15 @@
 // Copyright 2015 Jacob Chapman
 
 #include <string>
+#include <cstring>
+#include <algorithm>
+#include <cstddef>
+#include "rapidxml_utils.hpp"
+#include "rapidxml.hpp"
+
+#include "Utility.h"
 #include "DataStore.h"
 #include "SimulationTime.h"
-#include "QLearning_HeatingSetPoints.h"
 #include "Occupant_Action_HeatingSetPoints_Learning.h"
 
 Occupant_Action_HeatingSetPoints_Learning::
@@ -11,6 +17,8 @@ Occupant_Action_HeatingSetPoints_Learning::
     setPoint = 20;
     pmv = -1.0;
     result = 20;
+
+    file = SimulationConfig::RunLocation + "learning.xml";
 }
 
 void Occupant_Action_HeatingSetPoints_Learning::print() {
@@ -27,13 +35,17 @@ void Occupant_Action_HeatingSetPoints_Learning::setup(const int id,
   learnId = learn;
   agentId = id;
   std::string zoneIdStr = std::to_string(zoneId);
+
   qlWeekDay.setFilename("Weekday-" + zoneIdStr + "-");
   qlWeekEnd.setFilename("Weekend-" + zoneIdStr + "-");
   qlWeekDay.setStates(24 * 12);
   qlWeekEnd.setStates(24 * 12);
+  qlWeekDay.setActions(20);
+  qlWeekEnd.setActions(20);
   qlWeekDay.setId(id);
   qlWeekDay.setup();
   qlWeekEnd.setId(id);
+  parseConfiguration(file);
   qlWeekEnd.setup();
   pmv_name =
   DataStore::addVariable("Weekday-" + zoneIdStr + "-_pmv" + std::to_string(id));
@@ -71,11 +83,18 @@ void Occupant_Action_HeatingSetPoints_Learning::step(const Building_Zone& zone,
       int day = SimulationTime::day + 1;
       int dayOfTheWeek = (day - 1) % 7;
 
+
+      int state = getState();
+
+      //    std::cout << "state: " << state << std::endl;
+
       if (dayOfTheWeek < 5) {
+        qlWeekDay.setState(state);
         qlWeekDay.setAction(setPoint-10);
         qlWeekDay.setReward(reward);
         result = qlWeekDay.learn() + 10;
       } else {
+        qlWeekEnd.setState(state);
         qlWeekEnd.setAction(setPoint-10);
         qlWeekEnd.setReward(reward);
         result = qlWeekEnd.learn() + 10;
@@ -87,4 +106,55 @@ void Occupant_Action_HeatingSetPoints_Learning::step(const Building_Zone& zone,
       previousHour = hour;
       setPoint = result;
     }
+}
+
+int Occupant_Action_HeatingSetPoints_Learning::getState() const {
+  int month = SimulationTime::month - 1;
+  int count = 0;
+  for (const auto v : stateMappings){
+    if(std::find(v.begin(), v.end(), month) != v.end()){
+      break;
+    }
+    count++;
+  }
+
+
+
+  int hourOfDay = SimulationTime::hourOfDay;
+  int state = (count * 24) + hourOfDay;
+
+
+  return state;
+}
+
+
+
+void Occupant_Action_HeatingSetPoints_Learning::parseConfiguration(
+                                                  const std::string filename) {
+  namespace rx = rapidxml;
+  rx::file<> xmlFile(filename.c_str());  // Default template is char
+  rx::xml_document<> doc;
+  doc.parse<0>(xmlFile.data());    // 0 means default parse flags
+  rx::xml_node<> *node = doc.first_node("learning");
+  while (node) {
+    rx::xml_node<> *cnode = node->first_node();
+    cnode = node->first_node();
+    while (cnode) {
+      if (std::strcmp(cnode->name(), "states") == 0) {
+        rx::xml_node<> *snode = cnode->first_node();
+        while (snode) {
+          std::vector<int> x = Utility::csvToInt(snode->value());
+          stateMappings.push_back(x);
+          snode = snode->next_sibling();
+        }
+      } else if (std::strcmp(cnode->name(), "name") == 0) {
+          //name = cnode->value();
+      }
+      cnode = cnode->next_sibling();
+    }
+    node = node->next_sibling();
+  }
+
+  qlWeekDay.setStates(24 * stateMappings.size());
+  qlWeekEnd.setStates(24 * stateMappings.size());
 }
