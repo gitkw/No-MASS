@@ -11,11 +11,7 @@ void QLearning_Appliance::setId(const int id) {
     previous_state_name = DataStore::addVariable(filename + "previous_state");
 }
 
-QLearning_Appliance::QLearning_Appliance() {
-    actions = 24;
-    action = 0;
-    previous_state = 0;
-}
+QLearning_Appliance::QLearning_Appliance() {}
 
 void QLearning_Appliance::reset() {}
 
@@ -31,5 +27,5 @@ double QLearning_Appliance::learn() {
 double QLearning_Appliance::getAction() {
   action = greedySelection(state);
   previous_state = state;
-    return action;
+  return action;
 }

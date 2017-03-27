@@ -124,60 +124,63 @@ void Building::buildingInteractions() {
 double Building::decisionDoubleVec(const std::vector<double> & val,
                                   const std::vector<double> & power,
                                   const double currentState) const {
-  double totalIncrease = 0;
-  double totalDecrease = 0;
-  double increase = 0;
-  double decrease = 0;
-  double same = 0;
-  double increasePower = 0;
-  double decreasePower = 0;
-  double samePower = 0;
-  for (unsigned int i = 0; i < val.size(); i++) {
-    double d = val[i];
-    double powerValue = power[i];
-    if (d < currentState) {
-      decrease++;
-      totalDecrease = totalDecrease + d;
-      decreasePower = decreasePower + powerValue;
-    } else if (d > currentState) {
-      increase++;
-      totalIncrease = totalIncrease + d;
-      increasePower = increasePower + powerValue;
-    } else {
-      same++;
-      samePower = samePower + powerValue;
-    }
-  }
+
   double state = currentState;
-  if (samePower == increasePower
-      && samePower == decreasePower
-      && increasePower == decreasePower) {
-      int i = Utility::randomInt(0, 2);
-      if (i == 0) {
-          state = totalIncrease / increase;
-      } else if (i == 1) {
-          state = totalDecrease / decrease;
-      }
-  } else if (samePower < increasePower && increasePower > decreasePower) {
-      state = totalIncrease / increase;
-  } else if (samePower < decreasePower && increasePower < decreasePower) {
-      state = totalDecrease / decrease;
-  } else if (samePower == increasePower && samePower > decreasePower) {
-      if (Utility::tossACoin()) {
-          state = totalIncrease / increase;
-      }
-  } else if (samePower > increasePower && samePower == decreasePower) {
-      if (Utility::tossACoin()) {
-          state = totalDecrease / decrease;
-      }
-  } else if (samePower < increasePower
-      && samePower < decreasePower
-      && increasePower == decreasePower) {
-      if (Utility::tossACoin()) {
-          state = totalIncrease / increase;
+  if (!val.empty()){
+    double totalIncrease = 0;
+    double totalDecrease = 0;
+    double increase = 0;
+    double decrease = 0;
+    double same = 0;
+    double increasePower = 0;
+    double decreasePower = 0;
+    double samePower = 0;
+    for (unsigned int i = 0; i < val.size(); i++) {
+      double d = val[i];
+      double powerValue = power[i];
+      if (d < currentState) {
+        decrease++;
+        totalDecrease = totalDecrease + d;
+        decreasePower = decreasePower + powerValue;
+      } else if (d > currentState) {
+        increase++;
+        totalIncrease = totalIncrease + d;
+        increasePower = increasePower + powerValue;
       } else {
-          state = totalDecrease / decrease;
+        same++;
+        samePower = samePower + powerValue;
       }
+    }
+    if (samePower == increasePower
+        && samePower == decreasePower
+        && increasePower == decreasePower) {
+        int i = Utility::randomInt(0, 2);
+        if (i == 0) {
+            state = totalIncrease / increase;
+        } else if (i == 1) {
+            state = totalDecrease / decrease;
+        }
+    } else if (samePower < increasePower && increasePower > decreasePower) {
+        state = totalIncrease / increase;
+    } else if (samePower < decreasePower && increasePower < decreasePower) {
+        state = totalDecrease / decrease;
+    } else if (samePower == increasePower && samePower > decreasePower) {
+        if (Utility::tossACoin()) {
+            state = totalIncrease / increase;
+        }
+    } else if (samePower > increasePower && samePower == decreasePower) {
+        if (Utility::tossACoin()) {
+            state = totalDecrease / decrease;
+        }
+    } else if (samePower < increasePower
+        && samePower < decreasePower
+        && increasePower == decreasePower) {
+        if (Utility::tossACoin()) {
+            state = totalIncrease / increase;
+        } else {
+            state = totalDecrease / decrease;
+        }
+    }
   }
   return state;
 }
@@ -259,7 +262,6 @@ void Building::setOccupantBlindDecisionForZone(
     double state = zone->getBlindState();
     std::vector<double> desires;
     std::vector<double> powers;
-
     for (const Occupant &agent : population) {
         if (agent.isActionShades(*zone)) {
             double desire = agent.getDesiredShadeState(*zone);

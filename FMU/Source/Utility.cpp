@@ -100,3 +100,19 @@ std::vector<std::string> Utility::csvToTableHead(const std::string & filename) {
   }
   return t;
 }
+
+std::vector<double> Utility::csvToDouble(const std::string & s) {
+  std::vector<double> items;
+  for (std::string &item : Utility::splitCSV(s)) {
+      items.push_back(std::stod(item));
+  }
+  return items;
+}
+
+std::vector<int> Utility::csvToInt(const std::string & s) {
+  std::vector<int> items;
+  for (std::string &item : Utility::splitCSV(s)) {
+      items.push_back(std::stoi(item));
+  }
+  return items;
+}

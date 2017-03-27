@@ -226,7 +226,7 @@ class SimulationConfig {
     static bool strComp(const char * str1, const char * str2);
     static bool nodeNameIs(const rapidxml::xml_node<> *node, const char * str2);
     static bool nodeNameIs(const std::string & name, const char * str2);
-    static std::vector<double> csvToDouble(const std::string & s);
+    
     static std::vector<double> prioritiesToVector(
                                         const std::string & priorities);
     static std::vector<int> activityNamesToIds(

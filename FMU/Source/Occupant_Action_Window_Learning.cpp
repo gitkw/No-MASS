@@ -4,7 +4,6 @@
 #include "SimulationConfig.h"
 #include "DataStore.h"
 #include "Environment.h"
-#include "QLearning_Window.h"
 #include "Occupant_Action_Window_Learning.h"
 
 void Occupant_Action_Window_Learning::print() {
@@ -21,6 +20,7 @@ void Occupant_Action_Window_Learning::setup(const int id) {
   std::string zoneIdStr = std::to_string(zoneId);
   learn.setFilename("window-" + zoneIdStr + "-");
   learn.setStates(400);
+  learn.setActions(2);
   learn.setId(id);
   learn.setUpdate(SimulationConfig::info.learn);
   learn.setEpsilon(SimulationConfig::info.learnep);

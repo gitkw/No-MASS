@@ -6,7 +6,7 @@
 #include <cmath>
 
 #include "DataStore.h"
-#include "QLearning_HeatingSetPoints.h"
+#include "QLearning_Occupant.h"
 
 #include "Building_Zone.h"
 #include "SimulationConfig.h"
@@ -17,12 +17,13 @@
 
 class Test_QLearning_HeatingSetPoints : public ::testing::Test {
  protected:
-    QLearning_HeatingSetPoints ql;
+    QLearning_Occupant ql;
     virtual void SetUp();
 };
 
 void Test_QLearning_HeatingSetPoints::SetUp() {
   ql.setStates(288);
+  ql.setActions(20);
   SimulationConfig::info.learnep = 0.8;
 
   DataStore::addVariable("Block1:Zone1ZoneMeanAirTemperature");

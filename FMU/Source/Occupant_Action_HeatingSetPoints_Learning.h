@@ -1,7 +1,7 @@
 #ifndef Occupant_ACTION_HEATINGSETPOINTS_LEARNING_H
 #define Occupant_ACTION_HEATINGSETPOINTS_LEARNING_H
 #include <memory>
-#include "QLearning_HeatingSetPoints.h"
+#include "QLearning_Occupant.h"
 #include "Occupant_Action.h"
 
 class Occupant_Action_HeatingSetPoints_Learning : public Occupant_Action
@@ -13,8 +13,11 @@ class Occupant_Action_HeatingSetPoints_Learning : public Occupant_Action
     void print();
     void reset();
   private:
-    QLearning_HeatingSetPoints qlWeekDay;
-    QLearning_HeatingSetPoints qlWeekEnd;
+
+    void parseConfiguration(const std::string filename);
+
+    QLearning_Occupant qlWeekDay;
+    QLearning_Occupant qlWeekEnd;
 
     int learnId;
     int agentId;
@@ -26,7 +29,11 @@ class Occupant_Action_HeatingSetPoints_Learning : public Occupant_Action
     double pmv;
     int pmv_name;
     int step_name;
-  //  QLearning ql;
+
+    std::string file;
+    std::vector<std::vector<int>> stateMappings;
+
+    int getState() const;
 };
 
 #endif // Occupant_ACTION_HEATINGSETPOINTS_LEARNING_H

@@ -79,10 +79,11 @@ void QLearning::printQ() const {
     std::ofstream myfile;
     myfile.open(filename + std::to_string(id) + ".dat");
     for (int i =0; i < states; i++) {
-        for (int j =0; j < actions; j++) {
-            myfile  << qTable[i][j]  << ",";
+        myfile << qTable[i][0];
+        for (int j =1; j < actions; j++) {
+            myfile << "," << qTable[i][j];
         }
-        myfile  <<  std::endl;
+        myfile << std::endl;
     }
     myfile.close();
 }
