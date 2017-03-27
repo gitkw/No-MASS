@@ -5,11 +5,11 @@
 
 Appliance_Group_FMI::Appliance_Group_FMI() {}
 
-void Appliance_Group_FMI::setup(const std::vector<appFMIStruct> & app,
+void Appliance_Group_FMI::setup(const std::vector<applianceStruct> & app,
                                 const int & buildingID,
     const std::string & buildingString) {
 
-      for (const appFMIStruct s : app) {
+      for (const applianceStruct s : app) {
         appliances.push_back(Appliance_FMI());
         appliances.back().setID(s.id);
         appliances.back().setBuildingID(buildingID);

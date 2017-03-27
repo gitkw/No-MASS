@@ -8,7 +8,7 @@
 #include "gtest/gtest.h"
 
 /*
-struct appCSVStruct {
+struct applianceStruct {
     std::string name;
     int id;
     std::vector<double> priority;
@@ -36,16 +36,16 @@ void Test_Appliance_Generic_CSV::SetUp() {
                                                   "DSM1house.xml");
   SimulationConfig::setStepCount(-1);
   Utility::setSeed(0);
-    appCSVStruct a;
+    applianceStruct a;
     a.fileSupply = testFiles + "PVBowler2013_365.csv";
     a.fileDemand = testFiles + "heatingPower.csv";
     a.id = 0;
-    a.cost = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    a.costVector = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     a.priority = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     csv.setID(a.id);
     csv.setHoulyPriority(a.priority);
-    csv.setHourlyCost(a.cost);
+    csv.setHourlyCost(a.costVector);
     csv.setBuildingID(0);
     csv.setFileDemand(a.fileDemand);
     csv.setFileSupply(a.fileSupply);
@@ -98,7 +98,7 @@ TEST_F(Test_Appliance_Generic_CSV, power) {
 
     power = csv.getPower();
     supply = csv.getSupply();
-    double recieved = csv.getReceived();
+    //double recieved = csv.getReceived();
 
     double left = supply - power;
     if(supply - power < 0) left = 0;

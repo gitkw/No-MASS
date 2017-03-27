@@ -76,35 +76,24 @@ void Simulation::preTimeStep() {
   Environment::calculateDailyMeanTemperature();
 }
 
-
 /**
  * @brief Increments the timestep for the simulation
  * @details Increments the timestep for the EnergyPlus processor, the AgentModel and the ZoneManager.
  * Also we send any effects the agent have to the zones they are located in.
  */
 void Simulation::timeStep() {
-
-  gridCost = 0;
-  if (!SimulationConfig::info.GridCost.empty()){
-    if (SimulationConfig::info.GridCost.size() == 24) {
-      int stepCount = SimulationConfig::getStepCount();
-      int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
-      int hourOfDay = hour % 24;
-      gridCost = SimulationConfig::info.GridCost[hourOfDay];
-    } else if (SimulationConfig::info.GridCost.size() == 48) {
-      int stepCount = SimulationConfig::getStepCount();
-      int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 1800;
-      int halfHourOfDay = hour % 48;
-      gridCost = SimulationConfig::info.GridCost[halfHourOfDay];
-    } else {
-      gridCost = SimulationConfig::info.GridCost[0];
-    }
-  }
-
+  std::shuffle(buildings.begin(), buildings.end(), Utility::engine);
+  calculateGridCost();
+  //local negotiation
   for (Building &b : buildings) {
       b.step();
       b.stepAppliancesUse();
+      // add to contracts
       b.addContactsTo(&building_negotiation, true);
+  }
+  // battery negotiation
+  for (Building &b : buildings) {
+      b.stepAppliancesUseBatteries(&building_negotiation);
   }
 
   building_negotiation.process();
@@ -112,6 +101,7 @@ void Simulation::timeStep() {
   for (Building &b : buildings) {
       b.stepAppliancesNegotiationNeighbourhood(building_negotiation);
   }
+
 
   building_negotiation.clear();
 
@@ -153,4 +143,22 @@ void Simulation::postTimeStep() {
       lvn.setPowerForID(b.getPower(), b.getID());
   }
   lvn.postTimeStep();
+}
+
+void Simulation::calculateGridCost(){
+  gridCost = 0;
+  if (!SimulationConfig::info.GridCost.empty()){
+    gridCost = SimulationConfig::info.GridCost[0];
+    if (SimulationConfig::info.GridCost.size() == 24) {
+      int stepCount = SimulationConfig::getStepCount();
+      int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
+      int hourOfDay = hour % 24;
+      gridCost = SimulationConfig::info.GridCost[hourOfDay];
+    } else if (SimulationConfig::info.GridCost.size() == 48) {
+      int stepCount = SimulationConfig::getStepCount();
+      int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 1800;
+      int halfHourOfDay = hour % 48;
+      gridCost = SimulationConfig::info.GridCost[halfHourOfDay];
+    }
+  }
 }

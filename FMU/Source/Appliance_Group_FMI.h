@@ -15,7 +15,7 @@
 class Appliance_Group_FMI : public Appliance_Group<Appliance_FMI> {
  public:
     Appliance_Group_FMI();
-    void setup(const std::vector<appFMIStruct> & app,
+    void setup(const std::vector<applianceStruct> & app,
                                     const int & buildingID,
                                     const std::string & buildingString);
  protected:

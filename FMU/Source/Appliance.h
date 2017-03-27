@@ -67,7 +67,8 @@ class Appliance : public Agent {
     double getGridPower() const;
 
  protected:
-
+    virtual void saveNeighbourhoodCalculate();
+    virtual void saveGlobalCalculate();
     void setPower(const double power);
     void setSupply(const double supply);
     void setSupplyCost(const double supplyCost);
@@ -99,11 +100,11 @@ class Appliance : public Agent {
     int datastoreGridIDRequested;
     int datastoreGridIDCost;
 
-private:
     ApplianceParameters parameters;
     ApplianceParameters parametersLocal;
     ApplianceParameters parametersNeighbourhood;
     ApplianceParameters parametersGrid;
+ private:
 };
 
 #endif  // APPLIANCE_H_

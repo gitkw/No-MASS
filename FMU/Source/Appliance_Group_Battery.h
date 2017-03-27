@@ -15,10 +15,10 @@ class Appliance_Group_Battery : public Appliance_Group<T> {
  public:
     Appliance_Group_Battery(){}
 
-    void setup(const std::vector<appBatteryStruct> & appBattery,
+    void setup(const std::vector<applianceStruct> & appBattery,
                                     const int & buildingID,
                                     const std::string & buildingString) {
-      for (const appBatteryStruct s : appBattery) {
+      for (const applianceStruct s : appBattery) {
         this->appliances.push_back(T());
         this->appliances.back().setID(s.id);
         this->appliances.back().setEpsilon(s.epsilon);
@@ -26,6 +26,7 @@ class Appliance_Group_Battery : public Appliance_Group<T> {
         this->appliances.back().setGamma(s.gamma);
         this->appliances.back().setUpdate(s.update);
         this->appliances.back().setHoulyPriority(s.priority);
+        this->appliances.back().setNeighbourhoodSimultion(s.neighbourhoodSimultion);
         this->appliances.back().setBuildingID(buildingID);
         this->appliances.back().setup();
         this->appliances.back().setIDString(buildingString + std::to_string(s.id));
@@ -35,7 +36,8 @@ class Appliance_Group_Battery : public Appliance_Group<T> {
       this->setupSave();
     }
 
-    void step(Contract_Negotiation * app_negotiation){
+    void step(Contract_Negotiation * app_negotiation) {
+      this->reset();
       std::vector<int> pop = Utility::randomIntVect(this->appliances.size());
       for (int a : pop) {
         this->appliances[a].setPowerShortage(powerShortage);
@@ -44,26 +46,54 @@ class Appliance_Group_Battery : public Appliance_Group<T> {
         bool local = this->sendContractLocal(this->appliances[a], app_negotiation);
         this->appliances[a].setLocal(local);
         this->appliances[a].setGlobal(false);
-        this->parameters.power += this->appliances[a].getPower();
-        this->parameters.supply += this->appliances[a].getSupply();
+        this->setParameters(this->appliances[a]);
       }
     }
 
-    virtual void neighbourhoodNegotiation(const Contract_Negotiation & building_negotiation) {
-      this->clearGlobalContracts();
-      for (auto & g : this->appliances) {
-        if (g.isGlobal()) {
-          int appid = g.getID();
-          int buildingID = g.getBuildingID();
-          Contract c = building_negotiation.getContract(buildingID, appid);
-          g.setGlobal(false);
-          g.setReceived(c.received);
-          g.setReceivedCost(c.receivedCost);
-          g.setSupplyLeft(c.suppliedLeft);
-        }
-        g.saveNeighbourhood();
-      }
+void neighbourhoodNegotiationBattery(Contract_Negotiation * building_negotiation) {
+  std::vector<int> pop = Utility::randomIntVect(this->appliances.size());
+  for (int a : pop) {
+    if(building_negotiation->getDifference() >= 0){
+      break;
     }
+    this->appliances[a].setPowerShortage(-building_negotiation->getDifference());
+    this->appliances[a].stepNeighbourhood();
+    bool local = false;
+    if(this->appliances[a].getSupply() > 0 ){
+      local = this->sendContractLocal(this->appliances[a], building_negotiation);
+    }
+    this->appliances[a].setGlobal(local);
+  }
+}
+
+void neighbourhoodNegotiation(const Contract_Negotiation & building_negotiation) {
+  this->reset();
+  std::vector<int> pop = Utility::randomIntVect(this->appliances.size());
+  for (int a : pop) {
+    if (this->appliances[a].isGlobal()) {
+      int appid = this->appliances[a].getID();
+      int buildingID = this->appliances[a].getBuildingID();
+      Contract c = building_negotiation.getContract(buildingID, appid);
+      this->appliances[a].setGlobal(false);
+      this->appliances[a].setReceived(c.received);
+      this->appliances[a].setReceivedCost(c.receivedCost);
+      this->appliances[a].setSupplyLeft(c.suppliedLeft);
+    }
+
+    this->setParameters(this->appliances[a]);
+    this->appliances[a].saveNeighbourhood();
+  }
+}
+
+bool sendContractGlobal(const Contract & c) {
+  bool send = (c.suppliedLeft > 0);
+  if (send) {
+    Contract x = c;
+    x.supplied = c.suppliedLeft;
+    this->globalContracts.push_back(x);
+  }
+  return send;
+}
 
     void setPowerShortage(double powerShortage){
       this->powerShortage = powerShortage;

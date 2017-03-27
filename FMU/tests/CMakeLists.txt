@@ -51,7 +51,10 @@ SET( TESTSRC
   source/unittest_QLearning_HeatingSetPoints.cc
   source/unittest_QLearning_Window.cc
   source/unittest_Appliance_Large.cc
+  source/unittest_Appliance_Large_Learning.cc
+  source/unittest_Appliance_Battery.cc
   source/unittest_Appliance_Group_Large.cc
+  source/unittest_Appliance_Group_Battery.cc
   source/unittest_Appliance_Group_CSV.cc
   source/unittest_Appliance_Generic_CSV.cc
   source/unittest_Building_Appliances.cc

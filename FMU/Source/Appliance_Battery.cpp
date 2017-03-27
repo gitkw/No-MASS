@@ -64,7 +64,6 @@ void Appliance_Battery::doAction(){
   // for that hour
   int hourOfTheDay = calculateHourOfDay();
   if (hourOfTheDay != previousHourOfDay) {
-    previousHourOfDay = hourOfTheDay;
     // Get the energy needed over the last hour,
     // less what has been supplied by the battery
     double binShortage = sumShort - sumSupply;
@@ -79,9 +78,6 @@ void Appliance_Battery::doAction(){
     // calculate the percentage of power over the last
     // against the maximum seen
     double reward = rewardFunction(mostShortage, binShortage);
-
-
-
     // save reward for state
     qLearning.setReward(reward);
     qLearning.setState(hourOfTheDay);
@@ -90,9 +86,33 @@ void Appliance_Battery::doAction(){
     // get new reward
     action = qLearning.getAction();
     // reset the hourly sums
-    sumSupply = 0.0;
-    sumShort = 0.0;
   }
+}
+
+/**
+ * @brief The timestep call of the battery appliance
+ * @details
+ */
+void Appliance_Battery::stepNeighbourhood() {
+
+  if (neighbourhoodSimultion){
+    if(getSupply() == 0){
+      doAction();
+    }
+    double dischargeRateOld = dischargeRate;
+    dischargeRate -= getSupply();
+    calculateSupply();
+    dischargeRate = dischargeRateOld;
+
+
+    int hourOfTheDay = calculateHourOfDay();
+    if (hourOfTheDay != previousHourOfDay) {
+      previousHourOfDay = hourOfTheDay;
+      sumSupply = 0.0;
+      sumShort = 0.0;
+    }
+  }
+
 }
 
 /**
@@ -105,23 +125,29 @@ void Appliance_Battery::step() {
   // get the recieved power and add it to the battery
   get_new_SOC_charge(getReceived());
 
-  // if the battery is not full calculate how much power is needed
-  setPower(0.0);
-  if(stateOfCharge < 100) {
-    setPower(get_charge_delta());
-  }
-
   setSupply(0.0);
+  calculateSupply();
+  setPower(0.0);
+  // we cant supply and request power
+  // ie charge and discharge at the same time
+  if (getSupply() == 0){
+    // if the battery is not full calculate how much power is needed
+    if(stateOfCharge < 100) {
+      setPower(get_charge_delta());
+    }
+  }
+  // reset the recieved power
+  setReceived(0.0);
+}
+
+void Appliance_Battery::calculateSupply() {
   // If there is a power shortage
   if (powerShortage > 0){
     // Check battery is not empty and there is an action
     // actions are calculated from the learning
     if (action && stateOfCharge > 0) {
       // get power from battery as supply
-      setSupply(get_new_SOC_discharge(powerShortage));
-      // we cant supply and request power
-      // ie charge and discharge at the same time
-      setPower(0.0);
+      setSupply(get_new_SOC_discharge(powerShortage) + getSupply());
       // add the power to the sum for the hour
       // used to learn
       sumSupply += getSupply();
@@ -129,19 +155,19 @@ void Appliance_Battery::step() {
     // add the power shortage to the hourly sum used for learning
     sumShort += powerShortage;
   }
-  // reset the recieved power
-  setReceived(0.0);
-  // save the new state of charge to the datastore
-  DataStore::addValue(datastoreIDstateOfCharge, stateOfCharge);
 }
 
+
 void Appliance_Battery::clear() {
+  // save the new state of charge to the datastore
+  DataStore::addValue(datastoreIDstateOfCharge, stateOfCharge);
   local = false;
   global = false;
   setPower(0.0);
   setSupply(0.0);
   setSupplyCost(0.0);
   setReceivedCost(0.0);
+  setSupplyLeft(0.0);
 }
 
 /**
@@ -215,4 +241,28 @@ double Appliance_Battery::get_new_SOC_discharge(double P_request) {
 
 double Appliance_Battery::energy_calc() const{
     return stateOfCharge * capacity / 100; // this is the capacity at the correspondent SOC.
+}
+
+
+void Appliance_Battery::saveNeighbourhoodCalculate() {
+    parametersNeighbourhood.supply = parameters.supply - parameters.suppliedLeft;
+    if (parametersLocal.supply > 0 ){
+      parametersNeighbourhood.supply = parameters.supply - parametersLocal.suppliedLeft - parameters.suppliedLeft;
+    }
+    parametersNeighbourhood.suppliedLeft = parameters.suppliedLeft;
+    parametersNeighbourhood.received = parameters.received - parametersLocal.received;
+    parametersNeighbourhood.power =  parameters.power - parametersLocal.received;
+    parametersNeighbourhood.receivedCost =  parameters.receivedCost - parametersLocal.receivedCost;
+}
+
+void Appliance_Battery::saveGlobalCalculate(){
+  parametersGrid.supply = parameters.suppliedLeft;
+  parametersGrid.suppliedLeft = parameters.suppliedLeft;
+  parametersGrid.received = parameters.received - parametersNeighbourhood.received - parametersLocal.received;
+  parametersGrid.power =  parameters.power - parametersNeighbourhood.received - parametersLocal.received;
+  parametersGrid.receivedCost =  parameters.receivedCost - parametersNeighbourhood.receivedCost  - parametersLocal.receivedCost;
+}
+
+void Appliance_Battery::setNeighbourhoodSimultion(bool neighbourhoodSimultion) {
+  this->neighbourhoodSimultion = neighbourhoodSimultion;
 }

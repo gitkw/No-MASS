@@ -15,7 +15,7 @@
 class Appliance_Group_CSV : public Appliance_Group<Appliance_Generic_CSV> {
  public:
     Appliance_Group_CSV();
-    void setup(const std::vector<appCSVStruct> & appCSV,
+    void setup(const std::vector<applianceStruct> & appCSV,
                                     const int & buildingID,
                                     const std::string & buildingString);
  protected:

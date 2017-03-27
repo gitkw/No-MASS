@@ -15,7 +15,7 @@
 class Appliance_Group_Small : public Appliance_Group<Appliance_Small> {
  public:
     Appliance_Group_Small();
-    void setup(const std::vector<appSmallStruct> & appSmall,
+    void setup(const std::vector<applianceStruct> & appSmall,
                                     const int & buildingID,
                                     const std::string & buildingString);
  protected:

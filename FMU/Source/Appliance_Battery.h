@@ -20,6 +20,7 @@ class Appliance_Battery : public Appliance {
   void setup();
   void setupModel();
   void step();
+  void stepNeighbourhood();
   void postprocess();
   void setPowerShortage(double power);
   void setEpsilon(double epsilon);
@@ -27,6 +28,7 @@ class Appliance_Battery : public Appliance {
   void setGamma(double gamma);
   void setUpdate(bool update);
   void AddCost(double cost);
+  void setNeighbourhoodSimultion(bool neighbourhoodSimultion);
   virtual double rewardFunction(double mostShortage, double binShortage) const;
 
  protected:
@@ -38,7 +40,9 @@ class Appliance_Battery : public Appliance {
   double get_charge_delta() const;
   double calculateDeltaE(double P_request) const;
   void calculateStateOfCharge(double energy);
-
+  void calculateSupply();
+  void saveNeighbourhoodCalculate();
+  void saveGlobalCalculate();
 
   int datastoreIDstateOfCharge;
   double chargeRate = 1000;
@@ -60,7 +64,7 @@ class Appliance_Battery : public Appliance {
   double efficiency = 0.98;
   double stateOfCharge;
   double BatteryDeltaT;
-
+  bool neighbourhoodSimultion = false;
 
 };
 

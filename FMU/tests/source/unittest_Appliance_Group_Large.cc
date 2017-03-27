@@ -7,7 +7,7 @@
 #include "gtest/gtest.h"
 
 /*
-struct appLargeStruct {
+struct applianceStruct {
     std::string name;
     int id;
     std::vector<double> priority;
@@ -25,7 +25,7 @@ struct appLargeStruct {
 class Test_Appliance_Group_Large : public ::testing::Test {
  protected:
     Appliance_Group_Large large;
-    std::vector<appLargeStruct> AppliancesLarge;
+    std::vector<applianceStruct> AppliancesLarge;
     Contract_Negotiation local_negotiation;
     Contract_Negotiation neigh_negotiation;
     Contract_Negotiation global_negotiation;
@@ -41,7 +41,7 @@ void Test_Appliance_Group_Large::SetUp() {
   SimulationConfig::FolderSmallAppliance = testFiles + "SmallAppliances/";
   SimulationConfig::setStepCount(-1);
   Utility::setSeed(0);
-  appLargeStruct a;
+  applianceStruct a;
   a.name = "test_app_";
   a.id = 0;
   a.priority = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -159,7 +159,7 @@ TEST_F(Test_Appliance_Group_Large, powerSupply) {
 
 TEST_F(Test_Appliance_Group_Large, Appliances) {
   for(int i = 0; i < 5; i++) {
-    appLargeStruct a;
+    applianceStruct a;
     a.name = "test_app_" + std::to_string(i+1) + "_";
     a.id = i + 1;
     a.priority = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -301,12 +301,8 @@ TEST_F(Test_Appliance_Group_Large, networkLevelLocal) {
     EXPECT_NEAR(a.getNeighbourhoodReceived(), 0, 0.01);
     EXPECT_NEAR(a.getGridPower(), 0, 0.01);
     EXPECT_NEAR(a.getGridReceived(), 0, 0.01);
-
   }
-
 }
-
-
 
 TEST_F(Test_Appliance_Group_Large, networkLevelNeighbourhood) {
 
@@ -320,9 +316,6 @@ TEST_F(Test_Appliance_Group_Large, networkLevelNeighbourhood) {
     EXPECT_TRUE(supply >= 0);
     EXPECT_NEAR(supply, 0, 0);
     EXPECT_NEAR(recieved, 0, 0);
-
-
-
 
     local_negotiation.process();
     large.localNegotiation(local_negotiation);

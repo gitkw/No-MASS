@@ -29,6 +29,8 @@ class Simulation {
     static double getGridCost();
 
  private:
+
+    static void calculateGridCost();
     std::vector<int> monthCount;
     std::string simulationConfigurationFile;
     static double gridCost;

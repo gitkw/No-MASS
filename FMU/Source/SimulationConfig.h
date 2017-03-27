@@ -118,62 +118,47 @@ struct windowStruct {
     double b10gddep;
 };
 
-struct appLargeStruct {
-    std::string name;
-    int id;
-    std::vector<double> priority;
-    std::vector<double> timeRequired
-    = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    double cost;
-    double epsilon = 0.1;   // probability of a random action selection
-    double alpha = 0.3;     // learning rate
-    double gamma = 0.1;     // discount factor (how soon do you care)
-    bool update = false;
-    std::vector<int> activities;
-};
-
-struct appCSVStruct {
-    std::string fileSupply;
-    std::string fileDemand;
-    int id;
-    std::vector<double> cost;
-    std::vector<double> priority;
-};
-
-struct appSmallStruct {
-  std::string WeibullParameters;
-  std::string StateProbabilities;
-  std::string Fractions;
-  std::string SumRatedPowers;
+struct applianceStruct{
+  std::string name;
   int id;
   std::vector<double> priority;
-};
+  std::vector<double> timeRequired
+  = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-struct appFMIStruct {
-  std::string variableName;
-  int id;
-  std::vector<double> priority;
-};
+  double cost;
+  std::vector<double> costVector;
 
-struct appBatteryStruct {
-  int id;
-  std::vector<double> priority;
   double epsilon = 0.1;   // probability of a random action selection
   double alpha = 0.3;     // learning rate
   double gamma = 0.1;     // discount factor (how soon do you care)
   bool update = false;
+
+  std::vector<int> activities;
+
+  std::string fileSupply;
+  std::string fileDemand;
+
+  std::string WeibullParameters;
+  std::string StateProbabilities;
+  std::string Fractions;
+  std::string SumRatedPowers;
+
+  std::string variableName;
+
+  bool neighbourhoodSimultion;
+
 };
 
 struct buildingStruct {
     std::map<std::string, ZoneStruct> zones;
-    std::vector<appLargeStruct> AppliancesLarge;
-    std::vector<appLargeStruct> AppliancesGrid;
-    std::vector<appLargeStruct> AppliancesLargeLearning;
-    std::vector<appSmallStruct> AppliancesSmall;
-    std::vector<appCSVStruct> AppliancesCSV;
-    std::vector<appFMIStruct> AppliancesFMI;
-    std::vector<appBatteryStruct> AppliancesBattery;
-    std::vector<appBatteryStruct> AppliancesBatteryGrid;
+    std::vector<applianceStruct> AppliancesLarge;
+    std::vector<applianceStruct> AppliancesGrid;
+    std::vector<applianceStruct> AppliancesLargeLearning;
+    std::vector<applianceStruct> AppliancesSmall;
+    std::vector<applianceStruct> AppliancesCSV;
+    std::vector<applianceStruct> AppliancesFMI;
+    std::vector<applianceStruct> AppliancesBattery;
+    std::vector<applianceStruct> AppliancesBatteryGrid;
     std::vector<agentStruct> agents;
     std::string name;
     int id;

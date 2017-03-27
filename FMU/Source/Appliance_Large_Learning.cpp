@@ -140,7 +140,8 @@ void Appliance_Large_Learning::saveActualProfile() {
  * if there is data in the profile get the learn start time
  */
 void Appliance_Large_Learning::stepApplianceOffAndNotLearning() {
-  if (isOn() || match) {
+  int timeStep = SimulationConfig::getStepCount();
+  if (model.onAt(timeStep) || match) {
     calculateProfile();
   }
 }

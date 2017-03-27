@@ -342,3 +342,7 @@ int Building::getID() const {
 void Building::addContactsTo(Contract_Negotiation * building_negotiation,const bool battery) {
   appliances.addContactsTo(building_negotiation, battery);
 }
+
+void Building::stepAppliancesUseBatteries(Contract_Negotiation * building_negotiation){
+  appliances.stepAppliancesUseBatteries(building_negotiation);
+}

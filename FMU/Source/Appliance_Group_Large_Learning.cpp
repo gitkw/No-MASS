@@ -5,11 +5,11 @@
 
 Appliance_Group_Large_Learning::Appliance_Group_Large_Learning() {}
 
-void Appliance_Group_Large_Learning::setup(const std::vector<appLargeStruct> & app,
+void Appliance_Group_Large_Learning::setup(const std::vector<applianceStruct> & app,
                                 const int & buildingID,
                                 const std::string & buildingString) {
 
-    for (const appLargeStruct &s : app) {
+    for (const applianceStruct &s : app) {
       appliances.push_back(Appliance_Large_Learning());
       appliances.back().setEpsilon(s.epsilon);
       appliances.back().setAlpha(s.alpha);

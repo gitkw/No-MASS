@@ -27,19 +27,21 @@ class Building_Appliances {
     Building_Appliances();
     void setup(const buildingStruct & b);
     void stepLocal();
+    void stepAppliancesUseBatteries(
+                        Contract_Negotiation * building_negotiation);
     void stepLocalNegotiation();
     void stepGlobalNegotiation(
                         const Contract_Negotiation & building_negotiation);
 
     void stepNeighbourhoodNegotiation(
                         const Contract_Negotiation & building_negotiation);
-                        
+
     void postprocess();
     void preprocess();
     void postTimeStep();
     void addCurrentStates(const int stateid);
     void addContactsTo(Contract_Negotiation * building_negotiation,
-                        const bool battery) const;
+                        const bool battery);
     double getTotalPower() const;
 
  private:

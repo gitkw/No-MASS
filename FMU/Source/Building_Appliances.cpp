@@ -42,11 +42,11 @@ void Building_Appliances::stepLocal() {
                   + small.getPower()
                   + csv.getPower()
                   + fmi.getPower()
-                  - large.getSupply()
-                  - largeLearning.getSupply()
-                  - small.getSupply()
-                  - csv.getSupply()
-                  - fmi.getSupply();
+                  - large.getSupplyLeft()
+                  - largeLearning.getSupplyLeft()
+                  - small.getSupplyLeft()
+                  - csv.getSupplyLeft()
+                  - fmi.getSupplyLeft();
 
     batteries.setPowerShortage(powerShortage);
     batteries.step(&app_negotiation);
@@ -75,10 +75,8 @@ void Building_Appliances::stepNeighbourhoodNegotiation(
     small.neighbourhoodNegotiation(building_negotiation);
     fmi.neighbourhoodNegotiation(building_negotiation);
     csv.neighbourhoodNegotiation(building_negotiation);
-
     batteries.neighbourhoodNegotiation(building_negotiation);
     batteriesGrid.neighbourhoodNegotiation(building_negotiation);
-
 }
 
 void Building_Appliances::stepGlobalNegotiation(
@@ -160,7 +158,7 @@ void Building_Appliances::addCurrentStates(const int stateid) {
 
 void Building_Appliances::addContactsTo(
                                 Contract_Negotiation * building_negotiation,
-                              const bool battery) const {
+                              const bool battery) {
   large.addGlobalContactsTo(building_negotiation);
   largeLearning.addGlobalContactsTo(building_negotiation);
   small.addGlobalContactsTo(building_negotiation);
@@ -170,4 +168,10 @@ void Building_Appliances::addContactsTo(
     batteries.addGlobalContactsTo(building_negotiation);
     batteriesGrid.addGlobalContactsTo(building_negotiation);
   }
+}
+
+void Building_Appliances::stepAppliancesUseBatteries(
+                    Contract_Negotiation * building_negotiation){
+  batteries.neighbourhoodNegotiationBattery(building_negotiation);
+  batteriesGrid.neighbourhoodNegotiationBattery(building_negotiation);
 }

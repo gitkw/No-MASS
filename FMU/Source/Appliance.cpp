@@ -69,26 +69,32 @@ void Appliance::saveLocal() {
   DataStore::addValue(datastoreLocalIDCost, parametersLocal.receivedCost);
 }
 
-void Appliance::saveNeighbourhood() {
-  parametersNeighbourhood.supply = parametersLocal.suppliedLeft - parameters.suppliedLeft;
-  parametersNeighbourhood.suppliedLeft = parameters.suppliedLeft;
-  parametersNeighbourhood.received = parameters.received - parametersLocal.received;
-  parametersNeighbourhood.power =  parameters.power - parametersLocal.received;
-  parametersNeighbourhood.receivedCost =  parameters.receivedCost - parametersLocal.receivedCost;
+void Appliance::saveNeighbourhoodCalculate() {
+    parametersNeighbourhood.supply = parametersLocal.suppliedLeft - parameters.suppliedLeft;
+    parametersNeighbourhood.suppliedLeft = parameters.suppliedLeft;
+    parametersNeighbourhood.received = parameters.received - parametersLocal.received;
+    parametersNeighbourhood.power =  parameters.power - parametersLocal.received;
+    parametersNeighbourhood.receivedCost =  parameters.receivedCost - parametersLocal.receivedCost;
+}
 
+void Appliance::saveNeighbourhood() {
+  saveNeighbourhoodCalculate();
   DataStore::addValue(datastoreNeighbourhoodIDSupplied, parametersNeighbourhood.supply);
   DataStore::addValue(datastoreNeighbourhoodIDReceived, parametersNeighbourhood.received);
   DataStore::addValue(datastoreNeighbourhoodIDRequested, parametersNeighbourhood.power);
   DataStore::addValue(datastoreNeighbourhoodIDCost, parametersNeighbourhood.receivedCost);
 }
 
-void Appliance::saveGlobal() {
+void Appliance::saveGlobalCalculate(){
   parametersGrid.supply = parametersNeighbourhood.suppliedLeft - parameters.suppliedLeft;
   parametersGrid.suppliedLeft = parameters.suppliedLeft;
   parametersGrid.received = parameters.received - parametersNeighbourhood.received - parametersLocal.received;
   parametersGrid.power =  parameters.power - parametersNeighbourhood.received - parametersLocal.received;
   parametersGrid.receivedCost =  parameters.receivedCost - parametersNeighbourhood.receivedCost  - parametersLocal.receivedCost;
+}
 
+void Appliance::saveGlobal() {
+  saveGlobalCalculate();
   DataStore::addValue(datastoreGridIDSupplied, parametersGrid.supply);
   DataStore::addValue(datastoreGridIDReceived, parametersGrid.received);
   DataStore::addValue(datastoreGridIDRequested, parametersGrid.power);

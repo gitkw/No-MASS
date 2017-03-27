@@ -5,10 +5,10 @@
 
 Appliance_Group_Large::Appliance_Group_Large() {}
 
-void Appliance_Group_Large::setup(const std::vector<appLargeStruct> & app,
+void Appliance_Group_Large::setup(const std::vector<applianceStruct> & app,
                                 const int & buildingID,
                                 const std::string & buildingString) {
-  for (const appLargeStruct &s : app) {
+  for (const applianceStruct &s : app) {
     appliances.push_back(Appliance_Large());
     appliances.back().setID(s.id);
     appliances.back().setBuildingID(buildingID);

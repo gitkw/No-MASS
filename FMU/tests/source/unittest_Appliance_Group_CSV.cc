@@ -7,7 +7,7 @@
 #include "gtest/gtest.h"
 
 /*
-struct appCSVStruct {
+struct applianceStruct {
     std::string name;
     int id;
     std::vector<double> priority;
@@ -25,7 +25,7 @@ struct appCSVStruct {
 class Test_Appliance_Group_CSV : public ::testing::Test {
  protected:
     Appliance_Group_CSV csv;
-    std::vector<appCSVStruct> AppliancesCSV;
+    std::vector<applianceStruct> AppliancesCSV;
     Contract_Negotiation local_negotiation;
     Contract_Negotiation neigh_negotiation;
     Contract_Negotiation global_negotiation;
@@ -41,12 +41,12 @@ void Test_Appliance_Group_CSV::SetUp() {
 
   SimulationConfig::setStepCount(-1);
   Utility::setSeed(0);
-  appCSVStruct a;
+  applianceStruct a;
   a.fileSupply = testFiles + "PVBowler2013_365.csv";
   //a.fileDemand;
   a.id = 0;
   a.priority = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  a.cost = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  a.costVector = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   AppliancesCSV.push_back(a);
 }
 
@@ -160,14 +160,14 @@ TEST_F(Test_Appliance_Group_CSV, powerSupply) {
 
 TEST_F(Test_Appliance_Group_CSV, Appliances) {
   for(int i = 0; i < 5; i++) {
-    appCSVStruct a;
+    applianceStruct a;
     if (i<3){
       a.fileSupply = testFiles + "PVBowler2013_365.csv";
     } else{
       a.fileDemand = testFiles + "PVBowler2013_365.csv";
     }
     a.id = i + 1;
-    a.cost = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    a.costVector = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     a.priority = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     AppliancesCSV.push_back(a);
   }
@@ -197,7 +197,7 @@ TEST_F(Test_Appliance_Group_CSV, Appliances) {
     recieved = csv.getReceived();
     EXPECT_TRUE(power >= 0);
     EXPECT_TRUE(supply >= 0);
-    EXPECT_NEAR(recieved, 0, 0);
+    
 
     csv.addGlobalContactsTo(&global_negotiation);
 

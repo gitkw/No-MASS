@@ -197,7 +197,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
                 nodeNameIs(cnode, "largelearning") ||
                             nodeNameIs(cnode, "grid")) {
       rapidxml::xml_node<> *anode = cnode->first_node();
-      appLargeStruct s;
+      applianceStruct s;
       while (anode) {
         const std::string name = nameToLower(anode);
         const std::string value = anode->value();
@@ -225,7 +225,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
       }
     } else if (nodeNameIs(cnode, "small")) {
       rapidxml::xml_node<> *anode = cnode->first_node();
-      appSmallStruct s;
+      applianceStruct s;
       while (anode) {
         const std::string name = nameToLower(anode);
         const std::string value = anode->value();
@@ -242,7 +242,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
       b->AppliancesSmall.push_back(s);
     }  else if (nodeNameIs(cnode, "fmi")) {
       rapidxml::xml_node<> *anode = cnode->first_node();
-      appFMIStruct s;
+      applianceStruct s;
       while (anode) {
         const std::string name = nameToLower(anode);
         const std::string value = anode->value();
@@ -256,7 +256,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
       b->AppliancesFMI.push_back(s);
     }  else if (nodeNameIs(cnode, "battery") || nodeNameIs(cnode, "batterygridcostreward")) {
       rapidxml::xml_node<> *anode = cnode->first_node();
-      appBatteryStruct s;
+      applianceStruct s;
       while (anode) {
         const std::string name = nameToLower(anode);
         const std::string value = anode->value();
@@ -265,6 +265,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         setValFromNodeIfName(&s.alpha, value, name, "alpha");
         setValFromNodeIfName(&s.gamma, value, name, "gamma");
         setValFromNodeIfName(&s.update, value, name, "updateqtable");
+        setValFromNodeIfName(&s.neighbourhoodSimultion, value, name, "neighbourhoodsimultion");
         if (nodeNameIs(anode, "priority")) {
           s.priority = prioritiesToVector(anode->value());
         }
@@ -277,7 +278,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
       }
     } else if (nodeNameIs(cnode, "pv") || nodeNameIs(cnode, "csv")) {
         rapidxml::xml_node<> *anode = cnode->first_node();
-        appCSVStruct s;
+        applianceStruct s;
         while (anode) {
           const std::string name = nameToLower(anode);
           const std::string value = anode->value();
@@ -288,7 +289,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
           if (nodeNameIs(anode, "priority")) {
             s.priority = prioritiesToVector(anode->value());
           } else if (nodeNameIs(anode, "cost")) {
-            s.cost = csvToDouble(anode->value());
+            s.costVector = csvToDouble(anode->value());
           }
           anode = anode->next_sibling();
         }

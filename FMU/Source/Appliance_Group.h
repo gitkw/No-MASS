@@ -21,15 +21,14 @@ class Appliance_Group {
     Appliance_Group(){};
 
     virtual void step(Contract_Negotiation * app_negotiation){
+      reset();
       std::vector<int> pop = Utility::randomIntVect(appliances.size());
       for (int a : pop) {
         appliances[a].step();
         bool local = sendContractLocal(appliances[a], app_negotiation);
         appliances[a].setLocal(local);
         appliances[a].setGlobal(false);
-        parameters.power += appliances[a].getPower();
-        parameters.supply += appliances[a].getSupply();
-
+        this->setParameters(appliances[a]);
       }
     }
 
@@ -52,7 +51,7 @@ class Appliance_Group {
     }
 
     virtual void localNegotiation(const Contract_Negotiation & app_negotiation) {
-      clearGlobalContracts();
+      reset();
       for (T & g : appliances) {
         if (g.isLocal()) {
           int appid = g.getID();
@@ -63,12 +62,13 @@ class Appliance_Group {
           g.setReceivedCost(c.receivedCost);
           g.setSupplyLeft(c.suppliedLeft);
         }
+        this->setParameters(g);
         g.saveLocal();
       }
     }
 
     virtual void neighbourhoodNegotiation(const Contract_Negotiation & building_negotiation) {
-      clearGlobalContracts();
+      reset();
       for (T & g : appliances) {
         if (g.isGlobal()) {
           int appid = g.getID();
@@ -79,11 +79,13 @@ class Appliance_Group {
           g.setReceivedCost(c.receivedCost);
           g.setSupplyLeft(c.suppliedLeft);
         }
+        this->setParameters(g);
         g.saveNeighbourhood();
       }
     }
 
     virtual void globalNegotiation(const Contract_Negotiation & building_negotiation) {
+      reset();
       for (auto & g : appliances) {
         if (g.isGlobal()) {
           int appid = g.getID();
@@ -93,10 +95,7 @@ class Appliance_Group {
           g.setReceivedCost(c.receivedCost);
           g.setSupplyLeft(c.suppliedLeft);
         }
-
-        parameters.supplyCost += g.getSupplyCost();
-        parameters.received += g.getReceived();
-        parameters.receivedCost += g.getReceivedCost();
+        this->setParameters(g);
         g.saveGlobal();
         g.save();
         g.clear();
@@ -110,6 +109,13 @@ class Appliance_Group {
       }
     }
 
+    virtual void setParameters(const T & app) {
+      parameters.supplyCost += app.getSupplyCost();
+      parameters.received += app.getReceived();
+      parameters.receivedCost += app.getReceivedCost();
+      parameters.power += app.getPower();
+      parameters.supply += app.getSupply();
+    }
 
     virtual void reset() {
       parameters.power = 0.0;
@@ -117,12 +123,12 @@ class Appliance_Group {
       parameters.supplyCost = 0.0;
       parameters.received = 0.0;
       parameters.receivedCost = 0.0;
-      clearGlobalContracts();
+      parameters.suppliedLeft = 0.0;
     }
 
 
 
-    bool sendContractGlobal(const Contract & c) {
+    virtual bool sendContractGlobal(const Contract & c) {
       bool send = (c.requested > c.received || c.suppliedLeft > 0);
       if (send) {
         Contract x = c;
@@ -138,18 +144,19 @@ class Appliance_Group {
       }
     }
 
-    void addGlobalContactsTo(Contract_Negotiation * building_negotiation) const {
+    void addGlobalContactsTo(Contract_Negotiation * building_negotiation) {
       for (const Contract & c : globalContracts) {
         building_negotiation->submit(c);
       }
-    }
-
-    void clearGlobalContracts(){
       globalContracts.clear();
     }
 
+
     double getSupply() const {
       return parameters.supply;
+    }
+    double getSupplyLeft() const {
+      return parameters.suppliedLeft;
     }
 
     double getSupplyCost() const {

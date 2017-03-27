@@ -22,6 +22,7 @@ class Building{
   int getID() const;
 
   void stepAppliancesUse();
+  void stepAppliancesUseBatteries(Contract_Negotiation * building_negotiation);
 
   void stepAppliancesNegotiationNeighbourhood(
                           const Contract_Negotiation & building_negotiation);
