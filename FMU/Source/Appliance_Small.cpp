@@ -1,6 +1,7 @@
 // Copyright 2016 Jacob Chapman
 
 #include <string>
+#include <algorithm>
 #include "DataStore.h"
 #include "SimulationConfig.h"
 #include "Utility.h"

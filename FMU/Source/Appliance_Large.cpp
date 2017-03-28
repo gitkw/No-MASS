@@ -3,6 +3,7 @@
 #include <cassert>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include "SimulationConfig.h"
 #include "Utility.h"
 #include "Appliance_Large.h"
