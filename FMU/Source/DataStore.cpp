@@ -135,9 +135,7 @@ void DataStore::print() {
         for (unsigned int j : ids) {
             myfile << ",";
             if (intMap.at(j).size() > i) {
-                myfile << intMap.at(j).at(i);
-            }else{
-              myfile << "NAN";
+              myfile << intMap.at(j).at(i);
             }
         }
         myfile << "\n";
