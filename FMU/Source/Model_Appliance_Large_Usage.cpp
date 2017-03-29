@@ -72,7 +72,8 @@ std::vector<T> Model_Appliance_Large_Usage::as_vector(
   std::vector<T> r;
   std::string value = node->value();
 
-  std::vector<std::string> tokens = Utility::splitCSV(node->value());
+  std::vector<std::string> tokens;
+  Utility::splitCSV(node->value(), &tokens);
   for (std::string& item : tokens) {
       r.push_back(std::stod(item));
   }

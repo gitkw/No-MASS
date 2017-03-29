@@ -110,20 +110,22 @@ TEST_F(Test_DataStore, save) {
   std::vector<std::string> names;
   std::vector<int> ids;
   std::vector<std::vector<double>> values;
-std::string name;
+  std::string name;
   name = "1helloWorlderrrrrr";
   res = DataStore::addVariable(name);
   names.push_back(name);
   ids.push_back(res);
   values.push_back(std::vector<double>());
-    
-  for (int i = 0; i < 1000; i++) {
+    int z = 10;
+    int y = 10;
+
+  for (int i = 0; i < z; i++) {
     name = "1helloWorld" + std::to_string(i);
     res = DataStore::addVariable(name);
     names.push_back(name);
     ids.push_back(res);
     std::vector<double> vs;
-    for(int j = 0; j < 10000; j++) {
+    for(int j = 0; j < y; j++) {
       double val = Utility::randomDouble(0,100);
       DataStore::addValue(res, val);
       vs.push_back(val);
@@ -133,28 +135,28 @@ std::string name;
     values.push_back(vs);
   }
 
-    
-    name = "1helloWorlderrrrrr2";
-    res = DataStore::addVariable(name);
-    names.push_back(name);
-    ids.push_back(res);
-    values.push_back(std::vector<double>());
-    
-    for (int i = 0; i < 1000; i++) {
-        name = "2helloWorld" + std::to_string(i);
-        res = DataStore::addVariable(name);
-        names.push_back(name);
-        ids.push_back(res);
-        std::vector<double> vs;
-        for(int j = 0; j < 10000; j++) {
-            double val = Utility::randomDouble(1,100);
-            DataStore::addValue(res, val);
-            vs.push_back(val);
-            double ret = DataStore::getValue(res);
-            EXPECT_NEAR(val, ret, 0.001);
-        }
-        values.push_back(vs);
-    }
+
+  name = "1helloWorlderrrrrr2";
+  res = DataStore::addVariable(name);
+  names.push_back(name);
+  ids.push_back(res);
+  values.push_back(std::vector<double>());
+
+  for (int i = 0; i < z; i++) {
+      name = "2helloWorld" + std::to_string(i);
+      res = DataStore::addVariable(name);
+      names.push_back(name);
+      ids.push_back(res);
+      std::vector<double> vs;
+      for(int j = 0; j < y; j++) {
+          double val = Utility::randomDouble(1,100);
+          DataStore::addValue(res, val);
+          vs.push_back(val);
+          double ret = DataStore::getValue(res);
+          EXPECT_NEAR(val, ret, 0.001);
+      }
+      values.push_back(vs);
+  }
 
 
   DataStore::print();
@@ -163,6 +165,7 @@ std::string name;
   Utility::uTable<double> t = Utility::csvToTable<double>("NoMASS.out", true);
     std::vector<std::vector<double>> v;
   for(int i = 0; i < t[0].size(); i++){
+      
     std::vector<double> vs;
     for(int j = 0; j < t.size(); j++){
         vs.push_back(t[j][i]);
@@ -181,15 +184,13 @@ std::string name;
       }
     }
     std::vector<double> vs2 = values[x];
-      if (vs[0] > 0){
-    EXPECT_EQ(vs.size(), vs2.size());
-
-    for(int j = 0; j < vs.size(); j++){
-        EXPECT_NEAR(vs[j], vs2[j], 0.01);
-    }
-      }else {
-          EXPECT_EQ(0, vs2.size());
+    if (vs[0] > 0){
+      EXPECT_EQ(vs.size(), vs2.size());
+      for(int j = 0; j < vs.size(); j++){
+          EXPECT_NEAR(vs[j], vs2[j], 0.01);
       }
+    }else {
+        EXPECT_EQ(0, vs2.size());
+    }
   }
-
 }

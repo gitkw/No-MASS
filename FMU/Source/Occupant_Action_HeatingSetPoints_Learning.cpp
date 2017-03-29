@@ -21,6 +21,10 @@ Occupant_Action_HeatingSetPoints_Learning::
     file = SimulationConfig::RunLocation + "learning.xml";
 }
 
+void Occupant_Action_HeatingSetPoints_Learning::setFile(std::string file){
+  this->file = file;
+}
+
 void Occupant_Action_HeatingSetPoints_Learning::print() {
   qlWeekDay.printQ();
   qlWeekEnd.printQ();
@@ -117,13 +121,8 @@ int Occupant_Action_HeatingSetPoints_Learning::getState() const {
     }
     count++;
   }
-
-
-
   int hourOfDay = SimulationTime::hourOfDay;
   int state = (count * 24) + hourOfDay;
-
-
   return state;
 }
 

@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <cmath>
 #include <fstream>
 
 class Utility {
@@ -22,31 +23,33 @@ class Utility {
     static int cumulativeProbability(const std::vector<double> &v);
     static int cumulativeProbability(const double * v, const int len);
     static std::vector<int> randomIntVect(int number);
-    static std::vector<std::string> splitCSV(const std::string & typeString);
+    static void splitCSV(const std::string & typeString, std::vector<std::string> * types);
     static int calculateNumberOfDays(int startDay, int startMonth,
                                               int endDay, int endMonth);
     template< typename T>
-        static uTable<T> csvToTable(const std::string & filename, bool header) {
-          std::string line;
-          std::ifstream myfile(filename);
-          Utility::uTable<T> t;
-          if (myfile.is_open()) {
-            while (getline(myfile, line)) {
-              if (header) {
-                header = false;
-                continue;
+      static uTable<T> csvToTable(const std::string & filename, bool header) {
+        std::string line;
+        std::ifstream myfile(filename);
+        Utility::uTable<T> t;
+        if (myfile.is_open()) {
+          if(header) getline(myfile, line);
+          while (getline(myfile, line)) {
+            std::vector<std::string> split;
+            Utility::splitCSV(line, &split);
+            std::vector<T> items;
+            for (std::string &item : split) {
+              double v = NAN;
+              if(item != ""){
+                v = std::stod(item);
               }
-              std::vector<std::string> split = Utility::splitCSV(line);
-              std::vector<T> items;
-              for (std::string &item : split) {
-                items.push_back(std::stod(item));
-              }
-              t.push_back(items);
+              items.push_back(v);
             }
-            myfile.close();
+            t.push_back(items);
           }
-          return t;
+          myfile.close();
         }
+        return t;
+      }
 
 
     static std::vector<std::string> csvToTableHead(const std::string & filename);

@@ -40,6 +40,7 @@ class Appliance_Large_Learning : public Appliance_Large {
   void setHoulyTimeRequired(const std::vector<double> & houlyTimeRequired);
 
  private:
+  void beforeClear();
   int databaseIDactual;
   std::vector<profileStruct> powerProfile;
   std::vector<double> houlyTimeRequired;

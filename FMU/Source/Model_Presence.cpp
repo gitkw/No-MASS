@@ -26,7 +26,8 @@ void Model_Presence::calculatePresenceFromPage() {
     float pSun[24];
 
     for (int day = 0; day < 7; day++) {
-        std::vector<std::string> tokProbs = Utility::splitCSV(probMap.at(day));
+        std::vector<std::string> tokProbs;
+        Utility::splitCSV(probMap.at(day), &tokProbs);
 
         int hour = 0;
         for (std::string strProb : tokProbs) {

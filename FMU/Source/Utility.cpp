@@ -43,8 +43,8 @@ std::vector<int> Utility::randomIntVect(int number) {
     return v;
 }
 
-std::vector<std::string> Utility::splitCSV(const std::string & typeString) {
-    std::vector<std::string> types;
+void Utility::splitCSV(const std::string & typeString,
+                                      std::vector<std::string> * types) {
     const char *str = typeString.c_str();
     char c = ',';
     do {
@@ -52,9 +52,8 @@ std::vector<std::string> Utility::splitCSV(const std::string & typeString) {
         while (*str != c && *str) {
             str++;
         }
-        types.push_back(std::string(begin, str));
+        types->push_back(std::string(begin, str));
     } while (0 != *str++);
-    return types;
 }
 
 int Utility::calculateNumberOfDays(const int startDay,
@@ -95,7 +94,7 @@ std::vector<std::string> Utility::csvToTableHead(const std::string & filename) {
   std::vector<std::string> t;
   if (myfile.is_open()) {
     getline(myfile, line);
-    t = Utility::splitCSV(line);
+    Utility::splitCSV(line, &t);
     myfile.close();
   }
   return t;
@@ -103,7 +102,9 @@ std::vector<std::string> Utility::csvToTableHead(const std::string & filename) {
 
 std::vector<double> Utility::csvToDouble(const std::string & s) {
   std::vector<double> items;
-  for (std::string &item : Utility::splitCSV(s)) {
+  std::vector<std::string> stringItems;
+  Utility::splitCSV(s, &stringItems);
+  for (std::string &item : stringItems) {
       items.push_back(std::stod(item));
   }
   return items;
@@ -111,7 +112,9 @@ std::vector<double> Utility::csvToDouble(const std::string & s) {
 
 std::vector<int> Utility::csvToInt(const std::string & s) {
   std::vector<int> items;
-  for (std::string &item : Utility::splitCSV(s)) {
+  std::vector<std::string> stringItems;
+  Utility::splitCSV(s, &stringItems);
+  for (std::string &item : stringItems) {
       items.push_back(std::stoi(item));
   }
   return items;

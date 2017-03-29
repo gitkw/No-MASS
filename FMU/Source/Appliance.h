@@ -67,6 +67,7 @@ class Appliance : public Agent {
     double getGridPower() const;
 
  protected:
+    virtual void beforeClear();
     virtual void saveNeighbourhoodCalculate();
     virtual void saveGlobalCalculate();
     void setPower(const double power);

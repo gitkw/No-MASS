@@ -43,7 +43,8 @@ void Model_Activity_Survival::parseOther(rapidxml::xml_node<> *node) {
   type.erase(0, 5);
   int hour = std::stoi(type);
   std::vector<double> items;
-  std::vector<std::string> tokProbs = Utility::splitCSV(node->value());
+  std::vector<std::string> tokProbs;
+  Utility::splitCSV(node->value(), &tokProbs);
   for (std::string strProb : tokProbs) {
       items.push_back(std::stod(strProb));
   }

@@ -101,7 +101,11 @@ void Appliance::saveGlobal() {
   DataStore::addValue(datastoreGridIDCost, parametersGrid.receivedCost);
 }
 
+void Appliance::beforeClear() {
+}
+
 void Appliance::clear() {
+  beforeClear();
   local = false;
   global = false;
   parameters.power = 0.0;

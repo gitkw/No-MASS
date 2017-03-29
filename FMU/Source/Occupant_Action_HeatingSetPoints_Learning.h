@@ -12,6 +12,7 @@ class Occupant_Action_HeatingSetPoints_Learning : public Occupant_Action
     void setup(const int id, const int learn);
     void print();
     void reset();
+    void setFile(std::string file);
   private:
 
     void parseConfiguration(const std::string filename);

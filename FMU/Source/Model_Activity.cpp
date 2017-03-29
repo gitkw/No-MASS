@@ -196,7 +196,8 @@ void Model_Activity::parseConfiguration(const std::string filename) {
       rx::xml_node<> *cnode = node->first_node();
       while (cnode) {
         std::string name = cnode->name();
-        std::vector<std::string> tokProbs = Utility::splitCSV(cnode->value());
+        std::vector<std::string> tokProbs;
+        Utility::splitCSV(cnode->value(), &tokProbs);
         std::vector<double> tokProbsD;
         for (std::string strProb : tokProbs) {
             tokProbsD.push_back(std::stod(strProb));
@@ -222,7 +223,8 @@ std::vector<double> Model_Activity::disaggregate() const {
     double probabilities[24][10];
 
     for (int hour = 0; hour < 24; hour++) {
-        std::vector<std::string> tokProbs = Utility::splitCSV(probMap.at(hour));
+        std::vector<std::string> tokProbs;
+        Utility::splitCSV(probMap.at(hour), &tokProbs);
         int activity = 0;
         for (std::string strProb : tokProbs) {
             probabilities[hour][activity] = std::stod(strProb);

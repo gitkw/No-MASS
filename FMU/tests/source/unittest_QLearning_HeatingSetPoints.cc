@@ -18,6 +18,7 @@
 class Test_QLearning_HeatingSetPoints : public ::testing::Test {
  protected:
     QLearning_Occupant ql;
+    int dataVal = -1;
     virtual void SetUp();
 };
 
@@ -25,8 +26,8 @@ void Test_QLearning_HeatingSetPoints::SetUp() {
   ql.setStates(288);
   ql.setActions(20);
   SimulationConfig::info.learnep = 0.8;
-
-  DataStore::addVariable("Block1:Zone1ZoneMeanAirTemperature");
+  SimulationConfig::outputRegexs = {".*"};
+  dataVal = DataStore::addVariable("Block1:Zone1ZoneMeanAirTemperature");
   SimulationTime::hour = 1;
   SimulationTime::month = 1;
   SimulationTime::hourOfDay = 1;
@@ -44,7 +45,7 @@ TEST_F(Test_QLearning_HeatingSetPoints, learn) {
     z_Kitchen.setActive(true);
     z_Kitchen.setup(zs);
 
-    DataStore::addValueS("Block1:Zone1ZoneMeanAirTemperature", 1);
+    DataStore::addValue(dataVal, 1);
 
     double reward = -0.1;
     double heating;
@@ -59,10 +60,10 @@ TEST_F(Test_QLearning_HeatingSetPoints, learn) {
       if (static_cast<int>(z_Kitchen.getMeanAirTemperature()) == 21) {
         reward = 0.9;
       }
-      ql.setReward(reward);
+        ql.setReward(reward);
+        ql.setState(0);
       heating = ql.learn();
-      DataStore::addValueS("Block1:Zone1ZoneMeanAirTemperature",
-                          heating);
+      DataStore::addValue(dataVal, heating);
     }
     // ql.printQ();
 

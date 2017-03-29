@@ -122,6 +122,13 @@ void Appliance_Large_Learning::step() {
   saveActualProfile();
 }
 
+
+void Appliance_Large_Learning::beforeClear() {
+  if (powerProfile.empty() == false && powerProfile.front().isLearningPeriod) {
+      addToCost(getReceivedCost());
+  }
+}
+
 void Appliance_Large_Learning::saveActualProfile() {
   double p = 0.0;
   if (powerProfile.empty() == false &&

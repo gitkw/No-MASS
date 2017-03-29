@@ -128,8 +128,9 @@ void SimulationConfig::parseBuilding(rapidxml::xml_node<> *node, const int id) {
                     zone.second.name = znode->value();
                 } else if (nodeNameIs(znode, "activities")
                           || nodeNameIs(znode, "activity")) {
-                    zone.second.activities =
-                          activityNamesToIds(Utility::splitCSV(znode->value()));
+                    std::vector<std::string> s;
+                    Utility::splitCSV(znode->value(), &s);
+                    zone.second.activities = activityNamesToIds(s);
                 } else if (nodeNameIs(znode, "groundfloor")) {
                     zone.second.groundFloor = std::stoi(znode->value());
                 } else if (nodeNameIs(znode, "windowcount")) {
@@ -212,7 +213,9 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         } else if (nodeNameIs(anode, "timerequired")) {
           s.timeRequired = prioritiesToVector(anode->value());
         } else if (nodeNameIs(anode, "activities")) {
-          s.activities = activityNamesToIds(Utility::splitCSV(anode->value()));
+          std::vector<std::string> y;
+          Utility::splitCSV(anode->value(), &y);
+          s.activities = activityNamesToIds(y);
         }
         anode = anode->next_sibling();
       }

@@ -17,7 +17,7 @@ class Test_Occupant_Action_HeatingSetPoints_Learning : public ::testing::Test {
 };
 
 void Test_Occupant_Action_HeatingSetPoints_Learning::SetUp() {
-  SimulationConfig::buildings[0].agents.clear();
+  SimulationConfig::buildings.clear();
   SimulationConfig::parseConfiguration(testFiles + "/SimulationConfig2.xml");
 
   SimulationConfig::setStepCount(0);
@@ -31,6 +31,7 @@ void Test_Occupant_Action_HeatingSetPoints_Learning::SetUp() {
   SimulationTime::month = 1;
   SimulationTime::hourOfDay = 1;
   SimulationTime::day = 1;
+  aal.setFile(testFiles + "learning.xml");
 }
 
 TEST_F(Test_Occupant_Action_HeatingSetPoints_Learning, Learn) {
