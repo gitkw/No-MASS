@@ -40,8 +40,8 @@ TEST_F(Test_Appliance_Large_Learning, power) {
     al.hasActivities(v);
     al.step();
     EXPECT_TRUE(al.getPower() >= 0);
-    
-    
+
+
   }
 }
 
@@ -57,6 +57,7 @@ TEST_F(Test_Appliance_Large_Learning, trueFalse) {
   bool on = false;
   bool off = false;
   for (int i = 1; i < 100000; i++) {
+    al.hasActivities({});
     SimulationConfig::step();
     al.step();
     if (al.getPower() > 0) {
