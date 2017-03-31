@@ -63,30 +63,3 @@ void Appliance_Large::step() {
 bool Appliance_Large::isOn() const {
   return model.isOn();
 }
-
-/**
- * @brief Check the activities the appliance can be turned on during.
- * @return If there is a corresponding activity to turn the appliance on in.
- * @details For some appliances we may wish that they only turn on for some
- * applainces, here we check if the activities match.
- */
-bool Appliance_Large::hasActivities(std::vector<int> Activities) {
-  match = this->Activities.empty();
-  for (int i : this->Activities) {
-    for (int j : Activities) {
-      if (i == j) {
-          match = true;
-          break;
-      }
-    }
-  }
-  return match;
-}
-
-/**
- * @brief Set the activity for which the appliance can be turned on during.
- * @param Activities: A set of activities
- */
-void Appliance_Large::setActivities(const std::vector<int> Activities) {
-  this->Activities = Activities;
-}

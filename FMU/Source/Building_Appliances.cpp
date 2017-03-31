@@ -31,7 +31,9 @@ void Building_Appliances::setup(const buildingStruct & b) {
 void Building_Appliances::preprocess() {}
 
 void Building_Appliances::stepLocal() {
+  large.hasActivities(currentStates);
   large.step(&app_negotiation);
+  largeLearning.hasActivities(currentStates);
   largeLearning.step(&app_negotiation);
   small.step(&app_negotiation);
   csv.step(&app_negotiation);

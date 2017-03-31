@@ -20,7 +20,13 @@ class Appliance_Group {
  public:
     Appliance_Group(){};
 
-    virtual void step(Contract_Negotiation * app_negotiation){
+    virtual void hasActivities(const std::vector<int> Activities) {
+      for (T & a : appliances) {
+        a.hasActivities(Activities);
+      }
+    }
+
+    virtual void step(Contract_Negotiation * app_negotiation) {
       reset();
       std::vector<int> pop = Utility::randomIntVect(appliances.size());
       for (int a : pop) {

@@ -66,6 +66,10 @@ class Appliance : public Agent {
     double getGridReceivedCost() const;
     double getGridPower() const;
 
+
+    void setActivities(const std::vector<int> Activities);
+    bool hasActivities(const std::vector<int> Activities);
+
  protected:
     virtual void beforeClear();
     virtual void saveNeighbourhoodCalculate();
@@ -76,8 +80,11 @@ class Appliance : public Agent {
 
     std::vector<double> hourlyCost;
     std::vector<double> hourlyPriority;
+    std::vector<int> Activities;
+
     bool global;
     bool local;
+    bool match;
 
     int datastoreIDSupplied;
     int datastoreIDSuppliedCost;

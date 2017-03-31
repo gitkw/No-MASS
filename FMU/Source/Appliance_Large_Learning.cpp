@@ -149,7 +149,7 @@ void Appliance_Large_Learning::saveActualProfile() {
  */
 void Appliance_Large_Learning::stepApplianceOffAndNotLearning() {
   int timeStep = SimulationConfig::getStepCount();
-  if (model.onAt(timeStep) || match) {
+  if (model.onAt(timeStep) && match) {
     calculateProfile();
   }
 }

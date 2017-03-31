@@ -19,16 +19,13 @@ class Appliance_Large : public Appliance {
     void setup();
     void setupModel();
     void step();
-    void setActivities(const std::vector<int> Activities);
-    bool hasActivities(const std::vector<int> Activities);
     bool isOn() const;
 
  protected:
     Model_Appliance_Large_Usage_Survival model;
-    bool match;
+    
 
  private:
-    std::vector<int> Activities;
 };
 
 #endif  // APPLIANCE_LARGE_H_
