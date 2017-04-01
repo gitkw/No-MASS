@@ -7,6 +7,8 @@
 #include <string>
 #include "Appliance_Battery_GridCost_Reward.h"
 #include "Appliance_Battery.h"
+#include "Appliance_Large_Learning.h"
+#include "Appliance_Large_Learning_CSV.h"
 #include "Appliance_Group.h"
 #include "Appliance_Group_CSV.h"
 #include "Appliance_Group_Small.h"
@@ -53,7 +55,8 @@ class Building_Appliances {
     Contract_Negotiation app_negotiation;
 
     Appliance_Group_Large large;
-    Appliance_Group_Large_Learning largeLearning;
+    Appliance_Group_Large_Learning<Appliance_Large_Learning> largeLearning;
+    Appliance_Group_Large_Learning<Appliance_Large_Learning_CSV> largeLearningCSV;
     Appliance_Group_Small small;
     Appliance_Group_FMI fmi;
     Appliance_Group_Battery<Appliance_Battery> batteries;

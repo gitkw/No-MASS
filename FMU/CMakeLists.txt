@@ -101,6 +101,7 @@ Source/Appliance_Small.cpp
 Source/Appliance_Generic_CSV.cpp
 Source/Appliance_FMI.cpp
 Source/Appliance_Large_Learning.cpp
+Source/Appliance_Large_Learning_CSV.cpp
 Source/Appliance_Battery.cpp
 Source/Appliance_Battery_GridCost_Reward.cpp
 Source/LVN.cpp
@@ -111,7 +112,6 @@ Source/Contract_Negotiation.cpp
 Source/Appliance_Group_CSV.cpp
 Source/Appliance_Group_Small.cpp
 Source/Appliance_Group_Large.cpp
-Source/Appliance_Group_Large_Learning.cpp
 Source/Appliance_Group_FMI.cpp
 )
 

@@ -38,16 +38,24 @@ class Appliance_Large_Learning : public Appliance_Large {
   void setGamma(double gamma);
   void setUpdate(bool update);
   void setHoulyTimeRequired(const std::vector<double> & houlyTimeRequired);
+  void setFile(std::string file);
+
+protected:
+  virtual double getPowerAt(const int timestep);
+  virtual void calculateProfile();
+
+  std::vector<profileStruct> powerProfile;
+  std::string file;
+  std::vector<double> profileCSV;
 
  private:
   void beforeClear();
   int databaseIDactual;
-  std::vector<profileStruct> powerProfile;
   std::vector<double> houlyTimeRequired;
   QLearning_Appliance qLearning;
 
   void stepApplianceOffAndNotLearning();
-  void calculateProfile();
+
   void calculateLearntStartTime(const int hourOfTheDay);
   void startLearningPeriod(const int hourOfTheDay);
   void stopLearningPeriod(const int hourOfTheDay);

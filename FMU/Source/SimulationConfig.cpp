@@ -196,6 +196,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
   while (cnode) {
     if (nodeNameIs(cnode, "large") ||
                 nodeNameIs(cnode, "largelearning") ||
+                nodeNameIs(cnode, "largelearningcsv") ||
                             nodeNameIs(cnode, "grid")) {
       rapidxml::xml_node<> *anode = cnode->first_node();
       applianceStruct s;
@@ -203,6 +204,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         const std::string name = nameToLower(anode);
         const std::string value = anode->value();
         setValFromNodeIfName(&s.id, value, name, "id");
+        setValFromNodeIfName(&s.fileProfile, value, name, "fileprofile");
         setValFromNodeIfName(&s.cost, value, name, "cost");
         setValFromNodeIfName(&s.epsilon, value, name, "epsilon");
         setValFromNodeIfName(&s.alpha, value, name, "alpha");
@@ -223,6 +225,8 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         b->AppliancesLarge.push_back(s);
       } else if (nodeNameIs(cnode, "largelearning")) {
         b->AppliancesLargeLearning.push_back(s);
+      } else if (nodeNameIs(cnode, "largelearningcsv")) {
+        b->AppliancesLargeLearningCSV.push_back(s);
       } else if (nodeNameIs(cnode, "grid")) {
         b->AppliancesGrid.push_back(s);
       }

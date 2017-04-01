@@ -137,6 +137,7 @@ struct applianceStruct{
 
   std::string fileSupply;
   std::string fileDemand;
+  std::string fileProfile;
 
   std::string WeibullParameters;
   std::string StateProbabilities;
@@ -154,6 +155,7 @@ struct buildingStruct {
     std::vector<applianceStruct> AppliancesLarge;
     std::vector<applianceStruct> AppliancesGrid;
     std::vector<applianceStruct> AppliancesLargeLearning;
+    std::vector<applianceStruct> AppliancesLargeLearningCSV;
     std::vector<applianceStruct> AppliancesSmall;
     std::vector<applianceStruct> AppliancesCSV;
     std::vector<applianceStruct> AppliancesFMI;
@@ -226,7 +228,7 @@ class SimulationConfig {
     static bool strComp(const char * str1, const char * str2);
     static bool nodeNameIs(const rapidxml::xml_node<> *node, const char * str2);
     static bool nodeNameIs(const std::string & name, const char * str2);
-    
+
     static std::vector<double> prioritiesToVector(
                                         const std::string & priorities);
     static std::vector<int> activityNamesToIds(

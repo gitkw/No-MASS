@@ -37,6 +37,10 @@ void Appliance_Large_Learning::calculateLearntStartTime(
   powerProfile.front().startTime = qLearning.getAction();
 }
 
+double Appliance_Large_Learning::getPowerAt(const int timestep) {
+  return model.consumption(timestep);
+}
+
 /**
  * @brief Check large appliance model for a turn on, then generate the profile
  * @details Calculate if the applaince is predicted a turn on
@@ -44,14 +48,14 @@ void Appliance_Large_Learning::calculateLearntStartTime(
  */
 void Appliance_Large_Learning::calculateProfile() {
   int stepCount = SimulationConfig::getStepCount();
-  double p = model.consumption(stepCount);
+  double p = getPowerAt(stepCount);
   profileStruct profile;
   while (isOn()) {
     profile.power.push_back(p);
     stepCount++;
     profile.nonLearningStep++;
     model.decreaseDuration();
-    p = model.consumption(stepCount);
+    p = getPowerAt(stepCount);
   }
   if (profile.power.size()) {
     powerProfile.push_back(profile);
@@ -187,4 +191,8 @@ void Appliance_Large_Learning::setUpdate(bool update) {
 void Appliance_Large_Learning::setHoulyTimeRequired(
               const std::vector<double> & houlyTimeRequired) {
   this->houlyTimeRequired = houlyTimeRequired;
+}
+
+void Appliance_Large_Learning::setFile(std::string file) {
+  this->file = file;
 }

@@ -17,13 +17,13 @@ class Appliance_Large : public Appliance {
     Appliance_Large();
 
     void setup();
-    void setupModel();
+    virtual void setupModel();
     void step();
     bool isOn() const;
 
  protected:
     Model_Appliance_Large_Usage_Survival model;
-    
+
 
  private:
 };
