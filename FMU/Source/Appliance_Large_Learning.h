@@ -39,6 +39,7 @@ class Appliance_Large_Learning : public Appliance_Large {
   void setUpdate(bool update);
   void setHoulyTimeRequired(const std::vector<double> & houlyTimeRequired);
   void setFile(std::string file);
+  bool isModelOn();
 
 protected:
   virtual double getPowerAt(const int timestep);
@@ -49,6 +50,7 @@ protected:
   std::vector<double> profileCSV;
 
  private:
+
   void beforeClear();
   int databaseIDactual;
   std::vector<double> houlyTimeRequired;

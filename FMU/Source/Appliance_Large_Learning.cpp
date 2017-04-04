@@ -145,6 +145,11 @@ void Appliance_Large_Learning::saveActualProfile() {
   DataStore::addValue(databaseIDactual, p);
 }
 
+bool Appliance_Large_Learning::isModelOn() {
+  int timeStep = SimulationConfig::getStepCount();
+  return model.onAt(timeStep) && match;
+}
+
 /**
  * @brief Appliance is off and we are not learning
  * @details check if the appliance model should checked for a turn on
@@ -152,8 +157,7 @@ void Appliance_Large_Learning::saveActualProfile() {
  * if there is data in the profile get the learn start time
  */
 void Appliance_Large_Learning::stepApplianceOffAndNotLearning() {
-  int timeStep = SimulationConfig::getStepCount();
-  if (model.onAt(timeStep) && match) {
+  if (isModelOn()) {
     calculateProfile();
   }
 }
