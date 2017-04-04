@@ -39,6 +39,7 @@ class Model_Appliance_Large_Usage : public Model_RandomWeibull {
       int state;
       double maxPower;
       std::vector<double> meanF;
+      std::vector<double> onProbabilities10;
       std::vector<double> onProbabilities;
       std::vector<std::vector<double>> transitions;
 };

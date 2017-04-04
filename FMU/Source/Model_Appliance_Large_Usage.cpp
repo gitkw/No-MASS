@@ -27,8 +27,13 @@ std::string Model_Appliance_Large_Usage::getCountry() {
 double Model_Appliance_Large_Usage::probOn(int timestep) const {
   double prob = 0.0;
   int leninsec = SimulationConfig::lengthOfTimestep();
-  int ten = static_cast<int>(((timestep * leninsec) / 360.0)) % 144;
-  prob = onProbabilities[ten] / 10.0;
+  int second = timestep * leninsec;
+  int stop = second + leninsec;
+  while (second < stop) {
+    int minuteOfDay = (second / 60) % 1440;
+    prob += onProbabilities[minuteOfDay];
+    second = second + 60;
+  }
   return prob;
 }
 
@@ -125,7 +130,7 @@ void Model_Appliance_Large_Usage::parseConfiguration(
         } else if (std::strcmp(cnode->name(), "transitions") == 0) {
             transitions = as_vector_vector<double>(cnode);
         } else if (std::strcmp(cnode->name(), "on") == 0) {
-            onProbabilities = as_vector<double>(cnode);
+            onProbabilities10 = as_vector<double>(cnode);
         } else {
           parseShapeScale(cnode);
         }
@@ -134,6 +139,11 @@ void Model_Appliance_Large_Usage::parseConfiguration(
       break;
     }
     node = node->next_sibling();
+  }
+  for(double onP : onProbabilities10){
+    for (int i = 0; i < 10; i++){
+      onProbabilities.push_back(onP / 10.0);
+    }
   }
 }
 
