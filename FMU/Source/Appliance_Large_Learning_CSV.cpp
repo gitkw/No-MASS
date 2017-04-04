@@ -17,7 +17,7 @@ void Appliance_Large_Learning_CSV::calculateProfile() {
   profileStruct profile;
   profile.power = profileCSV;
   profile.nonLearningStep = profileCSV.size();
-  powerProfile.push_back(profile);
+  powerProfile.push(profile);
   model.setDuration(0.0);
 }
 

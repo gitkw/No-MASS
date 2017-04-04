@@ -4,6 +4,7 @@
 #define APPLIANCE_LARGE_LEARNING_H_
 
 #include <vector>
+#include <queue>
 #include <string>
 #include "QLearning_Appliance.h"
 #include "Appliance_Large.h"
@@ -17,6 +18,7 @@ struct profileStruct {
     bool isLearningPeriod = false;
     int nonLearningStep = 0;
     unsigned int learningStep = 0;
+    int requestedTime;
 };
 
 
@@ -31,7 +33,7 @@ class Appliance_Large_Learning : public Appliance_Large {
   void setup();
   void step();
   void postprocess();
-  double getRequiredTime() const;
+  double getRequiredTime(int hourOfDay) const;
   void addToCost(const double cost);
   void setEpsilon(double epsilon);
   void setAlpha(double alpha);
@@ -45,7 +47,7 @@ protected:
   virtual double getPowerAt(const int timestep);
   virtual void calculateProfile();
 
-  std::vector<profileStruct> powerProfile;
+  std::queue<profileStruct> powerProfile;
   std::string file;
   std::vector<double> profileCSV;
 
@@ -56,13 +58,15 @@ protected:
   std::vector<double> houlyTimeRequired;
   QLearning_Appliance qLearning;
 
-  void stepApplianceOffAndNotLearning();
+  void stepApplianceOffAndNotLearning(const int hourOfTheDay);
 
-  void calculateLearntStartTime(const int hourOfTheDay);
+  void calculateLearntStartTime();
   void startLearningPeriod(const int hourOfTheDay);
   void stopLearningPeriod(const int hourOfTheDay);
   void saveActualProfile();
   double calculateReward();
+  bool learnStepLessThanProfile() const;
+  void eraseFirstPowerProfile();
 
   double epsilon;   // probability of a random action selection
   double alpha;     // learning rate

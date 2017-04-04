@@ -31,9 +31,8 @@ void Appliance_Large_Learning::setup() {
  * @details set the current state for Q-learning
  * get the corresponding best action (start time)
  */
-void Appliance_Large_Learning::calculateLearntStartTime(
-                                              const int hourOfTheDay) {
-  qLearning.setState(hourOfTheDay);
+void Appliance_Large_Learning::calculateLearntStartTime() {
+  qLearning.setState(powerProfile.front().requestedTime);
   powerProfile.front().startTime = qLearning.getAction();
 }
 
@@ -58,7 +57,7 @@ void Appliance_Large_Learning::calculateProfile() {
     p = getPowerAt(stepCount);
   }
   if (profile.power.size()) {
-    powerProfile.push_back(profile);
+    powerProfile.push(profile);
   }
 }
 
@@ -83,34 +82,40 @@ double Appliance_Large_Learning::calculateReward() {
   return -(costOfProfile / sizeOfProfile * highestTimeRequired);
 }
 
+bool Appliance_Large_Learning::learnStepLessThanProfile() const {
+  auto it = powerProfile.front();
+  int s = it.power.size();
+  int l = it.learningStep;
+   return (l >= s);
+}
+
+void Appliance_Large_Learning::eraseFirstPowerProfile() {
+  powerProfile.pop();
+}
+
 void Appliance_Large_Learning::stopLearningPeriod(const int hourOfTheDay) {
-  if (powerProfile.front().learningStep >= powerProfile.front().power.size()) {
+  if (learnStepLessThanProfile()) {
     double reward = calculateReward();
     qLearning.setReward(reward);
     qLearning.setState(hourOfTheDay);
     qLearning.learn();
-    powerProfile.erase(powerProfile.begin());
+    eraseFirstPowerProfile();
   }
 }
 
-double Appliance_Large_Learning::getRequiredTime() const {
-  int timeStep = SimulationConfig::getStepCount();
-  int leninsec = SimulationConfig::lengthOfTimestep();
-  int numberOfSeconds = timeStep * leninsec;
-  int hour = numberOfSeconds / 3600;
-  int hourOfDay = hour % 24;
+double Appliance_Large_Learning::getRequiredTime(int hourOfDay) const {
   return houlyTimeRequired[hourOfDay];
 }
 
 void Appliance_Large_Learning::step() {
   setPower(0.0);
 
+  int hourOfTheDay = calculateHourOfDay();
   if (powerProfile.empty() == false) {
-    int hourOfTheDay = calculateHourOfDay();
     if (powerProfile.front().startTime < 0) {
-      calculateLearntStartTime(hourOfTheDay);
+      calculateLearntStartTime();
     }
-    double requiredTime = getRequiredTime();
+    double requiredTime = getRequiredTime(hourOfTheDay);
     if (powerProfile.front().maxTimeRequired < requiredTime) {
       powerProfile.front().maxTimeRequired = requiredTime;
     }
@@ -122,7 +127,7 @@ void Appliance_Large_Learning::step() {
     }
   }
 
-  stepApplianceOffAndNotLearning();
+  stepApplianceOffAndNotLearning(hourOfTheDay);
   saveActualProfile();
 }
 
@@ -156,9 +161,10 @@ bool Appliance_Large_Learning::isModelOn() {
  * get the profile
  * if there is data in the profile get the learn start time
  */
-void Appliance_Large_Learning::stepApplianceOffAndNotLearning() {
+void Appliance_Large_Learning::stepApplianceOffAndNotLearning(const int hourOfTheDay) {
   if (isModelOn()) {
     calculateProfile();
+    powerProfile.back().requestedTime = hourOfTheDay;
   }
 }
 
