@@ -55,8 +55,8 @@ int QLearning::greedySelection(const int s) const {
 
 int QLearning::getBestAction(const int s) const {
     std::vector<int> pop = Utility::randomIntVect(actions);
-    int m = pop.front();
-    pop.erase(pop.begin());
+    int m = pop.back();
+    pop.pop_back();
     for (const int i : pop) {
         if (qTable[s][m] < qTable[s][i]) {
             m = i;
