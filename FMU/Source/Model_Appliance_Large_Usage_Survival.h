@@ -16,6 +16,7 @@ class Model_Appliance_Large_Usage_Survival :
 
       bool onAt(const int timeStep);
       void decreaseDuration();
+      void setDuration(double duration);
  private:
       void parseShapeScale(rapidxml::xml_node<> *node);
       double randomWeibull() const;

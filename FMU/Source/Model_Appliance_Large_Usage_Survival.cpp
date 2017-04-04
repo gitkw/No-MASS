@@ -57,3 +57,7 @@ void Model_Appliance_Large_Usage_Survival::parseShapeScale(
       scale = exp(std::stod(node->value()));
   }
 }
+
+void Model_Appliance_Large_Usage_Survival::setDuration(double duration){
+  this->duration = duration;
+}
