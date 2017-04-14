@@ -17,18 +17,15 @@ class Appliance_Battery : public Appliance {
   Appliance_Battery();
 
   void clear();
-  void setup();
+  void setup(applianceStruct a);
   void setupModel();
   void step();
   void stepNeighbourhood();
   void postprocess();
   void setPowerShortage(double power);
-  void setEpsilon(double epsilon);
-  void setAlpha(double alpha);
-  void setGamma(double gamma);
-  void setUpdate(bool update);
   void AddCost(double cost);
-  void setNeighbourhoodSimultion(bool neighbourhoodSimultion);
+  void setBatteryNeighbourhoodDischarge(bool batteryNeighbourhoodDischarge);
+  void setBatteryNeighbourhoodCharge(bool batteryNeighbourhoodCharge);
   virtual double rewardFunction(double mostShortage, double binShortage) const;
 
  protected:
@@ -49,10 +46,6 @@ class Appliance_Battery : public Appliance {
   double dischargeRate = 1000;
   double powerShortage;
   QLearning_Appliance qLearning;
-  double epsilon;   // probability of a random action selection
-  double alpha;     // learning rate
-  double gamma;     // discount factor (how soon do you care)
-  bool update;
   int previousHourOfDay;
   double sumSupply;
   double sumShort;
@@ -64,7 +57,10 @@ class Appliance_Battery : public Appliance {
   double efficiency = 0.98;
   double stateOfCharge;
   double BatteryDeltaT;
-  bool neighbourhoodSimultion = false;
+
+  bool batteryNeighbourhoodDischarge;
+  bool batteryNeighbourhoodCharge;
+
 
 };
 

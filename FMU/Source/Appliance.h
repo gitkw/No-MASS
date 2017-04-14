@@ -4,7 +4,9 @@
 #define APPLIANCE_H_
 
 #include <vector>
+#include "SimulationConfig.h"
 #include "Agent.h"
+
 
 
 struct ApplianceParameters {
@@ -24,6 +26,7 @@ struct ApplianceParameters {
 class Appliance : public Agent {
  public:
     Appliance();
+    virtual void setup(applianceStruct a) = 0;
     void save();
     void clear();
     void setupSave();
@@ -32,11 +35,15 @@ class Appliance : public Agent {
     void setReceived(const double r);
     void setReceivedCost(const double c);
     void setSupplyLeft(const double supplyLeft);
+    void setPower(const double power);
+    void setSupply(const double supply);
+    void setSupplyCost(const double supplyCost);
     void setHourlyCost(const std::vector<double> & cost);
     void setHoulyPriority(const std::vector<double> & priority);
     bool isGlobal() const;
     bool isLocal() const;
     double getSupply() const;
+    double getSupplyLeft() const;
     double getSupplyCost() const;
     double getReceived() const;
     double getReceivedCost() const;
@@ -74,9 +81,6 @@ class Appliance : public Agent {
     virtual void beforeClear();
     virtual void saveNeighbourhoodCalculate();
     virtual void saveGlobalCalculate();
-    void setPower(const double power);
-    void setSupply(const double supply);
-    void setSupplyCost(const double supplyCost);
 
     std::vector<double> hourlyCost;
     std::vector<double> hourlyPriority;

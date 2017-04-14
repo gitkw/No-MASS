@@ -15,85 +15,59 @@ class Appliance_Group_Battery : public Appliance_Group<T> {
  public:
     Appliance_Group_Battery(){}
 
-    void setup(const std::vector<applianceStruct> & appBattery,
-                                    const int & buildingID,
-                                    const std::string & buildingString) {
-      for (const applianceStruct s : appBattery) {
-        this->appliances.push_back(T());
-        this->appliances.back().setID(s.id);
-        this->appliances.back().setEpsilon(s.epsilon);
-        this->appliances.back().setAlpha(s.alpha);
-        this->appliances.back().setGamma(s.gamma);
-        this->appliances.back().setUpdate(s.update);
-        this->appliances.back().setHoulyPriority(s.priority);
-        this->appliances.back().setNeighbourhoodSimultion(s.neighbourhoodSimultion);
-        this->appliances.back().setBuildingID(buildingID);
-        this->appliances.back().setup();
-        this->appliances.back().setIDString(buildingString + std::to_string(s.id));
-        this->appliances.back().setupSave();
-      }
-      this->idString = buildingString + "_Battery_Sum";
-      this->setupSave();
+    void stepApp(T & a, Contract_Negotiation * app_negotiation) {
+      a.setPowerShortage(powerShortage);
+      a.step();
+      powerShortage -= a.getSupply();
+      bool local = this->sendContractLocal(a, app_negotiation);
+      a.setLocal(local);
+      a.setGlobal(false);
     }
 
-    void step(Contract_Negotiation * app_negotiation) {
-      this->reset();
-      std::vector<int> pop = Utility::randomIntVect(this->appliances.size());
-      for (int a : pop) {
-        this->appliances[a].setPowerShortage(powerShortage);
-        this->appliances[a].step();
-        powerShortage -= this->appliances[a].getSupply();
-        bool local = this->sendContractLocal(this->appliances[a], app_negotiation);
-        this->appliances[a].setLocal(local);
-        this->appliances[a].setGlobal(false);
-        this->setParameters(this->appliances[a]);
+    void neighbourhoodNegotiationBattery(Contract_Negotiation * building_negotiation) {
+      this->shuffleAppliances();
+      for (auto & a : this->appliances) {
+        double diff = building_negotiation->getDifference();
+        a.setPowerShortage(-diff);
+        a.stepNeighbourhood();
+        bool local = this->sendContractLocal(a, building_negotiation);
+        a.setGlobal(local);
       }
     }
 
-void neighbourhoodNegotiationBattery(Contract_Negotiation * building_negotiation) {
-  std::vector<int> pop = Utility::randomIntVect(this->appliances.size());
-  for (int a : pop) {
-    if(building_negotiation->getDifference() >= 0){
-      break;
-    }
-    this->appliances[a].setPowerShortage(-building_negotiation->getDifference());
-    this->appliances[a].stepNeighbourhood();
-    bool local = false;
-    if(this->appliances[a].getSupply() > 0 ){
-      local = this->sendContractLocal(this->appliances[a], building_negotiation);
-    }
-    this->appliances[a].setGlobal(local);
-  }
-}
-
-void neighbourhoodNegotiation(const Contract_Negotiation & building_negotiation) {
-  this->reset();
-  std::vector<int> pop = Utility::randomIntVect(this->appliances.size());
-  for (int a : pop) {
-    if (this->appliances[a].isGlobal()) {
-      int appid = this->appliances[a].getID();
-      int buildingID = this->appliances[a].getBuildingID();
-      Contract c = building_negotiation.getContract(buildingID, appid);
-      this->appliances[a].setGlobal(false);
-      this->appliances[a].setReceived(c.received);
-      this->appliances[a].setReceivedCost(c.receivedCost);
-      this->appliances[a].setSupplyLeft(c.suppliedLeft);
+    void negotiationApp(const Contract_Negotiation & app_negotiation,
+                                      T & app, const bool negotiate) {
+        double received = app.getReceived();
+        double receivedCost = app.getReceivedCost();
+        double suppliedLeft = app.getSupplyLeft();
+        if (negotiate) {
+          int appid = app.getID();
+          int buildingID = app.getBuildingID();
+          Contract c = app_negotiation.getContract(buildingID, appid);
+          //app.setGlobal(sendContractGlobal(c));
+          received = c.received;
+          receivedCost = c.receivedCost;
+          suppliedLeft = c.suppliedLeft;
+        }
+        app.setReceived(received);
+        app.setReceivedCost(receivedCost);
+        app.setSupplyLeft(suppliedLeft);
+        app.setGlobal(false);
     }
 
-    this->setParameters(this->appliances[a]);
-    this->appliances[a].saveNeighbourhood();
-  }
-}
+    void negotiationAppGlobal(const Contract_Negotiation & app_negotiation,
+                                      T & app, const bool negotiate) {
+        app.setPower(0.0);
+        app.setSupply(0.0);
+        app.setSupplyCost(0.0);
+        app.setReceivedCost(0.0);
+        app.setSupplyLeft(0.0);
+        negotiationApp(app_negotiation, app, negotiate);
+    }
 
-bool sendContractGlobal(const Contract & c) {
-  bool send = (c.suppliedLeft > 0);
-  if (send) {
-    Contract x = c;
-    x.supplied = c.suppliedLeft;
-    this->globalContracts.push_back(x);
-  }
-  return send;
-}
+    virtual bool sendCondition(const Contract & c){
+      return (c.suppliedLeft > 0);
+    }
 
     void setPowerShortage(double powerShortage){
       this->powerShortage = powerShortage;
@@ -108,7 +82,6 @@ bool sendContractGlobal(const Contract & c) {
         l.AddCost(globalCost);
       }
     }
-
 
  private:
    double powerShortage;

@@ -6,25 +6,9 @@
 #include "Building_Appliances.h"
 #include "gtest/gtest.h"
 
-/*
-struct applianceStruct {
-    std::string name;
-    int id;
-    std::vector<double> priority;
-    std::vector<double> timeRequired
-    = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    double cost;
-    double epsilon = 0.1;   // probability of a random action selection
-    double alpha = 0.3;     // learning rate
-    double gamma = 0.1;     // discount factor (how soon do you care)
-    bool update = false;
-    std::vector<int> activities;
-};
-*/
-
 class Test_Appliance_Group_CSV : public ::testing::Test {
  protected:
-    Appliance_Group_CSV csv;
+    Appliance_Group<Appliance_Generic_CSV> csv;
     std::vector<applianceStruct> AppliancesCSV;
     Contract_Negotiation local_negotiation;
     Contract_Negotiation neigh_negotiation;
@@ -37,7 +21,6 @@ void Test_Appliance_Group_CSV::SetUp() {
   SimulationConfig::reset();
   SimulationConfig::parseConfiguration(testFiles +
                                                   "DSM1house.xml");
-
 
   SimulationConfig::setStepCount(-1);
   Utility::setSeed(0);
@@ -94,7 +77,7 @@ TEST_F(Test_Appliance_Group_CSV, power) {
     EXPECT_TRUE(supply >= 0);
     EXPECT_NEAR(power, 0, 0);
     EXPECT_NEAR(recieved, 0, 0);
-    csv.reset();
+    csv.clear();
   }
 }
 
@@ -153,7 +136,7 @@ TEST_F(Test_Appliance_Group_CSV, powerSupply) {
     }else {
         EXPECT_NEAR(recieved, 0, 0.01);
     }
-    csv.reset();
+    csv.clear();
   }
 
 }
@@ -197,20 +180,26 @@ TEST_F(Test_Appliance_Group_CSV, Appliances) {
     recieved = csv.getReceived();
     EXPECT_TRUE(power >= 0);
     EXPECT_TRUE(supply >= 0);
-    
+
 
     csv.addGlobalContactsTo(&global_negotiation);
 
+
     double diff = global_negotiation.getDifference();
-    if (diff < 0.0) {
-      Contract m;
-      m.id = -1;
-      m.buildingID = -1;
-      m.supplied = std::abs(diff);
+    Contract m;
+    m.id = -1;
+    m.buildingID = -1;
+    m.supplied = std::abs(diff);
+    m.suppliedCost = 0;
+    m.requested = 0;
+    if (diff > 0.0) {
+      m.supplied = 0;
       m.suppliedCost = 0;
-      m.requested = 0;
-      global_negotiation.submit(m);
+      m.requested = std::numeric_limits<double>::max();
     }
+    m.suppliedLeft = m.supplied;
+    global_negotiation.submit(m);
+
     global_negotiation.process();
     csv.globalNegotiation(global_negotiation);
     global_negotiation.clear();
@@ -224,7 +213,7 @@ TEST_F(Test_Appliance_Group_CSV, Appliances) {
     if (diff < 0.0) {
       EXPECT_NEAR(diff, power - supply, 0.01);
     }
-    csv.reset();
+    csv.clear();
   }
 
 }
@@ -237,10 +226,10 @@ TEST_F(Test_Appliance_Group_CSV, networkLevelLocal) {
     SimulationConfig::step();
     csv.step(&local_negotiation);
     double power = csv.getPower();
-    double supply = csv.getSupply();
+    double localSupply = csv.getSupply();
     double recieved = csv.getReceived();
     EXPECT_TRUE(power >= 0);
-    EXPECT_TRUE(supply >= 0);
+    EXPECT_TRUE(localSupply >= 0);
     EXPECT_NEAR(power, 0, 0);
     EXPECT_NEAR(recieved, 0, 0);
 
@@ -249,7 +238,7 @@ TEST_F(Test_Appliance_Group_CSV, networkLevelLocal) {
     m.buildingID = -1;
     m.supplied = 0;
     m.suppliedCost = 0;
-    m.requested = supply;
+    m.requested = localSupply;
     local_negotiation.submit(m);
 
     local_negotiation.process();
@@ -261,7 +250,7 @@ TEST_F(Test_Appliance_Group_CSV, networkLevelLocal) {
     csv.neighbourhoodNegotiation(neigh_negotiation);
     neigh_negotiation.clear();
     power = csv.getPower();
-    supply = csv.getSupply();
+    double supply = csv.getSupply();
 
     recieved = csv.getReceived();
     EXPECT_TRUE(power >= 0);
@@ -295,12 +284,11 @@ TEST_F(Test_Appliance_Group_CSV, networkLevelLocal) {
     }else {
         EXPECT_NEAR(recieved, 0, 0.01);
     }
-    csv.reset();
 
     Appliance_Generic_CSV a = csv.getApplianceAt(0, 0);
     EXPECT_NEAR(a.getLocalPower(), power, 0.01);
     EXPECT_NEAR(a.getLocalReceived(), power, 0.01);
-    EXPECT_NEAR(a.getLocalSupply(), supply, 0);
+    EXPECT_NEAR(a.getLocalSupply(), localSupply, 0);
     EXPECT_NEAR(a.getLocalSupplyLeft(), 0, 0);
     EXPECT_NEAR(a.getNeighbourhoodPower(), 0, 0.01);
     EXPECT_NEAR(a.getNeighbourhoodReceived(), 0, 0.01);
@@ -310,7 +298,8 @@ TEST_F(Test_Appliance_Group_CSV, networkLevelLocal) {
     EXPECT_NEAR(a.getGridReceived(), 0, 0.01);
     EXPECT_NEAR(a.getGridSupply(), 0, 0);
     EXPECT_NEAR(a.getGridSupplyLeft(), 0, 0);
-    totalSupply += supply;
+    totalSupply += supply + localSupply;
+    csv.clear();
   }
   EXPECT_TRUE(totalSupply > 0);
 }
@@ -324,10 +313,10 @@ TEST_F(Test_Appliance_Group_CSV, networkLevelNeighbourhood) {
     SimulationConfig::step();
     csv.step(&local_negotiation);
     double power = csv.getPower();
-    double supply = csv.getSupply();
+    double localSupply = csv.getSupply();
     double recieved = csv.getReceived();
     EXPECT_TRUE(power >= 0);
-    EXPECT_TRUE(supply >= 0);
+    EXPECT_TRUE(localSupply >= 0);
     EXPECT_NEAR(power, 0, 0);
     EXPECT_NEAR(recieved, 0, 0);
 
@@ -340,17 +329,17 @@ TEST_F(Test_Appliance_Group_CSV, networkLevelNeighbourhood) {
     m.buildingID = -1;
     m.supplied = 0;
     m.suppliedCost = 0;
-    m.requested = supply;
+    m.requested = localSupply;
     neigh_negotiation.submit(m);
     csv.addGlobalContactsTo(&neigh_negotiation);
     neigh_negotiation.process();
     csv.neighbourhoodNegotiation(neigh_negotiation);
     neigh_negotiation.clear();
     power = csv.getPower();
-    supply = csv.getSupply();
+    double neighSupply = csv.getSupply();
     recieved = csv.getReceived();
     EXPECT_TRUE(power >= 0);
-    EXPECT_TRUE(supply >= 0);
+    EXPECT_TRUE(neighSupply >= 0);
     EXPECT_NEAR(power, 0, 0);
     EXPECT_NEAR(recieved, 0, 0);
 
@@ -370,7 +359,7 @@ TEST_F(Test_Appliance_Group_CSV, networkLevelNeighbourhood) {
     csv.globalNegotiation(global_negotiation);
     global_negotiation.clear();
     power = csv.getPower();
-    supply = csv.getSupply();
+    double supply = csv.getSupply();
     recieved = csv.getReceived();
     EXPECT_TRUE(power >= 0);
     EXPECT_TRUE(supply >= 0);
@@ -380,23 +369,23 @@ TEST_F(Test_Appliance_Group_CSV, networkLevelNeighbourhood) {
     }else {
         EXPECT_NEAR(recieved, 0, 0.01);
     }
-    csv.reset();
 
     Appliance_Generic_CSV a = csv.getApplianceAt(0, 0);
 
     EXPECT_NEAR(a.getLocalPower(), 0, 0.01);
     EXPECT_NEAR(a.getLocalReceived(), 0, 0.01);
     EXPECT_NEAR(a.getLocalSupply(), 0, 0);
-    EXPECT_NEAR(a.getLocalSupplyLeft(), supply, 0);
+    EXPECT_NEAR(a.getLocalSupplyLeft(), localSupply, 0);
     EXPECT_NEAR(a.getNeighbourhoodPower(), 0, 0.01);
     EXPECT_NEAR(a.getNeighbourhoodReceived(), 0, 0.01);
-    EXPECT_NEAR(a.getNeighbourhoodSupply(), supply, 0);
+    EXPECT_NEAR(a.getNeighbourhoodSupply(), neighSupply, 0);
     EXPECT_NEAR(a.getNeighbourhoodSupplyLeft(), 0, 0);
     EXPECT_NEAR(a.getGridPower(), 0, 0.01);
     EXPECT_NEAR(a.getGridReceived(), 0, 0.01);
     EXPECT_NEAR(a.getGridSupply(), 0, 0);
     EXPECT_NEAR(a.getGridSupplyLeft(), 0, 0);
-    totalSupply += supply;
+    totalSupply += supply + localSupply + neighSupply;
+    csv.clear();
   }
   EXPECT_TRUE(totalSupply > 0);
 }
@@ -408,10 +397,10 @@ TEST_F(Test_Appliance_Group_CSV, networkLevelGrid) {
     SimulationConfig::step();
     csv.step(&local_negotiation);
     double power = csv.getPower();
-    double supply = csv.getSupply();
+    double localSupply = csv.getSupply();
     double recieved = csv.getReceived();
     EXPECT_TRUE(power >= 0);
-    EXPECT_TRUE(supply >= 0);
+    EXPECT_TRUE(localSupply >= 0);
     EXPECT_NEAR(power, 0, 0);
     EXPECT_NEAR(recieved, 0, 0);
 
@@ -424,10 +413,10 @@ TEST_F(Test_Appliance_Group_CSV, networkLevelGrid) {
     csv.neighbourhoodNegotiation(neigh_negotiation);
     neigh_negotiation.clear();
     power = csv.getPower();
-    supply = csv.getSupply();
+    double neighSupply = csv.getSupply();
     recieved = csv.getReceived();
     EXPECT_TRUE(power >= 0);
-    EXPECT_TRUE(supply >= 0);
+    EXPECT_TRUE(neighSupply >= 0);
     EXPECT_NEAR(power, 0, 0);
     EXPECT_NEAR(recieved, 0, 0);
 
@@ -438,35 +427,34 @@ TEST_F(Test_Appliance_Group_CSV, networkLevelGrid) {
     m.buildingID = -1;
     m.supplied = 0;
     m.suppliedCost = 0;
-    m.requested = supply;
+    m.requested = neighSupply;
     global_negotiation.submit(m);
 
     global_negotiation.process();
     csv.globalNegotiation(global_negotiation);
     global_negotiation.clear();
     power = csv.getPower();
-    supply = csv.getSupply();
+    double supply = csv.getSupply();
     recieved = csv.getReceived();
     EXPECT_TRUE(power >= 0);
     EXPECT_TRUE(supply >= 0);
     EXPECT_NEAR(power, 0, 0);
 
-    csv.reset();
-
     Appliance_Generic_CSV a = csv.getApplianceAt(0, 0);
     EXPECT_NEAR(a.getLocalPower(), 0, 0.01);
     EXPECT_NEAR(a.getLocalReceived(), 0, 0.01);
     EXPECT_NEAR(a.getLocalSupply(), 0, 0);
-    EXPECT_NEAR(a.getLocalSupplyLeft(), supply, 0);
+    EXPECT_NEAR(a.getLocalSupplyLeft(), localSupply, 0);
     EXPECT_NEAR(a.getNeighbourhoodPower(), 0, 0.01);
     EXPECT_NEAR(a.getNeighbourhoodReceived(), 0, 0.01);
     EXPECT_NEAR(a.getNeighbourhoodSupply(), 0, 0);
-    EXPECT_NEAR(a.getNeighbourhoodSupplyLeft(), supply, 0);
+    EXPECT_NEAR(a.getNeighbourhoodSupplyLeft(), neighSupply, 0);
     EXPECT_NEAR(a.getGridPower(), 0, 0.01);
     EXPECT_NEAR(a.getGridReceived(), 0, 0.01);
     EXPECT_NEAR(a.getGridSupply(), supply, 0);
     EXPECT_NEAR(a.getGridSupplyLeft(), 0, 0);
-    totalSupply += supply;
+    totalSupply += supply + localSupply + neighSupply;
+    csv.clear();
   }
   EXPECT_TRUE(totalSupply > 0);
 }

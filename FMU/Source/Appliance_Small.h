@@ -17,19 +17,12 @@ class Appliance_Small : public Appliance {
  public:
     Appliance_Small();
 
-    void setup();
+    void setup(applianceStruct a);
     void step();
-    void setWeibullParameters(const std::string & WeibullParameters);
-    void setStateProbabilities(const std::string & StateProbabilities);
-    void setFractions(const std::string & Fractions);
-    void setSumRatedPowers(const std::string & SumRatedPowers);
 
  private:
     Model_Appliance_Small_Usage model;
-    std::string WeibullParameters;
-    std::string StateProbabilities;
-    std::string Fractions;
-    std::string SumRatedPowers;
+
 };
 
 #endif  // APPLIANCE_SMALL_H_

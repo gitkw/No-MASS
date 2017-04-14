@@ -28,9 +28,12 @@ void Test_Appliance_Large::AfterConfiguration() {
 }
 
 TEST_F(Test_Appliance_Large, power) {
+  applianceStruct a;
+    a.id = 1;
+
   Appliance_Large al;
-  al.setID(1);
-  al.setup();
+  al.setup(a);
+
   SimulationConfig::step();
   al.step();
   EXPECT_FALSE(al.isOn());
@@ -51,9 +54,11 @@ TEST_F(Test_Appliance_Large, power) {
 
 
 TEST_F(Test_Appliance_Large, trueFalse) {
+    applianceStruct a;
+    a.id = 3;
   Appliance_Large al;
-  al.setID(3);
-  al.setup();
+    al.setup(a);
+    
   SimulationConfig::step();
   al.step();
   EXPECT_FALSE(al.isOn());

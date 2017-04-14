@@ -7,6 +7,12 @@
 Appliance_FMI::Appliance_FMI() {
 }
 
+void Appliance_FMI::setup(applianceStruct a) {
+  setID(a.id);
+  setHoulyPriority(a.priority);
+  setFMIVariableName(a.variableName);
+}
+
 /**
  * @brief Set the variable name of the variable we want to retrieve at run time
  */

@@ -9,32 +9,18 @@
 
 Appliance_Small::Appliance_Small() {}
 
-void Appliance_Small::setup() {
+void Appliance_Small::setup(applianceStruct a) {
+  setID(a.id);
+  setHoulyPriority(a.priority);
   model.setFolderLocation(SimulationConfig::FolderSmallAppliance);
-  model.readWeibullParameters(WeibullParameters);
-  model.readStateProbabilities(StateProbabilities);
-  model.readFractions(Fractions);
-  model.readSumRatedPowers(SumRatedPowers);
+  model.readWeibullParameters(a.WeibullParameters);
+  model.readStateProbabilities(a.StateProbabilities);
+  model.readFractions(a.Fractions);
+  model.readSumRatedPowers(a.SumRatedPowers);
   model.setRatedPowerAt(Utility::randomInt(0, 24));
 }
 
 void Appliance_Small::step() {
   int stepcount = SimulationConfig::getStepCount();
   setPower(model.consumption(stepcount));
-}
-
-void Appliance_Small::setWeibullParameters(
-                                        const std::string & WeibullParameters) {
-  this->WeibullParameters = WeibullParameters;
-}
-void Appliance_Small::setStateProbabilities(
-                                      const std::string & StateProbabilities) {
-  this->StateProbabilities = StateProbabilities;
-}
-void Appliance_Small::setFractions(const std::string & Fractions) {
-  this->Fractions = Fractions;
-}
-
-void Appliance_Small::setSumRatedPowers(const std::string & SumRatedPowers) {
-  this->SumRatedPowers = SumRatedPowers;
 }

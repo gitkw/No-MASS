@@ -16,7 +16,7 @@ class Appliance_Large : public Appliance {
  public:
     Appliance_Large();
 
-    void setup();
+    void setup(applianceStruct a);
     virtual void setupModel();
     void step();
     bool isOn() const;

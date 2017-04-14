@@ -2,6 +2,7 @@
 
 #include <string>
 #include <list>
+#include <algorithm>
 #include <vector>
 #include "SimulationConfig.h"
 #include "DataStore.h"
@@ -12,13 +13,22 @@ Building_Appliances::Building_Appliances() {}
 void Building_Appliances::setup(const buildingStruct & b) {
   buildingID = b.id;
   buildingString = "Building" + std::to_string(buildingID) + "_Appliance";
+
+  batteriesGrid.setIDString(buildingString + "_BatteryGrid_Sum");
   batteriesGrid.setup(b.AppliancesBatteryGrid, buildingID, buildingString);
+  batteries.setIDString(buildingString + "_Battery_Sum");
   batteries.setup(b.AppliancesBattery, buildingID, buildingString);
+  csv.setIDString(buildingString + "_CSV_Sum");
   csv.setup(b.AppliancesCSV, buildingID, buildingString);
+  large.setIDString(buildingString + "_Large_Sum");
   large.setup(b.AppliancesLarge, buildingID, buildingString);
+  largeLearning.setIDString(buildingString + "_LargeLearning_Sum");
   largeLearning.setup(b.AppliancesLargeLearning, buildingID, buildingString);
+  largeLearningCSV.setIDString(buildingString + "_LargeLearningCSV_Sum");
   largeLearningCSV.setup(b.AppliancesLargeLearningCSV, buildingID, buildingString);
+  small.setIDString(buildingString + "_Small_Sum");
   small.setup(b.AppliancesSmall, buildingID, buildingString);
+  fmi.setIDString(buildingString + "_FMI_Sum");
   fmi.setup(b.AppliancesFMI, buildingID, buildingString);
 
   datastoreIDNonShiftSupplied = DataStore::addVariable(buildingString + "_NonShift_supplied");
@@ -131,24 +141,23 @@ void Building_Appliances::stepGlobalNegotiation(
           fmi.getReceivedCost() +
           csv.getReceivedCost();
 
-
   DataStore::addValue(datastoreIDNonShiftSupplied, supply);
   DataStore::addValue(datastoreIDNonShiftSuppliedCost, supplyCost);
   DataStore::addValue(datastoreIDNonShiftReceived, received);
   DataStore::addValue(datastoreIDNonShiftRequested, power);
   DataStore::addValue(datastoreIDNonShiftCost, receivedCost);
 
-  large.reset();
-  largeLearning.reset();
-  largeLearningCSV.reset();
-  small.reset();
-  csv.reset();
-  fmi.reset();
-  batteries.reset();
-  batteriesGrid.reset();
-
   currentStates.clear();
   app_negotiation.clear();
+
+  large.clear();
+  largeLearning.clear();
+  largeLearningCSV.clear();
+  small.clear();
+  fmi.clear();
+  csv.clear();
+  batteries.clear();
+  batteriesGrid.clear();
 }
 
 void Building_Appliances::postprocess() {

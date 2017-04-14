@@ -27,8 +27,9 @@ bool Model_Lights::arrival(bool state, double Lumint) {
     float m01arr = 1.8223;
     bool currentLightState = state;
     if (!state) {
+        // Hunt D R G, 1980. Predicting artificial lighting use a method based upon observed patterns of behavior. Lighting Research & Technology 12[1], 7-14.
         // --- 2a. If the light is already off when occupant arrives ----------
-        float probonarr;  //  hunt 1979 model
+        float probonarr;  //  hunt 1980 model
         float log10lumint = 0;
         if (Lumint > 0) {
             log10lumint = std::log10(Lumint);

@@ -4,6 +4,7 @@
 #define APPLIANCE_GROUP_H_
 
 #include <vector>
+#include <algorithm>
 #include "Appliance.h"
 #include "DataStore.h"
 #include "Utility.h"
@@ -20,21 +21,41 @@ class Appliance_Group {
  public:
     Appliance_Group(){};
 
+
+    void setup(const std::vector<applianceStruct> & app,
+                                    const int & buildingID,
+                                    const std::string & buildingString) {
+      for (const applianceStruct s : app) {
+        appliances.push_back(T());
+        appliances.back().setBuildingID(buildingID);
+        appliances.back().setIDString(buildingString + std::to_string(s.id));
+        appliances.back().setup(s);
+        appliances.back().setupSave();
+      }
+      setupSave();
+    }
+
     virtual void hasActivities(const std::vector<int> Activities) {
       for (T & a : appliances) {
         a.hasActivities(Activities);
       }
     }
 
-    virtual void step(Contract_Negotiation * app_negotiation) {
-      reset();
-      std::vector<int> pop = Utility::randomIntVect(appliances.size());
-      for (int a : pop) {
-        appliances[a].step();
-        bool local = sendContractLocal(appliances[a], app_negotiation);
-        appliances[a].setLocal(local);
-        appliances[a].setGlobal(false);
-        this->setParameters(appliances[a]);
+    void shuffleAppliances() {
+      std::shuffle(appliances.begin(), appliances.end(), Utility::engine);
+    }
+
+    virtual void stepApp(T & a, Contract_Negotiation * app_negotiation) {
+      a.step();
+      bool local = sendContractLocal(a, app_negotiation);
+      a.setLocal(local);
+      a.setGlobal(false);
+    }
+
+    void step(Contract_Negotiation * app_negotiation) {
+      shuffleAppliances();
+      for (T & a : appliances) {
+        stepApp(a, app_negotiation);
       }
     }
 
@@ -56,86 +77,71 @@ class Appliance_Group {
       return ret;
     }
 
-    virtual void localNegotiation(const Contract_Negotiation & app_negotiation) {
-      reset();
-      for (T & g : appliances) {
-        if (g.isLocal()) {
-          int appid = g.getID();
-          int buildingID = g.getBuildingID();
+    virtual void negotiationApp(const Contract_Negotiation & app_negotiation,
+                                      T & app, const bool negotiate) {
+        double received = app.getReceived();
+        double receivedCost = app.getReceivedCost();
+        double suppliedLeft = app.getSupplyLeft();
+        if (negotiate) {
+          int appid = app.getID();
+          int buildingID = app.getBuildingID();
           Contract c = app_negotiation.getContract(buildingID, appid);
-          g.setGlobal(sendContractGlobal(c));
-          g.setReceived(c.received);
-          g.setReceivedCost(c.receivedCost);
-          g.setSupplyLeft(c.suppliedLeft);
+          app.setGlobal(sendContractGlobal(c));
+          received = c.received;
+          receivedCost = c.receivedCost;
+          suppliedLeft = c.suppliedLeft;
         }
-        this->setParameters(g);
-        g.saveLocal();
+        app.setReceived(received);
+        app.setReceivedCost(receivedCost);
+        app.setSupplyLeft(suppliedLeft);
+    }
+
+    void localNegotiation(const Contract_Negotiation & app_negotiation) {
+      for (T & app : appliances) {
+        negotiationApp(app_negotiation, app, app.isLocal());
+        app.saveLocal();
       }
     }
 
-    virtual void neighbourhoodNegotiation(const Contract_Negotiation & building_negotiation) {
-      reset();
-      for (T & g : appliances) {
-        if (g.isGlobal()) {
-          int appid = g.getID();
-          int buildingID = g.getBuildingID();
-          Contract c = building_negotiation.getContract(buildingID, appid);
-          g.setGlobal(sendContractGlobal(c));
-          g.setReceived(c.received);
-          g.setReceivedCost(c.receivedCost);
-          g.setSupplyLeft(c.suppliedLeft);
-        }
-        this->setParameters(g);
-        g.saveNeighbourhood();
+    void neighbourhoodNegotiation(const Contract_Negotiation & building_negotiation) {
+      for (T & app : appliances) {
+        negotiationApp(building_negotiation, app, app.isGlobal());
+        app.saveNeighbourhood();
       }
     }
 
-    virtual void globalNegotiation(const Contract_Negotiation & building_negotiation) {
-      reset();
-      for (auto & g : appliances) {
-        if (g.isGlobal()) {
-          int appid = g.getID();
-          int buildingID = g.getBuildingID();
-          Contract c = building_negotiation.getContract(buildingID, appid);
-          g.setReceived(c.received);
-          g.setReceivedCost(c.receivedCost);
-          g.setSupplyLeft(c.suppliedLeft);
-        }
-        this->setParameters(g);
-        g.saveGlobal();
-        g.save();
-        g.clear();
+    virtual void negotiationAppGlobal(const Contract_Negotiation & app_negotiation,
+                                      T & app, const bool negotiate) {
+        negotiationApp(app_negotiation, app, negotiate);
+    }
+
+    void globalNegotiation(const Contract_Negotiation & building_negotiation) {
+      for (T & app : appliances) {
+        negotiationAppGlobal(building_negotiation, app, app.isGlobal());
+        app.saveGlobal();
+        app.save();
       }
       if (!appliances.empty()) {
-        DataStore::addValue(datastoreIDSupplied, parameters.supply);
-        DataStore::addValue(datastoreIDSuppliedCost, parameters.supplyCost);
-        DataStore::addValue(datastoreIDReceived, parameters.received);
-        DataStore::addValue(datastoreIDRequested, parameters.power);
-        DataStore::addValue(datastoreIDCost, parameters.receivedCost);
+        DataStore::addValue(datastoreIDSupplied, getSupply());
+        DataStore::addValue(datastoreIDSuppliedCost, getSupplyCost());
+        DataStore::addValue(datastoreIDReceived, getReceived());
+        DataStore::addValue(datastoreIDRequested, getPower());
+        DataStore::addValue(datastoreIDCost, getReceivedCost());
       }
     }
 
-    virtual void setParameters(const T & app) {
-      parameters.supplyCost += app.getSupplyCost();
-      parameters.received += app.getReceived();
-      parameters.receivedCost += app.getReceivedCost();
-      parameters.power += app.getPower();
-      parameters.supply += app.getSupply();
+    void clear() {
+      for (T & app : appliances) {
+        app.clear();
+      }
     }
 
-    virtual void reset() {
-      parameters.power = 0.0;
-      parameters.supply = 0.0;
-      parameters.supplyCost = 0.0;
-      parameters.received = 0.0;
-      parameters.receivedCost = 0.0;
-      parameters.suppliedLeft = 0.0;
+    virtual bool sendCondition(const Contract & c){
+      return (c.requested > c.received || c.suppliedLeft > 0);
     }
 
-
-
-    virtual bool sendContractGlobal(const Contract & c) {
-      bool send = (c.requested > c.received || c.suppliedLeft > 0);
+    bool sendContractGlobal(const Contract & c) {
+      bool send = sendCondition(c);
       if (send) {
         Contract x = c;
         x.supplied = c.suppliedLeft;
@@ -159,26 +165,51 @@ class Appliance_Group {
 
 
     double getSupply() const {
-      return parameters.supply;
+      double sum = 0;
+      for (const T & l : appliances) {
+        sum += l.getSupply();
+      }
+      return sum;
     }
+
     double getSupplyLeft() const {
-      return parameters.suppliedLeft;
+      double sum = 0;
+      for (const T & l : appliances) {
+        sum += l.getSupplyLeft();
+      }
+      return sum;
     }
 
     double getSupplyCost() const {
-      return parameters.supplyCost;
+      double sum = 0;
+      for (const T & l : appliances) {
+        sum += l.getSupplyCost();
+      }
+      return sum;
     }
 
     double getPower() const {
-      return parameters.power;
+      double sum = 0;
+      for (const T & l : appliances) {
+        sum += l.getPower();
+      }
+      return sum;
     }
 
     double getReceived() const {
-      return parameters.received;
+      double sum = 0;
+      for (const T & l : appliances) {
+        sum += l.getReceived();
+      }
+      return sum;
     }
 
     double getReceivedCost() const {
-      return parameters.receivedCost;
+      double sum = 0;
+      for (const T & l : appliances) {
+        sum += l.getReceivedCost();
+      }
+      return sum;
     }
 
     T getApplianceAt(int BuildingID, int id){
@@ -189,6 +220,10 @@ class Appliance_Group {
         }
       }
       return app;
+    }
+
+    void setIDString(const std::string id){
+      idString = id;
     }
 
  protected:
@@ -206,8 +241,6 @@ class Appliance_Group {
      }
    }
 
-
-   ApplianceParameters parameters;
    int datastoreIDSupplied;
    int datastoreIDSuppliedCost;
    int datastoreIDReceived;

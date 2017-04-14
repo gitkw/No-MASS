@@ -6,25 +6,9 @@
 #include "Building_Appliances.h"
 #include "gtest/gtest.h"
 
-/*
-struct applianceStruct {
-    std::string name;
-    int id;
-    std::vector<double> priority;
-    std::vector<double> timeRequired
-    = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    double cost;
-    double epsilon = 0.1;   // probability of a random action selection
-    double alpha = 0.3;     // learning rate
-    double gamma = 0.1;     // discount factor (how soon do you care)
-    bool update = false;
-    std::vector<int> activities;
-};
-*/
-
 class Test_Appliance_Group_Large : public ::testing::Test {
  protected:
-    Appliance_Group_Large large;
+    Appliance_Group<Appliance_Large> large;
     std::vector<applianceStruct> AppliancesLarge;
     Contract_Negotiation local_negotiation;
     Contract_Negotiation neigh_negotiation;
@@ -92,7 +76,7 @@ TEST_F(Test_Appliance_Group_Large, power) {
     EXPECT_TRUE(supply >= 0);
     EXPECT_NEAR(supply, 0, 0);
     EXPECT_NEAR(recieved, 0, 0);
-    large.reset();
+    large.clear();
   }
 }
 
@@ -152,7 +136,7 @@ TEST_F(Test_Appliance_Group_Large, powerSupply) {
     }else {
         EXPECT_NEAR(recieved, 0, 0.01);
     }
-    large.reset();
+    large.clear();
   }
 
 }
@@ -222,7 +206,7 @@ TEST_F(Test_Appliance_Group_Large, Appliances) {
     }else {
         EXPECT_NEAR(recieved, 0, 0.01);
     }
-    large.reset();
+    large.clear();
   }
 
 }
@@ -292,7 +276,6 @@ TEST_F(Test_Appliance_Group_Large, networkLevelLocal) {
     }else {
         EXPECT_NEAR(recieved, 0, 0.01);
     }
-    large.reset();
 
     Appliance_Large a = large.getApplianceAt(0, 0);
     EXPECT_NEAR(a.getLocalPower(), power, 0.01);
@@ -301,6 +284,7 @@ TEST_F(Test_Appliance_Group_Large, networkLevelLocal) {
     EXPECT_NEAR(a.getNeighbourhoodReceived(), 0, 0.01);
     EXPECT_NEAR(a.getGridPower(), 0, 0.01);
     EXPECT_NEAR(a.getGridReceived(), 0, 0.01);
+    large.clear();
   }
 }
 
@@ -366,7 +350,6 @@ TEST_F(Test_Appliance_Group_Large, networkLevelNeighbourhood) {
     }else {
         EXPECT_NEAR(recieved, 0, 0.01);
     }
-    large.reset();
 
     Appliance_Large a = large.getApplianceAt(0, 0);
     EXPECT_NEAR(a.getLocalPower(), 0, 0.01);
@@ -375,7 +358,7 @@ TEST_F(Test_Appliance_Group_Large, networkLevelNeighbourhood) {
     EXPECT_NEAR(a.getNeighbourhoodReceived(), power, 0.01);
     EXPECT_NEAR(a.getGridPower(), 0, 0.01);
     EXPECT_NEAR(a.getGridReceived(), 0, 0.01);
-
+    large.clear();
   }
 }
 
@@ -434,7 +417,6 @@ TEST_F(Test_Appliance_Group_Large, networkLevelGrid) {
     }else {
         EXPECT_NEAR(recieved, 0, 0.01);
     }
-    large.reset();
 
     Appliance_Large a = large.getApplianceAt(0, 0);
     EXPECT_NEAR(a.getLocalPower(), 0, 0.01);
@@ -443,6 +425,6 @@ TEST_F(Test_Appliance_Group_Large, networkLevelGrid) {
     EXPECT_NEAR(a.getNeighbourhoodReceived(), 0, 0.01);
     EXPECT_NEAR(a.getGridPower(), power, 0.01);
     EXPECT_NEAR(a.getGridReceived(), power, 0.01);
-
+    large.clear();
   }
 }

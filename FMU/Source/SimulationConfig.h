@@ -146,7 +146,8 @@ struct applianceStruct{
 
   std::string variableName;
 
-  bool neighbourhoodSimultion;
+  bool batteryNeighbourhoodDischarge = false;
+  bool batteryNeighbourhoodCharge = false;
 
 };
 

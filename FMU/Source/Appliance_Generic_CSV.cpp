@@ -11,7 +11,13 @@ Appliance_Generic_CSV::Appliance_Generic_CSV() {}
 /**
  * @brief read in the csv file containing the power values
  */
-void Appliance_Generic_CSV::setup() {
+void Appliance_Generic_CSV::setup(applianceStruct a) {
+  setID(a.id);
+  setHoulyPriority(a.priority);
+  setHourlyCost(a.costVector);
+  setFileDemand(a.fileDemand);
+  setFileSupply(a.fileSupply);
+  
   enableSupply = false;
   enableDemand = false;
   if (fileSupply != "") {
@@ -22,6 +28,9 @@ void Appliance_Generic_CSV::setup() {
     enableDemand = true;
     modelDemand.parseConfiguration(SimulationConfig::RunLocation + fileDemand);
   }
+
+
+
 }
 
 void Appliance_Generic_CSV::step() {

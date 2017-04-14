@@ -109,10 +109,6 @@ Source/LVN_Node.cpp
 Source/Contract_Node_Priority.cpp
 Source/Contract_Node_Supply.cpp
 Source/Contract_Negotiation.cpp
-Source/Appliance_Group_CSV.cpp
-Source/Appliance_Group_Small.cpp
-Source/Appliance_Group_Large.cpp
-Source/Appliance_Group_FMI.cpp
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/../rapidxml)

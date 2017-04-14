@@ -49,7 +49,7 @@ void Test_Appliance_Generic_CSV::SetUp() {
     csv.setBuildingID(0);
     csv.setFileDemand(a.fileDemand);
     csv.setFileSupply(a.fileSupply);
-    csv.setup();
+    csv.setup(a);
     csv.setIDString("test_building_" + std::to_string(0) + "_" + std::to_string(a.id));
     csv.setupSave();
 

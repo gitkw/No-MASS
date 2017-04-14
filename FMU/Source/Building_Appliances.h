@@ -7,14 +7,13 @@
 #include <string>
 #include "Appliance_Battery_GridCost_Reward.h"
 #include "Appliance_Battery.h"
+#include "Appliance_Small.h"
+#include "Appliance_Generic_CSV.h"
 #include "Appliance_Large_Learning.h"
 #include "Appliance_Large_Learning_CSV.h"
+#include "Appliance_Large.h"
+#include "Appliance_FMI.h"
 #include "Appliance_Group.h"
-#include "Appliance_Group_CSV.h"
-#include "Appliance_Group_Small.h"
-#include "Appliance_Group_Large.h"
-#include "Appliance_Group_Large_Learning.h"
-#include "Appliance_Group_FMI.h"
 #include "Appliance_Group_Battery.h"
 #include "Contract_Negotiation.h"
 #include "SimulationConfig.h"
@@ -54,23 +53,20 @@ class Building_Appliances {
     std::string buildingString;
     Contract_Negotiation app_negotiation;
 
-    Appliance_Group_Large large;
-    Appliance_Group_Large_Learning<Appliance_Large_Learning> largeLearning;
-    Appliance_Group_Large_Learning<Appliance_Large_Learning_CSV> largeLearningCSV;
-    Appliance_Group_Small small;
-    Appliance_Group_FMI fmi;
+    Appliance_Group<Appliance_Large> large;
+    Appliance_Group<Appliance_Large_Learning> largeLearning;
+    Appliance_Group<Appliance_Large_Learning_CSV> largeLearningCSV;
+    Appliance_Group<Appliance_Small> small;
+    Appliance_Group<Appliance_FMI> fmi;
+    Appliance_Group<Appliance_Generic_CSV> csv;
     Appliance_Group_Battery<Appliance_Battery> batteries;
     Appliance_Group_Battery<Appliance_Battery_GridCost_Reward> batteriesGrid;
-    Appliance_Group_CSV csv;
 
     int datastoreIDNonShiftSupplied;
     int datastoreIDNonShiftSuppliedCost;
     int datastoreIDNonShiftReceived;
     int datastoreIDNonShiftRequested;
     int datastoreIDNonShiftCost;
-
-
-
 };
 
 #endif  // BUILDING_APPLIANCES_H_

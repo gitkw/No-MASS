@@ -16,7 +16,7 @@
 class Appliance_Generic_CSV : public Appliance {
  public:
     Appliance_Generic_CSV();
-    void setup();
+    void setup(applianceStruct a);
     void step();
     void setFileSupply(const std::string & filename);
     void setFileDemand(const std::string & filename);

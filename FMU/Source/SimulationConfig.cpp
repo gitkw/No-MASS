@@ -272,7 +272,9 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
         setValFromNodeIfName(&s.alpha, value, name, "alpha");
         setValFromNodeIfName(&s.gamma, value, name, "gamma");
         setValFromNodeIfName(&s.update, value, name, "updateqtable");
-        setValFromNodeIfName(&s.neighbourhoodSimultion, value, name, "neighbourhoodsimultion");
+        setValFromNodeIfName(&s.batteryNeighbourhoodDischarge, value, name, "batteryneighbourhooddischarge");
+        setValFromNodeIfName(&s.batteryNeighbourhoodCharge, value, name, "batteryneighbourhoodcharge");
+
         if (nodeNameIs(anode, "priority")) {
           s.priority = prioritiesToVector(anode->value());
         }

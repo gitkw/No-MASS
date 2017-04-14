@@ -14,7 +14,10 @@ Appliance_Large::Appliance_Large() {}
  * @brief Set up the large appliance model, reading in the large applaince
  * configuration file
  */
-void Appliance_Large::setup() {
+void Appliance_Large::setup(applianceStruct a) {
+  setID(a.id);
+  setHoulyPriority(a.priority);
+  setActivities(a.activities);
   setupModel();
 }
 

@@ -15,10 +15,6 @@ class Appliance_Battery_GridCost_Reward : public Appliance_Battery {
   Appliance_Battery_GridCost_Reward();
 
   double rewardFunction(double mostShortage, double binShortage) const;
-  //void setGridCost(double gridCost);
-
- private:
-  // double gridCost;
 
 };
 

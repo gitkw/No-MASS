@@ -9,15 +9,22 @@
 
 Appliance_Large_Learning::Appliance_Large_Learning() {}
 
-void Appliance_Large_Learning::setup() {
+void Appliance_Large_Learning::setup(applianceStruct a) {
+
+  setID(a.id);
+  setHoulyPriority(a.priority);
+  setHoulyTimeRequired(a.timeRequired);
+  setActivities(a.activities);
+  setFile(a.fileProfile);
+
   std::string buildingString = "Building" + std::to_string(buildingID);
   std::string s_fullname = buildingString + "_Appliance";
   s_fullname = s_fullname + std::to_string(id) + "_";
   databaseIDactual = DataStore::addVariable(s_fullname + "actual");
-  qLearning.setEpsilon(epsilon);
-  qLearning.setAlpha(alpha);
-  qLearning.setGamma(gamma);
-  qLearning.setUpdate(update);
+  qLearning.setEpsilon(a.epsilon);
+  qLearning.setAlpha(a.alpha);
+  qLearning.setGamma(a.gamma);
+  qLearning.setUpdate(a.update);
   qLearning.setFilename(s_fullname);
   qLearning.setStates(24);
   qLearning.setActions(24);
@@ -183,19 +190,6 @@ void Appliance_Large_Learning::addToCost(const double cost) {
  */
 void Appliance_Large_Learning::postprocess() {
   qLearning.printQ();
-}
-
-void Appliance_Large_Learning::setEpsilon(double epsilon) {
-  this->epsilon = epsilon;
-}
-void Appliance_Large_Learning::setAlpha(double alpha) {
-  this->alpha = alpha;
-}
-void Appliance_Large_Learning::setGamma(double gamma) {
-  this->gamma = gamma;
-}
-void Appliance_Large_Learning::setUpdate(bool update) {
-  this->update = update;
 }
 
 void Appliance_Large_Learning::setHoulyTimeRequired(

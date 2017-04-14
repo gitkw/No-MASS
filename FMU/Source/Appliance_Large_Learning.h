@@ -30,15 +30,11 @@ struct profileStruct {
 class Appliance_Large_Learning : public Appliance_Large {
  public:
   Appliance_Large_Learning();
-  void setup();
+  void setup(applianceStruct a);
   void step();
   void postprocess();
   double getRequiredTime(int hourOfDay) const;
   void addToCost(const double cost);
-  void setEpsilon(double epsilon);
-  void setAlpha(double alpha);
-  void setGamma(double gamma);
-  void setUpdate(bool update);
   void setHoulyTimeRequired(const std::vector<double> & houlyTimeRequired);
   void setFile(std::string file);
   bool isModelOn();
@@ -67,11 +63,6 @@ protected:
   double calculateReward();
   bool learnStepLessThanProfile() const;
   void eraseFirstPowerProfile();
-
-  double epsilon;   // probability of a random action selection
-  double alpha;     // learning rate
-  double gamma;     // discount factor (how soon do you care)
-  bool update;
 };
 
 #endif  // APPLIANCE_LARGE_LEARNING_H_

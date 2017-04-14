@@ -188,9 +188,12 @@ void Appliance::setActivities(const std::vector<int> Activities) {
   this->Activities = Activities;
 }
 
-
 double Appliance::getSupply() const {
   return parameters.supply;
+}
+
+double Appliance::getSupplyLeft() const {
+  return parameters.suppliedLeft;
 }
 
 double Appliance::getSupplyCost() const {

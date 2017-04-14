@@ -29,14 +29,20 @@ double Appliance_Battery::rewardFunction(double mostShortage, double binShortage
  * @brief Set up the large appliance model, reading in the large applaince
  * configuration file
  */
-void Appliance_Battery::setup() {
+void Appliance_Battery::setup(applianceStruct a) {
+
+  setID(a.id);
+  setHoulyPriority(a.priority);
+  setBatteryNeighbourhoodDischarge(a.batteryNeighbourhoodDischarge);
+  setBatteryNeighbourhoodCharge(a.batteryNeighbourhoodCharge);
+
   std::string buildingString = "Building" + std::to_string(buildingID);
   std::string s_fullname = buildingString + "_Appliance";
   s_fullname = s_fullname + std::to_string(id) + "_";
-  qLearning.setEpsilon(epsilon);
-  qLearning.setAlpha(alpha);
-  qLearning.setGamma(gamma);
-  qLearning.setUpdate(update);
+  qLearning.setEpsilon(a.epsilon);
+  qLearning.setAlpha(a.alpha);
+  qLearning.setGamma(a.gamma);
+  qLearning.setUpdate(a.update);
   qLearning.setFilename(s_fullname);
   qLearning.setStates(1440 / 60);
   qLearning.setActions(2);
@@ -95,24 +101,36 @@ void Appliance_Battery::doAction(){
  */
 void Appliance_Battery::stepNeighbourhood() {
 
-  if (neighbourhoodSimultion){
+  if (batteryNeighbourhoodDischarge){
     if(getSupply() == 0){
       doAction();
     }
-    double dischargeRateOld = dischargeRate;
-    dischargeRate -= getSupply();
-    calculateSupply();
-    dischargeRate = dischargeRateOld;
-
-
-    int hourOfTheDay = calculateHourOfDay();
-    if (hourOfTheDay != previousHourOfDay) {
-      previousHourOfDay = hourOfTheDay;
-      sumSupply = 0.0;
-      sumShort = 0.0;
+    if (getSupply() < dischargeRate){
+      double dischargeRateOld = dischargeRate;
+      dischargeRate -= getSupply();
+      calculateSupply();
+      dischargeRate = dischargeRateOld;
+      int hourOfTheDay = calculateHourOfDay();
+      if (hourOfTheDay != previousHourOfDay) {
+        previousHourOfDay = hourOfTheDay;
+        sumSupply = 0.0;
+        sumShort = 0.0;
+      }
     }
+  } else {
+    setSupply(0);
   }
 
+  if (batteryNeighbourhoodCharge) {
+    if (getSupply() == 0){
+      // if the battery is not full calculate how much power is needed
+      if(stateOfCharge < 100) {
+        setPower(get_charge_delta());
+      }
+    }
+  } else {
+    setPower(0);
+  }
 }
 
 /**
@@ -157,7 +175,6 @@ void Appliance_Battery::calculateSupply() {
   }
 }
 
-
 void Appliance_Battery::clear() {
   // save the new state of charge to the datastore
   DataStore::addValue(datastoreIDstateOfCharge, stateOfCharge);
@@ -179,22 +196,6 @@ void Appliance_Battery::postprocess() {
 
 void Appliance_Battery::setPowerShortage(double power) {
   this->powerShortage = power;
-}
-
-void Appliance_Battery::setEpsilon(double epsilon) {
-  this->epsilon = epsilon;
-}
-
-void Appliance_Battery::setAlpha(double alpha) {
-  this->alpha = alpha;
-}
-
-void Appliance_Battery::setGamma(double gamma) {
-  this->gamma = gamma;
-}
-
-void Appliance_Battery::setUpdate(bool update) {
-  this->update = update;
 }
 
 void Appliance_Battery::AddCost(double cost) {
@@ -243,26 +244,27 @@ double Appliance_Battery::energy_calc() const{
     return stateOfCharge * capacity / 100; // this is the capacity at the correspondent SOC.
 }
 
-
 void Appliance_Battery::saveNeighbourhoodCalculate() {
+  if (batteryNeighbourhoodDischarge){
     parametersNeighbourhood.supply = parameters.supply - parameters.suppliedLeft;
     if (parametersLocal.supply > 0 ){
       parametersNeighbourhood.supply = parameters.supply - parametersLocal.suppliedLeft - parameters.suppliedLeft;
     }
     parametersNeighbourhood.suppliedLeft = parameters.suppliedLeft;
+  }
+  if (batteryNeighbourhoodCharge) {
     parametersNeighbourhood.received = parameters.received - parametersLocal.received;
     parametersNeighbourhood.power =  parameters.power - parametersLocal.received;
     parametersNeighbourhood.receivedCost =  parameters.receivedCost - parametersLocal.receivedCost;
+  }
 }
 
-void Appliance_Battery::saveGlobalCalculate(){
-  parametersGrid.supply = parameters.suppliedLeft;
-  parametersGrid.suppliedLeft = parameters.suppliedLeft;
-  parametersGrid.received = parameters.received - parametersNeighbourhood.received - parametersLocal.received;
-  parametersGrid.power =  parameters.power - parametersNeighbourhood.received - parametersLocal.received;
-  parametersGrid.receivedCost =  parameters.receivedCost - parametersNeighbourhood.receivedCost  - parametersLocal.receivedCost;
+void Appliance_Battery::saveGlobalCalculate(){}
+
+void Appliance_Battery::setBatteryNeighbourhoodDischarge(bool batteryNeighbourhoodDischarge) {
+  this->batteryNeighbourhoodDischarge = batteryNeighbourhoodDischarge;
 }
 
-void Appliance_Battery::setNeighbourhoodSimultion(bool neighbourhoodSimultion) {
-  this->neighbourhoodSimultion = neighbourhoodSimultion;
+void Appliance_Battery::setBatteryNeighbourhoodCharge(bool batteryNeighbourhoodCharge) {
+  this->batteryNeighbourhoodCharge = batteryNeighbourhoodCharge;
 }
