@@ -54,7 +54,7 @@ void Appliance_Large::step() {
   setPower(0.0);
   int stepCount = SimulationConfig::getStepCount();
   double p = model.consumption(stepCount);
-  if (isOn() || match) {
+  if (isOn() && match) {
     setPower(p);
   }
 }

@@ -88,7 +88,7 @@ class Appliance : public Agent {
 
     bool global;
     bool local;
-    bool match;
+    bool match = true;
 
     int datastoreIDSupplied;
     int datastoreIDSuppliedCost;
