@@ -8,16 +8,40 @@
 State::State() {}
 State::~State() {}
 
+State::State(int id, double metabolicRate, double clo,
+                  const std::string & activity) :
+                  id(id), metabolicRate(metabolicRate),
+                  clo(clo), activity(activity) {
+}
+
 unsigned int State::numberOfSubStates() const {
   return states.size();
+}
+
+void State::setId(int id){
+  this->id = id;
+}
+
+void State::setMetabolicRate(double metabolicRate) {
+    this->metabolicRate = metabolicRate;
+}
+
+void State::setClo(double clo) {
+    this->clo = clo;
+}
+
+void State::setActivity(const std::string & activity) {
+    this->activity = activity;
 }
 
 int State::getId() const {
     return id;
 }
+
 double State::getMetabolicRate()const {
     return metabolicRate;
 }
+
 double State::getClo()const {
     return clo;
 }

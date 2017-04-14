@@ -75,17 +75,6 @@ Source/SimulationConfig.cpp
 Source/SimulationTime.cpp
 Source/State.cpp
 Source/StateMachine.cpp
-Source/State_Audio_Visual.cpp
-Source/State_Cleaning.cpp
-Source/State_Cooking.cpp
-Source/State_IT.cpp
-Source/State_Metabolic.cpp
-Source/State_Out.cpp
-Source/State_Passive.cpp
-Source/State_Present.cpp
-Source/State_Sleep.cpp
-Source/State_Washing.cpp
-Source/State_Washing_Appliance.cpp
 Source/Utility.cpp
 Source/Environment.cpp
 Source/Building.cpp

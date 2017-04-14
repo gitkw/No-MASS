@@ -7,8 +7,6 @@
 #include <memory>
 #include <vector>
 
-#include "Model_Activity_Survival.h"
-#include "Model_Presence.h"
 #include "StateMachine.h"
 #include "State.h"
 

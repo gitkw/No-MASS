@@ -54,7 +54,6 @@ void Occupant_Zone::setup(int buildingID, const Building_Zone & buldingZone,
   }
 }
 
-
 void Occupant_Zone::setupLights(const agentStruct &agent,
     const Building_Zone & buldingZone) {
       ActionLights = false;
@@ -100,7 +99,7 @@ void Occupant_Zone::setupShades(const agentStruct &agent,
     } else if (SimulationConfig::info.shading) {
           aas.setup(agent.shadeId);
           availableActions.push_back(2);
-      }
+    }
 }
 
 void Occupant_Zone::setupWindows(int agentid, const agentStruct &agent,

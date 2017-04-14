@@ -3,17 +3,7 @@
 #include <limits.h>
 
 #include "StateMachine.h"
-#include "State_Out.h"
-#include "State_Present.h"
-#include "State_Sleep.h"
-#include "State_Passive.h"
-#include "State_IT.h"
-#include "State_Washing_Appliance.h"
-#include "State_Audio_Visual.h"
-#include "State_Cleaning.h"
-#include "State_Cooking.h"
-#include "State_Washing.h"
-#include "State_Metabolic.h"
+#include "State.h"
 #include "Building_Zone.h"
 #include "SimulationConfig.h"
 
@@ -35,15 +25,15 @@ TEST(StateMachine, statesPage) {
   z_out.setup(zs_out);
 
   StateMachine stateMachine;
-  State_Out out;
+  State out(9, 0, 1, "Out");
   out.setZonePtr(std::make_shared<Building_Zone>(z_out));
   stateMachine.addState(out);
 
   EXPECT_EQ(stateMachine.numberOfStates(),  1);
   EXPECT_EQ(out.numberOfSubStates(),  0);
 
-  State_Present present;
-  State_IT it;
+  State present(-100,-1,-1,"");
+  State it(3, 70, 1, "IT");
 
   it.setZonePtr(std::make_shared<Building_Zone>(z));
   present.addState(it);
@@ -79,10 +69,10 @@ TEST(StateMachine, statesActivity) {
   z_out.setup(zs_out);
 
   StateMachine stateMachine;
-  State_Out out;
+  State out(9, 0, 1, "Out");
   out.setZonePtr(std::make_shared<Building_Zone>(z_out));
   stateMachine.addState(out);
-  State_Present present;
+  State present(-100,-1,-1,"");
   EXPECT_EQ(stateMachine.numberOfStates(), 1);
   EXPECT_EQ(out.numberOfSubStates(), 0);
   ZoneStruct zs;
@@ -112,23 +102,24 @@ TEST(StateMachine, statesActivity) {
   z_Office.setName(zs.name);
   z_Office.setup(zs);
 
-  State_Sleep sleep;
+  State sleep(0, 46, 2.55, "Sleep");
+  State passive(1, 58, 1, "Passive");
+  State audioVisual(2, 70, 1, "AudioVisual");
+  State it(3, 70, 1, "IT");
+  State cooking(4, 116, 1, "Cooking");
+  State cleaning(5, 116, 1, "Cleaning");
+  State washing(6, 116, 0, "Washing");
+  State metabolic(7, 93, 1, "Metabolic");
+  State washingAppliance(8, 116, 1, "WashingAppliance");
+
   sleep.setZonePtr(std::make_shared<Building_Zone>(z_MasterBedroom));
-  State_Passive passive;
   passive.setZonePtr(std::make_shared<Building_Zone>(z_LivingRoom));
-  State_Washing_Appliance washingAppliance;
   washingAppliance.setZonePtr(std::make_shared<Building_Zone>(z_Bathroom));
-  State_Washing washing;
   washing.setZonePtr(std::make_shared<Building_Zone>(z_Bathroom));
-  State_Audio_Visual audioVisual;
   audioVisual.setZonePtr(std::make_shared<Building_Zone>(z_LivingRoom));
-  State_Cleaning cleaning;
   cleaning.setZonePtr(std::make_shared<Building_Zone>(z_Kitchen));
-  State_Cooking cooking;
   cooking.setZonePtr(std::make_shared<Building_Zone>(z_Kitchen));
-  State_Metabolic metabolic;
   metabolic.setZonePtr(std::make_shared<Building_Zone>(z_LivingRoom));
-  State_IT it;
   it.setZonePtr(std::make_shared<Building_Zone>(z_Office));
   present.addState(sleep);
   present.addState(passive);
@@ -139,7 +130,6 @@ TEST(StateMachine, statesActivity) {
   present.addState(cooking);
   present.addState(metabolic);
   present.addState(it);
-
 
   stateMachine.addState(present);
 
@@ -155,7 +145,6 @@ TEST(StateMachine, statesActivity) {
   EXPECT_EQ(metabolic.numberOfSubStates(), 0);
   EXPECT_EQ(it.numberOfSubStates(), 0);
   EXPECT_EQ(present.numberOfSubStates(), 9);
-
 
   State s = stateMachine.transistionTo(9);
   EXPECT_EQ(s.getId(), 9);

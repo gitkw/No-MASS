@@ -10,20 +10,10 @@
 #include <cstddef>
 #include <utility>
 
+
+#include "Model_Activity_Survival.h"
+#include "Model_Presence.h"
 #include "State.h"
-#include "State_Present.h"
-#include "State_Sleep.h"
-#include "State_Passive.h"
-#include "State_IT.h"
-#include "State_Washing_Appliance.h"
-#include "State_Audio_Visual.h"
-#include "State_Cleaning.h"
-#include "State_Cooking.h"
-#include "State_Washing.h"
-#include "State_Metabolic.h"
-#include "State_Out.h"
-#include "Model_HeatGains.h"
-#include "Model_Lights.h"
 #include "DataStore.h"
 #include "SimulationConfig.h"
 #include "StateMachine.h"
@@ -71,29 +61,29 @@ void Occupant::setup(int id, const agentStruct &agent,
 
 void Occupant::initialiseStates(
                   const std::vector<std::shared_ptr<Building_Zone>> &zones) {
-    State_Present present;
+    State present(-100,-1,-1,"");
     if (SimulationConfig::info.presencePage) {
-        State_IT it;
+        State it(3, 70, 1, "IT");
         matchStateToZone(&it, zones);
         present.addState(it);
     } else {
-        State_Sleep sleep;
+        State sleep(0, 46, 2.55, "Sleep");
+        State passive(1, 58, 1, "Passive");
+        State audioVisual(2, 70, 1, "AudioVisual");
+        State it(3, 70, 1, "IT");
+        State cooking(4, 116, 1, "Cooking");
+        State cleaning(5, 116, 1, "Cleaning");
+        State washing(6, 116, 0, "Washing");
+        State metabolic(7, 93, 1, "Metabolic");
+        State washingAppliance(8, 116, 1, "WashingAppliance");
         matchStateToZone(&sleep, zones);
-        State_Passive passive;
         matchStateToZone(&passive, zones);
-        State_Washing_Appliance washingAppliance;
         matchStateToZone(&washingAppliance, zones);
-        State_Washing washing;
         matchStateToZone(&washing, zones);
-        State_Audio_Visual audioVisual;
         matchStateToZone(&audioVisual, zones);
-        State_Cleaning cleaning;
         matchStateToZone(&cleaning, zones);
-        State_Cooking cooking;
         matchStateToZone(&cooking, zones);
-        State_Metabolic metabolic;
         matchStateToZone(&metabolic, zones);
-        State_IT it;
         matchStateToZone(&it, zones);
         present.addState(sleep);
         present.addState(passive);
@@ -106,7 +96,7 @@ void Occupant::initialiseStates(
         present.addState(it);
     }
     stateMachine.addState(present);
-    State_Out out;
+    State out(9, 0, 1, "Out");
     matchStateToZone(&out, zones);
     stateMachine.addState(out);
     setState(out);
@@ -183,30 +173,29 @@ void Occupant::model_presenceFromPage(const agentStruct &agent) {
 
 
 double Occupant::getCurrentRadientGains(const Building_Zone &zone) const {
-    double state = 0.0;
-    for (const Occupant_Zone &agentZone : agentZones) {
-      if (agentZone.getId() == zone.getId()) {
-        state = agentZone.getHeatgains();
-        break;
-      }
+  double state = 0.0;
+  for (const Occupant_Zone &agentZone : agentZones) {
+    if (agentZone.getId() == zone.getId()) {
+      state = agentZone.getHeatgains();
+      break;
     }
-
-    return state;
+  }
+  return state;
 }
 
 double Occupant::getPower() const {
-    return power;
+  return power;
 }
 
 bool Occupant::getDesiredLightState(const Building_Zone &zone) const {
-    bool state = false;
-    for (const Occupant_Zone &agentZone : agentZones) {
-      if (agentZone.getId() == zone.getId()) {
-        state = agentZone.getDesiredLightState();
-        break;
-      }
+  bool state = false;
+  for (const Occupant_Zone &agentZone : agentZones) {
+    if (agentZone.getId() == zone.getId()) {
+      state = agentZone.getDesiredLightState();
+      break;
     }
-    return state;
+  }
+  return state;
 }
 
 bool Occupant::getDesiredWindowState(const Building_Zone &zone) const {
