@@ -249,9 +249,14 @@ void Appliance_Battery::saveNeighbourhoodCalculate() {
     parametersNeighbourhood.suppliedLeft = parameters.suppliedLeft;
   }
   if (batteryNeighbourhoodCharge) {
-    parametersNeighbourhood.received = parameters.received - parametersLocal.received;
-    parametersNeighbourhood.power =  parameters.power - parametersLocal.received;
-    parametersNeighbourhood.receivedCost =  parameters.receivedCost - parametersLocal.receivedCost;
+    parametersNeighbourhood.received = 0;
+    parametersNeighbourhood.receivedCost = 0;
+    parametersNeighbourhood.power = 0;
+    if (parameters.received > 0) {
+      parametersNeighbourhood.received = parameters.received - parametersLocal.received;
+      parametersNeighbourhood.receivedCost =  parameters.receivedCost - parametersLocal.receivedCost;
+      parametersNeighbourhood.power =  parameters.power - parametersLocal.received;
+    }
   }
 }
 
