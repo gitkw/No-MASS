@@ -257,18 +257,20 @@ class NoMASS(object):
                 theList.append(int(element.find('id').text))
             return theList
         self.simulationConfigInfo = pd.DataFrame(columns=['Building', 'LargeApplianceList', 'SmallApplianceList',
-                                                          'PVList', 'BatteryList', 'csvList'])
+                                                          'ShiftApplianceList', 'PVList', 'BatteryList', 'csvList'])
         buildingNumber=0
         for build in self.root.iter('building'):
             for ap in build.iter('Appliances'):
                 largeApplianceList   = getIDList(ap, 'Large')
                 smallApplianceList   = getIDList(ap, 'Small')
+                shiftApplianceList   = getIDList(ap, 'LargeLearning') + getIDList(ap, 'LargeLearningCSV')
                 pvList               = getIDList(ap, 'pv')
                 batteryList          = getIDList(ap, 'battery')
                 batteryList_cont     = getIDList(ap, 'batteryGridCostReward')
                 csvApplianceList     = getIDList(ap, 'csv')
 
             self.simulationConfigInfo.loc[buildingNumber] = [buildingNumber, largeApplianceList, smallApplianceList,
+                                                             shiftApplianceList,
                                                              pvList, batteryList + batteryList_cont, csvApplianceList]
             buildingNumber+=1
         return self.simulationConfigInfo
