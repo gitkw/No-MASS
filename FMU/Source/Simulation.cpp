@@ -92,18 +92,15 @@ void Simulation::timeStep() {
       // add to contracts
       b.addContactsTo(&building_negotiation, true);
   }
+
   // battery negotiation
   for (Building &b : buildings) {
       b.stepAppliancesUseBatteries(&building_negotiation);
   }
-
   building_negotiation.process();
-
   for (Building &b : buildings) {
       b.stepAppliancesNegotiationNeighbourhood(building_negotiation);
   }
-
-
   building_negotiation.clear();
 
   for (Building &b : buildings) {

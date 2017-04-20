@@ -57,11 +57,11 @@ class Appliance_Group_Battery : public Appliance_Group<T> {
 
     void negotiationAppGlobal(const Contract_Negotiation & app_negotiation,
                                       T & app, const bool negotiate) {
-        app.setPower(0.0);
-        app.setSupply(0.0);
-        app.setSupplyCost(0.0);
-        app.setReceivedCost(0.0);
-        app.setSupplyLeft(0.0);
+        // app.setPower(0.0);
+        // app.setSupply(0.0);
+        // app.setSupplyCost(0.0);
+        // app.setReceivedCost(0.0);
+        // app.setSupplyLeft(0.0);
         negotiationApp(app_negotiation, app, negotiate);
     }
 

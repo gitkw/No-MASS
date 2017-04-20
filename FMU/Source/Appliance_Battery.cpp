@@ -117,8 +117,6 @@ void Appliance_Battery::stepNeighbourhood() {
         sumShort = 0.0;
       }
     }
-  } else {
-    setSupply(0);
   }
 
   if (batteryNeighbourhoodCharge) {
@@ -128,8 +126,6 @@ void Appliance_Battery::stepNeighbourhood() {
         setPower(get_charge_delta());
       }
     }
-  } else {
-    setPower(0);
   }
 }
 
