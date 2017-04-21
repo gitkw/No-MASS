@@ -70,8 +70,8 @@ class Appliance_Group {
         c.supplied = a.getSupply();
         c.suppliedLeft = a.getSupply();
         c.suppliedCost = a.getSupplyCost();
-        c.receivedCost = 0;
-        c.received = 0;
+        c.receivedCost = a.getReceivedCost();
+        c.received = a.getReceived();
         app_negotiation->submit(c);
       }
       return ret;
