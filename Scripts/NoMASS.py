@@ -261,7 +261,7 @@ class NoMASS(object):
         buildingNumber=0
         for build in self.root.iter('building'):
             for ap in build.iter('Appliances'):
-                largeApplianceList   = getIDList(ap, 'Large')
+                largeApplianceList   = getIDList(ap, 'Large') + getIDList(ap, 'LargeCSV')
                 smallApplianceList   = getIDList(ap, 'Small')
                 shiftApplianceList   = getIDList(ap, 'LargeLearning') + getIDList(ap, 'LargeLearningCSV')
                 pvList               = getIDList(ap, 'pv')
