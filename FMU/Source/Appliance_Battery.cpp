@@ -120,10 +120,10 @@ void Appliance_Battery::stepNeighbourhood() {
   }
 
   if (batteryNeighbourhoodCharge) {
-    if (getSupply() == 0){
+    if (getSupply() == 0 && getReceived() < chargeRate){
       // if the battery is not full calculate how much power is needed
       if(stateOfCharge < 100) {
-        setPower(get_charge_delta());
+        setPower(get_charge_delta() - getReceived());
       }
     }
   }
@@ -239,7 +239,19 @@ double Appliance_Battery::get_new_SOC_discharge(double P_request) {
 double Appliance_Battery::energy_calc() const{
     return stateOfCharge * capacity / 100; // this is the capacity at the correspondent SOC.
 }
+void Appliance_Battery::saveLocal() {
+  parametersLocal.supply = parameters.supply - parameters.suppliedLeft;
+  parametersLocal.suppliedLeft = parameters.suppliedLeft;
+  parametersLocal.received = parameters.received;
+  parametersLocal.power = parameters.power;
+  parametersLocal.receivedCost = parameters.receivedCost;
 
+  DataStore::addValue(datastoreLocalIDSupplied, parametersLocal.supply);
+  DataStore::addValue(datastoreLocalIDReceived, parametersLocal.received);
+  DataStore::addValue(datastoreLocalIDRequested, parametersLocal.power);
+  DataStore::addValue(datastoreLocalIDCost, parametersLocal.receivedCost);
+
+}
 void Appliance_Battery::saveNeighbourhoodCalculate() {
   if (batteryNeighbourhoodDischarge){
     parametersNeighbourhood.supply = parameters.supply - parameters.suppliedLeft;
@@ -254,8 +266,8 @@ void Appliance_Battery::saveNeighbourhoodCalculate() {
     parametersNeighbourhood.power = 0;
     if (parameters.received > 0) {
       parametersNeighbourhood.received = parameters.received - parametersLocal.received;
-      parametersNeighbourhood.receivedCost =  parameters.receivedCost - parametersLocal.receivedCost;
-      parametersNeighbourhood.power =  parameters.power - parametersLocal.received;
+        parametersNeighbourhood.receivedCost = parameters.receivedCost - parametersLocal.receivedCost;
+      parametersNeighbourhood.power = parameters.power - parametersLocal.received;
     }
   }
 }

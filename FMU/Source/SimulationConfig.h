@@ -154,6 +154,7 @@ struct applianceStruct{
 struct buildingStruct {
     std::map<std::string, ZoneStruct> zones;
     std::vector<applianceStruct> AppliancesLarge;
+    std::vector<applianceStruct> AppliancesLargeCSV;
     std::vector<applianceStruct> AppliancesGrid;
     std::vector<applianceStruct> AppliancesLargeLearning;
     std::vector<applianceStruct> AppliancesLargeLearningCSV;

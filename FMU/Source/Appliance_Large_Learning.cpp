@@ -196,7 +196,3 @@ void Appliance_Large_Learning::setHoulyTimeRequired(
               const std::vector<double> & houlyTimeRequired) {
   this->houlyTimeRequired = houlyTimeRequired;
 }
-
-void Appliance_Large_Learning::setFile(std::string file) {
-  this->file = file;
-}

@@ -22,6 +22,9 @@ class Appliance_Large : public Appliance {
     bool isOn() const;
 
  protected:
+   void setFile(std::string file);
+     std::string file;
+     std::vector<double> profileCSV;
     Model_Appliance_Large_Usage_Survival model;
 
 

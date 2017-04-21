@@ -86,6 +86,7 @@ Source/QLearning_Occupant.cpp
 Source/QLearning_Appliance.cpp
 Source/Appliance.cpp
 Source/Appliance_Large.cpp
+Source/Appliance_Large_CSV.cpp
 Source/Appliance_Small.cpp
 Source/Appliance_Generic_CSV.cpp
 Source/Appliance_FMI.cpp

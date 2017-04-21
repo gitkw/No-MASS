@@ -195,6 +195,7 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
   rapidxml::xml_node<> *cnode = node->first_node();
   while (cnode) {
     if (nodeNameIs(cnode, "large") ||
+                nodeNameIs(cnode, "largecsv") ||
                 nodeNameIs(cnode, "largelearning") ||
                 nodeNameIs(cnode, "largelearningcsv") ||
                             nodeNameIs(cnode, "grid")) {
@@ -223,6 +224,8 @@ void SimulationConfig::parseAppliances(rapidxml::xml_node<> *node,
       }
       if (nodeNameIs(cnode, "large")) {
         b->AppliancesLarge.push_back(s);
+      } else if (nodeNameIs(cnode, "largecsv")) {
+        b->AppliancesLargeCSV.push_back(s);
       } else if (nodeNameIs(cnode, "largelearning")) {
         b->AppliancesLargeLearning.push_back(s);
       } else if (nodeNameIs(cnode, "largelearningcsv")) {

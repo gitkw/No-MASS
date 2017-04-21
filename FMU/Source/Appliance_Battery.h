@@ -27,7 +27,7 @@ class Appliance_Battery : public Appliance {
   void setBatteryNeighbourhoodDischarge(bool batteryNeighbourhoodDischarge);
   void setBatteryNeighbourhoodCharge(bool batteryNeighbourhoodCharge);
   virtual double rewardFunction(double mostShortage, double binShortage) const;
-
+  void saveLocal();
  protected:
   bool action;
   void doAction();

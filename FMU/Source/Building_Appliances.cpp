@@ -22,6 +22,8 @@ void Building_Appliances::setup(const buildingStruct & b) {
   csv.setup(b.AppliancesCSV, buildingID, buildingString);
   large.setIDString(buildingString + "_Large_Sum");
   large.setup(b.AppliancesLarge, buildingID, buildingString);
+  largeCSV.setIDString(buildingString + "_Large_CSV_Sum");
+  largeCSV.setup(b.AppliancesLargeCSV, buildingID, buildingString);
   largeLearning.setIDString(buildingString + "_LargeLearning_Sum");
   largeLearning.setup(b.AppliancesLargeLearning, buildingID, buildingString);
   largeLearningCSV.setIDString(buildingString + "_LargeLearningCSV_Sum");
@@ -44,6 +46,8 @@ void Building_Appliances::preprocess() {}
 void Building_Appliances::stepLocal() {
   large.hasActivities(currentStates);
   large.step(&app_negotiation);
+  largeCSV.hasActivities(currentStates);
+  largeCSV.step(&app_negotiation);
   largeLearning.hasActivities(currentStates);
   largeLearning.step(&app_negotiation);
   largeLearningCSV.hasActivities(currentStates);
@@ -53,12 +57,14 @@ void Building_Appliances::stepLocal() {
   fmi.step(&app_negotiation);
 
   double powerShortage = large.getPower()
+                  + largeCSV.getPower()
                   + largeLearning.getPower()
                   + largeLearningCSV.getPower()
                   + small.getPower()
                   + csv.getPower()
                   + fmi.getPower()
                   - large.getSupplyLeft()
+                  -largeCSV.getSupplyLeft()
                   - largeLearning.getSupplyLeft()
                   - largeLearningCSV.getSupplyLeft()
                   - small.getSupplyLeft()
@@ -76,6 +82,7 @@ void Building_Appliances::stepLocalNegotiation() {
   app_negotiation.process();
   small.localNegotiation(app_negotiation);
   large.localNegotiation(app_negotiation);
+  largeCSV.localNegotiation(app_negotiation);
   largeLearning.localNegotiation(app_negotiation);
   largeLearningCSV.localNegotiation(app_negotiation);
   fmi.localNegotiation(app_negotiation);
@@ -89,6 +96,7 @@ void Building_Appliances::stepNeighbourhoodNegotiation(
                           const Contract_Negotiation & building_negotiation) {
 
     large.neighbourhoodNegotiation(building_negotiation);
+    largeCSV.neighbourhoodNegotiation(building_negotiation);
     largeLearning.neighbourhoodNegotiation(building_negotiation);
     largeLearningCSV.neighbourhoodNegotiation(building_negotiation);
     small.neighbourhoodNegotiation(building_negotiation);
@@ -102,6 +110,7 @@ void Building_Appliances::stepGlobalNegotiation(
                           const Contract_Negotiation & building_negotiation) {
 
   large.globalNegotiation(building_negotiation);
+  largeCSV.globalNegotiation(building_negotiation);
   largeLearning.globalNegotiation(building_negotiation);
   largeLearningCSV.globalNegotiation(building_negotiation);
   small.globalNegotiation(building_negotiation);
@@ -109,6 +118,7 @@ void Building_Appliances::stepGlobalNegotiation(
   csv.globalNegotiation(building_negotiation);
 
   double cost = large.getReceivedCost() +
+  largeCSV.getReceivedCost() +
                 largeLearning.getReceivedCost() +
                 largeLearningCSV.getReceivedCost() +
                 small.getReceivedCost() +
@@ -121,22 +131,27 @@ void Building_Appliances::stepGlobalNegotiation(
   batteriesGrid.globalNegotiation(building_negotiation);
 
   double supply = large.getSupply() +
+  largeCSV.getSupply() +
           small.getSupply() +
           fmi.getSupply() +
           csv.getSupply();
   double supplyCost = large.getSupplyCost() +
+  largeCSV.getSupplyCost() +
           small.getSupplyCost() +
           fmi.getSupplyCost() +
           csv.getSupplyCost();
   double received = large.getReceived() +
+  largeCSV.getReceived() +
           small.getReceived() +
           fmi.getReceived() +
           csv.getReceived();
   double power = large.getPower() +
+  largeCSV.getPower() +
           small.getPower() +
           fmi.getPower() +
           csv.getPower();
   double receivedCost = large.getReceivedCost() +
+  largeCSV.getReceivedCost() +
           small.getReceivedCost() +
           fmi.getReceivedCost() +
           csv.getReceivedCost();
@@ -151,6 +166,7 @@ void Building_Appliances::stepGlobalNegotiation(
   app_negotiation.clear();
 
   large.clear();
+  largeCSV.clear();
   largeLearning.clear();
   largeLearningCSV.clear();
   small.clear();
@@ -182,6 +198,7 @@ void Building_Appliances::addContactsTo(
                                 Contract_Negotiation * building_negotiation,
                               const bool battery) {
   large.addGlobalContactsTo(building_negotiation);
+  largeCSV.addGlobalContactsTo(building_negotiation);
   largeLearning.addGlobalContactsTo(building_negotiation);
   largeLearningCSV.addGlobalContactsTo(building_negotiation);
   small.addGlobalContactsTo(building_negotiation);

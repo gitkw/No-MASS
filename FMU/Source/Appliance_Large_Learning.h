@@ -36,7 +36,7 @@ class Appliance_Large_Learning : public Appliance_Large {
   double getRequiredTime(int hourOfDay) const;
   void addToCost(const double cost);
   void setHoulyTimeRequired(const std::vector<double> & houlyTimeRequired);
-  void setFile(std::string file);
+  
   bool isModelOn();
 
 protected:
@@ -44,8 +44,7 @@ protected:
   virtual void calculateProfile();
 
   std::queue<profileStruct> powerProfile;
-  std::string file;
-  std::vector<double> profileCSV;
+
 
  private:
 

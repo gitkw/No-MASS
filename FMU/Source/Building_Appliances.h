@@ -12,6 +12,7 @@
 #include "Appliance_Large_Learning.h"
 #include "Appliance_Large_Learning_CSV.h"
 #include "Appliance_Large.h"
+#include "Appliance_Large_CSV.h"
 #include "Appliance_FMI.h"
 #include "Appliance_Group.h"
 #include "Appliance_Group_Battery.h"
@@ -54,6 +55,7 @@ class Building_Appliances {
     Contract_Negotiation app_negotiation;
 
     Appliance_Group<Appliance_Large> large;
+    Appliance_Group<Appliance_Large_CSV> largeCSV;
     Appliance_Group<Appliance_Large_Learning> largeLearning;
     Appliance_Group<Appliance_Large_Learning_CSV> largeLearningCSV;
     Appliance_Group<Appliance_Small> small;

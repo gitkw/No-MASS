@@ -97,7 +97,10 @@ void Simulation::timeStep() {
   for (Building &b : buildings) {
       b.stepAppliancesUseBatteries(&building_negotiation);
   }
-  building_negotiation.process();
+  if (buildings.size() > 1) {
+    // only process contracts if there is a neighbourhood
+    building_negotiation.process();
+  }
   for (Building &b : buildings) {
       b.stepAppliancesNegotiationNeighbourhood(building_negotiation);
   }
@@ -106,6 +109,7 @@ void Simulation::timeStep() {
   for (Building &b : buildings) {
     b.addContactsTo(&building_negotiation, false);
   }
+
 
   double diff = building_negotiation.getDifference();
   Contract m;

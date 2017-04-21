@@ -18,6 +18,7 @@ void Appliance_Large::setup(applianceStruct a) {
   setID(a.id);
   setHoulyPriority(a.priority);
   setActivities(a.activities);
+  setFile(a.fileProfile);
   setupModel();
 }
 
@@ -40,15 +41,6 @@ void Appliance_Large::setupModel() {
  * and retrieve power. \n
  * Otherwise set power to 0.
  */
-/*void Appliance_Large::step() {
-  model.decreaseDuration();
-  setPower(0.0);
-  if (isOn() || match) {
-    int stepCount = SimulationConfig::getStepCount();
-    setPower(model.consumption(stepCount));
-  }
-}
-*/
 void Appliance_Large::step() {
   model.decreaseDuration();
   setPower(0.0);
@@ -65,4 +57,9 @@ void Appliance_Large::step() {
  */
 bool Appliance_Large::isOn() const {
   return model.isOn();
+}
+
+
+void Appliance_Large::setFile(std::string file) {
+  this->file = file;
 }
