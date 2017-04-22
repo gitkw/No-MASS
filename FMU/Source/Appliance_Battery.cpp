@@ -255,7 +255,7 @@ void Appliance_Battery::saveNeighbourhoodCalculate() {
     if (parameters.received > 0) {
       parametersNeighbourhood.received = parameters.received - parametersLocal.received;
         parametersNeighbourhood.receivedCost = parameters.receivedCost - parametersLocal.receivedCost;
-      parametersNeighbourhood.power = parameters.power - parametersLocal.received;
+      parametersNeighbourhood.power = parameters.power;
     }
   }
 }

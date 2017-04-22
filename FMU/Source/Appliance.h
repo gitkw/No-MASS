@@ -80,6 +80,7 @@ class Appliance : public Agent {
  protected:
     virtual void beforeClear();
     virtual void saveNeighbourhoodCalculate();
+    virtual void saveLocalCalculate();
     virtual void saveGlobalCalculate();
 
     std::vector<double> hourlyCost;

@@ -56,13 +56,16 @@ void Appliance::save() {
   DataStore::addValue(datastoreIDCost, parameters.receivedCost);
 }
 
-void Appliance::saveLocal() {
+void Appliance::saveLocalCalculate() {
   parametersLocal.supply = parameters.supply - parameters.suppliedLeft;
   parametersLocal.suppliedLeft = parameters.suppliedLeft;
   parametersLocal.received = parameters.received;
   parametersLocal.power = parameters.power;
   parametersLocal.receivedCost = parameters.receivedCost;
+}
 
+void Appliance::saveLocal() {
+  saveLocalCalculate();
   DataStore::addValue(datastoreLocalIDSupplied, parametersLocal.supply);
   DataStore::addValue(datastoreLocalIDReceived, parametersLocal.received);
   DataStore::addValue(datastoreLocalIDRequested, parametersLocal.power);
