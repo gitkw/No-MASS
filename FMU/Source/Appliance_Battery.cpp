@@ -54,6 +54,7 @@ void Appliance_Battery::setup(applianceStruct a) {
   sumShort = 0;
   stateOfCharge = 0;
   datastoreIDstateOfCharge = DataStore::addVariable(s_fullname + "stateOfCharge");
+  action = false;
 }
 
 /**
