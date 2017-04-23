@@ -2,9 +2,9 @@
 
 #include <string>
 #include <vector>
-#include "SimulationConfig.h"
-#include "Utility.h"
-#include "Appliance_Large_Learning_CSV.h"
+#include "Configuration.hpp"
+#include "Utility.hpp"
+#include "Appliance_Large_Learning_CSV.hpp"
 
 Appliance_Large_Learning_CSV::Appliance_Large_Learning_CSV() {}
 
@@ -29,7 +29,7 @@ void Appliance_Large_Learning_CSV::calculateProfile() {
  */
 void Appliance_Large_Learning_CSV::setupModel() {
   model.setID(id);
-  model.parseConfiguration(SimulationConfig::FileLargeAppliance);
+  model.parseConfiguration(Configuration::FileLargeAppliance);
 
   for(auto x : Utility::csvToTable<double>(file, false)) {
     profileCSV.push_back(x[0]);

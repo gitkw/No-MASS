@@ -44,3 +44,4 @@ FMU/build
 FMU/xcode
 Documentation/Doxygen/html
 Documentation/Doxygen/latex
+Documentation/Doxygen/xml

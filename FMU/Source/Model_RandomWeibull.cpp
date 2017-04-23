@@ -2,8 +2,8 @@
 
 #include <cmath>
 #include <cfloat>
-#include "Utility.h"
-#include "Model_RandomWeibull.h"
+#include "Utility.hpp"
+#include "Model_RandomWeibull.hpp"
 
 Model_RandomWeibull::Model_RandomWeibull() {}
 

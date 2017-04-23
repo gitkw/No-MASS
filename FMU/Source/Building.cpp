@@ -5,28 +5,28 @@
 #include <list>
 #include <iostream>
 #include <utility>
-#include "SimulationTime.h"
-#include "SimulationConfig.h"
-#include "DataStore.h"
-#include "Occupant.h"
-#include "Utility.h"
-#include "Model_Presence.h"
-#include "Building.h"
+#include "SimulationTime.hpp"
+#include "Configuration.hpp"
+#include "DataStore.hpp"
+#include "Occupant.hpp"
+#include "Utility.hpp"
+#include "Model_Presence.hpp"
+#include "Building.hpp"
 
 Building::Building() {}
 
-void Building::setup(const buildingStruct &b) {
-    name = b.name;
-    id = b.id;
+void Building::setup(const ConfigStructBuilding &buildingInput) {
+    name = buildingInput.name;
+    id = buildingInput.id;
     std::string buildingID = "Building" + std::to_string(id) + "_";
-    for (std::pair<std::string, ZoneStruct> z : b.zones) {
+    for (std::pair<std::string, ConfigStructZone> z : buildingInput.zones) {
       zones.push_back(std::make_shared<Building_Zone>(Building_Zone()));
       zones.back()->setName(z.second.name);
       zones.back()->setActive(z.second.active);
       zones.back()->setIDString(buildingID + z.second.name);
       zones.back()->setup(z.second);
     }
-    int popSize = b.agents.size();
+    int popSize = buildingInput.agents.size();
     std::vector<int> pop = Utility::randomIntVect(popSize);
     // setup each agent randomly
     for (int a : pop) {
@@ -35,9 +35,9 @@ void Building::setup(const buildingStruct &b) {
       population.back().setBuildingID(id);
       population.back().setBuildingName(name);
       population.back().setIDString(buildingID + "Occupant" + occid + "_");
-      population.back().setup(a, b.agents[a], zones);
+      population.back().setup(a, buildingInput.agents[a], zones);
     }
-    appliances.setup(b);
+    appliances.setup(buildingInput);
 }
 
 void Building::preprocess() {
@@ -83,17 +83,17 @@ void Building::step() {
         }
         setOccupantCountForZone(zone);
 
-        if (SimulationConfig::info.windows
-          || SimulationConfig::info.windowsLearn) {
+        if (Configuration::info.windows
+          || Configuration::info.windowsLearn) {
             setOccupantWindowDecisionForZone(zone);
         }
-        if (SimulationConfig::info.shading) {
+        if (Configuration::info.shading) {
             setOccupantBlindDecisionForZone(zone);
         }
-        if (SimulationConfig::info.lights) {
+        if (Configuration::info.lights) {
             setOccupantLightDecisionForZone(zone);
         }
-        if (SimulationConfig::info.heating) {
+        if (Configuration::info.heating) {
             setOccupantHeatDecisionsForZone(zone);
         }
         setOccupantGainsForZone(zone);
@@ -109,7 +109,7 @@ void Building::step() {
 }
 
 void Building::buildingInteractions() {
-  if (SimulationConfig::info.ShadeClosedDuringNight) {
+  if (Configuration::info.ShadeClosedDuringNight) {
     int hourOfDay = SimulationTime::hourOfDay;
     if (hourOfDay > 19 || hourOfDay < 6) {
       for (std::shared_ptr<Building_Zone> &zone : zones) {

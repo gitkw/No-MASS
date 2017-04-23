@@ -7,9 +7,9 @@
 #include <iomanip>
 #include <string>
 #include <regex>
-#include "Log.h"
-#include "SimulationConfig.h"
-#include "DataStore.h"
+#include "Log.hpp"
+#include "Configuration.hpp"
+#include "DataStore.hpp"
 
 std::unordered_map<std::string, int> DataStore::variableMap;
 std::vector<std::vector<float>> DataStore::intMap;
@@ -26,7 +26,7 @@ int DataStore::getID(const std::string &name) {
 int DataStore::addVariable(const std::string &name) {
   int ret = -1;
   if (name != "") {
-    for (std::string reg : SimulationConfig::outputRegexs) {
+    for (std::string reg : Configuration::outputRegexs) {
       std::regex rgx(reg);
       std::smatch match;
       if (std::regex_match(name, match, rgx)) {
@@ -111,11 +111,11 @@ void DataStore::clear() {
 }
 
 void DataStore::print() {
-  if (SimulationConfig::info.save) {
+  if (Configuration::info.save) {
     //  std::cout << "print " << std::endl;
     std::ofstream myfile;
     myfile.open("NoMASS.out");
-    myfile << std::fixed << std::setprecision(SimulationConfig::info.precision);
+    myfile << std::fixed << std::setprecision(Configuration::info.precision);
     myfile << "stepCount";
     std::vector<int> ids;
     unsigned int maxSize = 0;

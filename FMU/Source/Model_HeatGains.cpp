@@ -1,7 +1,7 @@
 // Copyright 2015 Jacob Chapman
 
 #include <cmath>
-#include "Model_HeatGains.h"
+#include "Model_HeatGains.hpp"
 
 Model_HeatGains::Model_HeatGains() {
     maxI = 150;

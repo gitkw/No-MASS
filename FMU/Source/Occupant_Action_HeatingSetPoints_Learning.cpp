@@ -7,18 +7,17 @@
 #include "rapidxml_utils.hpp"
 #include "rapidxml.hpp"
 
-#include "Utility.h"
-#include "DataStore.h"
-#include "SimulationTime.h"
-#include "Occupant_Action_HeatingSetPoints_Learning.h"
+#include "Utility.hpp"
+#include "DataStore.hpp"
+#include "SimulationTime.hpp"
+#include "Occupant_Action_HeatingSetPoints_Learning.hpp"
 
 Occupant_Action_HeatingSetPoints_Learning::
                   Occupant_Action_HeatingSetPoints_Learning() {
     setPoint = 20;
     pmv = -1.0;
     result = 20;
-
-    file = SimulationConfig::RunLocation + "learning.xml";
+    file = Configuration::RunLocation + "learning.xml";
 }
 
 void Occupant_Action_HeatingSetPoints_Learning::setFile(std::string file){
@@ -86,22 +85,20 @@ void Occupant_Action_HeatingSetPoints_Learning::step(const Building_Zone& zone,
 
       int day = SimulationTime::day + 1;
       int dayOfTheWeek = (day - 1) % 7;
-
-
       int state = getState();
-
-      //    std::cout << "state: " << state << std::endl;
 
       if (dayOfTheWeek < 5) {
         qlWeekDay.setState(state);
         qlWeekDay.setAction(setPoint-10);
         qlWeekDay.setReward(reward);
-        result = qlWeekDay.learn() + 10;
+        qlWeekDay.learn();
+        result = qlWeekDay.getAction() + 10;
       } else {
         qlWeekEnd.setState(state);
         qlWeekEnd.setAction(setPoint-10);
         qlWeekEnd.setReward(reward);
-        result = qlWeekEnd.learn() + 10;
+        qlWeekEnd.learn();
+        result = qlWeekEnd.getAction() + 10;
       }
 
       DataStore::addValue(pmv_name, pmv);
@@ -146,8 +143,6 @@ void Occupant_Action_HeatingSetPoints_Learning::parseConfiguration(
           stateMappings.push_back(x);
           snode = snode->next_sibling();
         }
-      } else if (std::strcmp(cnode->name(), "name") == 0) {
-          //name = cnode->value();
       }
       cnode = cnode->next_sibling();
     }

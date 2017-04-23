@@ -71,7 +71,7 @@ Source/Model_Appliance_Large_Usage_Survival.cpp
 Source/Model_Appliance_Small_Usage.cpp
 Source/Model_Appliance_Power_CSV.cpp
 Source/Simulation.cpp
-Source/SimulationConfig.cpp
+Source/Configuration.cpp
 Source/SimulationTime.cpp
 Source/State.cpp
 Source/StateMachine.cpp
@@ -82,8 +82,6 @@ Source/Building_Zone.cpp
 Source/Building_Appliances.cpp
 Source/fmiFunctions.cpp
 Source/QLearning.cpp
-Source/QLearning_Occupant.cpp
-Source/QLearning_Appliance.cpp
 Source/Appliance.cpp
 Source/Appliance_Large.cpp
 Source/Appliance_Large_CSV.cpp

@@ -3,9 +3,9 @@
 #include <vector>
 #include <string>
 #include <utility>
-#include "Utility.h"
-#include "DataStore.h"
-#include "Model_Activity_Survival.h"
+#include "Utility.hpp"
+#include "DataStore.hpp"
+#include "Model_Activity_Survival.hpp"
 
 /**
  * sleep
@@ -27,7 +27,7 @@ Model_Activity_Survival::Model_Activity_Survival() {
 
 int Model_Activity_Survival::multinominalActivity(const double p[24][10],
                                                     const int hourCount) {
-  duration -= SimulationConfig::lengthOfTimestep() / 60.0;
+  duration -= Configuration::lengthOfTimestep() / 60.0;
   if (duration < 1.0) {
     state = Utility::cumulativeProbability(p[hourCount], 10);
     double shape = shapes.at(hourCount +1)[state];

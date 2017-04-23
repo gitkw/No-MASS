@@ -1,17 +1,17 @@
 // Copyright 2016 Jacob Chapman
 
-#include "LVN_Node.h"
-#include "SimulationConfig.h"
-#include "LVN.h"
+#include "LVN_Node.hpp"
+#include "Configuration.hpp"
+#include "LVN.hpp"
 
 LVN::LVN() {
   enabled = false;
 }
 
 void LVN::setup() {
-  if (SimulationConfig::lvn.size() > 0) {
+  if (Configuration::lvn.size() > 0) {
     enabled = true;
-    for (const LVNNodeStruct & l : SimulationConfig::lvn) {
+    for (const ConfigStructLVNNode & l : Configuration::lvn) {
       if (l.parent == -1) {
         rootNode.setID(l.id);
         rootNode.addChildren(l.children);

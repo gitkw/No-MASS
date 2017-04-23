@@ -4,9 +4,9 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
-#include "SimulationConfig.h"
-#include "Utility.h"
-#include "Appliance_Large.h"
+#include "Configuration.hpp"
+#include "Utility.hpp"
+#include "Appliance_Large.hpp"
 
 Appliance_Large::Appliance_Large() {}
 
@@ -14,7 +14,7 @@ Appliance_Large::Appliance_Large() {}
  * @brief Set up the large appliance model, reading in the large applaince
  * configuration file
  */
-void Appliance_Large::setup(applianceStruct a) {
+void Appliance_Large::setup(ConfigStructAppliance a) {
   setID(a.id);
   setHoulyPriority(a.priority);
   setActivities(a.activities);
@@ -30,7 +30,7 @@ void Appliance_Large::setup(applianceStruct a) {
  */
 void Appliance_Large::setupModel() {
   model.setID(id);
-  model.parseConfiguration(SimulationConfig::FileLargeAppliance);
+  model.parseConfiguration(Configuration::FileLargeAppliance);
 }
 
 /**
@@ -44,7 +44,7 @@ void Appliance_Large::setupModel() {
 void Appliance_Large::step() {
   model.decreaseDuration();
   setPower(0.0);
-  int stepCount = SimulationConfig::getStepCount();
+  int stepCount = Configuration::getStepCount();
   double p = model.consumption(stepCount);
   if (isOn() && match) {
     setPower(p);

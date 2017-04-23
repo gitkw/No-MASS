@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <numeric>
 
-#include "Utility.h"
+#include "Utility.hpp"
 
 std::random_device Utility::r;
 std::mt19937_64 Utility::engine(r());

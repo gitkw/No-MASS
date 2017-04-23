@@ -15,9 +15,9 @@
 #include "rapidxml_utils.hpp"
 #include "rapidxml.hpp"
 
-#include "SimulationConfig.h"
-#include "Utility.h"
-#include "Model_Activity.h"
+#include "Configuration.hpp"
+#include "Utility.hpp"
+#include "Model_Activity.hpp"
 
 /**
  * sleep
@@ -35,10 +35,10 @@
 Model_Activity::Model_Activity() {}
 
 std::vector<double> Model_Activity::preProcessActivities() {
-    if (SimulationConfig::FileActivity == "") {
+    if (Configuration::FileActivity == "") {
         return disaggregate();
     } else {
-        parseConfiguration(SimulationConfig::FileActivity);
+        parseConfiguration(Configuration::FileActivity);
         return multinominal();
     }
 }
@@ -146,15 +146,15 @@ std::vector<double> Model_Activity::multinominal() {
     static const int daysInMonth[] =
       {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-    int tsph = SimulationConfig::info.timeStepsPerHour;
+    int tsph = Configuration::info.timeStepsPerHour;
     int hourCount = 0;
-    int month = SimulationConfig::info.startMonth;
-    int day = SimulationConfig::info.startDay -1;
-    int dayOfWeek = SimulationConfig::info.startDayOfWeek-1;
+    int month = Configuration::info.startMonth;
+    int day = Configuration::info.startDay -1;
+    int dayOfWeek = Configuration::info.startDayOfWeek-1;
 
     int season = getSeasonInt(month);
 
-    for (int i = 0; i <= SimulationConfig::info.timeSteps; i++) {
+    for (int i = 0; i <= Configuration::info.timeSteps; i++) {
         if (i % tsph == 0) {
             hourCount++;
             if (hourCount > 23) {
@@ -233,9 +233,9 @@ std::vector<double> Model_Activity::disaggregate() const {
     }
 
     std::vector<double> activities;
-    int tsph = SimulationConfig::info.timeStepsPerHour;
+    int tsph = Configuration::info.timeStepsPerHour;
     int hourCount = -1;
-    for (int i = 0; i <= SimulationConfig::info.timeSteps; i++) {
+    for (int i = 0; i <= Configuration::info.timeSteps; i++) {
         if (i % tsph == 0 || hourCount < 0) {
             hourCount++;
             if (hourCount == 24) {

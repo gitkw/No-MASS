@@ -1,9 +1,9 @@
 // Copyright 2015 Jacob Chapman
 
 #include <vector>
-#include "Utility.h"
-#include "Model_Lights.h"
-#include "Occupant_Action_Lights.h"
+#include "Utility.hpp"
+#include "Model_Lights.hpp"
+#include "Occupant_Action_Lights.hpp"
 
 Occupant_Action_Lights::Occupant_Action_Lights() {}
 

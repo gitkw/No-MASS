@@ -2,16 +2,16 @@
 
 #include <iostream>
 #include <vector>
-#include "Utility.h"
-#include "DataStore.h"
-#include "Environment.h"
-#include "Occupant_Action_Shades.h"
-#include "SimulationConfig.h"
+#include "Utility.hpp"
+#include "DataStore.hpp"
+#include "Environment.hpp"
+#include "Occupant_Action_Shades.hpp"
+#include "Configuration.hpp"
 
 Occupant_Action_Shades::Occupant_Action_Shades() {}
 
 void Occupant_Action_Shades::setup(int shadeID) {
-    shadeStruct ws = SimulationConfig::shades.at(shadeID);
+    ConfigStructShade ws = Configuration::shades.at(shadeID);
     m_blindUsage.setFullVars(ws.afullraise, ws.boutfullraise, ws.bsfullraise,
                   ws.bsfulllower, ws.boutfulllower, ws.afulllower);
     m_blindUsage.setDurationVars(ws.aSFlower, ws.bSFlower, ws.shapelower);

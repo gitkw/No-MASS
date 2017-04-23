@@ -1,6 +1,6 @@
 // Copyright 2016 Jacob Chapman
 
-#include "Agent.h"
+#include "Agent.hpp"
 
 Agent::Agent() {}
 

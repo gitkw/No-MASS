@@ -2,8 +2,8 @@
 
 #include <iostream>
 #include <string>
-#include "SimulationConfig.h"
-#include "State.h"
+#include "Configuration.hpp"
+#include "State.hpp"
 
 State::State() {}
 State::~State() {}

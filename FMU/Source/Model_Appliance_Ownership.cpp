@@ -1,6 +1,6 @@
 
 #include <cmath>
-#include "Model_Appliance_Ownership.h"
+#include "Model_Appliance_Ownership.hpp"
 
 Model_Appliance_Ownership::Model_Appliance_Ownership(){}
 

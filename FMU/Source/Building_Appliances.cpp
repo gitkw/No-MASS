@@ -4,13 +4,13 @@
 #include <list>
 #include <algorithm>
 #include <vector>
-#include "SimulationConfig.h"
-#include "DataStore.h"
-#include "Building_Appliances.h"
+#include "Configuration.hpp"
+#include "DataStore.hpp"
+#include "Building_Appliances.hpp"
 
 Building_Appliances::Building_Appliances() {}
 
-void Building_Appliances::setup(const buildingStruct & b) {
+void Building_Appliances::setup(const ConfigStructBuilding & b) {
   buildingID = b.id;
   buildingString = "Building" + std::to_string(buildingID) + "_Appliance";
 

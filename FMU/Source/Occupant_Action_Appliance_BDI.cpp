@@ -1,8 +1,8 @@
 // Copyright 2016 Jacob Chapman
 
 #include <vector>
-#include "Utility.h"
-#include "Occupant_Action_Appliance_BDI.h"
+#include "Utility.hpp"
+#include "Occupant_Action_Appliance_BDI.hpp"
 
 Occupant_Action_Appliance_BDI::Occupant_Action_Appliance_BDI() {
   ApplianceDuringDay = 0.0;
@@ -19,7 +19,7 @@ bool Occupant_Action_Appliance_BDI::doRecipe(
   if (ApplianceDuringDay > 0) {
     bdi = true;
     result = 0;
-    int stepCount = SimulationConfig::getStepCount();
+    int stepCount = Configuration::getStepCount();
     if (stepCount == 0) {
       first = -1;
       last = -1;
@@ -38,9 +38,9 @@ bool Occupant_Action_Appliance_BDI::doRecipe(
 
 void Occupant_Action_Appliance_BDI::calculateFirstLastCouts(
       const std::vector<double> &activities) {
-  int stepCount = SimulationConfig::getStepCount();
+  int stepCount = Configuration::getStepCount();
   if (stepCount > first) {
-    int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
+    int hour = (stepCount * Configuration::lengthOfTimestep()) / 3600;
     int day = hour / 24;
     int dayCounter = day;
     int counter = stepCount;
@@ -56,7 +56,7 @@ void Occupant_Action_Appliance_BDI::calculateFirstLastCouts(
       if (activities[counter] < 9) {
         last = counter;
       }
-      hour = (counter * SimulationConfig::lengthOfTimestep()) / 3600;
+      hour = (counter * Configuration::lengthOfTimestep()) / 3600;
       dayCounter = hour / 24;
       counter++;
     }

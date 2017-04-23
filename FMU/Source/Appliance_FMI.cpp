@@ -1,13 +1,13 @@
 // Copyright 2016 Jacob Chapman
 
 #include <string>
-#include "DataStore.h"
-#include "Appliance_FMI.h"
+#include "DataStore.hpp"
+#include "Appliance_FMI.hpp"
 
 Appliance_FMI::Appliance_FMI() {
 }
 
-void Appliance_FMI::setup(applianceStruct a) {
+void Appliance_FMI::setup(ConfigStructAppliance a) {
   setID(a.id);
   setHoulyPriority(a.priority);
   setFMIVariableName(a.variableName);

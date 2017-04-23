@@ -6,14 +6,14 @@
 #include <cassert>
 #include <map>
 #include <algorithm>
-#include "Utility.h"
-#include "SimulationConfig.h"
-#include "Model_Presence.h"
+#include "Utility.hpp"
+#include "Configuration.hpp"
+#include "Model_Presence.hpp"
 
 Model_Presence::Model_Presence() {}
 
 int Model_Presence::presentForFutureSteps() const {
-    return presenceForFutureSteps.at(SimulationConfig::getStepCount());
+    return presenceForFutureSteps.at(Configuration::getStepCount());
 }
 
 void Model_Presence::calculatePresenceFromPage() {
@@ -59,11 +59,11 @@ void Model_Presence::calculatePresenceFromPage() {
     }
 
     double timeStepsPerHour =
-            static_cast<double>(SimulationConfig::info.timeStepsPerHour);
-    unsigned int days = Utility::calculateNumberOfDays(SimulationConfig::info.startDay,
-                                              SimulationConfig::info.startMonth,
-                                              SimulationConfig::info.endDay,
-                                              SimulationConfig::info.endMonth);
+            static_cast<double>(Configuration::info.timeStepsPerHour);
+    unsigned int days = Utility::calculateNumberOfDays(Configuration::info.startDay,
+                                              Configuration::info.startMonth,
+                                              Configuration::info.endDay,
+                                              Configuration::info.endMonth);
 // Model for the prediction of presence derived by J. Page
 // Reference: J. Page, D. Robinson, N. Morel, J.-L. Scartezzini,
 // A generalised stochasticmodel for the simulation of occupant presence,

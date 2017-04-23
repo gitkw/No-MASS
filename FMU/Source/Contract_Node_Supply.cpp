@@ -1,6 +1,6 @@
 // Copyright 2016 Jacob Chapman
 #include <memory>
-#include "Contract_Node_Supply.h"
+#include "Contract_Node_Supply.hpp"
 
 Contract_Node_Supply::Contract_Node_Supply() {}
 

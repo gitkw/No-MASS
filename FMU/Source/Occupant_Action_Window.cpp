@@ -2,10 +2,10 @@
 
 #include <vector>
 #include <iostream>
-#include "SimulationConfig.h"
-#include "Utility.h"
-#include "DataStore.h"
-#include "Occupant_Action_Window.h"
+#include "Configuration.hpp"
+#include "Utility.hpp"
+#include "DataStore.hpp"
+#include "Occupant_Action_Window.hpp"
 
 Occupant_Action_Window::Occupant_Action_Window() {
 }

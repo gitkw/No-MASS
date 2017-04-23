@@ -2,14 +2,14 @@
 
 #include <string>
 #include <vector>
-#include "SimulationConfig.h"
-#include "DataStore.h"
-#include "Utility.h"
-#include "Appliance_Large_Learning.h"
+#include "Configuration.hpp"
+#include "DataStore.hpp"
+#include "Utility.hpp"
+#include "Appliance_Large_Learning.hpp"
 
 Appliance_Large_Learning::Appliance_Large_Learning() {}
 
-void Appliance_Large_Learning::setup(applianceStruct a) {
+void Appliance_Large_Learning::setup(ConfigStructAppliance a) {
 
   setID(a.id);
   setHoulyPriority(a.priority);
@@ -53,7 +53,7 @@ double Appliance_Large_Learning::getPowerAt(const int timestep) {
  * if so increment model and save teh power demand until turn off
  */
 void Appliance_Large_Learning::calculateProfile() {
-  int stepCount = SimulationConfig::getStepCount();
+  int stepCount = Configuration::getStepCount();
   double p = getPowerAt(stepCount);
   profileStruct profile;
   while (isOn()) {
@@ -158,7 +158,7 @@ void Appliance_Large_Learning::saveActualProfile() {
 }
 
 bool Appliance_Large_Learning::isModelOn() {
-  int timeStep = SimulationConfig::getStepCount();
+  int timeStep = Configuration::getStepCount();
   return model.onAt(timeStep) && match;
 }
 

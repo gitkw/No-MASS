@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "Model_Windows.h"
+#include "Model_Windows.hpp"
 
 Model_Windows::Model_Windows() {
     durationOpen = 0;

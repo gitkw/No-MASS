@@ -28,12 +28,12 @@
 #include <cstddef>
 #include "rapidxml_utils.hpp"
 #include "rapidxml.hpp"
-#include "Log.h"
-#include "DataStore.h"
-#include "Simulation.h"
-#include "SimulationConfig.h"
-#include "fmuTemplate.h"
-#include "fmiPlatformTypes.h"
+#include "Log.hpp"
+#include "DataStore.hpp"
+#include "Simulation.hpp"
+#include "Configuration.hpp"
+#include "fmuTemplate.hpp"
+#include "fmiPlatformTypes.hpp"
 
 // array of value references of states
 #if NUMBER_OF_REALS > 0
@@ -54,7 +54,7 @@ static fmiComponent instantiateModel(const char* fname, fmiString instanceName,
     fmiString GUID, fmiCallbackFunctions functions, fmiBoolean loggingOn) {
     DataStore::clearValues();
 
-    SimulationConfig::setStepCount(-1);
+    Configuration::setStepCount(-1);
     if (valToRefs.empty()) {
         loadVariables();
 	modelInstance->sim.preprocess();
@@ -170,8 +170,8 @@ fmiComponent fmiInstantiateSlave(fmiString  instanceName, fmiString  GUID,
     fmiBoolean loggingOn) {
     // ignoring arguments: fmuLocation, mimeType, timeout, visible, interactive
 
-    SimulationConfig::RunLocation = fmuLocation;
-    SimulationConfig::RunLocation = SimulationConfig::RunLocation + "/";
+    Configuration::RunLocation = fmuLocation;
+    Configuration::RunLocation = Configuration::RunLocation + "/";
     return instantiateModel("fmiInstantiateSlave", instanceName,
       GUID, functions, loggingOn);
 }
@@ -266,7 +266,7 @@ fmiStatus fmiGetStringStatus(fmiComponent c, const fmiStatusKind s,
  */
 void loadVariables() {
   std::string filename =
-    SimulationConfig::RunLocation + "modelDescription.xml";
+    Configuration::RunLocation + "modelDescription.xml";
 
   LOG << " Loading XML file: -" << filename << "-\n";
 
@@ -286,7 +286,7 @@ void loadVariables() {
     std::string causality = pAttr->value();
     pAttr = node->first_attribute("valueReference");
     int valueReference = std::stoi(pAttr->value());
-    SimulationConfig::outputRegexs.push_back(name);
+    Configuration::outputRegexs.push_back(name);
     DataStore::addVariable(name);
     if (causality.compare("input") == 0) {
         //std::cout << "added: " << name << std::endl;

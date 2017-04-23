@@ -2,17 +2,17 @@
 
 #include <string>
 #include <algorithm>
-#include "DataStore.h"
-#include "SimulationConfig.h"
-#include "Utility.h"
-#include "Appliance_Small.h"
+#include "DataStore.hpp"
+#include "Configuration.hpp"
+#include "Utility.hpp"
+#include "Appliance_Small.hpp"
 
 Appliance_Small::Appliance_Small() {}
 
-void Appliance_Small::setup(applianceStruct a) {
+void Appliance_Small::setup(ConfigStructAppliance a) {
   setID(a.id);
   setHoulyPriority(a.priority);
-  model.setFolderLocation(SimulationConfig::FolderSmallAppliance);
+  model.setFolderLocation(Configuration::FolderSmallAppliance);
   model.readWeibullParameters(a.WeibullParameters);
   model.readStateProbabilities(a.StateProbabilities);
   model.readFractions(a.Fractions);
@@ -21,6 +21,6 @@ void Appliance_Small::setup(applianceStruct a) {
 }
 
 void Appliance_Small::step() {
-  int stepcount = SimulationConfig::getStepCount();
+  int stepcount = Configuration::getStepCount();
   setPower(model.consumption(stepcount));
 }

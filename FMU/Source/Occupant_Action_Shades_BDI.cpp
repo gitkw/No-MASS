@@ -2,10 +2,10 @@
 
 #include <iostream>
 #include <vector>
-#include "Utility.h"
-#include "DataStore.h"
-#include "Occupant_Action_Shades_BDI.h"
-#include "SimulationConfig.h"
+#include "Utility.hpp"
+#include "DataStore.hpp"
+#include "Occupant_Action_Shades_BDI.hpp"
+#include "Configuration.hpp"
 
 Occupant_Action_Shades_BDI::Occupant_Action_Shades_BDI() {
   ShadeClosedDuringSleep = 0.0;
@@ -35,7 +35,7 @@ void Occupant_Action_Shades_BDI::setClosedDuringAudioVisual(
 
 bool Occupant_Action_Shades_BDI::doRecipe(const std::vector<double> &activities) {
   bool bdi = false;
-  int stepCount = SimulationConfig::getStepCount();
+  int stepCount = Configuration::getStepCount();
   if (ShadeClosedDuringSleep > Utility::randomDouble(0, 1) &&
       activities.at(stepCount) == 0) {
       result = 0;

@@ -3,9 +3,9 @@
 #include <cstring>
 #include <string>
 #include <vector>
-#include "Utility.h"
-#include "SimulationConfig.h"
-#include "Model_Appliance_Large_Usage.h"
+#include "Utility.hpp"
+#include "Configuration.hpp"
+#include "Model_Appliance_Large_Usage.hpp"
 
 
 Model_Appliance_Large_Usage::Model_Appliance_Large_Usage() {
@@ -26,7 +26,7 @@ std::string Model_Appliance_Large_Usage::getCountry() {
 
 double Model_Appliance_Large_Usage::probOn(int timestep) const {
   double prob = 0.0;
-  int leninsec = SimulationConfig::lengthOfTimestep();
+  int leninsec = Configuration::lengthOfTimestep();
   int second = timestep * leninsec;
   int stop = second + leninsec;
   while (second < stop) {
@@ -39,7 +39,7 @@ double Model_Appliance_Large_Usage::probOn(int timestep) const {
 
 double Model_Appliance_Large_Usage::consumption(const int timeStep) {
   double result = 0.0;
-  int leninsec = SimulationConfig::lengthOfTimestep();
+  int leninsec = Configuration::lengthOfTimestep();
   int now = timeStep * leninsec;
   int end = now + leninsec;
   while (now < end) {

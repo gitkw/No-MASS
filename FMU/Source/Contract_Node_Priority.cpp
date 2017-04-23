@@ -1,6 +1,6 @@
 // Copyright 2016 Jacob Chapman
 #include <memory>
-#include "Contract_Node_Priority.h"
+#include "Contract_Node_Priority.hpp"
 
 
 Contract_Node_Priority::Contract_Node_Priority() {}

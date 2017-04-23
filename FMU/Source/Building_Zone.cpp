@@ -5,13 +5,13 @@
 #include <string>
 #include <algorithm>
 #include <vector>
-#include "DataStore.h"
-#include "SimulationConfig.h"
-#include "Building_Zone.h"
+#include "DataStore.hpp"
+#include "Configuration.hpp"
+#include "Building_Zone.hpp"
 
 Building_Zone::Building_Zone() {}
 
-void Building_Zone::setup(const ZoneStruct & zoneStruct) {
+void Building_Zone::setup(const ConfigStructZone & zoneStruct) {
   id = zoneStruct.id;
   activities = zoneStruct.activities;
   occupantFraction = 0;
@@ -22,7 +22,7 @@ void Building_Zone::setup(const ZoneStruct & zoneStruct) {
 
   if (active) {
       int windowCount = zoneStruct.windowCount;
-      setGroundFloor(SimulationConfig::isZoneGroundFloor(&name));
+      setGroundFloor(Configuration::isZoneGroundFloor(&name));
       for (int i = 0; i < windowCount; i ++) {
         int windowid =
               DataStore::addVariable(name + "WindowState" + std::to_string(i));

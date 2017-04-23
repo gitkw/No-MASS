@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include "SimulationConfig.h"
-#include "Occupant_Action.h"
+#include "Configuration.hpp"
+#include "Occupant_Action.hpp"
 
 Occupant_Action::Occupant_Action() {}
 
@@ -24,12 +24,12 @@ bool Occupant_Action::activityAvailable(const int act) const {
 
 double Occupant_Action::getFutureDurationOfAbsenceState(
   const std::vector<double> &activities) const {
-    int stepCount = SimulationConfig::getStepCount();
+    int stepCount = Configuration::getStepCount();
     unsigned int stepCounter = stepCount;
     double cdp = 0;
     if (!activityAvailable(activities.at(stepCount))) {
       double lengthOfTimeStepSeconds =
-        (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+        (60 * (60 / Configuration::info.timeStepsPerHour));
       cdp = lengthOfTimeStepSeconds;
       while (stepCounter + 1 < activities.size()
           && !activityAvailable(activities.at(stepCounter+1))) {
@@ -43,10 +43,10 @@ double Occupant_Action::getFutureDurationOfAbsenceState(
 double Occupant_Action::getPreviousDurationOfAbsenceState(
     const std::vector<double> &activities) const {
   double cdp = 0;
-  int stepCount = SimulationConfig::getStepCount();
+  int stepCount = Configuration::getStepCount();
   int stepCounter = stepCount - 1;
   double lengthOfTimeStepSeconds =
-    (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+    (60 * (60 / Configuration::info.timeStepsPerHour));
   while (stepCounter >= 0 && !activityAvailable(activities.at(stepCounter))) {
     cdp = cdp + lengthOfTimeStepSeconds;
     stepCounter--;
@@ -57,11 +57,11 @@ double Occupant_Action::getPreviousDurationOfAbsenceState(
 double Occupant_Action::getCurrentDurationOfPresenceState(
     const std::vector<double> &activities) const {
   double cdp = 0;
-  int stepCount = SimulationConfig::getStepCount();
+  int stepCount = Configuration::getStepCount();
   int stepCounter = stepCount;
   if (activityAvailable(activities.at(stepCount))) {
     double lengthOfTimeStepSeconds =
-      (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+      (60 * (60 / Configuration::info.timeStepsPerHour));
     while (stepCounter > 0 && activityAvailable(activities.at(stepCounter-1))) {
       cdp = cdp + lengthOfTimeStepSeconds;
       stepCounter--;

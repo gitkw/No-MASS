@@ -16,52 +16,52 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 # Unit Tests
 ##############
 
-configure_file(source/Gen.h.in
-                ${CMAKE_CURRENT_BINARY_DIR}/Gen.h)
+configure_file(source/Gen.hpp.in
+                ${CMAKE_CURRENT_BINARY_DIR}/Gen.hpp)
 
-set(gen_file "${CMAKE_CURRENT_BINARY_DIR}/Gen.h")
+set(gen_file "${CMAKE_CURRENT_BINARY_DIR}/Gen.hpp")
 
 SET( TESTSRC
   ${gen_file}
-  source/unittest_Simulation.cc
-  source/unittest_SimulationConfig.cc
-  source/unittest_SimulationTime.cc
-  source/unittest_Model_Activity.cc
-  source/unittest_Model_Windows.cc
-  source/unittest_Occupant_Action_HeatingSetPoints_Learning.cc
-  source/unittest_Model_Appliance_Large_Usage.cc
-  source/unittest_Model_Appliance_Ownership.cc
-  source/unittest_Model_Appliance_Small_Usage.cc
-  source/unittest_StateMachine.cc
-  source/unittest_Log.cc
-  source/unittest_Building_Zone.cc
-  source/unittest_Utility.cc
-  source/unittest_Building.cc
-  source/unittest_Occupant.cc
-  source/unittest_Occupant_Zone.cc
-  source/unittest_Occupant_Action.cc
-  source/unittest_Occupant_Action_Window_Stochastic.cc
-  source/unittest_Occupant_Action_Window_Stochastic_BDI.cc
-  source/unittest_Occupant_Action_Shades.cc
-  source/unittest_Occupant_Action_Shades_BDI.cc
-  source/unittest_Occupant_Action_Light.cc
-  source/unittest_Occupant_Action_Light_BDI.cc
-  source/unittest_Occupant_Action_Window_Learning.cc
-  source/unittest_Occupant_Action_Heat_Gains.cc
-  source/unittest_QLearning_HeatingSetPoints.cc
-  source/unittest_QLearning_Window.cc
-  source/unittest_Appliance_Large.cc
-  source/unittest_Appliance_Large_Learning.cc
-  source/unittest_Appliance_Battery.cc
-  source/unittest_Appliance_Group_Large.cc
-  source/unittest_Appliance_Group_Battery.cc
-  source/unittest_Appliance_Group_CSV.cc
-  source/unittest_Appliance_Generic_CSV.cc
-  source/unittest_Building_Appliances.cc
-  source/unittest_Contract_Negotiation.cc
-  source/unittest_Contract_Node_Supply.cc
-  source/unittest_Contract_Node_Priority.cc
-  source/unittest_DataStore.cc
+  source/unittest_Simulation.cpp
+  source/unittest_Configuration.cpp
+  source/unittest_SimulationTime.cpp
+  source/unittest_Model_Activity.cpp
+  source/unittest_Model_Windows.cpp
+  source/unittest_Occupant_Action_HeatingSetPoints_Learning.cpp
+  source/unittest_Model_Appliance_Large_Usage.cpp
+  source/unittest_Model_Appliance_Ownership.cpp
+  source/unittest_Model_Appliance_Small_Usage.cpp
+  source/unittest_StateMachine.cpp
+  source/unittest_Log.cpp
+  source/unittest_Building_Zone.cpp
+  source/unittest_Utility.cpp
+  source/unittest_Building.cpp
+  source/unittest_Occupant.cpp
+  source/unittest_Occupant_Zone.cpp
+  source/unittest_Occupant_Action.cpp
+  source/unittest_Occupant_Action_Window_Stochastic.cpp
+  source/unittest_Occupant_Action_Window_Stochastic_BDI.cpp
+  source/unittest_Occupant_Action_Shades.cpp
+  source/unittest_Occupant_Action_Shades_BDI.cpp
+  source/unittest_Occupant_Action_Light.cpp
+  source/unittest_Occupant_Action_Light_BDI.cpp
+  source/unittest_Occupant_Action_Window_Learning.cpp
+  source/unittest_Occupant_Action_Heat_Gains.cpp
+  source/unittest_QLearning_HeatingSetPoints.cpp
+  source/unittest_QLearning_Window.cpp
+  source/unittest_Appliance_Large.cpp
+  source/unittest_Appliance_Large_Learning.cpp
+  source/unittest_Appliance_Battery.cpp
+  source/unittest_Appliance_Group_Large.cpp
+  source/unittest_Appliance_Group_Battery.cpp
+  source/unittest_Appliance_Group_CSV.cpp
+  source/unittest_Appliance_Generic_CSV.cpp
+  source/unittest_Building_Appliances.cpp
+  source/unittest_Contract_Negotiation.cpp
+  source/unittest_Contract_Node_Supply.cpp
+  source/unittest_Contract_Node_Priority.cpp
+  source/unittest_DataStore.cpp
 )
 
 add_executable(runUnitTests ${TESTSRC})

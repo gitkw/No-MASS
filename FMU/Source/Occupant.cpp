@@ -11,18 +11,18 @@
 #include <utility>
 
 
-#include "Model_Activity_Survival.h"
-#include "Model_Presence.h"
-#include "State.h"
-#include "DataStore.h"
-#include "SimulationConfig.h"
-#include "StateMachine.h"
-#include "Utility.h"
-#include "Occupant.h"
+#include "Model_Activity_Survival.hpp"
+#include "Model_Presence.hpp"
+#include "State.hpp"
+#include "DataStore.hpp"
+#include "Configuration.hpp"
+#include "StateMachine.hpp"
+#include "Utility.hpp"
+#include "Occupant.hpp"
 
 Occupant::Occupant() {}
 
-void Occupant::setup(int id, const agentStruct &agent,
+void Occupant::setup(int id, const ConfigStructAgent &agent,
       const std::vector<std::shared_ptr<Building_Zone>> &zones) {
     this->id = id;
     datastoreIdActivity = DataStore::addVariable(idString + "Activity");
@@ -37,12 +37,12 @@ void Occupant::setup(int id, const agentStruct &agent,
     }
 
     for (const std::shared_ptr<Building_Zone> & buldingZone : zones) {
-        if (SimulationConfig::info.presencePage &&
+        if (Configuration::info.presencePage &&
             buldingZone->hasActivity(3) &&
             !buldingZone->isNamed(office)) {
           continue;
         }
-        if (!SimulationConfig::info.presencePage &&
+        if (!Configuration::info.presencePage &&
             buldingZone->hasActivity(0) &&
             !buldingZone->isNamed(bedroom) &&
             buldingZone->getNumberOfActivities() == 1) {
@@ -51,7 +51,7 @@ void Occupant::setup(int id, const agentStruct &agent,
         agentZones.push_back(Occupant_Zone());
         agentZones.back().setup(buildingID, *buldingZone, id, agent);
     }
-    if (SimulationConfig::info.presencePage) {
+    if (Configuration::info.presencePage) {
       model_presenceFromPage(agent);
     } else {
       model_activity(agent);
@@ -62,7 +62,7 @@ void Occupant::setup(int id, const agentStruct &agent,
 void Occupant::initialiseStates(
                   const std::vector<std::shared_ptr<Building_Zone>> &zones) {
     State present(-100,-1,-1,"");
-    if (SimulationConfig::info.presencePage) {
+    if (Configuration::info.presencePage) {
         State it(3, 70, 1, "IT");
         matchStateToZone(&it, zones);
         present.addState(it);
@@ -105,12 +105,12 @@ void Occupant::initialiseStates(
 void Occupant::matchStateToZone(State *s,
                   const std::vector<std::shared_ptr<Building_Zone>> &zones) {
     for (unsigned int i =0; i < zones.size(); i++) {
-      if (SimulationConfig::info.presencePage &&
+      if (Configuration::info.presencePage &&
           zones[i]->hasActivity(3) &&
           !zones[i]->isNamed(office)) {
         continue;
       }
-      if (!SimulationConfig::info.presencePage &&
+      if (!Configuration::info.presencePage &&
           zones[i]->hasActivity(0) &&
           !zones[i]->isNamed(bedroom) &&
           zones[i]->getNumberOfActivities() == 1) {
@@ -124,7 +124,7 @@ void Occupant::matchStateToZone(State *s,
 }
 
 void Occupant::step() {
-    int stepCount = SimulationConfig::getStepCount();
+    int stepCount = Configuration::getStepCount();
     int newStateID = activities.at(stepCount);
     zonePtrPrevious = state.getZonePtr();
     state = stateMachine.transistionTo(newStateID);
@@ -144,7 +144,7 @@ void Occupant::step() {
     DataStore::addValue(datastoreIdActivity, newStateID);
 }
 
-void Occupant::model_activity(const agentStruct &agent) {
+void Occupant::model_activity(const ConfigStructAgent &agent) {
     Model_Activity_Survival ma;
     ma.setAge(agent.age);
     ma.setComputer(agent.computer);
@@ -158,7 +158,7 @@ void Occupant::model_activity(const agentStruct &agent) {
     activities = ma.preProcessActivities();
 }
 
-void Occupant::model_presenceFromPage(const agentStruct &agent) {
+void Occupant::model_presenceFromPage(const ConfigStructAgent &agent) {
     Model_Presence presence;
     presence.setProbMap(agent.profile);
     presence.calculatePresenceFromPage();
@@ -259,7 +259,7 @@ bool Occupant::currentlyInZone(const Building_Zone &zone) const {
 
 bool Occupant::previouslyInZone(const Building_Zone &zone) const {
     bool inZone = false;
-    if (SimulationConfig::getStepCount() > 0) {
+    if (Configuration::getStepCount() > 0) {
         inZone = zone.getId() == zonePtrPrevious->getId();
     }
     return inZone;

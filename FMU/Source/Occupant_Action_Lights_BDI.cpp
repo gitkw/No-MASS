@@ -1,8 +1,8 @@
 // Copyright 2015 Jacob Chapman
 
 #include <vector>
-#include "Utility.h"
-#include "Occupant_Action_Lights_BDI.h"
+#include "Utility.hpp"
+#include "Occupant_Action_Lights_BDI.hpp"
 
 Occupant_Action_Lights_BDI::Occupant_Action_Lights_BDI() {
   OffDuringAudioVisual = 0.0;
@@ -20,7 +20,7 @@ void Occupant_Action_Lights_BDI::setOffDuringSleep(double OffDuringSleep) {
 
 bool Occupant_Action_Lights_BDI::doRecipe(const std::vector<double> &activities) {
   bool bdi = false;
-  int stepCount = SimulationConfig::getStepCount();
+  int stepCount = Configuration::getStepCount();
   if (OffDuringSleep > Utility::randomDouble(0, 1) &&
         activities.at(stepCount) == 0) {
       result = 0;

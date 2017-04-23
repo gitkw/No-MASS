@@ -1,8 +1,8 @@
 // Copyright 2015 Jacob Chapman
 
 #include <string>
-#include "Utility.h"
-#include "Model_Appliance_Power_CSV.h"
+#include "Utility.hpp"
+#include "Model_Appliance_Power_CSV.hpp"
 
 Model_Appliance_Power_CSV::Model_Appliance_Power_CSV() {}
 

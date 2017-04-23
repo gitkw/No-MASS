@@ -2,10 +2,10 @@
 
 #include <vector>
 #include <iostream>
-#include "SimulationConfig.h"
-#include "Utility.h"
-#include "DataStore.h"
-#include "Occupant_Action_Window_Stochastic_BDI.h"
+#include "Configuration.hpp"
+#include "Utility.hpp"
+#include "DataStore.hpp"
+#include "Occupant_Action_Window_Stochastic_BDI.hpp"
 
 Occupant_Action_Window_Stochastic_BDI::Occupant_Action_Window_Stochastic_BDI() {
   OpenDuringWashing = 0.0;
@@ -37,14 +37,14 @@ bool Occupant_Action_Window_Stochastic_BDI::doRecipe(
                                 const std::vector<double> &activities) {
   bool bdi = false;
 
-  int stepCount = SimulationConfig::getStepCount();
+  int stepCount = Configuration::getStepCount();
   if (OpenDuringWashing > Utility::randomDouble(0, 1)) {
     if (stepCount > 0) {
       if (activities.at(stepCount - 1) == 6 && activities.at(stepCount) != 6) {
         if (m_window.getWindowState() == 0) {
           m_window.setWindowState(1);
           int lengthOfTimeStepSeconds =
-              (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+              (60 * (60 / Configuration::info.timeStepsPerHour));
           m_window.setDurationOpen(lengthOfTimeStepSeconds);
           bdi = true;
           result = m_window.getWindowState();
@@ -65,7 +65,7 @@ bool Occupant_Action_Window_Stochastic_BDI::doRecipe(
     if (m_window.getWindowState() == 0) {
       m_window.setWindowState(1);
       int lengthOfTimeStepSeconds =
-          (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+          (60 * (60 / Configuration::info.timeStepsPerHour));
       m_window.setDurationOpen(lengthOfTimeStepSeconds);
       result = m_window.getWindowState();
       bdi = true;
@@ -78,7 +78,7 @@ bool Occupant_Action_Window_Stochastic_BDI::doRecipe(
         if (m_window.getWindowState() == 0) {
           m_window.setWindowState(1);
           int lengthOfTimeStepSeconds =
-              (60 * (60 / SimulationConfig::info.timeStepsPerHour));
+              (60 * (60 / Configuration::info.timeStepsPerHour));
           m_window.setDurationOpen(lengthOfTimeStepSeconds);
           bdi = true;
           result = m_window.getWindowState();

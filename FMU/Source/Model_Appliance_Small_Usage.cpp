@@ -5,9 +5,9 @@
 #include <string>
 #include <vector>
 #include <cmath>
-#include "Utility.h"
-#include "SimulationConfig.h"
-#include "Model_Appliance_Small_Usage.h"
+#include "Utility.hpp"
+#include "Configuration.hpp"
+#include "Model_Appliance_Small_Usage.hpp"
 
 Model_Appliance_Small_Usage::Model_Appliance_Small_Usage() {
   duration = 0;
@@ -15,7 +15,7 @@ Model_Appliance_Small_Usage::Model_Appliance_Small_Usage() {
 
 double Model_Appliance_Small_Usage::consumption(const int timeStep) {
   double result = 0.0;
-  int leninsec = SimulationConfig::lengthOfTimestep();
+  int leninsec = Configuration::lengthOfTimestep();
   int now = timeStep * leninsec;
   int end = timeStep * leninsec + leninsec;
   while (now < end) {

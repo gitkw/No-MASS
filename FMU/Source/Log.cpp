@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "Log.h"
+#include "Log.hpp"
 // Define the static member, somewhere in an implementation file.
 std::stringstream Log::buf;
 bool Log::errorFlag = false;

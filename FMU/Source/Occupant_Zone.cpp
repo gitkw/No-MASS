@@ -4,10 +4,10 @@
 #include <vector>
 #include <algorithm>
 
-#include "Environment.h"
-#include "DataStore.h"
-#include "Utility.h"
-#include "Occupant_Zone.h"
+#include "Environment.hpp"
+#include "DataStore.hpp"
+#include "Utility.hpp"
+#include "Occupant_Zone.hpp"
 
 Occupant_Zone::Occupant_Zone() {}
 
@@ -28,10 +28,10 @@ bool Occupant_Zone::isActionLearning() const {
 }
 
 void Occupant_Zone::setup(int buildingID, const Building_Zone & buldingZone,
-                        int agentid, const agentStruct &agent) {
+                        int agentid, const ConfigStructAgent &agent) {
   id = buldingZone.getId();
   this->buildingID = buildingID;
-  if (SimulationConfig::info.agentHeatGains) {
+  if (Configuration::info.agentHeatGains) {
       aahg.setup(buildingID, agentid);
       availableActions.push_back(0);
   }
@@ -44,9 +44,9 @@ void Occupant_Zone::setup(int buildingID, const Building_Zone & buldingZone,
   setupLights(agent, buldingZone);
   setupShades(agent, buldingZone);
 
-  if (SimulationConfig::info.learn > 0) {
+  if (Configuration::info.learn > 0) {
       aalearn.setZoneId(id);
-      aalearn.setup(agentid, SimulationConfig::info.learn);
+      aalearn.setup(agentid, Configuration::info.learn);
   }
   if (agent.ApplianceDuringDay > 0) {
     aaa.setApplianceDuringDay(agent.ApplianceDuringDay);
@@ -54,13 +54,13 @@ void Occupant_Zone::setup(int buildingID, const Building_Zone & buldingZone,
   }
 }
 
-void Occupant_Zone::setupLights(const agentStruct &agent,
+void Occupant_Zone::setupLights(const ConfigStructAgent &agent,
     const Building_Zone & buldingZone) {
       ActionLights = false;
 
       if ((agent.LightOffDuringAudioVisual > 0 ||
           agent.LightOffDuringSleep > 0) &&
-          SimulationConfig::info.lights
+          Configuration::info.lights
         ) {
           availableActions.push_back(7);
           if (buldingZone.hasActivity(2)) {
@@ -69,20 +69,20 @@ void Occupant_Zone::setupLights(const agentStruct &agent,
           aalBDI.setOffDuringSleep(agent.LightOffDuringSleep);
           aalBDI.setAvailableActivities(buldingZone.getActivities());
           enableBDI();
-      } else if (SimulationConfig::info.lights) {
+      } else if (Configuration::info.lights) {
           availableActions.push_back(3);
           aal.setAvailableActivities(buldingZone.getActivities());
       }
 }
 
-void Occupant_Zone::setupShades(const agentStruct &agent,
+void Occupant_Zone::setupShades(const ConfigStructAgent &agent,
     const Building_Zone & buldingZone) {
     ActionShades = false;
     if ((agent.ShadeClosedDuringSleep > 0 ||
         agent.ShadeDuringNight > 0 ||
         agent.ShadeDuringAudioVisual > 0 ||
         agent.ShadeClosedDuringWashing > 0)
-      && SimulationConfig::info.shading) {
+      && Configuration::info.shading) {
       aasBDI.setup(agent.shadeId);
       if (buldingZone.hasActivity(0)) {
         aasBDI.setClosedDuringSleep(agent.ShadeClosedDuringSleep);
@@ -96,20 +96,20 @@ void Occupant_Zone::setupShades(const agentStruct &agent,
       }
       availableActions.push_back(8);
       enableBDI();
-    } else if (SimulationConfig::info.shading) {
+    } else if (Configuration::info.shading) {
           aas.setup(agent.shadeId);
           availableActions.push_back(2);
     }
 }
 
-void Occupant_Zone::setupWindows(int agentid, const agentStruct &agent,
+void Occupant_Zone::setupWindows(int agentid, const ConfigStructAgent &agent,
     const Building_Zone & buldingZone) {
   ActionWindow = false;
 
   if ((agent.WindowOpenDuringCooking > 0 ||
       agent.WindowOpenDuringWashing > 0 ||
       agent.WindowOpenDuringSleeping > 0) &&
-      SimulationConfig::info.windows) {
+      Configuration::info.windows) {
     enableBDI();
     aawBDI.setup(agent.windowId, agentid);
     if (buldingZone.hasActivity(4)) {
@@ -124,11 +124,11 @@ void Occupant_Zone::setupWindows(int agentid, const agentStruct &agent,
     aawBDI.setAvailableActivities(buldingZone.getActivities());
     availableActions.push_back(6);
 
-  } else if (SimulationConfig::info.windows) {
+  } else if (Configuration::info.windows) {
     aaw.setup(agent.windowId, agentid);
     aaw.setAvailableActivities(buldingZone.getActivities());
     availableActions.push_back(1);
-  } else if (SimulationConfig::info.windowsLearn) {
+  } else if (Configuration::info.windowsLearn) {
     aawLearn.setZoneId(id);
     aawLearn.setup(agentid);
     availableActions.push_back(4);
@@ -151,7 +151,7 @@ void Occupant_Zone::step(const Building_Zone& zone,
             actionStep(a, zone, inZone, previouslyInZone, activities);
         }
       }
-      if (SimulationConfig::info.heating && SimulationConfig::info.learn > 0) {
+      if (Configuration::info.heating && Configuration::info.learn > 0) {
         actionStep(5, zone, inZone, previouslyInZone, activities);
       }
     }
@@ -170,7 +170,7 @@ void Occupant_Zone::stepPre(const Building_Zone& zone,
         }
     }
     if (inZone || previouslyInZone) {
-        if (SimulationConfig::info.windows){
+        if (Configuration::info.windows){
             aaw.saveResult();
         }
     }
@@ -314,11 +314,11 @@ void Occupant_Zone::setMetabolicRate(double metabolicRate) {
 }
 
 void Occupant_Zone::postprocess() {
-  if (isInBuilding() && SimulationConfig::info.learn > 0) {
+  if (isInBuilding() && Configuration::info.learn > 0) {
     aalearn.print();
     aalearn.reset();
   }
-  if (isInBuilding() && SimulationConfig::info.windowsLearn > 0) {
+  if (isInBuilding() && Configuration::info.windowsLearn > 0) {
     aawLearn.print();
     aawLearn.reset();
   }

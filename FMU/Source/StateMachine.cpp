@@ -1,7 +1,7 @@
 // Copyright 2016 Jacob Chapman
 
 #include <iostream>
-#include "StateMachine.h"
+#include "StateMachine.hpp"
 
 StateMachine::StateMachine() {}
 

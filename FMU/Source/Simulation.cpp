@@ -5,13 +5,13 @@
 #include <limits>
 #include <algorithm>
 
-#include "Environment.h"
-#include "SimulationConfig.h"
-#include "DataStore.h"
-#include "Building.h"
-#include "LVN_Node.h"
-#include "SimulationTime.h"
-#include "Simulation.h"
+#include "Environment.hpp"
+#include "Configuration.hpp"
+#include "DataStore.hpp"
+#include "Building.hpp"
+#include "LVN_Node.hpp"
+#include "SimulationTime.hpp"
+#include "Simulation.hpp"
 
 double Simulation::gridCost;
 
@@ -20,10 +20,10 @@ double Simulation::getGridCost() {
 }
 
 Simulation::Simulation() {
-        simulationConfigurationFile = "SimulationConfig.xml";
+        simulationConfigurationFile = "Configuration.xml";
 }
 
-void Simulation::setSimulationConfigurationFile(const std::string & filename) {
+void Simulation::setConfigurationurationFile(const std::string & filename) {
   this->simulationConfigurationFile = filename;
 }
 /**
@@ -32,7 +32,7 @@ void Simulation::setSimulationConfigurationFile(const std::string & filename) {
  * Sets up the EnergyPlus processor, the AgentModel and the ZoneManager.
  */
 void Simulation::preprocess() {
-  parseConfiguration(SimulationConfig::RunLocation
+  parseConfiguration(Configuration::RunLocation
     + simulationConfigurationFile);
   SimulationTime::preprocess();
   if (!LOG.getError()) {
@@ -41,14 +41,14 @@ void Simulation::preprocess() {
 }
 
 void Simulation::parseConfiguration(const std::string & file) {
-    SimulationConfig::parseConfiguration(file);
+    Configuration::parseConfiguration(file);
     GridPowerDataId = DataStore::addVariable("grid_power");
     GridCostDataId = DataStore::addVariable("grid_cost");
     GridReceivedDataId = DataStore::addVariable("grid_received");
 }
 
 void Simulation::setupSimulationModel() {
-    for (buildingStruct b : SimulationConfig::buildings) {
+    for (ConfigStructBuilding b : Configuration::buildings) {
       buildings.push_back(Building());
       buildings.back().setup(b);
       buildings.back().preprocess();
@@ -149,18 +149,18 @@ void Simulation::postTimeStep() {
 
 void Simulation::calculateGridCost(){
   gridCost = 0;
-  if (!SimulationConfig::info.GridCost.empty()){
-    gridCost = SimulationConfig::info.GridCost[0];
-    if (SimulationConfig::info.GridCost.size() == 24) {
-      int stepCount = SimulationConfig::getStepCount();
-      int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
+  if (!Configuration::info.GridCost.empty()){
+    gridCost = Configuration::info.GridCost[0];
+    if (Configuration::info.GridCost.size() == 24) {
+      int stepCount = Configuration::getStepCount();
+      int hour = (stepCount * Configuration::lengthOfTimestep()) / 3600;
       int hourOfDay = hour % 24;
-      gridCost = SimulationConfig::info.GridCost[hourOfDay];
-    } else if (SimulationConfig::info.GridCost.size() == 48) {
-      int stepCount = SimulationConfig::getStepCount();
-      int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 1800;
+      gridCost = Configuration::info.GridCost[hourOfDay];
+    } else if (Configuration::info.GridCost.size() == 48) {
+      int stepCount = Configuration::getStepCount();
+      int hour = (stepCount * Configuration::lengthOfTimestep()) / 1800;
       int halfHourOfDay = hour % 48;
-      gridCost = SimulationConfig::info.GridCost[halfHourOfDay];
+      gridCost = Configuration::info.GridCost[halfHourOfDay];
     }
   }
 }

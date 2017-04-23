@@ -1,17 +1,17 @@
 // Copyright 2016 Jacob Chapman
 
 #include <string>
-#include "DataStore.h"
-#include "SimulationConfig.h"
-#include "Utility.h"
-#include "Appliance_Generic_CSV.h"
+#include "DataStore.hpp"
+#include "Configuration.hpp"
+#include "Utility.hpp"
+#include "Appliance_Generic_CSV.hpp"
 
 Appliance_Generic_CSV::Appliance_Generic_CSV() {}
 
 /**
  * @brief read in the csv file containing the power values
  */
-void Appliance_Generic_CSV::setup(applianceStruct a) {
+void Appliance_Generic_CSV::setup(ConfigStructAppliance a) {
   setID(a.id);
   setHoulyPriority(a.priority);
   setHourlyCost(a.costVector);
@@ -22,11 +22,11 @@ void Appliance_Generic_CSV::setup(applianceStruct a) {
   enableDemand = false;
   if (fileSupply != "") {
     enableSupply = true;
-    modelSupply.parseConfiguration(SimulationConfig::RunLocation + fileSupply);
+    modelSupply.parseConfiguration(Configuration::RunLocation + fileSupply);
   }
   if (fileDemand != "") {
     enableDemand = true;
-    modelDemand.parseConfiguration(SimulationConfig::RunLocation + fileDemand);
+    modelDemand.parseConfiguration(Configuration::RunLocation + fileDemand);
   }
 
 
@@ -34,8 +34,8 @@ void Appliance_Generic_CSV::setup(applianceStruct a) {
 }
 
 void Appliance_Generic_CSV::step() {
-  int timeStep = SimulationConfig::getStepCount();
-  int leninsec = SimulationConfig::lengthOfTimestep();
+  int timeStep = Configuration::getStepCount();
+  int leninsec = Configuration::lengthOfTimestep();
   int numberOfSeconds = timeStep * leninsec;
   int minute = numberOfSeconds / 60;
   int minuteOfDay = minute % 1440;

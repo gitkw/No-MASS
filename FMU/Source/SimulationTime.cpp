@@ -2,9 +2,9 @@
 
 #include <vector>
 #include <string>
-#include "SimulationConfig.h"
-#include "DataStore.h"
-#include "SimulationTime.h"
+#include "Configuration.hpp"
+#include "DataStore.hpp"
+#include "SimulationTime.hpp"
 
 std::vector<int> SimulationTime::monthCount;
 int SimulationTime::stepCount = 0;
@@ -63,9 +63,9 @@ void SimulationTime::preprocess() {
  * @brief processes before timestep
  */
 void SimulationTime::trackTime() {
-  SimulationConfig::step();
-  stepCount = SimulationConfig::getStepCount();
-  minute = (stepCount * SimulationConfig::lengthOfTimestep()) / 60;
+  Configuration::step();
+  stepCount = Configuration::getStepCount();
+  minute = (stepCount * Configuration::lengthOfTimestep()) / 60;
   hour = minute / 60;
   day = hour / 24;
 

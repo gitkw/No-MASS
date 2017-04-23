@@ -1,8 +1,8 @@
 // Copyright 2016 Jacob Chapman
 
 #include <algorithm>
-#include "Utility.h"
-#include "Model_Lights.h"
+#include "Utility.hpp"
+#include "Model_Lights.hpp"
 
 Model_Lights::Model_Lights() {}
 

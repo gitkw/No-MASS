@@ -2,10 +2,10 @@
 
 #include <vector>
 #include <string>
-#include "SimulationConfig.h"
-#include "DataStore.h"
-#include "Utility.h"
-#include "Appliance_Battery.h"
+#include "Configuration.hpp"
+#include "DataStore.hpp"
+#include "Utility.hpp"
+#include "Appliance_Battery.hpp"
 
 Appliance_Battery::Appliance_Battery() {
 }
@@ -29,7 +29,7 @@ double Appliance_Battery::rewardFunction(double mostShortage, double binShortage
  * @brief Set up the large appliance model, reading in the large applaince
  * configuration file
  */
-void Appliance_Battery::setup(applianceStruct a) {
+void Appliance_Battery::setup(ConfigStructAppliance a) {
 
   setID(a.id);
   setHoulyPriority(a.priority);
@@ -48,7 +48,7 @@ void Appliance_Battery::setup(applianceStruct a) {
   qLearning.setActions(2);
   qLearning.setId(id);
   qLearning.setup();
-  double lengthOfTimestep = SimulationConfig::lengthOfTimestep();
+  double lengthOfTimestep = Configuration::lengthOfTimestep();
   BatteryDeltaT = lengthOfTimestep / 60.0 / 60.0;
   sumSupply = 0;
   sumShort = 0;
@@ -237,6 +237,10 @@ double Appliance_Battery::get_new_SOC_discharge(double P_request) {
     return requestedPower;
 }
 
+/**
+ * calculates the current energy available
+ * @return current energy
+ */
 double Appliance_Battery::energy_calc() const{
     return stateOfCharge * capacity / 100; // this is the capacity at the correspondent SOC.
 }

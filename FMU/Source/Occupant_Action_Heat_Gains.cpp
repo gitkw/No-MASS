@@ -3,9 +3,9 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include "DataStore.h"
-#include "Model_HeatGains.h"
-#include "Occupant_Action_Heat_Gains.h"
+#include "DataStore.hpp"
+#include "Model_HeatGains.hpp"
+#include "Occupant_Action_Heat_Gains.hpp"
 
 Occupant_Action_Heat_Gains::Occupant_Action_Heat_Gains() {}
 

@@ -1,0 +1,8 @@
+#ifndef GEN_H
+#define GEN_H
+
+#include <string>
+
+const std::string testFiles = "@testLocationFiles@";
+
+#endif // GEN_H

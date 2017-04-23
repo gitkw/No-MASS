@@ -4,7 +4,7 @@
 #include <utility>
 #include <limits>
 #include <iostream>
-#include "Contract_Negotiation.h"
+#include "Contract_Negotiation.hpp"
 
 Contract_Negotiation::Contract_Negotiation() {
     difference = 0;

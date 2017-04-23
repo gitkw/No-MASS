@@ -2,16 +2,16 @@
 
 #include <string>
 #include <vector>
-#include "Utility.h"
-#include "DataStore.h"
-#include "SimulationConfig.h"
-#include "Appliance.h"
+#include "Utility.hpp"
+#include "DataStore.hpp"
+#include "Configuration.hpp"
+#include "Appliance.hpp"
 
 Appliance::Appliance() {}
 
 double Appliance::getPriority() const {
-  int timeStep = SimulationConfig::getStepCount();
-  int leninsec = SimulationConfig::lengthOfTimestep();
+  int timeStep = Configuration::getStepCount();
+  int leninsec = Configuration::lengthOfTimestep();
   int numberOfSeconds = timeStep * leninsec;
   int hour = numberOfSeconds / 3600;
   int hourOfDay = hour % 24;
@@ -159,8 +159,8 @@ void Appliance::setSupplyLeft(const double supplyLeft) {
 }
 
 int Appliance::calculateHourOfDay() const {
-  int stepCount = SimulationConfig::getStepCount();
-  int hour = (stepCount * SimulationConfig::lengthOfTimestep()) / 3600;
+  int stepCount = Configuration::getStepCount();
+  int hour = (stepCount * Configuration::lengthOfTimestep()) / 3600;
   return hour % 24;
 }
 

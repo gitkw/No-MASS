@@ -4,9 +4,9 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
-#include "SimulationConfig.h"
-#include "Utility.h"
-#include "Appliance_Large_CSV.h"
+#include "Configuration.hpp"
+#include "Utility.hpp"
+#include "Appliance_Large_CSV.hpp"
 
 Appliance_Large_CSV::Appliance_Large_CSV() {}
 
@@ -18,7 +18,7 @@ Appliance_Large_CSV::Appliance_Large_CSV() {}
  void Appliance_Large_CSV::step() {
    model.decreaseDuration();
    setPower(0.0);
-   int stepCount = SimulationConfig::getStepCount();
+   int stepCount = Configuration::getStepCount();
    model.consumption(stepCount);
    if ((isOn() && match)) {
      running = true;
@@ -42,7 +42,7 @@ Appliance_Large_CSV::Appliance_Large_CSV() {}
  */
 void Appliance_Large_CSV::setupModel() {
   model.setID(id);
-  model.parseConfiguration(SimulationConfig::FileLargeAppliance);
+  model.parseConfiguration(Configuration::FileLargeAppliance);
 
   for(auto x : Utility::csvToTable<double>(file, false)) {
     profileCSV.push_back(x[0]);

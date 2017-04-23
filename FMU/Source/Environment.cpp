@@ -1,9 +1,9 @@
 // Copyright 2016 Jacob Chapman
 
 #include <deque>
-#include "DataStore.h"
-#include "SimulationConfig.h"
-#include "Environment.h"
+#include "DataStore.hpp"
+#include "Configuration.hpp"
+#include "Environment.hpp"
 
 double Environment::dailyMeanTemperature = 0;
 std::deque<double> Environment::outDoorTemperatures;
@@ -15,11 +15,11 @@ double Environment::getDailyMeanTemperature() {
 }
 
 void Environment::calculateDailyMeanTemperature() {
-  if (SimulationConfig::info.windows) {
+  if (Configuration::info.windows) {
     double outdoorTemperature = getOutdoorAirDrybulbTemperature();
     outDoorTemperatures.push_back(outdoorTemperature);
     if (outDoorTemperatures.size() >
-          (SimulationConfig::info.timeStepsPerHour * 24)) {
+          (Configuration::info.timeStepsPerHour * 24)) {
             outDoorTemperatures.pop_front();
     }
     dailyMeanTemperature = 0;

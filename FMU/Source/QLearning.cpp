@@ -8,13 +8,14 @@
 #include <string>
 #include <vector>
 
-#include "SimulationConfig.h"
-#include "Utility.h"
-#include "QLearning.h"
+#include "Configuration.hpp"
+#include "DataStore.hpp"
+#include "Utility.hpp"
+#include "QLearning.hpp"
 
 QLearning::QLearning() {
-  epsilon = SimulationConfig::info.learnep;
-  update = SimulationConfig::info.learnupdate;
+  epsilon = Configuration::info.learnep;
+  update = Configuration::info.learnupdate;
 }
 
 void QLearning::setup() {
@@ -90,6 +91,11 @@ void QLearning::printQ() const {
 
 void QLearning::setId(const int id) {
     this->id = id;
+    std::string idstr = std::to_string(id);
+    reward_name = DataStore::addVariable(filename + "_reward" + idstr);
+    action_name = DataStore::addVariable(filename + "_action" + idstr);
+    state_name = DataStore::addVariable(filename + "_state" + idstr);
+    previous_state_name = DataStore::addVariable(filename + "_previous_state" + idstr);
 }
 
 void QLearning::setState(const int state) {
@@ -108,8 +114,18 @@ void QLearning::setReward(const double reward) {
     this->reward = reward;
 }
 
-double QLearning::learn() {
-  return 0;
+void QLearning::learn() {
+    DataStore::addValue(reward_name, reward);
+    DataStore::addValue(action_name, action);
+    DataStore::addValue(state_name, state);
+    DataStore::addValue(previous_state_name, previous_state);
+    updateQ(previous_state, action, reward, state);
+}
+
+double QLearning::getAction() {
+  action = greedySelection(state);
+  previous_state = state;
+  return action;
 }
 
 void QLearning::reset() {}

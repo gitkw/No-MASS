@@ -2,17 +2,17 @@
 
 #include <vector>
 #include <iostream>
-#include "SimulationConfig.h"
-#include "Utility.h"
-#include "DataStore.h"
-#include "Environment.h"
-#include "Occupant_Action_Window_Stochastic.h"
+#include "Configuration.hpp"
+#include "Utility.hpp"
+#include "DataStore.hpp"
+#include "Environment.hpp"
+#include "Occupant_Action_Window_Stochastic.hpp"
 
 Occupant_Action_Window_Stochastic::Occupant_Action_Window_Stochastic() {
 }
 
 void Occupant_Action_Window_Stochastic::setup(int windowID, int id) {
-  windowStruct ws = SimulationConfig::windows.at(windowID);
+  ConfigStructWindow ws = Configuration::windows.at(windowID);
   m_window.setDurationVars(ws.aop, ws.bopout, ws.shapeop);
   m_window.setArrivalVars(ws.a01arr, ws.b01inarr, ws.b01outarr,
       ws.b01absprevarr, ws.b01rnarr);
@@ -35,7 +35,7 @@ void Occupant_Action_Window_Stochastic::step(const Building_Zone& zone,
   // double rain = DataStore::getValue("EnvironmentSiteRainStatus");
   double rain = 0;
   double indoorTemperature = zone.getMeanAirTemperature();
-  double timeStepLengthInMinutes = SimulationConfig::lengthOfTimestep() / 60;
+  double timeStepLengthInMinutes = Configuration::lengthOfTimestep() / 60;
 
   m_window.setWindowState(zone.getWindowState());
   if (m_window.getWindowState() == 0) {

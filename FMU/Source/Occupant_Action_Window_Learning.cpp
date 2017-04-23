@@ -1,10 +1,10 @@
 // Copyright 2016 Jacob Chapman
 
 #include <string>
-#include "SimulationConfig.h"
-#include "DataStore.h"
-#include "Environment.h"
-#include "Occupant_Action_Window_Learning.h"
+#include "Configuration.hpp"
+#include "DataStore.hpp"
+#include "Environment.hpp"
+#include "Occupant_Action_Window_Learning.hpp"
 
 void Occupant_Action_Window_Learning::print() {
   learn.printQ();
@@ -22,8 +22,8 @@ void Occupant_Action_Window_Learning::setup(const int id) {
   learn.setStates(400);
   learn.setActions(2);
   learn.setId(id);
-  learn.setUpdate(SimulationConfig::info.learn);
-  learn.setEpsilon(SimulationConfig::info.learnep);
+  learn.setUpdate(Configuration::info.learn);
+  learn.setEpsilon(Configuration::info.learnep);
   learn.setup();
   window_name =
   DataStore::addVariable("Weekday-" + zoneIdStr + "-_pmv" + std::to_string(id));
@@ -65,6 +65,7 @@ void Occupant_Action_Window_Learning::step(const Building_Zone& zone,
 
     learn.setAction(zone.getWindowState());
     learn.setReward(reward);
-    result = learn.learn();
+    learn.learn();
+    result = learn.getAction();
   }
 }

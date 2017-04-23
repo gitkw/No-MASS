@@ -2,9 +2,9 @@
 #include <complex>
 #include <vector>
 #include <string>
-#include "SimulationConfig.h"
-#include "DataStore.h"
-#include "LVN_Node.h"
+#include "Configuration.hpp"
+#include "DataStore.hpp"
+#include "LVN_Node.hpp"
 
 LVN_Node::LVN_Node() {
   root = false;
@@ -211,7 +211,7 @@ bool LVN_Node::setPowerForID(const std::complex<double> & power, const int id) {
 
 void LVN_Node::addChildren(const std::vector<int> & ids) {
   for (const int & i : ids) {
-    for (const LVNNodeStruct & l : SimulationConfig::lvn) {
+    for (const ConfigStructLVNNode & l : Configuration::lvn) {
       if (i == l.id) {
         joinedNodes.push_back(LVN_Node());
         joinedNodes.back().setID(l.id);

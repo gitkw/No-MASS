@@ -3,9 +3,9 @@
 #include <cstring>
 #include <string>
 #include <vector>
-#include "Utility.h"
-#include "SimulationConfig.h"
-#include "Model_Appliance_Large_Usage_Survival.h"
+#include "Utility.hpp"
+#include "Configuration.hpp"
+#include "Model_Appliance_Large_Usage_Survival.hpp"
 
 
 Model_Appliance_Large_Usage_Survival::Model_Appliance_Large_Usage_Survival() {
@@ -13,7 +13,7 @@ Model_Appliance_Large_Usage_Survival::Model_Appliance_Large_Usage_Survival() {
   duration = 0;
 }
 void Model_Appliance_Large_Usage_Survival::decreaseDuration() {
-  duration -= SimulationConfig::lengthOfTimestep() / 60.0;
+  duration -= Configuration::lengthOfTimestep() / 60.0;
 }
 
 bool Model_Appliance_Large_Usage_Survival::onAt(const int timeStep) {

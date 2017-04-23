@@ -2,8 +2,8 @@
 
 #include <cmath>
 #include <algorithm>
-#include "Utility.h"
-#include "Model_ExternalShading.h"
+#include "Utility.hpp"
+#include "Model_ExternalShading.hpp"
 
 Model_ExternalShading::Model_ExternalShading() {
   a01arr = -7.41;

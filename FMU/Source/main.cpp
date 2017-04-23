@@ -1,23 +1,23 @@
 // Copyright 2016 Jacob Chapman
 
-#include "Utility.h"
-#include "Simulation.h"
+#include "Utility.hpp"
+#include "Simulation.hpp"
 
 Simulation sim;
 
 int main(int argc, char *argv[]) {
   if (argc > 1) {
-    sim.setSimulationConfigurationFile(argv[1]);
+    sim.setConfigurationurationFile(argv[1]);
   }
 
     sim.preprocess();
 
-    int days = Utility::calculateNumberOfDays(SimulationConfig::info.startDay,
-                                              SimulationConfig::info.startMonth,
-                                              SimulationConfig::info.endDay,
-                                              SimulationConfig::info.endMonth);
+    int days = Utility::calculateNumberOfDays(Configuration::info.startDay,
+                                              Configuration::info.startMonth,
+                                              Configuration::info.endDay,
+                                              Configuration::info.endMonth);
 
-    int totoaltimesteps = days * 24 * SimulationConfig::info.timeStepsPerHour;
+    int totoaltimesteps = days * 24 * Configuration::info.timeStepsPerHour;
     for (int i = 0; i < totoaltimesteps; i++) {
         sim.preTimeStep();
         sim.timeStep();
