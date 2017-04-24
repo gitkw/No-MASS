@@ -18,7 +18,7 @@ class QLearning {
     void updateQ(const int s, const int a, const double r, const int sp);
     void printQ() const;
     virtual void setId(const int id);
-    void setFilename(const std::string filename);
+    void setFilename(const std::string &filename);
     void setState(const int state);
     void setStates(const int states);
     void setActions(const int actions);

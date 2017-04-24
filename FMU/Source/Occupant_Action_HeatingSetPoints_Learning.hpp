@@ -21,7 +21,7 @@ class Occupant_Action_HeatingSetPoints_Learning : public Occupant_Action {
     void setFile(std::string file);
   private:
 
-    void parseConfiguration(const std::string filename);
+    void parseConfiguration(const std::string &filename);
     int getState() const;
 
     QLearning qlWeekDay;

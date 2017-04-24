@@ -14,18 +14,23 @@ Occupant_Zone::Occupant_Zone() {}
 bool Occupant_Zone::isActionWindow() const {
   return ActionWindow;
 }
+
 bool Occupant_Zone::isActionLights() const {
   return ActionLights;
 }
+
 bool Occupant_Zone::isActionShades() const {
   return ActionShades;
 }
+
 bool Occupant_Zone::isActionHeatGains() const {
   return ActionHeatGains;
 }
+
 bool Occupant_Zone::isActionLearning() const {
   return ActionLearning;
 }
+
 
 void Occupant_Zone::setup(int buildingID, const Building_Zone & buldingZone,
                         int agentid, const ConfigStructAgent &agent) {

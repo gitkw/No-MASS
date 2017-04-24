@@ -20,7 +20,7 @@ double Simulation::getGridCost() {
 }
 
 Simulation::Simulation() {
-        simulationConfigurationFile = "Configuration.xml";
+        simulationConfigurationFile = "SimulationConfig.xml";
 }
 
 void Simulation::setConfigurationurationFile(const std::string & filename) {

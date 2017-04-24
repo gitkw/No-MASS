@@ -170,7 +170,7 @@ int Appliance::calculateHourOfDay() const {
  * @details For some appliances we may wish that they only turn on for some
  * applainces, here we check if the activities match.
  */
-bool Appliance::hasActivities(std::vector<int> Activities) {
+bool Appliance::hasActivities(const std::vector<int> &Activities) {
   match = this->Activities.empty();
   for (int i : this->Activities) {
     for (int j : Activities) {
@@ -187,7 +187,7 @@ bool Appliance::hasActivities(std::vector<int> Activities) {
  * @brief Set the activity for which the appliance can be turned on during.
  * @param Activities: A set of activities
  */
-void Appliance::setActivities(const std::vector<int> Activities) {
+void Appliance::setActivities(const std::vector<int> &Activities) {
   this->Activities = Activities;
 }
 

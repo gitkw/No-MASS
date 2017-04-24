@@ -15,7 +15,7 @@ class Occupant_Action {
  public:
   Occupant_Action();
 
-  void setAvailableActivities(const std::vector<int> availableActivities);
+  void setAvailableActivities(const std::vector<int> &availableActivities);
   void setZoneId(const double zoneId);
   void setReward(const double reward);
   double getResult() const;

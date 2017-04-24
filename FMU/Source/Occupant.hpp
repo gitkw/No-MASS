@@ -49,42 +49,36 @@ class Occupant : public Agent {
     double getPower() const;
 
  private:
-    int action;
-    bool heatState;
-    bool learn = false;
-    double power;
-    double currentRadientGains;
-    double metabolicRate; /** Metabolic Rate of the occupant */
-    double clo; /** clothing value of the occupant */
-
-    std::vector<Occupant_Zone> agentZones;
-    std::vector<double> activities;
-    std::vector<int> availableActions;
-
-    std::string buildingName; /** building agent belongs to */
-    std::string bedroom; /** Which bedroom the occupant sleeps in */
-    std::string office; /** Which Office the occupant works in */
-    State state; /** Occupants current state */
-    std::shared_ptr<Building_Zone> zonePtrPrevious;
-
-    int datastoreIdActivity;
-    int datastoreIdHeatGains;
-
     void model_presenceFromPage(const ConfigStructAgent &agent);
     void model_pastAndFutureDurations();
     void model_activity(const ConfigStructAgent &agent);
     void matchStateToZone(State *s,
-                    const std::vector<std::shared_ptr<Building_Zone>> &zones);
+                   const std::vector<std::shared_ptr<Building_Zone>> &zones);
 
     void initialiseStates(
-                      const std::vector<std::shared_ptr<Building_Zone>> &zones);
+                     const std::vector<std::shared_ptr<Building_Zone>> &zones);
     bool calculateLightInteractionsOnZone(const Building_Zone &zone);
     bool calculateWindowInteractionsOnZone(const Building_Zone &zone);
     double calculateExternalShadeInteractionsOnZone(const Building_Zone &zone);
     double calculateMetabolicHeatGainsOnZone(const Building_Zone &zone);
     double getPMV(const Building_Zone &zone) const;
 
-    StateMachine stateMachine;
+    bool heatState; //!< the desired heating state
+    double power; //!< power of occupant, used in negotiations
+    double metabolicRate; //!< Metabolic Rate of the occupant
+    double clo; //!< clothing value of the occupant
+    std::string buildingName; //!< building agent belongs to
+    std::string bedroom; //!< Which bedroom the occupant sleeps in
+    std::string office; //!< Which Office the occupant works in
+    std::vector<Occupant_Zone> agentZones;
+    std::vector<double> activities;
+    std::vector<int> availableActions;
+    std::shared_ptr<Building_Zone> zonePtrPrevious;
+    State state; //!< Occupants current state
+    StateMachine stateMachine; //!< transitions occupant between states
+
+    int datastoreIdActivity;
+    int datastoreIdHeatGains;
 };
 
 #endif  // OCCUPANT_H_

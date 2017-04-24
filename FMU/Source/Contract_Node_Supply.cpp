@@ -4,7 +4,7 @@
 
 Contract_Node_Supply::Contract_Node_Supply() {}
 
-bool Contract_Node_Supply::compare(const ContractPtr insert) const {
+bool Contract_Node_Supply::compare(const ContractPtr &insert) const {
   return insert->suppliedCost < nodeObject->suppliedCost;
 }
 

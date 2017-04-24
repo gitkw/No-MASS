@@ -28,10 +28,10 @@ class Contract_Negotiation {
 
  private:
     void calcDifference(const Contract & c);
-    void insertSupply(const ContractPtr contract);
-    void insertPriority(const ContractPtr contract);
+    void insertSupply(const ContractPtr &contract);
+    void insertPriority(const ContractPtr &contract);
     void processContracts();
-    bool sameContract(const ContractPtr c1, const ContractPtr c2) const;
+    bool sameContract(const ContractPtr &c1, const ContractPtr &c2) const;
     double difference;
 
     std::unordered_map<int, std::unordered_map<int, ContractPtr>> contracts;

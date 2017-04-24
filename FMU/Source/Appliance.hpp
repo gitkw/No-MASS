@@ -76,8 +76,8 @@ class Appliance : public Agent {
     double getGridPower() const;
 
 
-    void setActivities(const std::vector<int> Activities);
-    bool hasActivities(const std::vector<int> Activities);
+    void setActivities(const std::vector<int> &Activities);
+    bool hasActivities(const std::vector<int> &Activities);
 
  protected:
     virtual void beforeClear();

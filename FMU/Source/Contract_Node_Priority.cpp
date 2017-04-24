@@ -5,7 +5,7 @@
 
 Contract_Node_Priority::Contract_Node_Priority() {}
 
-bool Contract_Node_Priority::compare(const ContractPtr insert) const {
+bool Contract_Node_Priority::compare(const ContractPtr &insert) const {
   return insert->priority < nodeObject->priority;
 }
 

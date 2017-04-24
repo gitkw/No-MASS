@@ -13,7 +13,7 @@ double Occupant_Action::getResult() const {
 }
 
 void Occupant_Action::setAvailableActivities(
-    const std::vector<int> availableActivities) {
+    const std::vector<int> &availableActivities) {
     this->availableActivities = availableActivities;
 }
 

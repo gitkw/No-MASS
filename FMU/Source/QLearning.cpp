@@ -138,7 +138,7 @@ void QLearning::setEpsilon(const double epsilon) {
   this->epsilon = epsilon;
 }
 
-void QLearning::setFilename(const std::string filename) {
+void QLearning::setFilename(const std::string &filename) {
   this->filename = filename;
 }
 

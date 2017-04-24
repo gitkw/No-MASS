@@ -6,6 +6,8 @@
 #include "Environment.hpp"
 #include "Occupant_Action_Window_Learning.hpp"
 
+Occupant_Action_Window_Learning::Occupant_Action_Window_Learning(){}
+
 void Occupant_Action_Window_Learning::print() {
   learn.printQ();
 }

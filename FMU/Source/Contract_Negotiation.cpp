@@ -14,13 +14,13 @@ void Contract_Negotiation::calcDifference(const Contract & c) {
   difference += (0.0 - (c.requested - c.received)) + c.suppliedLeft;
 }
 
-void Contract_Negotiation::insertSupply(const ContractPtr contract) {
+void Contract_Negotiation::insertSupply(const ContractPtr &contract) {
   if (contract->suppliedLeft > 0) {
     nodeSupply.insert(contract, contract->suppliedCost);
   }
 }
 
-void Contract_Negotiation::insertPriority(const ContractPtr contract) {
+void Contract_Negotiation::insertPriority(const ContractPtr &contract) {
   if (contract->requested > 0) {
     nodePriority.insert(contract, contract->priority);
   }
@@ -81,8 +81,8 @@ void Contract_Negotiation::processContracts() {
   }
 }
 
-bool Contract_Negotiation::sameContract(const ContractPtr c1,
-                                          const ContractPtr c2) const {
+bool Contract_Negotiation::sameContract(const ContractPtr &c1,
+                                          const ContractPtr &c2) const {
   return ((c1->buildingID == c2->buildingID) && (c1->id == c2->id));
 }
 

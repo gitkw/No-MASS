@@ -180,7 +180,7 @@ std::vector<double> Model_Activity::multinominal() {
     return activities;
 }
 
-void Model_Activity::parseConfiguration(const std::string filename) {
+void Model_Activity::parseConfiguration(const std::string &filename) {
   namespace rx = rapidxml;
   rx::file<> xmlFile(filename.c_str());  // Default template is char
   rx::xml_document<> doc;

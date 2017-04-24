@@ -14,6 +14,7 @@
 
 class Occupant_Action_Window_Learning : public Occupant_Action_Window {
   public:
+    Occupant_Action_Window_Learning();
     void setup(const int id);
     void step(const Building_Zone& zone, const bool inZone,
     const bool previouslyInZone);

@@ -13,7 +13,6 @@
   * @details A zone within a building
   */
 
-
 class Building_Zone {
  public:
     Building_Zone();
@@ -55,19 +54,21 @@ class Building_Zone {
     std::vector<int> getActivities() const;
 
  private:
-    bool groundFloor;
-    bool active;
-    bool lightState;
-    bool windowState;
-    double currentOccupantGains;
-    double blindState;
-    double occupantFraction;
-    double heatingState;
-    double appFraction;
+    bool groundFloor; //<! is the zone on the grounf floor
+    bool active; //<! is the zone active, ie have occupants
+    bool lightState; //<! the light state
+    bool windowState; //<! the window state
+    double currentOccupantGains; //<! the current mean gains for an occupant
+    double blindState; //<! the shade state
+    double occupantFraction; //<! the number of occupants (I dont think this is a fraction anymore)
+    double heatingState; //<! the heating setpoint temperature
+    double appFraction; //<! the average appliance gains
 
-    int id;
-    std::string idString;
-    std::string name;
+    std::vector<int> activities;   //<! the activites that take place in a zone
+    std::string idString;  //<! the zones id as a string
+    std::string name;  //<! the zones name
+    int id;  //<! the zones id
+    // datastore variables for faster lookup
     int variableNameBlindFraction;
     int variableNameNumberOfOccupants;
     int variableNameAverageGains;
@@ -80,7 +81,7 @@ class Building_Zone {
     int variableNameDaylighting;
     int variableNameZoneAirHeating;
     std::vector<int> variableNameWindow;
-    std::vector<int> activities;
+
 };
 
 #endif  // BUILDING_ZONE_H_

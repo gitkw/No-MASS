@@ -13,11 +13,11 @@
 #include "Occupant_Action_HeatingSetPoints_Learning.hpp"
 
 Occupant_Action_HeatingSetPoints_Learning::
-                  Occupant_Action_HeatingSetPoints_Learning() {
+                  Occupant_Action_HeatingSetPoints_Learning() :
+                  file(Configuration::RunLocation + "learning.xml") {
     setPoint = 20;
     pmv = -1.0;
     result = 20;
-    file = Configuration::RunLocation + "learning.xml";
 }
 
 void Occupant_Action_HeatingSetPoints_Learning::setFile(std::string file){
@@ -126,7 +126,7 @@ int Occupant_Action_HeatingSetPoints_Learning::getState() const {
 
 
 void Occupant_Action_HeatingSetPoints_Learning::parseConfiguration(
-                                                  const std::string filename) {
+                                                  const std::string &filename) {
   namespace rx = rapidxml;
   rx::file<> xmlFile(filename.c_str());  // Default template is char
   rx::xml_document<> doc;

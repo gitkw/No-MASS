@@ -36,7 +36,7 @@ class Model_Activity : public Model_RandomWeibull {
 
  protected:
   virtual void parseOther(rapidxml::xml_node<> *node);
-  void parseConfiguration(const std::string filename);
+  void parseConfiguration(const std::string &filename);
 
   std::vector<double> disaggregate() const;
   std::vector<double> multinominal();

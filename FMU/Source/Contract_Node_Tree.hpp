@@ -14,7 +14,7 @@
 template <class T>
 class Contract_Node_Tree {
  public:
-  virtual bool compare(const T insert) const = 0;
+  virtual bool compare(const T &insert) const = 0;
   virtual void makeLeft() = 0;
   virtual void makeRight() = 0;
   virtual bool isNodeRemoveable(

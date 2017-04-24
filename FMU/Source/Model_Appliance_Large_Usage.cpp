@@ -98,7 +98,7 @@ std::vector<std::vector<T>> Model_Appliance_Large_Usage::as_vector_vector(
 }
 
 void Model_Appliance_Large_Usage::parseConfiguration(
-                                                  const std::string filename) {
+                                                  const std::string &filename) {
   namespace rx = rapidxml;
   rx::file<> xmlFile(filename.c_str());  // Default template is char
   rx::xml_document<> doc;

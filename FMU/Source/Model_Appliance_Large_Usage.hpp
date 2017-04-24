@@ -24,7 +24,7 @@ class Model_Appliance_Large_Usage : public Model_RandomWeibull {
       double getPower();
       double getMeanFraction();
       virtual bool onAt(const int timeStep);
-      void parseConfiguration(const std::string filename);
+      void parseConfiguration(const std::string &filename);
       void setCountry(const std::string & name);
       void setID(const int id);
       std::string getCountry();

@@ -11,6 +11,11 @@
 
 Building_Zone::Building_Zone() {}
 
+/**
+ * @brief Set up the zone from the configuration struct
+ * @details Setup the zone, adds the zone values to the data store
+ * @param zoneStruct The configuration struct which values have been populated form configuration file
+ */
 void Building_Zone::setup(const ConfigStructZone & zoneStruct) {
   id = zoneStruct.id;
   activities = zoneStruct.activities;
@@ -54,6 +59,10 @@ void Building_Zone::setup(const ConfigStructZone & zoneStruct) {
   }
 }
 
+/**
+ * @brief the zones step function
+ * @details saves the zone values to the data store at each timestep
+ */
 void Building_Zone::step() {
     if (active) {
         DataStore::addValue(variableNameNumberOfOccupants, occupantFraction);

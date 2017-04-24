@@ -14,7 +14,7 @@
 class Contract_Node_Priority : public Contract_Node_Tree<ContractPtr> {
  public:
   Contract_Node_Priority();
-  bool compare(const ContractPtr insert) const;
+  bool compare(const ContractPtr &insert) const;
   bool isNodeRemoveable(
       const std::shared_ptr<Contract_Node_Tree<ContractPtr>> & ptr) const;
   void makeLeft();
