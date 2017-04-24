@@ -13,7 +13,7 @@
 #include <cassert>
 #include <cstddef>
 #include "rapidxml_utils.hpp"
-#include "rapidxml.hpp"
+
 
 #include "Configuration.hpp"
 #include "Utility.hpp"
