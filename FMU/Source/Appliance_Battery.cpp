@@ -93,6 +93,8 @@ void Appliance_Battery::doAction(){
     // get new reward
     action = qLearning.getAction();
     // reset the hourly sums
+    sumSupply = 0.0;
+    sumShort = 0.0;
   }
 }
 
@@ -103,20 +105,11 @@ void Appliance_Battery::doAction(){
 void Appliance_Battery::stepNeighbourhood() {
 
   if (batteryNeighbourhoodDischarge){
-    if(getSupply() == 0){
-      doAction();
-    }
     if (getSupply() < dischargeRate){
       double dischargeRateOld = dischargeRate;
       dischargeRate -= getSupply();
       calculateSupply();
       dischargeRate = dischargeRateOld;
-      int hourOfTheDay = calculateHourOfDay();
-      if (hourOfTheDay != previousHourOfDay) {
-        previousHourOfDay = hourOfTheDay;
-        sumSupply = 0.0;
-        sumShort = 0.0;
-      }
     }
   }
 
@@ -161,11 +154,13 @@ void Appliance_Battery::calculateSupply() {
     // Check battery is not empty and there is an action
     // actions are calculated from the learning
     if (action && stateOfCharge > 0) {
+      double oldSupply = getSupply();
+      double newSupply = get_new_SOC_discharge(powerShortage);
       // get power from battery as supply
-      setSupply(get_new_SOC_discharge(powerShortage) + getSupply());
+      setSupply(oldSupply + newSupply);
       // add the power to the sum for the hour
       // used to learn
-      sumSupply += getSupply();
+      sumSupply += newSupply;
     }
     // add the power shortage to the hourly sum used for learning
     sumShort += powerShortage;
