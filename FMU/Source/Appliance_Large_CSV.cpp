@@ -20,9 +20,8 @@ Appliance_Large_CSV::Appliance_Large_CSV() {}
    setPower(0.0);
    int stepCount = Configuration::getStepCount();
    model.consumption(stepCount);
-   if ((isOn() && match)) {
+   if (!running && (isOn() && match)) {
      running = true;
-     model.setDuration(0);
    }
    if (running){
      if (count + 1 < profileCSV.size()) {
@@ -30,6 +29,8 @@ Appliance_Large_CSV::Appliance_Large_CSV() {}
        setPower(profileCSV.at(count));
      } else {
        running = false;
+       count = 0;
+       model.setDuration(0);
      }
    }
  }
