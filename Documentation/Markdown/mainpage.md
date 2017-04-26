@@ -16,7 +16,9 @@ The No-MASS framework integrates existing models of occupant interaction and app
 * @subpage input
 * @subpage scripts
 * @subpage ClassDiagram
+* @subpage FMU
 * @subpage EnergyPlusExamples
+
 
 ## What is No-MASS? {#What}
 ## What is No-MASS?

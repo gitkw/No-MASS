@@ -18,8 +18,6 @@ BDI rules are included to model relatively straight forward interactions for whi
 Finally the results are parsed back to the building solver which calculates the environmental conditions arising from the modelled interactions at the next time step.
 
 
-![No-MASS Flow Diagram](FlowDiagramExistingModelsIncluded.png "No-MASS Flow Diagram")
-
 No-MASS was built from the ground up, C++ was chosen as the development language as it is simple to integrate with EnergyPlus (Crawley 2001), our chosen building simulation tool is also developed in C++.
 Using the same language allows for easy communication between the two tools.
 EnergyPlus developed by the US Department of Energy, is well tested, well documented and open source; allowing us to readily understand how to connect to it.
@@ -34,3 +32,7 @@ Returned to EnergyPlus are the number of occupants in a zone, their metabolic ga
 Due to the window, shading and location/presence models used within No-MASS a sub-hourly timestep is recommended (ie. 5 minutes), as longer timesteps may overestimate the implication of the occupant interactions.
 For example the response time to an agent opening a window may be short with the room cooling in just a few minutes.
 An agent can only respond at the next time step, if the timesteps are not sufficiently short in length, the open window may over cool the room.
+
+
+@image latex FlowDiagramExistingModelsIncluded
+@image html FlowDiagramExistingModelsIncluded.png

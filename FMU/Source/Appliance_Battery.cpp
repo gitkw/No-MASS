@@ -157,7 +157,7 @@ void Appliance_Battery::calculateSupply() {
     if (action && stateOfCharge > 0) {
       double oldSupply = getSupply();
       double newSupply = get_new_SOC_discharge(powerShortage);
-      setSupplyLeft(getSupply() - getSupplyLeft() + newSupply);
+      setSupplyLeft(getSupplyLeft() + newSupply);
       // get power from battery as supply
       setSupply(oldSupply + newSupply);
 
@@ -258,7 +258,7 @@ void Appliance_Battery::saveNeighbourhoodCalculate() {
   if (batteryNeighbourhoodDischarge){
     parametersNeighbourhood.supply = parameters.supply - parameters.suppliedLeft;
     if (parametersLocal.supply > 0 ){
-      parametersNeighbourhood.supply = parameters.supply - parametersLocal.suppliedLeft - parameters.suppliedLeft;
+      parametersNeighbourhood.supply = parameters.supply - parametersLocal.supply - parametersLocal.suppliedLeft;
     }
     parametersNeighbourhood.suppliedLeft = parameters.suppliedLeft;
   }

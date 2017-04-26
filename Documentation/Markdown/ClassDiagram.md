@@ -1,3 +1,4 @@
 # Class Diagram                       {#ClassDiagram}
 
-![ClassDiagram](classDiagram.png "ClassDiagram")
+@image latex classDiagramr
+@image html classDiagram.png
