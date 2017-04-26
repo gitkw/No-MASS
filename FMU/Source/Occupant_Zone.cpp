@@ -11,27 +11,55 @@
 
 Occupant_Zone::Occupant_Zone() {}
 
+/**
+ * @brief is there currently a window action
+ * @return true if there is a action taking place
+ */
 bool Occupant_Zone::isActionWindow() const {
   return ActionWindow;
 }
 
+/**
+ * @brief is there currently a Light action
+ * @return true if there is a action taking place
+ */
 bool Occupant_Zone::isActionLights() const {
   return ActionLights;
 }
 
+/**
+ * @brief is there currently a shade action
+ * @return true if there is a action taking place
+ */
 bool Occupant_Zone::isActionShades() const {
   return ActionShades;
 }
 
+/**
+ * @brief is there currently a heat gain action
+ * @return true if there is a action taking place
+ */
 bool Occupant_Zone::isActionHeatGains() const {
   return ActionHeatGains;
 }
 
+/**
+ * @brief is there currently a learning action
+ * @return true if there is a action taking place
+ */
 bool Occupant_Zone::isActionLearning() const {
   return ActionLearning;
 }
 
 
+/**
+ * @brief Initialises the occupants understanding of a zone
+ * @details enables the different interactions that can take place in a zone
+ * @param buildingID  The id of the building the zone is in
+ * @param buldingZone The actual zone
+ * @param agentid     The agents id
+ * @param agent       The configuration struct for the agent
+ */
 void Occupant_Zone::setup(int buildingID, const Building_Zone & buldingZone,
                         int agentid, const ConfigStructAgent &agent) {
   id = buldingZone.getId();

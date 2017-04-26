@@ -74,12 +74,18 @@ TEST_F(Test_Appliance_Battery, Received) {
     supply = al.getSupply();
     double requested = al.getPower();
     al.setReceived(requested);
-    powerShortage -= supply;
     if(supply > 0){
-      EXPECT_NEAR(supply, 1000, 0);
+      if (al.getStateOfCharge() > 0){
+        if (supply != 1000){
+         EXPECT_NEAR(supply, powerShortage, 0);
+        }else {
+            EXPECT_NEAR(supply, 1000, 0);
+        }
+      }
     } else {
       EXPECT_NEAR(supply, 0, 0);
     }
+      powerShortage -= supply;
     al.clear();
   }
 }
@@ -223,18 +229,18 @@ TEST_F(Test_Appliance_Battery, two) {
     al.saveLocal();
     al.setPowerShortage(0);
     al.stepNeighbourhood();
+    al.setSupplyLeft(0.0);
     al.saveNeighbourhood();
     al.setPower(0.0);
     al.setSupply(0.0);
     al.setSupplyCost(0.0);
     al.setReceivedCost(0.0);
-    al.setSupplyLeft(0.0);
     al.saveGlobal();
     al.clear();
-    if(supply > 0) {
+    if(supply > 0 && al.getStateOfCharge() > 0) {
         EXPECT_NEAR(al.getLocalPower(), 0, 0.01);
         EXPECT_NEAR(al.getLocalReceived(), 00, 0.01);
-        EXPECT_NEAR(al.getLocalSupply(), 90, 0.01);
+        EXPECT_NEAR(al.getLocalSupply(), 0, 0.01);
 
         EXPECT_NEAR(al.getNeighbourhoodPower(), 0, 0.01);
         EXPECT_NEAR(al.getNeighbourhoodReceived(), 00, 0.01);
@@ -415,8 +421,8 @@ TEST_F(Test_Appliance_Battery, four) {
 
     al.step();
     al.setReceived(0);
+    al.setSupplyLeft(0);
     al.saveLocal();
-      al.setSupplyLeft(0);
   }
 
 

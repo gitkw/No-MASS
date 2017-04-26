@@ -134,6 +134,7 @@ void Appliance_Battery::step() {
   get_new_SOC_charge(getReceived());
 
   setSupply(0.0);
+  setSupplyLeft(getSupply());
   calculateSupply();
   setPower(0.0);
   // we cant supply and request power
@@ -156,8 +157,10 @@ void Appliance_Battery::calculateSupply() {
     if (action && stateOfCharge > 0) {
       double oldSupply = getSupply();
       double newSupply = get_new_SOC_discharge(powerShortage);
+      setSupplyLeft(getSupply() - getSupplyLeft() + newSupply);
       // get power from battery as supply
       setSupply(oldSupply + newSupply);
+
       // add the power to the sum for the hour
       // used to learn
       sumSupply += newSupply;
@@ -222,12 +225,23 @@ void Appliance_Battery::get_new_SOC_charge(double P_request) {
     calculateStateOfCharge(energy);
 }
 
+double Appliance_Battery::powerAvaliable(const double energy) const {
+  // power in battery for energy provided
+  return energy / BatteryDeltaT / efficiency;
+}
+
 double Appliance_Battery::get_new_SOC_discharge(double P_request) {
     double requestedPower = P_request;
     if (requestedPower > dischargeRate){
       requestedPower = dischargeRate;
     }
-    double energy = energy_calc() - calculateDeltaE(requestedPower);; // new capacity, after removing what you discharged
+    double currentEnergy = energy_calc();
+     // new capacity, after removing what you discharged;
+    double energy = currentEnergy - calculateDeltaE(requestedPower);
+    if (energy < 0) {
+      energy = 0;
+      requestedPower = powerAvaliable(currentEnergy);
+    }
     calculateStateOfCharge(energy);
     return requestedPower;
 }
@@ -268,4 +282,8 @@ void Appliance_Battery::setBatteryNeighbourhoodDischarge(bool batteryNeighbourho
 
 void Appliance_Battery::setBatteryNeighbourhoodCharge(bool batteryNeighbourhoodCharge) {
   this->batteryNeighbourhoodCharge = batteryNeighbourhoodCharge;
+}
+
+double Appliance_Battery::getStateOfCharge() const {
+  return stateOfCharge;
 }

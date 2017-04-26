@@ -27,6 +27,7 @@ class Appliance_Battery : public Appliance {
   void setBatteryNeighbourhoodDischarge(bool batteryNeighbourhoodDischarge);
   void setBatteryNeighbourhoodCharge(bool batteryNeighbourhoodCharge);
   virtual double rewardFunction(double mostShortage, double binShortage) const;
+  double getStateOfCharge() const;
 
  protected:
   bool action;
@@ -40,6 +41,7 @@ class Appliance_Battery : public Appliance {
   void calculateSupply();
   void saveNeighbourhoodCalculate();
   void saveGlobalCalculate();
+  double powerAvaliable(const double energy) const;
   int datastoreIDstateOfCharge;
   double chargeRate = 1000;
   double dischargeRate = 1000;

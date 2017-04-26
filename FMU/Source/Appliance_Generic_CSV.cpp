@@ -17,7 +17,7 @@ void Appliance_Generic_CSV::setup(ConfigStructAppliance a) {
   setHourlyCost(a.costVector);
   setFileDemand(a.fileDemand);
   setFileSupply(a.fileSupply);
-  
+
   enableSupply = false;
   enableDemand = false;
   if (fileSupply != "") {
@@ -48,6 +48,7 @@ void Appliance_Generic_CSV::step() {
   while (now < end) {
     if (enableSupply) {
       setSupply(getSupply() + modelSupply.power(day, minuteOfDay));
+      setSupplyLeft(getSupply());
     }
     if (enableDemand) {
       setPower(getPower() + modelDemand.power(day, minuteOfDay));

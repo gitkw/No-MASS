@@ -22,6 +22,14 @@
 
 Occupant::Occupant() {}
 
+/**
+ * @brief Initialises the occupant
+ * @details Set occupant parameters, preprocesses the activities or states and
+ * sets up the inital state of the occupant
+ * @param id    The occupants id
+ * @param agent The configuration struct, built from config file
+ * @param zones Zones that the agent can inhabit
+ */
 void Occupant::setup(int id, const ConfigStructAgent &agent,
       const std::vector<std::shared_ptr<Building_Zone>> &zones) {
     this->id = id;
@@ -59,6 +67,12 @@ void Occupant::setup(int id, const ConfigStructAgent &agent,
     initialiseStates(zones);
 }
 
+/**
+ * @brief Initialises the states and assigns them to a zone
+ * @details builds the states an occupant can be in, and then matches the states
+ * to their corresponding zones
+ * @param zones Zones that the occupant can inhabit
+ */
 void Occupant::initialiseStates(
                   const std::vector<std::shared_ptr<Building_Zone>> &zones) {
     State present(-100,-1,-1,"");
@@ -102,6 +116,11 @@ void Occupant::initialiseStates(
     setState(out);
 }
 
+/**
+ * @brief matches a state to a zone
+ * @param s     The state
+ * @param zones zones to be searched for which the state will belong
+ */
 void Occupant::matchStateToZone(State *s,
                   const std::vector<std::shared_ptr<Building_Zone>> &zones) {
     for (unsigned int i =0; i < zones.size(); i++) {
@@ -123,6 +142,11 @@ void Occupant::matchStateToZone(State *s,
     }
 }
 
+/**
+ * @brief the occupant timestep function
+ * @detail moves the agent to their new state, calls the agents understanding
+ * of zone that an agent will be interacting with.
+ */
 void Occupant::step() {
     int stepCount = Configuration::getStepCount();
     int newStateID = activities.at(stepCount);
@@ -144,6 +168,11 @@ void Occupant::step() {
     DataStore::addValue(datastoreIdActivity, newStateID);
 }
 
+/**
+ * @brief Calls the activity model
+ * @param agent the config struct with the info needed for the activity model,
+ * saves the result to the activity array for recall later
+ */
 void Occupant::model_activity(const ConfigStructAgent &agent) {
     Model_Activity_Survival ma;
     ma.setAge(agent.age);
@@ -158,6 +187,12 @@ void Occupant::model_activity(const ConfigStructAgent &agent) {
     activities = ma.preProcessActivities();
 }
 
+/**
+ * @brief Calls the resence model
+ * @param agent the config struct with the info needed for the presence model,
+ * saves the result to the activity array for recall later. Here there are two states
+ * IT and Out
+ */
 void Occupant::model_presenceFromPage(const ConfigStructAgent &agent) {
     Model_Presence presence;
     presence.setProbMap(agent.profile);

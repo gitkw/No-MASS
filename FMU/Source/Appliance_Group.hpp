@@ -68,7 +68,7 @@ class Appliance_Group {
         c.requested = a.getPower();
         c.priority = a.getPriority();
         c.supplied = a.getSupply();
-        c.suppliedLeft = a.getSupply();
+        c.suppliedLeft = a.getSupplyLeft();
         c.suppliedCost = a.getSupplyCost();
         c.receivedCost = a.getReceivedCost();
         c.received = a.getReceived();
