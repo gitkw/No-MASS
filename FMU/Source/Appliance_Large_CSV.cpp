@@ -19,8 +19,7 @@ Appliance_Large_CSV::Appliance_Large_CSV() {}
    model.decreaseDuration();
    setPower(0.0);
    int stepCount = Configuration::getStepCount();
-   model.consumption(stepCount);
-   if (!running && (isOn() && match)) {
+   if (!running && (model.onAt(stepCount) && match)) {
      running = true;
    }
    if (running){

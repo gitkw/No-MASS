@@ -368,7 +368,7 @@ TEST_F(Test_Appliance_Battery, threee) {
     al.saveLocal();
     al.setPowerShortage(10);
     al.stepNeighbourhood();
-    double supplyNeigh = al.getSupply();
+    double supplyNeigh = al.getSupply() - supply;
     al.setSupplyLeft(0);
     al.saveNeighbourhood();
     al.setPower(0.0);

@@ -45,8 +45,8 @@ void Appliance_Large::step() {
   model.decreaseDuration();
   setPower(0.0);
   int stepCount = Configuration::getStepCount();
-  double p = model.consumption(stepCount);
-  if (isOn() && match) {
+  if (model.onAt(stepCount) && match) {
+    double p = model.consumption(stepCount);
     setPower(p);
   }
 }

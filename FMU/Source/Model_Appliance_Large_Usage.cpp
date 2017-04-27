@@ -43,9 +43,7 @@ double Model_Appliance_Large_Usage::consumption(const int timeStep) {
   int now = timeStep * leninsec;
   int end = now + leninsec;
   while (now < end) {
-    if (onAt(timeStep)) {
       result += getPower();
-    }
     now += 60;
   }
   return result;

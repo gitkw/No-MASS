@@ -56,12 +56,13 @@ void Appliance_Large_Learning::calculateProfile() {
   int stepCount = Configuration::getStepCount();
   double p = getPowerAt(stepCount);
   profileStruct profile;
-  while (isOn()) {
+  while (model.onAt(stepCount)) {
     profile.power.push_back(p);
     stepCount++;
     profile.nonLearningStep++;
     model.decreaseDuration();
     p = getPowerAt(stepCount);
+
   }
   if (profile.power.size()) {
     powerProfile.push(profile);
