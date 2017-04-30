@@ -21,7 +21,6 @@ class Appliance_Group {
  public:
     Appliance_Group(){};
 
-
     void setup(const std::vector<ConfigStructAppliance> & app,
                                     const int & buildingID,
                                     const std::string & buildingString) {
@@ -35,7 +34,7 @@ class Appliance_Group {
       setupSave();
     }
 
-    virtual void hasActivities(const std::vector<int> Activities) {
+    void hasActivities(const std::vector<int> & Activities) {
       for (T & a : appliances) {
         a.hasActivities(Activities);
       }
@@ -143,9 +142,7 @@ class Appliance_Group {
     bool sendContractGlobal(const Contract & c) {
       bool send = sendCondition(c);
       if (send) {
-        Contract x = c;
-        x.supplied = c.suppliedLeft;
-        globalContracts.push_back(x);
+        globalContracts.push_back(c);
       }
       return send;
     }
