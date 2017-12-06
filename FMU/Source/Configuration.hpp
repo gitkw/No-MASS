@@ -24,6 +24,7 @@ struct ConfigStructZone {
     bool active = false;
     int windowCount = 0;
     int id = 0;
+    double lightPower = 1.0;
 };
 
 struct ConfigStructAgent {

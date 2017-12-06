@@ -40,7 +40,6 @@ void Occupant_Action_Heat_Gains::step(const Building_Zone& zone,
   double airTemp = zone.getMeanAirTemperature();
   double airHumid = zone.getAirRelativeHumidity();
   double meanRadient = zone.getMeanRadiantTemperature();
-
   if (inZone) {
     Model_HeatGains h;
     /**

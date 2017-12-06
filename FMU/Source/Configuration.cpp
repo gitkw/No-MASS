@@ -135,6 +135,8 @@ void Configuration::parseBuilding(rapidxml::xml_node<> *node, const int id) {
                     zone.second.groundFloor = std::stoi(znode->value());
                 } else if (nodeNameIs(znode, "windowcount")) {
                     zone.second.windowCount = std::stoi(znode->value());
+                } else if (nodeNameIs(znode, "lightpower")) {
+                    zone.second.lightPower = std::stod(znode->value());
                 }
                 znode = znode->next_sibling();
             }

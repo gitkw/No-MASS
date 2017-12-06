@@ -63,6 +63,7 @@ class Building_Zone {
     double occupantFraction; //<! the number of occupants (I dont think this is a fraction anymore)
     double heatingState; //<! the heating setpoint temperature
     double appFraction; //<! the average appliance gains
+    double lightPower; //<! the power used by the lights in the zone
 
     std::vector<int> activities;   //<! the activites that take place in a zone
     std::string idString;  //<! the zones id as a string

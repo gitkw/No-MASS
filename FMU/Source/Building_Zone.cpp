@@ -19,6 +19,7 @@ Building_Zone::Building_Zone() {}
 void Building_Zone::setup(const ConfigStructZone & zoneStruct) {
   id = zoneStruct.id;
   activities = zoneStruct.activities;
+  lightPower = zoneStruct.lightPower;
   occupantFraction = 0;
   currentOccupantGains = 0;
   blindState = 1;
@@ -70,7 +71,7 @@ void Building_Zone::step() {
         for (int wname : variableNameWindow) {
           DataStore::addValue(wname, windowState);
         }
-        DataStore::addValue(variableNameLight, lightState);
+        DataStore::addValue(variableNameLight, lightState * lightPower);
         // Shade in EP is
         // 1 is closed
         // 0 is open
