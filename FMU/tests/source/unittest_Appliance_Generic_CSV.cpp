@@ -32,26 +32,25 @@ class Test_Appliance_Generic_CSV : public ::testing::Test {
 
 void Test_Appliance_Generic_CSV::SetUp() {
   Configuration::reset();
-  Configuration::parseConfiguration(testFiles +
-                                                  "DSM1house.xml");
+  Configuration::parseConfiguration(testFiles + "DSM1house.xml");
   Configuration::setStepCount(-1);
   Utility::setSeed(0);
-    ConfigStructAppliance a;
-    a.fileSupply = testFiles + "PVBowler2013_365.csv";
-    a.fileDemand = testFiles + "heatingPower.csv";
-    a.id = 0;
-    a.costVector = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    a.priority = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  ConfigStructAppliance a;
+  a.fileSupply = testFiles + "PVBowler2013_365.csv";
+  a.fileDemand = testFiles + "HeatingPower.csv";
+  a.id = 0;
+  a.costVector = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  a.priority = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    csv.setID(a.id);
-    csv.setHoulyPriority(a.priority);
-    csv.setHourlyCost(a.costVector);
-    csv.setBuildingID(0);
-    csv.setFileDemand(a.fileDemand);
-    csv.setFileSupply(a.fileSupply);
-    csv.setup(a);
-    csv.setIDString("test_building_" + std::to_string(0) + "_" + std::to_string(a.id));
-    csv.setupSave();
+  csv.setID(a.id);
+  csv.setHoulyPriority(a.priority);
+  csv.setHourlyCost(a.costVector);
+  csv.setBuildingID(0);
+  csv.setFileDemand(a.fileDemand);
+  csv.setFileSupply(a.fileSupply);
+  csv.setup(a);
+  csv.setIDString("test_building_" + std::to_string(0) + "_" + std::to_string(a.id));
+  csv.setupSave();
 
 }
 
