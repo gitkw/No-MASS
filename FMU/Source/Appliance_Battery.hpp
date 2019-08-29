@@ -15,6 +15,7 @@
 class Appliance_Battery : public Appliance {
  public:
   Appliance_Battery();
+  virtual ~Appliance_Battery() = default;
 
   void clear();
   void setup(ConfigStructAppliance a);

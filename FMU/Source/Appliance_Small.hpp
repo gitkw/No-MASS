@@ -16,6 +16,7 @@
 class Appliance_Small : public Appliance {
  public:
     Appliance_Small();
+    virtual ~Appliance_Small() = default;
 
     void setup(ConfigStructAppliance a);
     void step();

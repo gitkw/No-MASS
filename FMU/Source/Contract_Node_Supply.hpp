@@ -14,6 +14,8 @@
 class Contract_Node_Supply : public Contract_Node_Tree<ContractPtr> {
  public:
   Contract_Node_Supply();
+  virtual ~Contract_Node_Supply() = default;
+
   bool compare(const ContractPtr &insert) const;
   bool isNodeRemoveable(
         const std::shared_ptr<Contract_Node_Tree<ContractPtr>> & ptr) const;

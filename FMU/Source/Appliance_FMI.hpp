@@ -15,6 +15,8 @@
 class Appliance_FMI : public Appliance {
  public:
     Appliance_FMI();
+    virtual ~Appliance_FMI() = default;
+
     void setup(ConfigStructAppliance a);
     void step();
     void setFMIVariableName(const std::string & FMIVariableName);

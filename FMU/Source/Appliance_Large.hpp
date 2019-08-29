@@ -15,6 +15,7 @@
 class Appliance_Large : public Appliance {
  public:
     Appliance_Large();
+    virtual ~Appliance_Large() = default;
 
     void setup(ConfigStructAppliance a);
     virtual void setupModel();
