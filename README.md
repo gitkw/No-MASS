@@ -9,7 +9,7 @@ Clone the repository using git, ensure you do a recursive clone to receive all d
 - Rapidxml for xml parsing
 - googletest for testing
 
-Use the following commands or alternatively use a GUI such as GitHub Desktop or SourceTree. You'll need to add your ssh key to your profile in github. See ![here](https://help.github.com/en/articles/adding-a-new-ssh-key-to-your-github-account)
+Use the following commands or alternatively use a GUI such as GitHub Desktop or SourceTree. You'll need to add your ssh key to your profile in github. See [here](https://help.github.com/en/articles/adding-a-new-ssh-key-to-your-github-account)
 
 ```sh
 git clone https://github.com/jacoblchapman/No-MASS.git
